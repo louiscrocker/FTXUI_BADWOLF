@@ -13,6 +13,7 @@ endfunction(example)
 
 add_subdirectory(component)
 add_subdirectory(dom)
+add_subdirectory(ui)
 
 if (EMSCRIPTEN)
   get_property(EXAMPLES GLOBAL PROPERTY FTXUI::EXAMPLES)

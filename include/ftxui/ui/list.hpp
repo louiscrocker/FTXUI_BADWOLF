@@ -86,6 +86,13 @@ class List {
 
   // ── Empty state ────────────────────────────────────────────────────────────
 
+  /// @brief Provide a label extractor used for filtering and default rendering.
+  /// Required when T is not string-convertible and Filterable(true) is set.
+  List& Label(std::function<std::string(const T&)> fn) {
+    state_->labeler = std::move(fn);
+    return *this;
+  }
+
   /// @brief Text shown when the list is empty (or all items are filtered out).
   List& Empty(std::string_view msg) {
     state_->empty_msg = std::string(msg);
@@ -114,6 +121,7 @@ class List {
     // Configuration
     const std::vector<T>* data = nullptr;
     std::function<ftxui::Element(const T&, bool)> renderer;
+    std::function<std::string(const T&)> labeler;  // optional label extractor
     bool filterable = false;
     std::function<void(const T&, size_t)> on_select;
     std::function<void(const T&, size_t)> on_activate;
@@ -127,13 +135,16 @@ class List {
   // ── Helpers ────────────────────────────────────────────────────────────────
 
   // Convert an item to a string for default rendering and filtering.
-  static std::string ItemToString(const T& item) {
+  static std::string ItemToString(const std::shared_ptr<State>& s, const T& item) {
+    if (s->labeler) return s->labeler(item);
     if constexpr (std::is_same_v<std::decay_t<T>, std::string>) {
       return item;
     } else if constexpr (std::is_convertible_v<T, std::string_view>) {
       return std::string(static_cast<std::string_view>(item));
-    } else {
+    } else if constexpr (std::is_arithmetic_v<T>) {
       return std::to_string(item);
+    } else {
+      return "";  // fallback: provide a Label() for custom types
     }
   }
 
@@ -159,7 +170,7 @@ class List {
     } else {
       const std::string filter_lower = ToLower(s->filter);
       for (size_t i = 0; i < s->data->size(); ++i) {
-        if (ToLower(ItemToString((*s->data)[i])).find(filter_lower) !=
+        if (ToLower(ItemToString(s, (*s->data)[i])).find(filter_lower) !=
             std::string::npos) {
           indices.push_back(i);
         }
@@ -170,10 +181,11 @@ class List {
   }
 
   // Default item renderer: highlight selected with theme secondary + bold.
-  static ftxui::Element DefaultRenderItem(const T& item,
+  static ftxui::Element DefaultRenderItem(const std::shared_ptr<State>& s,
+                                          const T& item,
                                           bool selected,
                                           const Theme& theme) {
-    ftxui::Element e = ftxui::text(" " + ItemToString(item) + " ");
+    ftxui::Element e = ftxui::text(" " + ItemToString(s, item) + " ");
     if (selected) {
       return e | ftxui::bgcolor(theme.secondary) |
              ftxui::color(ftxui::Color::White) | ftxui::bold;
@@ -221,7 +233,7 @@ class List {
         if (s->renderer) {
           row = s->renderer(item, sel);
         } else {
-          row = DefaultRenderItem(item, sel, theme);
+          row = DefaultRenderItem(s, item, sel, theme);
         }
 
         items.push_back(std::move(row));
