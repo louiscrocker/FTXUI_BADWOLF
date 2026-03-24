@@ -135,6 +135,12 @@ jobs:
         run: >
           ctest -C Debug --rerun-failed --output-on-failure;
 
+      - name: Unix - UI tests
+        if: runner.os != 'Windows'
+        working-directory: ./build
+        run: >
+          ctest -C Debug --rerun-failed --output-on-failure -R ui;
+
       - name: Unix - coverage
         if: matrix.gcov_executable != ''
         working-directory: ./build

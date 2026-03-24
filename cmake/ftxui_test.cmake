@@ -85,6 +85,10 @@ add_executable(ftxui_ui_test
   src/ftxui/ui/router_test.cpp
   src/ftxui/ui/logpanel_test.cpp
   src/ftxui/ui/datatable_test.cpp
+  src/ftxui/ui/form_test.cpp
+  src/ftxui/ui/textinput_test.cpp
+  src/ftxui/ui/grid_test.cpp
+  src/ftxui/ui/dialog_test.cpp
 )
 
 target_link_libraries(ftxui_ui_test
