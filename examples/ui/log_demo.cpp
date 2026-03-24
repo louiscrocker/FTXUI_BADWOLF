@@ -21,8 +21,7 @@ using namespace ftxui::ui;
 int main() {
   SetTheme(Theme::Dark());
 
-  auto log = std::make_shared<LogPanel>();
-  log->SetMaxLines(200);
+  auto log = LogPanel::Create(200);
   log->SetMinLevel(LogLevel::Trace);
 
   // Background thread generating log entries
