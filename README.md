@@ -465,6 +465,75 @@ g++ . . . -lftxui-component -lftxui-dom -lftxui-screen . . .
 
 To build FTXUI with modules, check [documentation](https://arthursonzogni.github.io/FTXUI/cpp20-modules.html)
 
+## ftxui::ui — High-Level API (New!)
+
+If you want a Go `tview` / Bubbletea-style experience in C++, the `ftxui::ui` namespace has you covered. It provides ready-made, themed components — forms, data tables, lists, trees, routers, wizards, dialogs, toasts, and more — assembled through a fluent builder API. You get a complete application toolkit without hand-crafting layouts or wiring up event handlers.
+
+Everything in `ftxui::ui` is built on top of the standard FTXUI `component` / `dom` / `screen` layers, so you can freely mix high-level `ui::` helpers with low-level `Renderer`, `CatchEvent`, and DOM elements whenever you need the extra control.
+
+### Quick start
+
+```cpp
+#include <ftxui/ui/app.hpp>
+#include <ftxui/ui/theme.hpp>
+#include <ftxui/ui/form.hpp>
+#include <ftxui/ui/notification.hpp>
+#include <string>
+
+int main() {
+    ftxui::ui::SetTheme(ftxui::ui::Theme::Nord());
+
+    std::string name, email;
+    bool subscribe = false;
+
+    auto form = ftxui::ui::Form()
+        .Title("Newsletter Sign-Up")
+        .Field("Name",  &name,  "Your full name")
+        .Field("Email", &email, "you@example.com")
+        .Check("Subscribe to updates", &subscribe)
+        .Submit("Sign Up", [&]{
+            ftxui::ui::Notify("Welcome, " + name + "!", ftxui::ui::Severity::Success);
+        })
+        .Cancel("Quit", []{ ftxui::App::Active()->Exit(); });
+
+    ftxui::ui::RunFullscreen(
+        ftxui::ui::WithNotifications(form.Build()));
+}
+```
+
+### CMake linking
+
+```cmake
+target_link_libraries(myapp PRIVATE ftxui::ui)
+```
+
+### Available components
+
+| Component | Description | Header |
+|-----------|-------------|--------|
+| `Theme` | 6 built-in presets; fluent color/style customisation | `ftxui/ui/theme.hpp` |
+| App runners | `Run`, `RunFullscreen`, `RunFitComponent`, `RunFixed` | `ftxui/ui/app.hpp` |
+| `State<T>` | Reactive value wrapper that triggers redraws on mutation | `ftxui/ui/state.hpp` |
+| `MVU<Model,Msg>` | Elm / Bubbletea-style Model-View-Update architecture | `ftxui/ui/mvu.hpp` |
+| `BackgroundTask` | `RunAsync` / `MakeAsync` — fire-and-forget async work | `ftxui/ui/background_task.hpp` |
+| `Form` | Labeled data-entry form with text, password, checkbox, select, numeric fields | `ftxui/ui/form.hpp` |
+| Layout | `Panel`, `Row`, `Column`, `HSplit`, `VSplit`, `TabView`, `StatusBar`, `ScrollView`, `Labeled` | `ftxui/ui/layout.hpp` |
+| `SimpleTable` | Themed static table rendered as a DOM element | `ftxui/ui/simple_table.hpp` |
+| `DataTable<T>` | Interactive sortable/filterable data table | `ftxui/ui/datatable.hpp` |
+| `List<T>` | Interactive, optionally-filterable item list | `ftxui/ui/list.hpp` |
+| `Tree` | Collapsible tree view built from `TreeNode::Leaf` / `Branch` | `ftxui/ui/tree.hpp` |
+| `Router` | History-based multi-screen router with `Push`/`Pop`/`Replace` | `ftxui/ui/router.hpp` |
+| `CommandPalette` | VS Code-style searchable command palette overlay | `ftxui/ui/command_palette.hpp` |
+| `Wizard` | Multi-step wizard dialog with Next / Back / Cancel | `ftxui/ui/wizard.hpp` |
+| `LogPanel` | Thread-safe auto-scrolling log panel | `ftxui/ui/log_panel.hpp` |
+| Notifications | `Notify()`, `WithNotifications()`, severity levels | `ftxui/ui/notification.hpp` |
+| Dialogs | `WithConfirm`, `WithAlert`, `WithHelp` modal overlays | `ftxui/ui/dialog.hpp` |
+| `Keymap` | Key-binding registry with help rendering | `ftxui/ui/keymap.hpp` |
+| Progress | `ThemedProgressBar`, `WithSpinner` | `ftxui/ui/progress.hpp` |
+| Widgets | `Badge`, `EmptyState`, `LabeledSeparator`, `Kbd`, `StatusDot` | `ftxui/ui/widgets.hpp` |
+
+📖 **Full API reference:** [`doc/ui-layer.md`](doc/ui-layer.md)
+
 ## Contributors
 
 <a href="https://github.com/ArthurSonzogni/FTXUI/graphs/contributors">
