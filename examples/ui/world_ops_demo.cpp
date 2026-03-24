@@ -46,62 +46,44 @@
 #include "ftxui/ui/notification.hpp"
 #include "ftxui/ui/theme.hpp"
 
+#include <filesystem>
+#include <fstream>
+
 using namespace ftxui;
 using namespace ftxui::ui;
 
 // ── World GeoJSON ─────────────────────────────────────────────────────────────
+// Looks for world_ne110m.geojson next to the binary (or in the working dir).
+// Falls back to a minimal inline dataset if not found.
 
-static const char kWorldGeoJSON[] = R"GEO({
+static std::string FindGeoJSONPath() {
+  // Search relative to binary location, cwd, and common build paths
+  std::vector<std::string> candidates = {
+      "world_ne110m.geojson",
+      "examples/ui/world_ne110m.geojson",
+      "../examples/ui/world_ne110m.geojson",
+      "../../examples/ui/world_ne110m.geojson",
+  };
+  for (const auto& p : candidates) {
+    if (std::filesystem::exists(p)) return p;
+  }
+  return {};
+}
+
+static const char kFallbackGeoJSON[] = R"GEO({
 "type":"FeatureCollection",
 "features":[
-  {"type":"Feature","properties":{"name":"USA","region":"Americas"},"geometry":{"type":"Polygon","coordinates":[[
+  {"type":"Feature","properties":{"name":"Americas","type":"coastline"},"geometry":{"type":"Polygon","coordinates":[[
     [-125,49],[-95,49],[-75,45],[-67,47],[-70,43],[-77,35],[-81,25],[-97,26],
     [-105,22],[-117,32],[-124,36],[-125,49]]]}},
-  {"type":"Feature","properties":{"name":"Canada","region":"Americas"},"geometry":{"type":"Polygon","coordinates":[[
-    [-141,60],[-125,49],[-95,49],[-75,45],[-67,47],[-60,47],[-52,47],
-    [-55,60],[-79,63],[-95,63],[-120,65],[-141,60]]]}},
-  {"type":"Feature","properties":{"name":"Mexico","region":"Americas"},"geometry":{"type":"Polygon","coordinates":[[
-    [-117,32],[-97,26],[-94,18],[-90,18],[-88,16],[-83,10],[-85,10],
-    [-91,15],[-105,22],[-117,32]]]}},
-  {"type":"Feature","properties":{"name":"Brazil","region":"Americas"},"geometry":{"type":"Polygon","coordinates":[[
-    [-73,-4],[-60,5],[-50,5],[-35,-5],[-35,-22],[-50,-33],[-55,-34],
-    [-65,-55],[-70,-55],[-75,-45],[-80,-2],[-73,-4]]]}},
-  {"type":"Feature","properties":{"name":"Argentina","region":"Americas"},"geometry":{"type":"Polygon","coordinates":[[
-    [-73,-40],[-55,-35],[-53,-34],[-65,-55],[-70,-55],[-75,-50],[-73,-40]]]}},
-  {"type":"Feature","properties":{"name":"UK","region":"Europe"},"geometry":{"type":"Polygon","coordinates":[[
-    [-5,50],[1,51],[1,53],[-3,58],[-5,55],[-6,53],[-5,50]]]}},
-  {"type":"Feature","properties":{"name":"France","region":"Europe"},"geometry":{"type":"Polygon","coordinates":[[
-    [-4,43],[8,43],[8,47],[6,50],[2,51],[-2,49],[-4,48],[-4,43]]]}},
-  {"type":"Feature","properties":{"name":"Germany","region":"Europe"},"geometry":{"type":"Polygon","coordinates":[[
-    [6,47],[15,47],[15,55],[14,54],[9,55],[6,54],[5,50],[6,47]]]}},
-  {"type":"Feature","properties":{"name":"Spain","region":"Europe"},"geometry":{"type":"Polygon","coordinates":[[
-    [-9,36],[3,36],[3,44],[-2,44],[-9,44],[-9,36]]]}},
-  {"type":"Feature","properties":{"name":"Italy","region":"Europe"},"geometry":{"type":"Polygon","coordinates":[[
-    [7,44],[18,40],[16,38],[15,38],[12,38],[9,40],[7,44]]]}},
-  {"type":"Feature","properties":{"name":"Russia","region":"Europe"},"geometry":{"type":"Polygon","coordinates":[[
-    [28,55],[40,50],[60,52],[90,65],[140,65],[145,55],[130,42],
-    [90,45],[60,42],[38,42],[28,45],[28,55]]]}},
-  {"type":"Feature","properties":{"name":"China","region":"Asia-Pacific"},"geometry":{"type":"Polygon","coordinates":[[
-    [73,20],[90,20],[100,8],[115,8],[120,20],[135,35],[135,48],
-    [120,52],[90,52],[75,40],[73,38],[73,20]]]}},
-  {"type":"Feature","properties":{"name":"India","region":"Asia-Pacific"},"geometry":{"type":"Polygon","coordinates":[[
-    [68,8],[80,8],[88,20],[92,27],[80,35],[72,28],[68,22],[68,8]]]}},
-  {"type":"Feature","properties":{"name":"Japan","region":"Asia-Pacific"},"geometry":{"type":"Polygon","coordinates":[[
-    [130,31],[131,33],[133,34],[136,36],[141,41],[145,44],[141,45],
-    [135,34],[130,31]]]}},
-  {"type":"Feature","properties":{"name":"Australia","region":"Asia-Pacific"},"geometry":{"type":"Polygon","coordinates":[[
-    [114,-22],[114,-35],[120,-38],[148,-38],[154,-28],[150,-18],
-    [138,-12],[120,-14],[114,-22]]]}},
-  {"type":"Feature","properties":{"name":"South Korea","region":"Asia-Pacific"},"geometry":{"type":"Polygon","coordinates":[[
-    [126,34],[129,34],[129,38],[126,38],[126,34]]]}},
-  {"type":"Feature","properties":{"name":"Egypt","region":"EMEA"},"geometry":{"type":"Polygon","coordinates":[[
-    [25,22],[35,22],[35,31],[33,31],[32,29],[25,29],[25,22]]]}},
-  {"type":"Feature","properties":{"name":"Nigeria","region":"EMEA"},"geometry":{"type":"Polygon","coordinates":[[
-    [3,4],[14,4],[14,14],[3,14],[3,4]]]}},
-  {"type":"Feature","properties":{"name":"South Africa","region":"EMEA"},"geometry":{"type":"Polygon","coordinates":[[
-    [17,-35],[30,-35],[33,-28],[38,-20],[26,-18],[18,-18],[17,-25],[17,-35]]]}},
-  {"type":"Feature","properties":{"name":"Saudi Arabia","region":"EMEA"},"geometry":{"type":"Polygon","coordinates":[[
-    [37,28],[37,16],[45,12],[55,22],[58,28],[55,32],[45,32],[37,28]]]}}
+  {"type":"Feature","properties":{"name":"Europe","type":"coastline"},"geometry":{"type":"Polygon","coordinates":[[
+    [-10,36],[36,36],[36,70],[-10,70],[-10,36]]]}},
+  {"type":"Feature","properties":{"name":"Asia","type":"coastline"},"geometry":{"type":"Polygon","coordinates":[[
+    [26,70],[180,70],[180,-10],[100,-10],[60,20],[36,36],[36,70],[26,70]]]}},
+  {"type":"Feature","properties":{"name":"Africa","type":"coastline"},"geometry":{"type":"Polygon","coordinates":[[
+    [-18,37],[51,37],[51,-35],[-18,-35],[-18,37]]]}},
+  {"type":"Feature","properties":{"name":"Australia","type":"coastline"},"geometry":{"type":"Polygon","coordinates":[[
+    [114,-22],[154,-22],[154,-38],[114,-38],[114,-22]]]}}
 ]})GEO";
 
 // ── Node / Region data model ──────────────────────────────────────────────────
@@ -469,14 +451,23 @@ int main() {
   g_log->Info("Monitoring " + std::to_string(g_regions.size()) + " regions");
   g_log->Debug("Background metrics refresh: 750ms");
 
+  // ── Load GeoJSON ──────────────────────────────────────────────────────────
+  std::string geo_path = FindGeoJSONPath();
+  GeoMap map_builder;
+  if (!geo_path.empty()) {
+    map_builder.LoadFile(geo_path);
+    g_log->Info("Map: Natural Earth 110m  (" + geo_path + ")");
+  } else {
+    map_builder.Data(kFallbackGeoJSON);
+    g_log->Warn("Map: world_ne110m.geojson not found — using fallback");
+  }
+
   // ── GeoMap ────────────────────────────────────────────────────────────────
-  auto map = GeoMap()
-                 .Data(kWorldGeoJSON)
+  auto map = map_builder
                  .LineColor(Color::GrayLight)
                  .ShowGraticule(true)
                  .GraticuleStep(30.0f)
                  .OnSelect([](const GeoFeature& f) {
-                   // Find which region this country belongs to
                    auto it = f.properties.find("region");
                    std::string region_name =
                        (it != f.properties.end()) ? it->second : "";
@@ -487,7 +478,6 @@ int main() {
                    std::lock_guard<std::mutex> lock(g_mutex);
                    g_selected_country = country;
 
-                   // Select matching region in table
                    for (int i = 0; i < static_cast<int>(g_regions.size()); ++i) {
                      if (g_regions[static_cast<size_t>(i)].name == region_name) {
                        g_selected_region = i;
@@ -495,7 +485,7 @@ int main() {
                      }
                    }
                    if (g_log) {
-                     g_log->Info("Selected: " + country + " (" + region_name + ")");
+                     g_log->Info("Selected: " + country);
                    }
                  })
                  .Build();

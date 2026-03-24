@@ -55,6 +55,7 @@ out/
 # examples directory:
 !examples/**/*.cpp
 !examples/**/*.css
+!examples/**/*.geojson
 !examples/**/*.hpp
 !examples/**/*.html
 !examples/**/*.html.disabled
