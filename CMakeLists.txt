@@ -182,8 +182,12 @@ add_library(ui
   include/ftxui/ui/state.hpp
   include/ftxui/ui/textinput.hpp
   include/ftxui/ui/theme.hpp
+  include/ftxui/ui/canvas.hpp
+  include/ftxui/ui/charts.hpp
   include/ftxui/ui/widgets.hpp
   include/ftxui/ui/wizard.hpp
+  src/ftxui/ui/canvas.cpp
+  src/ftxui/ui/charts.cpp
   src/ftxui/ui/dialog.cpp
   src/ftxui/ui/form.cpp
   src/ftxui/ui/grid.cpp
@@ -200,6 +204,14 @@ add_library(ui
   src/ftxui/ui/command_palette.cpp
   src/ftxui/ui/widgets.cpp
   src/ftxui/ui/wizard.cpp
+  include/ftxui/ui/geojson.hpp
+  include/ftxui/ui/geomap.hpp
+  src/ftxui/ui/geojson.cpp
+  src/ftxui/ui/geomap.cpp
+  include/ftxui/ui/filepicker.hpp
+  include/ftxui/ui/config_editor.hpp
+  src/ftxui/ui/filepicker.cpp
+  src/ftxui/ui/config_editor.cpp
 )
 
 target_link_libraries(dom PUBLIC screen)

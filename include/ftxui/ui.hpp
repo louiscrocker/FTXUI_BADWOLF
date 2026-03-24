@@ -47,11 +47,15 @@
 ///  - **router.hpp**          – `Router` history-based multi-screen navigation
 ///  - **tree.hpp**            – `Tree` collapsible tree-view component
 
+#include "ftxui/ui/canvas.hpp"
+#include "ftxui/ui/charts.hpp"
 #include "ftxui/ui/app.hpp"
 #include "ftxui/ui/background_task.hpp"
 #include "ftxui/ui/command_palette.hpp"
+#include "ftxui/ui/config_editor.hpp"
 #include "ftxui/ui/datatable.hpp"
 #include "ftxui/ui/dialog.hpp"
+#include "ftxui/ui/filepicker.hpp"
 #include "ftxui/ui/form.hpp"
 #include "ftxui/ui/grid.hpp"
 #include "ftxui/ui/keymap.hpp"
@@ -69,5 +73,7 @@
 #include "ftxui/ui/tree.hpp"
 #include "ftxui/ui/widgets.hpp"
 #include "ftxui/ui/wizard.hpp"
+#include "ftxui/ui/geojson.hpp"
+#include "ftxui/ui/geomap.hpp"
 
 #endif  // FTXUI_UI_HPP

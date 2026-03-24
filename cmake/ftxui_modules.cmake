@@ -46,6 +46,30 @@ target_sources(ftxui-modules
   src/ftxui/util.cppm
   src/ftxui/util/autoreset.cppm
   src/ftxui/util/ref.cppm
+  # ftxui::ui high-level API module
+  src/ftxui/ui.cppm
+  src/ftxui/ui_modules/App.cppm
+  src/ftxui/ui_modules/BackgroundTask.cppm
+  src/ftxui/ui_modules/CommandPalette.cppm
+  src/ftxui/ui_modules/DataTable.cppm
+  src/ftxui/ui_modules/Dialog.cppm
+  src/ftxui/ui_modules/Form.cppm
+  src/ftxui/ui_modules/Grid.cppm
+  src/ftxui/ui_modules/Keymap.cppm
+  src/ftxui/ui_modules/Layout.cppm
+  src/ftxui/ui_modules/List.cppm
+  src/ftxui/ui_modules/LogPanel.cppm
+  src/ftxui/ui_modules/MVU.cppm
+  src/ftxui/ui_modules/Notification.cppm
+  src/ftxui/ui_modules/Progress.cppm
+  src/ftxui/ui_modules/Router.cppm
+  src/ftxui/ui_modules/SimpleTable.cppm
+  src/ftxui/ui_modules/State.cppm
+  src/ftxui/ui_modules/TextInput.cppm
+  src/ftxui/ui_modules/Theme.cppm
+  src/ftxui/ui_modules/Tree.cppm
+  src/ftxui/ui_modules/Widgets.cppm
+  src/ftxui/ui_modules/Wizard.cppm
   )
 
 target_link_libraries(ftxui-modules
@@ -53,6 +77,7 @@ target_link_libraries(ftxui-modules
   ftxui::screen
   ftxui::dom
   ftxui::component
+  ftxui::ui
   )
 
 target_compile_features(ftxui-modules PUBLIC cxx_std_20)

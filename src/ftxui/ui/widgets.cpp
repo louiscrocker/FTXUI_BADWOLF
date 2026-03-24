@@ -3,8 +3,11 @@
 // the LICENSE file.
 #include "ftxui/ui/widgets.hpp"
 
+#include <algorithm>
 #include <string>
+#include <vector>
 
+#include "ftxui/dom/canvas.hpp"
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/ui/theme.hpp"
 

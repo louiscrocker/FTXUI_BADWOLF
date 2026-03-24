@@ -4,6 +4,66 @@ Changelog
 Next
 ====
 
+### New: `ftxui::ui` — High-Level API Layer
+
+A new `ftxui::ui` namespace provides a Go-inspired (Bubbletea/tview style) high-level API
+that abstracts away boilerplate. Single include: `#include "ftxui/ui.hpp"`. New CMake target: `ftxui::ui`.
+
+**Core infrastructure:**
+- `Theme` — 6 built-in presets (Default/Dark/Light/Nord/Dracula/Monokai), global `SetTheme`/`GetTheme`, `ScopedTheme`, `SaveTheme`/`LoadTheme` for persistence.
+- `State<T>` — reactive wrapper; `Set()`/`Mutate()` auto-trigger redraws.
+- `MVU<Model,Msg>` — Elm/Bubbletea Model-View-Update architecture template.
+- `BackgroundTask` — `RunAsync<T>(work, on_complete)` thread-safe async with UI-thread callback.
+- `App::Fullscreen()` / `App::Fit()` / `App::Fixed(w,h)` — one-liner app runners.
+
+**Interactive components:**
+- `Form` — fluent field builder: `Field`/`Password`/`Multiline`/`Check`/`Radio`/`Select`/`Integer`/`Float`/`Section`/`Submit`/`Cancel`.
+- `TextInput` — standalone input with label, validation, error message, char limit, password mode.
+- `DataTable<T>` — sortable, selectable, filterable interactive table.
+- `List<T>` — filterable item list with custom renderer and `Label()` extractor.
+- `Tree` — collapsible tree-view via `TreeNode::Leaf`/`Branch`.
+- `Router` — named view navigation with `Push`/`Pop`/`Replace` history stack.
+- `CommandPalette` — Ctrl+P fuzzy command launcher with categories.
+- `Wizard` — multi-step guided flow with progress indicator.
+- `FilePicker` — OS filesystem browser with filter, hidden-file toggle, keyboard navigation.
+
+**Overlays & dialogs:**
+- `WithConfirm` / `WithAlert` / `WithHelp` — overlay decorators.
+- `WithModal` — general-purpose centered modal with configurable button row.
+- `WithDrawer` — slide-in panel anchored to Left/Right/Bottom.
+- `Notification` / `WithNotifications` — thread-safe toast overlay with auto-dismiss.
+
+**Layout & widgets:**
+- `Panel`, `Row`, `Column`, `HSplit`, `VSplit`, `TabView`, `StatusBar`, `ScrollView`, `Labeled`.
+- `Grid(cols)` — auto-fill column grid with `Cell`/`CellComponent`, gap support.
+- `SimpleTable` — DOM table builder with alternate rows.
+- `Badge`, `EmptyState`, `LabeledSeparator`, `Kbd`, `StatusDot`.
+- `ThemedProgressBar`, `WithSpinner`.
+- `Sparkline` — inline braille mini-chart.
+
+**Charts (braille-rendered via `ftxui::Canvas`):**
+- `BrailleCanvas` — coordinate-system canvas with `Plot`/`Scatter`/`DrawFunction`/`Axes`/`Grid`.
+- `LineChart` — multi-series line chart with legend, auto-scaling.
+- `BarChart` — horizontal/vertical bar chart with value labels.
+- `ScatterPlot` — multi-series scatter chart.
+- `Histogram` — frequency distribution chart.
+
+**GeoJSON & terminal maps:**
+- `ParseGeoJSON` / `LoadGeoJSON` — zero-dependency GeoJSON parser (Point/LineString/Polygon/MultiPolygon/FeatureCollection).
+- `GeoMap` — braille terminal map renderer with Equirectangular/Mercator projection, graticule grid, zoom/pan, feature selection.
+
+**Config:**
+- `ConfigEditor` — persistent key-value settings editor (String/Int/Float/Bool fields, auto-load/save).
+- `Keymap` — `Bind("Ctrl+X", fn, "desc")` key registry with `.AsDecorator()` and `.HelpElement()`.
+
+**Tests:** 94+ unit tests in `src/ftxui/ui/` covering all major components.
+
+**Examples** (in `examples/ui/`):
+`form_demo`, `mvu_counter`, `mvu_todo`, `layout_demo`, `keymap_demo`, `state_demo`,
+`simple_table_demo`, `progress_demo`, `datatable_demo`, `list_demo`, `tree_demo`,
+`router_demo`, `command_palette_demo`, `notification_demo`, `wizard_demo`, `log_demo`,
+`filepicker_demo`, `config_demo`, `charts_demo`, `geomap_demo`, `showcase`, `new_features_demo`.
+
 ### Doc
 - Fix broken Doxygen output. See @markmandel in #1029.
 - Use Doxygen awesome. Add our own theme.
