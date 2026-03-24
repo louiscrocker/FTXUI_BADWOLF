@@ -79,13 +79,14 @@ class BrailleCanvas {
   float ymax_ = 1.f;
 
   /// Draw commands accumulated in order.
-  std::vector<std::function<void(ftxui::Canvas&)>> cmds_;
+  /// Each receives the canvas plus its actual dot dimensions at render time.
+  std::vector<std::function<void(ftxui::Canvas&, int w_dots, int h_dots)>> cmds_;
 
-  /// Map logical x → dot column  [0, w_chars_*2 - 1].
-  int ToPixX(float x) const;
+  /// Map logical x → dot column using supplied @p w_dots width.
+  int ToPixX(float x, int w_dots) const;
 
-  /// Map logical y → dot row     [0, h_chars_*4 - 1]  (y-axis flipped).
-  int ToPixY(float y) const;
+  /// Map logical y → dot row using supplied @p h_dots height (y-axis flipped).
+  int ToPixY(float y, int h_dots) const;
 };
 
 }  // namespace ftxui::ui

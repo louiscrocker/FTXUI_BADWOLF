@@ -157,8 +157,8 @@ Component LineChart::Build() {
     // The actual rendering size adapts at Render() time when using
     // canvas(fn) without explicit width/height, but we want a consistent
     // coordinate mapping so we pick reasonable defaults.
-    constexpr int kW = 80;
-    constexpr int kH = 20;
+    constexpr int kW = 20;
+    constexpr int kH = 8;
 
     BrailleCanvas bc(kW, kH);
 
@@ -360,8 +360,8 @@ Component ScatterPlot::Build() {
   bool show_grid = show_grid_;
 
   return Renderer([=]() -> Element {
-    constexpr int kW = 80;
-    constexpr int kH = 20;
+    constexpr int kW = 20;
+    constexpr int kH = 8;
 
     BrailleCanvas bc(kW, kH);
 
