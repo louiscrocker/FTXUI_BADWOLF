@@ -15,7 +15,8 @@
 
 namespace ftxui::ui {
 
-// ── Sparkline ─────────────────────────────────────────────────────────────────
+// ── Sparkline
+// ─────────────────────────────────────────────────────────────────
 
 /// @brief Inline braille mini-chart — renders a line graph in a single row.
 ///
@@ -27,10 +28,11 @@ namespace ftxui::ui {
 /// @param color        Line color.
 /// @ingroup ui
 ftxui::Element Sparkline(const std::vector<float>& values,
-                          int width_chars = 20,
-                          ftxui::Color color = ftxui::Color::Cyan);
+                         int width_chars = 20,
+                         ftxui::Color color = ftxui::Color::Cyan);
 
-// ── LineChart ─────────────────────────────────────────────────────────────────
+// ── LineChart
+// ─────────────────────────────────────────────────────────────────
 
 /// @brief Fluent builder for a braille line-chart component.
 ///
@@ -81,7 +83,8 @@ class LineChart {
   float ymax_ = 1.f;
 };
 
-// ── BarChart ──────────────────────────────────────────────────────────────────
+// ── BarChart
+// ──────────────────────────────────────────────────────────────────
 
 /// @brief Fluent builder for a bar-chart component.
 ///
@@ -114,7 +117,8 @@ class BarChart {
   float max_value_ = 0.f;
 };
 
-// ── ScatterPlot ───────────────────────────────────────────────────────────────
+// ── ScatterPlot
+// ───────────────────────────────────────────────────────────────
 
 /// @brief Fluent builder for a braille scatter-plot component.
 ///
@@ -144,7 +148,8 @@ class ScatterPlot {
   bool show_grid_ = true;
 };
 
-// ── Histogram ─────────────────────────────────────────────────────────────────
+// ── Histogram
+// ─────────────────────────────────────────────────────────────────
 
 /// @brief Fluent builder for a histogram component.
 ///

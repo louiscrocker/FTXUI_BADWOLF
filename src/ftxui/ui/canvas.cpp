@@ -60,16 +60,33 @@ BrailleCanvas& BrailleCanvas::AutoFit(
 BrailleCanvas& BrailleCanvas::Plot(
     const std::vector<std::pair<float, float>>& pts,
     ftxui::Color color) {
-  cmds_.push_back([this, pts, color](ftxui::Canvas& c, int w, int h) {
+  float xn = xmin_, xx = xmax_, yn = ymin_, yx = ymax_;
+  cmds_.push_back([pts, color, xn, xx, yn, yx](ftxui::Canvas& c, int w, int h) {
+    auto px = [&](float x) {
+      if (xx == xn) {
+        return w / 2;
+      }
+      int v = static_cast<int>(
+          (x - xn) / (xx - xn) * static_cast<float>(w - 1) + 0.5f);
+      return std::max(0, std::min(w - 1, v));
+    };
+    auto py = [&](float y) {
+      if (yx == yn) {
+        return h / 2;
+      }
+      int v = static_cast<int>(
+          (1.f - (y - yn) / (yx - yn)) * static_cast<float>(h - 1) + 0.5f);
+      return std::max(0, std::min(h - 1, v));
+    };
     if (pts.size() < 2) {
       for (const auto& [x, y] : pts) {
-        c.DrawPoint(ToPixX(x, w), ToPixY(y, h), true, color);
+        c.DrawPoint(px(x), py(y), true, color);
       }
       return;
     }
     for (size_t i = 1; i < pts.size(); ++i) {
-      c.DrawPointLine(ToPixX(pts[i - 1].first, w), ToPixY(pts[i - 1].second, h),
-                      ToPixX(pts[i].first, w), ToPixY(pts[i].second, h), color);
+      c.DrawPointLine(px(pts[i - 1].first), py(pts[i - 1].second),
+                      px(pts[i].first), py(pts[i].second), color);
     }
   });
   return *this;
@@ -78,24 +95,40 @@ BrailleCanvas& BrailleCanvas::Plot(
 BrailleCanvas& BrailleCanvas::Scatter(
     const std::vector<std::pair<float, float>>& pts,
     ftxui::Color color) {
-  cmds_.push_back([this, pts, color](ftxui::Canvas& c, int w, int h) {
+  float xn = xmin_, xx = xmax_, yn = ymin_, yx = ymax_;
+  cmds_.push_back([pts, color, xn, xx, yn, yx](ftxui::Canvas& c, int w, int h) {
+    auto px = [&](float x) {
+      if (xx == xn) {
+        return w / 2;
+      }
+      int v = static_cast<int>(
+          (x - xn) / (xx - xn) * static_cast<float>(w - 1) + 0.5f);
+      return std::max(0, std::min(w - 1, v));
+    };
+    auto py = [&](float y) {
+      if (yx == yn) {
+        return h / 2;
+      }
+      int v = static_cast<int>(
+          (1.f - (y - yn) / (yx - yn)) * static_cast<float>(h - 1) + 0.5f);
+      return std::max(0, std::min(h - 1, v));
+    };
     for (const auto& [x, y] : pts) {
-      int px = ToPixX(x, w);
-      int py = ToPixY(y, h);
-      c.DrawPoint(px, py, true, color);
-      // Draw a small cross for visibility.
-      c.DrawPoint(px - 1, py, true, color);
-      c.DrawPoint(px + 1, py, true, color);
-      c.DrawPoint(px, py - 1, true, color);
-      c.DrawPoint(px, py + 1, true, color);
+      int ppx = px(x);
+      int ppy = py(y);
+      c.DrawPoint(ppx, ppy, true, color);
+      c.DrawPoint(ppx - 1, ppy, true, color);
+      c.DrawPoint(ppx + 1, ppy, true, color);
+      c.DrawPoint(ppx, ppy - 1, true, color);
+      c.DrawPoint(ppx, ppy + 1, true, color);
     }
   });
   return *this;
 }
 
 BrailleCanvas& BrailleCanvas::DrawFunction(std::function<float(float)> fn,
-                                            int samples,
-                                            ftxui::Color color) {
+                                           int samples,
+                                           ftxui::Color color) {
   std::vector<std::pair<float, float>> pts;
   pts.reserve(samples);
   for (int i = 0; i < samples; ++i) {
@@ -108,16 +141,26 @@ BrailleCanvas& BrailleCanvas::DrawFunction(std::function<float(float)> fn,
 }
 
 BrailleCanvas& BrailleCanvas::HLine(float y, ftxui::Color color) {
-  cmds_.push_back([this, y, color](ftxui::Canvas& c, int w, int h) {
-    int py = ToPixY(y, h);
+  float yn = ymin_, yx = ymax_;
+  cmds_.push_back([y, color, yn, yx](ftxui::Canvas& c, int w, int h) {
+    int py = (yx == yn) ? h / 2
+                        : static_cast<int>((1.f - (y - yn) / (yx - yn)) *
+                                               static_cast<float>(h - 1) +
+                                           0.5f);
+    py = std::max(0, std::min(h - 1, py));
     c.DrawPointLine(0, py, w - 1, py, color);
   });
   return *this;
 }
 
 BrailleCanvas& BrailleCanvas::VLine(float x, ftxui::Color color) {
-  cmds_.push_back([this, x, color](ftxui::Canvas& c, int w, int h) {
-    int px = ToPixX(x, w);
+  float xn = xmin_, xx = xmax_;
+  cmds_.push_back([x, color, xn, xx](ftxui::Canvas& c, int w, int h) {
+    int px = (xx == xn)
+                 ? w / 2
+                 : static_cast<int>(
+                       (x - xn) / (xx - xn) * static_cast<float>(w - 1) + 0.5f);
+    px = std::max(0, std::min(w - 1, px));
     c.DrawPointLine(px, 0, px, h - 1, color);
   });
   return *this;
@@ -134,8 +177,8 @@ BrailleCanvas& BrailleCanvas::Axes(ftxui::Color color) {
 }
 
 BrailleCanvas& BrailleCanvas::Grid(int h_lines,
-                                    int v_lines,
-                                    ftxui::Color color) {
+                                   int v_lines,
+                                   ftxui::Color color) {
   // Horizontal grid lines
   for (int i = 0; i <= h_lines; ++i) {
     float t = static_cast<float>(i) / static_cast<float>(h_lines);
@@ -169,25 +212,6 @@ ftxui::Element BrailleCanvas::Render() const {
       cmd(c, w, h);
     }
   });
-}
-
-int BrailleCanvas::ToPixX(float x, int w_dots) const {
-  if (xmax_ == xmin_) {
-    return w_dots / 2;
-  }
-  float t = (x - xmin_) / (xmax_ - xmin_);
-  int px = static_cast<int>(t * static_cast<float>(w_dots - 1) + 0.5f);
-  return std::max(0, std::min(w_dots - 1, px));
-}
-
-int BrailleCanvas::ToPixY(float y, int h_dots) const {
-  if (ymax_ == ymin_) {
-    return h_dots / 2;
-  }
-  // Flip: logical ymax maps to dot row 0 (top), ymin maps to dot row h-1 (bot)
-  float t = (y - ymin_) / (ymax_ - ymin_);
-  int py = static_cast<int>((1.f - t) * static_cast<float>(h_dots - 1) + 0.5f);
-  return std::max(0, std::min(h_dots - 1, py));
 }
 
 }  // namespace ftxui::ui

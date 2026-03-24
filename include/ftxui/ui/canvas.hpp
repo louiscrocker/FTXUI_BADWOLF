@@ -47,16 +47,14 @@ class BrailleCanvas {
 
   /// Sample @p fn over the current domain and draw as a line.
   BrailleCanvas& DrawFunction(std::function<float(float)> fn,
-                               int samples = 300,
-                               ftxui::Color color = ftxui::Color::Cyan);
+                              int samples = 300,
+                              ftxui::Color color = ftxui::Color::Cyan);
 
   /// Draw a horizontal line at logical y value.
-  BrailleCanvas& HLine(float y,
-                       ftxui::Color color = ftxui::Color::GrayDark);
+  BrailleCanvas& HLine(float y, ftxui::Color color = ftxui::Color::GrayDark);
 
   /// Draw a vertical line at logical x value.
-  BrailleCanvas& VLine(float x,
-                       ftxui::Color color = ftxui::Color::GrayDark);
+  BrailleCanvas& VLine(float x, ftxui::Color color = ftxui::Color::GrayDark);
 
   /// Draw x-axis and y-axis through (0,0), clamped to the canvas edges.
   BrailleCanvas& Axes(ftxui::Color color = ftxui::Color::GrayLight);
@@ -80,13 +78,8 @@ class BrailleCanvas {
 
   /// Draw commands accumulated in order.
   /// Each receives the canvas plus its actual dot dimensions at render time.
-  std::vector<std::function<void(ftxui::Canvas&, int w_dots, int h_dots)>> cmds_;
-
-  /// Map logical x → dot column using supplied @p w_dots width.
-  int ToPixX(float x, int w_dots) const;
-
-  /// Map logical y → dot row using supplied @p h_dots height (y-axis flipped).
-  int ToPixY(float y, int h_dots) const;
+  std::vector<std::function<void(ftxui::Canvas&, int w_dots, int h_dots)>>
+      cmds_;
 };
 
 }  // namespace ftxui::ui

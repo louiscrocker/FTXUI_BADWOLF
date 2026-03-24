@@ -53,11 +53,12 @@ std::vector<std::pair<float, float>> AllPoints(
 
 }  // namespace
 
-// ── Sparkline ─────────────────────────────────────────────────────────────────
+// ── Sparkline
+// ─────────────────────────────────────────────────────────────────
 
 Element Sparkline(const std::vector<float>& values,
-                   int width_chars,
-                   Color color) {
+                  int width_chars,
+                  Color color) {
   if (values.empty()) {
     return text(std::string(static_cast<size_t>(width_chars), ' '));
   }
@@ -74,11 +75,12 @@ Element Sparkline(const std::vector<float>& values,
   return bc.Render();
 }
 
-// ── LineChart ─────────────────────────────────────────────────────────────────
+// ── LineChart
+// ─────────────────────────────────────────────────────────────────
 
 LineChart& LineChart::Series(std::string label,
-                              std::vector<float> values,
-                              Color color) {
+                             std::vector<float> values,
+                             Color color) {
   std::vector<std::pair<float, float>> pts;
   pts.reserve(values.size());
   for (size_t i = 0; i < values.size(); ++i) {
@@ -88,8 +90,8 @@ LineChart& LineChart::Series(std::string label,
 }
 
 LineChart& LineChart::Series(std::string label,
-                              std::vector<std::pair<float, float>> points,
-                              Color color) {
+                             std::vector<std::pair<float, float>> points,
+                             Color color) {
   series_.push_back({std::move(label), std::move(points), color});
   return *this;
 }
@@ -204,8 +206,7 @@ Component LineChart::Build() {
     // Compose the full element.
     Elements rows;
     if (!title.empty()) {
-      rows.push_back(text(title) | bold | hcenter |
-                     color(GetTheme().primary));
+      rows.push_back(text(title) | bold | hcenter | color(GetTheme().primary));
     }
 
     Element main_row = chart_elem | flex;
@@ -216,11 +217,8 @@ Component LineChart::Build() {
         legend_col.push_back(e);
       }
       legend_col.push_back(filler());
-      main_row =
-          hbox({chart_elem | flex,
-                separatorEmpty(),
-                vbox(std::move(legend_col)) |
-                    size(WIDTH, EQUAL, 16)});
+      main_row = hbox({chart_elem | flex, separatorEmpty(),
+                       vbox(std::move(legend_col)) | size(WIDTH, EQUAL, 16)});
     }
     rows.push_back(main_row | flex);
 
@@ -238,7 +236,8 @@ Component LineChart::Build() {
   });
 }
 
-// ── BarChart ──────────────────────────────────────────────────────────────────
+// ── BarChart
+// ──────────────────────────────────────────────────────────────────
 
 BarChart& BarChart::Bar(std::string label, float value, Color color) {
   bars_.push_back({std::move(label), value, color});
@@ -289,8 +288,7 @@ Component BarChart::Build() {
 
     Elements rows;
     if (!title.empty()) {
-      rows.push_back(text(title) | bold | hcenter |
-                     color(GetTheme().primary));
+      rows.push_back(text(title) | bold | hcenter | color(GetTheme().primary));
       rows.push_back(separatorEmpty());
     }
 
@@ -315,7 +313,7 @@ Component BarChart::Build() {
         // (We still use a gauge-based column for simplicity.)
         rows.push_back(hbox({
             text(bars[i].label) | size(WIDTH, EQUAL, 8),
-            text(" ") ,
+            text(" "),
             gauge(ratio) | color(c) | flex,
             show_values
                 ? (text(" " + std::to_string(static_cast<int>(bars[i].value))) |
@@ -329,11 +327,12 @@ Component BarChart::Build() {
   });
 }
 
-// ── ScatterPlot ───────────────────────────────────────────────────────────────
+// ── ScatterPlot
+// ───────────────────────────────────────────────────────────────
 
 ScatterPlot& ScatterPlot::Series(std::string label,
-                                  std::vector<std::pair<float, float>> points,
-                                  Color color) {
+                                 std::vector<std::pair<float, float>> points,
+                                 Color color) {
   series_.push_back({std::move(label), std::move(points), color});
   return *this;
 }
@@ -396,8 +395,7 @@ Component ScatterPlot::Build() {
 
     Elements rows;
     if (!title.empty()) {
-      rows.push_back(text(title) | bold | hcenter |
-                     color(GetTheme().primary));
+      rows.push_back(text(title) | bold | hcenter | color(GetTheme().primary));
     }
 
     Element main_row = chart_elem | flex;
@@ -408,8 +406,7 @@ Component ScatterPlot::Build() {
         legend_col.push_back(e);
       }
       legend_col.push_back(filler());
-      main_row = hbox({chart_elem | flex,
-                       separatorEmpty(),
+      main_row = hbox({chart_elem | flex, separatorEmpty(),
                        vbox(std::move(legend_col)) | size(WIDTH, EQUAL, 14)});
     }
     rows.push_back(main_row | flex);
@@ -418,7 +415,8 @@ Component ScatterPlot::Build() {
   });
 }
 
-// ── Histogram ─────────────────────────────────────────────────────────────────
+// ── Histogram
+// ─────────────────────────────────────────────────────────────────
 
 Histogram& Histogram::Data(std::vector<float> values) {
   data_ = std::move(values);
@@ -470,7 +468,8 @@ Component Histogram::Build() {
       max_count = 1;
     }
 
-    ftxui::Color resolved = (bar_col == ftxui::Color::Default) ? GetTheme().primary : bar_col;
+    ftxui::Color resolved =
+        (bar_col == ftxui::Color::Default) ? GetTheme().primary : bar_col;
 
     Elements rows;
     if (!title.empty()) {
@@ -481,16 +480,14 @@ Component Histogram::Build() {
 
     for (int i = 0; i < bins; ++i) {
       float bin_lo = lo + static_cast<float>(i) * step;
-      float ratio =
-          static_cast<float>(counts[static_cast<size_t>(i)]) /
-          static_cast<float>(max_count);
+      float ratio = static_cast<float>(counts[static_cast<size_t>(i)]) /
+                    static_cast<float>(max_count);
 
       char label_buf[16];
       std::snprintf(label_buf, sizeof(label_buf), "%6.1f", bin_lo);
 
       rows.push_back(hbox({
-          text(std::string(label_buf)) | dim |
-              size(WIDTH, EQUAL, 7),
+          text(std::string(label_buf)) | dim | size(WIDTH, EQUAL, 7),
           text(" │") | dim,
           gauge(ratio) | ftxui::color(resolved) | flex,
           text(" " + std::to_string(counts[static_cast<size_t>(i)])) |

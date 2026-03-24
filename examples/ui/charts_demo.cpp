@@ -24,7 +24,8 @@ using namespace ftxui::ui;
 
 static constexpr float kPi = 3.14159265f;
 
-// ── LineChart — trigonometric functions ───────────────────────────────────────
+// ── LineChart — trigonometric functions
+// ───────────────────────────────────────
 
 Component MakeLineChart() {
   std::vector<std::pair<float, float>> sin_pts, cos_pts, tan_pts;
@@ -57,7 +58,8 @@ Component MakeLineChart() {
       .Build();
 }
 
-// ── BarChart — monthly revenue ────────────────────────────────────────────────
+// ── BarChart — monthly revenue
+// ────────────────────────────────────────────────
 
 Component MakeBarChart() {
   return BarChart()
@@ -73,7 +75,8 @@ Component MakeBarChart() {
       .Build();
 }
 
-// ── ScatterPlot — two clusters ────────────────────────────────────────────────
+// ── ScatterPlot — two clusters
+// ────────────────────────────────────────────────
 
 Component MakeScatterPlot() {
   // Cluster A — centred at (2, 3)
@@ -118,17 +121,16 @@ Component MakeHistogram() {
       .Build();
 }
 
-// ── Sparkline strip ───────────────────────────────────────────────────────────
+// ── Sparkline strip
+// ───────────────────────────────────────────────────────────
 
 Element MakeSparklineRow() {
-  std::vector<float> cpu = {0.4f, 0.5f, 0.6f, 0.7f, 0.5f, 0.8f,
-                             0.9f, 0.6f, 0.4f, 0.5f, 0.3f, 0.7f,
-                             0.6f, 0.8f, 0.7f, 0.5f, 0.4f, 0.6f,
-                             0.9f, 0.7f};
-  std::vector<float> mem = {0.6f, 0.6f, 0.7f, 0.7f, 0.7f, 0.8f,
-                             0.8f, 0.8f, 0.9f, 0.9f, 0.9f, 0.9f,
-                             0.8f, 0.8f, 0.7f, 0.7f, 0.8f, 0.8f,
-                             0.9f, 0.9f};
+  std::vector<float> cpu = {0.4f, 0.5f, 0.6f, 0.7f, 0.5f, 0.8f, 0.9f,
+                            0.6f, 0.4f, 0.5f, 0.3f, 0.7f, 0.6f, 0.8f,
+                            0.7f, 0.5f, 0.4f, 0.6f, 0.9f, 0.7f};
+  std::vector<float> mem = {0.6f, 0.6f, 0.7f, 0.7f, 0.7f, 0.8f, 0.8f,
+                            0.8f, 0.9f, 0.9f, 0.9f, 0.9f, 0.8f, 0.8f,
+                            0.7f, 0.7f, 0.8f, 0.8f, 0.9f, 0.9f};
 
   return hbox({
       text("CPU: ") | dim,
@@ -138,7 +140,8 @@ Element MakeSparklineRow() {
   });
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────────
+// ── Main
+// ──────────────────────────────────────────────────────────────────────
 
 int main() {
   auto line_chart = MakeLineChart();
@@ -159,16 +162,18 @@ int main() {
 
   auto root = Renderer(grid_c, [&]() -> Element {
     return vbox({
-        text("  ftxui::ui  Chart Suite Demo") | bold | hcenter |
-            color(GetTheme().primary),
-        separatorEmpty(),
-        hbox({top_left->Render() | flex, top_right->Render() | flex}) | flex,
-        hbox({bot_left->Render() | flex, bot_right->Render() | flex}) | flex,
-        separator(),
-        MakeSparklineRow() | hcenter,
-        text("press  q / Ctrl-C  to quit") | dim | hcenter,
-    }) |
-        flex;
+               text("  ftxui::ui  Chart Suite Demo") | bold | hcenter |
+                   color(GetTheme().primary),
+               separatorEmpty(),
+               hbox({top_left->Render() | flex, top_right->Render() | flex}) |
+                   flex,
+               hbox({bot_left->Render() | flex, bot_right->Render() | flex}) |
+                   flex,
+               separator(),
+               MakeSparklineRow() | hcenter,
+               text("press  q / Ctrl-C  to quit") | dim | hcenter,
+           }) |
+           flex;
   });
 
   // Handle 'q' to quit.
