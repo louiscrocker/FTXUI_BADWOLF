@@ -75,5 +75,6 @@
 #include "ftxui/ui/wizard.hpp"
 #include "ftxui/ui/geojson.hpp"
 #include "ftxui/ui/geomap.hpp"
+#include "ftxui/ui/world_map_data.hpp"
 
 #endif  // FTXUI_UI_HPP

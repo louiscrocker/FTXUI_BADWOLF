@@ -208,6 +208,8 @@ add_library(ui
   include/ftxui/ui/geomap.hpp
   src/ftxui/ui/geojson.cpp
   src/ftxui/ui/geomap.cpp
+  include/ftxui/ui/world_map_data.hpp
+  src/ftxui/ui/world_map_data.cpp
   include/ftxui/ui/filepicker.hpp
   include/ftxui/ui/config_editor.hpp
   src/ftxui/ui/filepicker.cpp

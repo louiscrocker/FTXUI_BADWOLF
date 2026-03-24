@@ -23,3 +23,11 @@ example(showcase)
 example(new_features_demo)
 example(geomap_demo)
 example(world_ops_demo)
+
+# Copy world map GeoJSON data next to the binary at build time so examples
+# can locate it at runtime via their relative-path search.
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/world_ne110m.geojson"
+  "${CMAKE_CURRENT_BINARY_DIR}/world_ne110m.geojson"
+  COPYONLY
+)

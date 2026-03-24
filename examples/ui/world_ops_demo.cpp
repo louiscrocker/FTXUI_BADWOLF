@@ -45,46 +45,67 @@
 #include "ftxui/ui/log_panel.hpp"
 #include "ftxui/ui/notification.hpp"
 #include "ftxui/ui/theme.hpp"
-
-#include <filesystem>
-#include <fstream>
+#include "ftxui/ui/world_map_data.hpp"
 
 using namespace ftxui;
 using namespace ftxui::ui;
 
-// ── World GeoJSON ─────────────────────────────────────────────────────────────
-// Looks for world_ne110m.geojson next to the binary (or in the working dir).
-// Falls back to a minimal inline dataset if not found.
 
-static std::string FindGeoJSONPath() {
-  // Search relative to binary location, cwd, and common build paths
-  std::vector<std::string> candidates = {
-      "world_ne110m.geojson",
-      "examples/ui/world_ne110m.geojson",
-      "../examples/ui/world_ne110m.geojson",
-      "../../examples/ui/world_ne110m.geojson",
-  };
-  for (const auto& p : candidates) {
-    if (std::filesystem::exists(p)) return p;
+// ── City / Target data ────────────────────────────────────────────────────────
+// Derived from WOPR WorldMapView — normalized coords (x,y) where:
+//   lon = x*360 - 180,  lat = 90 - y*180
+
+struct CityTarget {
+  double lon, lat;
+  const char* name;
+  int type;  // 0=US, 1=USSR, 2=Allied, 3=Base
+};
+
+static const CityTarget kCities[] = {
+    // US
+    {-127.8, 36.9, "LOS ANGELES",    0},
+    {-122.4, 44.1, "SAN FRANCISCO",  0},
+    {-115.2, 49.5, "SEATTLE",        0},
+    { -99.0, 45.0, "CHICAGO",        0},
+    { -84.6, 38.7, "WASHINGTON DC",  0},
+    { -81.0, 42.3, "NEW YORK",       0},
+    { -90.0, 36.0, "HOUSTON",        0},
+    // USSR
+    {  34.2, 58.5, "MOSCOW",         1},
+    {  27.0, 63.0, "LENINGRAD",      1},
+    {  77.4, 57.6, "NOVOSIBIRSK",    1},
+    { 102.6, 55.8, "IRKUTSK",        1},
+    { 133.2, 54.9, "VLADIVOSTOK",    1},
+    // Allied
+    {   0.0, 54.0, "LONDON",         2},
+    {   2.2, 51.3, "PARIS",          2},
+    {  13.3, 54.9, "BERLIN",         2},
+    { 116.3, 41.4, "BEIJING",        2},
+    { 139.7, 36.9, "TOKYO",          2},
+    // Bases
+    {-108.0, 43.2, "NORAD",          3},
+    { -79.2, 64.8, "THULE AB",       3},
+    {  14.4, 69.3, "RAF FYLINGDALES", 3},
+};
+static constexpr int kCityCount = 20;
+
+// Build a GeoCollection with city Points for map overlay.
+// Types: 0=US (cyan), 1=USSR (red), 2=Allied (yellow), 3=Base (magenta)
+static GeoCollection MakeCityCollection() {
+  GeoCollection col;
+  for (int i = 0; i < kCityCount; ++i) {
+    const auto& c = kCities[i];
+    GeoFeature feat;
+    feat.geometry.type = "Point";
+    feat.geometry.points.push_back({c.lon, c.lat});
+    feat.properties["name"] = c.name;
+    feat.properties["city_type"] = std::to_string(c.type);
+    col.features.push_back(std::move(feat));
   }
-  return {};
+  col.min_lon = -180; col.max_lon = 180;
+  col.min_lat =  -90; col.max_lat =  90;
+  return col;
 }
-
-static const char kFallbackGeoJSON[] = R"GEO({
-"type":"FeatureCollection",
-"features":[
-  {"type":"Feature","properties":{"name":"Americas","type":"coastline"},"geometry":{"type":"Polygon","coordinates":[[
-    [-125,49],[-95,49],[-75,45],[-67,47],[-70,43],[-77,35],[-81,25],[-97,26],
-    [-105,22],[-117,32],[-124,36],[-125,49]]]}},
-  {"type":"Feature","properties":{"name":"Europe","type":"coastline"},"geometry":{"type":"Polygon","coordinates":[[
-    [-10,36],[36,36],[36,70],[-10,70],[-10,36]]]}},
-  {"type":"Feature","properties":{"name":"Asia","type":"coastline"},"geometry":{"type":"Polygon","coordinates":[[
-    [26,70],[180,70],[180,-10],[100,-10],[60,20],[36,36],[36,70],[26,70]]]}},
-  {"type":"Feature","properties":{"name":"Africa","type":"coastline"},"geometry":{"type":"Polygon","coordinates":[[
-    [-18,37],[51,37],[51,-35],[-18,-35],[-18,37]]]}},
-  {"type":"Feature","properties":{"name":"Australia","type":"coastline"},"geometry":{"type":"Polygon","coordinates":[[
-    [114,-22],[154,-22],[154,-38],[114,-38],[114,-22]]]}}
-]})GEO";
 
 // ── Node / Region data model ──────────────────────────────────────────────────
 
@@ -451,16 +472,29 @@ int main() {
   g_log->Info("Monitoring " + std::to_string(g_regions.size()) + " regions");
   g_log->Debug("Background metrics refresh: 750ms");
 
-  // ── Load GeoJSON ──────────────────────────────────────────────────────────
-  std::string geo_path = FindGeoJSONPath();
+  // ── Load GeoJSON (embedded — always available, no file dependency) ──────────
   GeoMap map_builder;
-  if (!geo_path.empty()) {
-    map_builder.LoadFile(geo_path);
-    g_log->Info("Map: Natural Earth 110m  (" + geo_path + ")");
-  } else {
-    map_builder.Data(kFallbackGeoJSON);
-    g_log->Warn("Map: world_ne110m.geojson not found — using fallback");
-  }
+  map_builder.Data(WorldMapGeoJSON());
+  g_log->Info("Map: Natural Earth 110m (embedded, 461 features)");
+
+  // ── City overlay: US=cyan, USSR=red, Allied=yellow, Bases=magenta ────────
+  auto cities_col = MakeCityCollection();
+  map_builder.Overlay(cities_col, Color::Cyan);
+
+  // ── Missile arc trajectories (great-circle, DEFCON-style) ────────────────
+  // Washington DC → Moscow
+  map_builder.AddArc(-84.6, 38.7, 34.2, 58.5, Color::Red, 48);
+  // NORAD → Leningrad
+  map_builder.AddArc(-108.0, 43.2, 27.0, 63.0, Color{220, 80, 80}, 48);
+  // Vladivostok → Seattle
+  map_builder.AddArc(133.2, 54.9, -115.2, 49.5, Color{220, 80, 80}, 48);
+  // London → Moscow (retaliation arc)
+  map_builder.AddArc(0.0, 54.0, 34.2, 58.5, Color{255, 140, 0}, 32);
+  // Beijing → Tokyo (regional)
+  map_builder.AddArc(116.3, 41.4, 139.7, 36.9, Color{200, 100, 50}, 24);
+
+  g_log->Warn("DEFCON 3 — 5 missile trajectories plotted");
+  g_log->Debug("Great-circle arcs: DC→Moscow, NORAD→Leningrad, Vlad→Seattle");
 
   // ── GeoMap ────────────────────────────────────────────────────────────────
   auto map = map_builder

@@ -28,6 +28,8 @@ enum class Projection {
 ///     .SetProjection(Projection::Mercator)
 ///     .LineColor(Color::Green)
 ///     .ShowGraticule(true)
+///     .Overlay(cities, Color::Yellow)           // city markers
+///     .AddArc(-77, 38.9, 37.6, 55.75, Color::Red) // missile arc DC→Moscow
 ///     .OnSelect([](const GeoFeature& f){ /* ... */ })
 ///     .Build();
 /// @endcode
@@ -46,6 +48,15 @@ class GeoMap {
   GeoMap& ShowGraticule(bool v = true);
   GeoMap& GraticuleStep(float degrees = 30.0f);
   GeoMap& OnSelect(std::function<void(const GeoFeature&)> fn);
+
+  /// Draw an additional GeoCollection on top of the base map with a
+  /// custom color.  Call multiple times to stack overlays.
+  GeoMap& Overlay(const GeoCollection& col, ftxui::Color color);
+
+  /// Draw a great-circle arc between two (lon,lat) positions.
+  /// @param steps  number of interpolation segments (default 32)
+  GeoMap& AddArc(double lon1, double lat1, double lon2, double lat2,
+                 ftxui::Color color, int steps = 32);
 
   ftxui::Component Build();
 

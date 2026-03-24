@@ -61,3 +61,11 @@ install(
   FILES "${CMAKE_CURRENT_BINARY_DIR}/ftxui.pc"
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
   )
+
+# ------------------------------------------------------------------------------
+# Install GeoJSON data files (world map and example data)
+# ------------------------------------------------------------------------------
+install(
+  FILES "${CMAKE_CURRENT_SOURCE_DIR}/examples/ui/world_ne110m.geojson"
+  DESTINATION "${CMAKE_INSTALL_DATADIR}/ftxui"
+  )

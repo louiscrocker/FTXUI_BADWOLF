@@ -10,6 +10,7 @@
 #include <memory>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include "ftxui/component/component.hpp"
 #include "ftxui/component/event.hpp"
@@ -25,6 +26,23 @@ namespace ftxui::ui {
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 static constexpr double kPi = 3.14159265358979323846;
+static constexpr double kDeg2Rad = kPi / 180.0;
+static constexpr double kRad2Deg = 180.0 / kPi;
+
+// ── Arc definition ────────────────────────────────────────────────────────────
+
+struct ArcDef {
+  double lon1, lat1, lon2, lat2;
+  ftxui::Color color;
+  int steps;
+};
+
+// ── Overlay definition ────────────────────────────────────────────────────────
+
+struct MapOverlay {
+  GeoCollection collection;
+  ftxui::Color color;
+};
 
 // ── Impl ──────────────────────────────────────────────────────────────────────
 
@@ -37,6 +55,9 @@ struct GeoMap::Impl {
   bool show_graticule_ = false;
   float graticule_step_ = 30.0f;
   std::function<void(const GeoFeature&)> on_select_;
+
+  std::vector<MapOverlay> overlays_;
+  std::vector<ArcDef> arcs_;
 
   // Pan / zoom state
   double pan_lon_ = 0.0;
@@ -56,11 +77,15 @@ struct GeoMap::Impl {
                 const std::function<std::pair<int,int>(double,double)>& project,
                 ftxui::Color col) const;
 
+  // Draw a great-circle arc between two lon/lat positions.
+  void DrawArc(ftxui::Canvas& c, const ArcDef& arc,
+               const std::function<std::pair<int,int>(double,double)>& project) const;
+
   // Draw all features onto an existing Canvas (uses c.width()/c.height()).
   void DrawOnto(ftxui::Canvas& c);
 
   static double MercY(double lat_deg) {
-    double rad = lat_deg * kPi / 180.0;
+    double rad = lat_deg * kDeg2Rad;
     if (rad > 1.4835) rad = 1.4835;   // clamp ~85°
     if (rad < -1.4835) rad = -1.4835;
     return std::log(std::tan(kPi / 4.0 + rad / 2.0));
@@ -114,6 +139,63 @@ void GeoMap::Impl::DrawRing(
   auto [x1, y1] = project(ring.back().lon, ring.back().lat);
   auto [x2, y2] = project(ring.front().lon, ring.front().lat);
   c.DrawPointLine(x1, y1, x2, y2, col);
+}
+
+// ── Great-circle arc drawing ──────────────────────────────────────────────────
+
+void GeoMap::Impl::DrawArc(
+    ftxui::Canvas& c, const ArcDef& arc,
+    const std::function<std::pair<int,int>(double,double)>& project) const {
+  // Convert lon/lat → unit 3D vector on unit sphere
+  auto toVec = [](double lon_deg, double lat_deg,
+                  double& x, double& y, double& z) {
+    double lon = lon_deg * kDeg2Rad;
+    double lat = lat_deg * kDeg2Rad;
+    x = std::cos(lat) * std::cos(lon);
+    y = std::cos(lat) * std::sin(lon);
+    z = std::sin(lat);
+  };
+
+  double x1, y1, z1, x2, y2, z2;
+  toVec(arc.lon1, arc.lat1, x1, y1, z1);
+  toVec(arc.lon2, arc.lat2, x2, y2, z2);
+
+  // Great-circle slerp: interpolate on sphere surface
+  double dot = x1*x2 + y1*y2 + z1*z2;
+  if (dot > 1.0) dot = 1.0;
+  if (dot < -1.0) dot = -1.0;
+  double omega = std::acos(dot);
+
+  int prev_px = -1, prev_py = -1;
+  const int steps = std::max(arc.steps, 2);
+
+  for (int i = 0; i <= steps; ++i) {
+    double t = static_cast<double>(i) / steps;
+
+    double ix, iy, iz;
+    if (std::abs(omega) < 1e-10) {
+      ix = x1; iy = y1; iz = z1;
+    } else {
+      double s = std::sin(omega);
+      ix = (std::sin((1-t)*omega)/s)*x1 + (std::sin(t*omega)/s)*x2;
+      iy = (std::sin((1-t)*omega)/s)*y1 + (std::sin(t*omega)/s)*y2;
+      iz = (std::sin((1-t)*omega)/s)*z1 + (std::sin(t*omega)/s)*z2;
+    }
+
+    double lon = std::atan2(iy, ix) * kRad2Deg;
+    double lat = std::asin(std::max(-1.0, std::min(1.0, iz))) * kRad2Deg;
+
+    auto [px, py] = project(lon, lat);
+
+    if (prev_px >= 0) {
+      // Skip wrap-around segments (> 180° longitude jump)
+      if (std::abs(px - prev_px) < c.width() / 2) {
+        c.DrawPointLine(prev_px, prev_py, px, py, arc.color);
+      }
+    }
+    prev_px = px;
+    prev_py = py;
+  }
 }
 
 // ── Canvas rendering ──────────────────────────────────────────────────────────
@@ -199,6 +281,38 @@ void GeoMap::Impl::DrawOnto(ftxui::Canvas& c) {
         for (const auto& ring : poly)
           DrawRing(c, ring, project, line_color_);
     }
+  }
+
+  // Draw overlays (city markers, custom feature layers)
+  for (const auto& ov : overlays_) {
+    for (const auto& feat : ov.collection.features) {
+      const auto& geom = feat.geometry;
+      if (geom.type == "Point" || geom.type == "MultiPoint") {
+        for (const auto& pt : geom.points) {
+          auto [x, y] = project(pt.lon, pt.lat);
+          // Draw a 3-dot cross marker for each point
+          c.DrawPoint(x,     y,     true, ov.color);
+          c.DrawPoint(x + 1, y,     true, ov.color);
+          c.DrawPoint(x - 1, y,     true, ov.color);
+          c.DrawPoint(x,     y + 1, true, ov.color);
+          c.DrawPoint(x,     y - 1, true, ov.color);
+        }
+      } else if (geom.type == "LineString" || geom.type == "MultiLineString") {
+        for (size_t i = 0; i + 1 < geom.points.size(); ++i) {
+          auto [x1, y1] = project(geom.points[i].lon, geom.points[i].lat);
+          auto [x2, y2] = project(geom.points[i+1].lon, geom.points[i+1].lat);
+          c.DrawPointLine(x1, y1, x2, y2, ov.color);
+        }
+      } else if (geom.type == "Polygon") {
+        for (const auto& ring : geom.rings)
+          DrawRing(c, ring, project, ov.color);
+      }
+    }
+  }
+
+  // Draw great-circle arcs (missile trajectories, flight routes)
+  for (const auto& arc : arcs_) {
+    DrawArc(c, arc, project);
   }
 
   // Crosshair when zoomed in
@@ -344,6 +458,17 @@ GeoMap& GeoMap::GraticuleStep(float degrees) {
 
 GeoMap& GeoMap::OnSelect(std::function<void(const GeoFeature&)> fn) {
   impl_->on_select_ = std::move(fn);
+  return *this;
+}
+
+GeoMap& GeoMap::Overlay(const GeoCollection& col, ftxui::Color color) {
+  impl_->overlays_.push_back(MapOverlay{col, color});
+  return *this;
+}
+
+GeoMap& GeoMap::AddArc(double lon1, double lat1, double lon2, double lat2,
+                        ftxui::Color color, int steps) {
+  impl_->arcs_.push_back({lon1, lat1, lon2, lat2, color, steps});
   return *this;
 }
 
