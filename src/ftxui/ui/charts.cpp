@@ -155,14 +155,9 @@ Component LineChart::Build() {
   float ymin = ymin_, ymax = ymax_;
 
   return Renderer([=]() -> Element {
-    // Canvas occupies most of the cell — we use a fixed size that looks good.
-    // The actual rendering size adapts at Render() time when using
-    // canvas(fn) without explicit width/height, but we want a consistent
-    // coordinate mapping so we pick reasonable defaults.
-    constexpr int kW = 20;
-    constexpr int kH = 8;
-
-    BrailleCanvas bc(kW, kH);
+    // BrailleCanvas with a small hint size; RenderFlex() uses canvas(2,4,fn)
+    // so the chart expands to fill every available braille dot via flex.
+    BrailleCanvas bc(4, 4);
 
     // Determine domain/range.
     if (!has_domain || !has_range) {
@@ -190,7 +185,7 @@ Component LineChart::Build() {
       bc.Plot(series[i].points, c);
     }
 
-    Element chart_elem = bc.Render();
+    Element chart_elem = bc.RenderFlex();
 
     // Build legend.
     Elements legend_entries;
@@ -359,10 +354,7 @@ Component ScatterPlot::Build() {
   bool show_grid = show_grid_;
 
   return Renderer([=]() -> Element {
-    constexpr int kW = 20;
-    constexpr int kH = 8;
-
-    BrailleCanvas bc(kW, kH);
+    BrailleCanvas bc(4, 4);
 
     auto all = AllPoints(series);
     if (!all.empty()) {
@@ -381,7 +373,7 @@ Component ScatterPlot::Build() {
       bc.Scatter(series[i].points, c);
     }
 
-    Element chart_elem = bc.Render();
+    Element chart_elem = bc.RenderFlex();
 
     // Build legend.
     Elements legend_entries;

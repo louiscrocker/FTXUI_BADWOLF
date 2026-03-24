@@ -66,7 +66,13 @@ class BrailleCanvas {
                       ftxui::Color color = ftxui::Color::GrayDark);
 
   /// Produce an FTXUI Element (canvas DOM node) from all accumulated commands.
+  /// The element requests `width_chars × height_chars` as its natural size.
   ftxui::Element Render() const;
+
+  /// Like Render() but sets a 1-char minimum size so the element fills
+  /// its entire allocated box when wrapped with `| flex`.
+  /// All draw commands still use actual allocated dot dimensions.
+  ftxui::Element RenderFlex() const;
 
  private:
   int w_chars_;

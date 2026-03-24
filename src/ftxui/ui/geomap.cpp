@@ -43,22 +43,21 @@ struct GeoMap::Impl {
   double pan_lat_ = 0.0;
   double zoom_ = 1.0;
 
-  // Canvas dimensions in braille dots
-  int canvas_w_ = 200;
-  int canvas_h_ = 80;
-
   ftxui::Canvas RenderCanvas();
   bool HandleEvent(ftxui::Event event);
 
-  // Project (lon, lat) → canvas (x, y) given current view bounds.
+  // Project (lon, lat) → canvas (x, y) given explicit view bounds and dims.
   std::pair<int, int> Project(double lon, double lat, double lon_min,
-                               double lon_max, double lat_min,
-                               double lat_max) const;
+                               double lon_max, double lat_min, double lat_max,
+                               int dot_w, int dot_h) const;
 
-  // Draw a closed ring onto the canvas.
-  void DrawRing(ftxui::Canvas& c, const GeoRing& ring, double lon_min,
-                double lon_max, double lat_min, double lat_max,
+  // Draw a closed ring onto the canvas using a project lambda.
+  void DrawRing(ftxui::Canvas& c, const GeoRing& ring,
+                const std::function<std::pair<int,int>(double,double)>& project,
                 ftxui::Color col) const;
+
+  // Draw all features onto an existing Canvas (uses c.width()/c.height()).
+  void DrawOnto(ftxui::Canvas& c);
 
   static double MercY(double lat_deg) {
     double rad = lat_deg * kPi / 180.0;
@@ -72,8 +71,8 @@ struct GeoMap::Impl {
 
 std::pair<int, int> GeoMap::Impl::Project(double lon, double lat,
                                             double lon_min, double lon_max,
-                                            double lat_min,
-                                            double lat_max) const {
+                                            double lat_min, double lat_max,
+                                            int dot_w, int dot_h) const {
   double px = 0.0;
   double py = 0.0;
 
@@ -83,16 +82,16 @@ std::pair<int, int> GeoMap::Impl::Project(double lon, double lat,
   if (projection_ == Projection::Equirectangular) {
     double dlat = lat_max - lat_min;
     if (dlat < 1e-10) dlat = 1e-10;
-    px = (lon - lon_min) / dlon * (canvas_w_ - 1);
-    py = (lat_max - lat) / dlat * (canvas_h_ - 1);
+    px = (lon - lon_min) / dlon * (dot_w - 1);
+    py = (lat_max - lat) / dlat * (dot_h - 1);
   } else {
     double y = MercY(lat);
     double y_min = MercY(lat_min);
     double y_max = MercY(lat_max);
     double dy = y_max - y_min;
     if (std::abs(dy) < 1e-10) dy = 1e-10;
-    px = (lon - lon_min) / dlon * (canvas_w_ - 1);
-    py = (y_max - y) / dy * (canvas_h_ - 1);
+    px = (lon - lon_min) / dlon * (dot_w - 1);
+    py = (y_max - y) / dy * (dot_h - 1);
   }
 
   return {static_cast<int>(std::round(px)),
@@ -101,33 +100,31 @@ std::pair<int, int> GeoMap::Impl::Project(double lon, double lat,
 
 // ── Ring drawing ──────────────────────────────────────────────────────────────
 
-void GeoMap::Impl::DrawRing(ftxui::Canvas& c, const GeoRing& ring,
-                              double lon_min, double lon_max, double lat_min,
-                              double lat_max, ftxui::Color col) const {
+void GeoMap::Impl::DrawRing(
+    ftxui::Canvas& c, const GeoRing& ring,
+    const std::function<std::pair<int,int>(double,double)>& project,
+    ftxui::Color col) const {
   if (ring.size() < 2) return;
   for (size_t i = 0; i + 1 < ring.size(); ++i) {
-    auto [x1, y1] = Project(ring[i].lon, ring[i].lat, lon_min, lon_max,
-                             lat_min, lat_max);
-    auto [x2, y2] = Project(ring[i + 1].lon, ring[i + 1].lat, lon_min,
-                             lon_max, lat_min, lat_max);
+    auto [x1, y1] = project(ring[i].lon, ring[i].lat);
+    auto [x2, y2] = project(ring[i + 1].lon, ring[i + 1].lat);
     c.DrawPointLine(x1, y1, x2, y2, col);
   }
   // Close the ring
-  auto [x1, y1] = Project(ring.back().lon, ring.back().lat, lon_min, lon_max,
-                           lat_min, lat_max);
-  auto [x2, y2] = Project(ring.front().lon, ring.front().lat, lon_min,
-                           lon_max, lat_min, lat_max);
+  auto [x1, y1] = project(ring.back().lon, ring.back().lat);
+  auto [x2, y2] = project(ring.front().lon, ring.front().lat);
   c.DrawPointLine(x1, y1, x2, y2, col);
 }
 
 // ── Canvas rendering ──────────────────────────────────────────────────────────
 
-ftxui::Canvas GeoMap::Impl::RenderCanvas() {
-  Canvas c(canvas_w_, canvas_h_);
+void GeoMap::Impl::DrawOnto(ftxui::Canvas& c) {
+  const int dot_w = c.width();
+  const int dot_h = c.height();
 
   if (collection_.features.empty()) {
     c.DrawText(0, 0, "No GeoJSON data loaded");
-    return c;
+    return;
   }
 
   // Compute visible lon/lat bounds including zoom and pan
@@ -153,27 +150,28 @@ ftxui::Canvas GeoMap::Impl::RenderCanvas() {
 
   // Clamp to valid geographic range
   if (lon_min < -180.0) lon_min = -180.0;
-  if (lon_max > 180.0) lon_max = 180.0;
-  if (lat_min < -90.0) lat_min = -90.0;
-  if (lat_max > 90.0) lat_max = 90.0;
+  if (lon_max > 180.0)  lon_max = 180.0;
+  if (lat_min < -90.0)  lat_min = -90.0;
+  if (lat_max > 90.0)   lat_max = 90.0;
+
+  // Project helper using current canvas dimensions
+  auto project = [&](double lon, double lat) -> std::pair<int,int> {
+    return Project(lon, lat, lon_min, lon_max, lat_min, lat_max, dot_w, dot_h);
+  };
 
   // Draw graticule
   if (show_graticule_) {
     const ftxui::Color gray(50, 50, 60);
     float step = graticule_step_;
 
-    // Meridians
-    for (float lon = std::ceil(lon_min / step) * step; lon <= lon_max;
-         lon += step) {
-      auto [x1, y1] = Project(lon, lat_min, lon_min, lon_max, lat_min, lat_max);
-      auto [x2, y2] = Project(lon, lat_max, lon_min, lon_max, lat_min, lat_max);
+    for (float lon = std::ceil(lon_min / step) * step; lon <= lon_max; lon += step) {
+      auto [x1, y1] = project(lon, lat_min);
+      auto [x2, y2] = project(lon, lat_max);
       c.DrawPointLine(x1, y1, x2, y2, gray);
     }
-    // Parallels
-    for (float lat = std::ceil(lat_min / step) * step; lat <= lat_max;
-         lat += step) {
-      auto [x1, y1] = Project(lon_min, lat, lon_min, lon_max, lat_min, lat_max);
-      auto [x2, y2] = Project(lon_max, lat, lon_min, lon_max, lat_min, lat_max);
+    for (float lat = std::ceil(lat_min / step) * step; lat <= lat_max; lat += step) {
+      auto [x1, y1] = project(lon_min, lat);
+      auto [x2, y2] = project(lon_max, lat);
       c.DrawPointLine(x1, y1, x2, y2, gray);
     }
   }
@@ -182,50 +180,34 @@ ftxui::Canvas GeoMap::Impl::RenderCanvas() {
   for (const auto& feat : collection_.features) {
     const auto& geom = feat.geometry;
 
-    if (geom.type == "Point") {
+    if (geom.type == "Point" || geom.type == "MultiPoint") {
       for (const auto& pt : geom.points) {
-        auto [x, y] =
-            Project(pt.lon, pt.lat, lon_min, lon_max, lat_min, lat_max);
+        auto [x, y] = project(pt.lon, pt.lat);
         c.DrawPoint(x, y, true, point_color_);
       }
-    } else if (geom.type == "MultiPoint") {
-      for (const auto& pt : geom.points) {
-        auto [x, y] =
-            Project(pt.lon, pt.lat, lon_min, lon_max, lat_min, lat_max);
-        c.DrawPoint(x, y, true, point_color_);
-      }
-    } else if (geom.type == "LineString" ||
-               geom.type == "MultiLineString") {
+    } else if (geom.type == "LineString" || geom.type == "MultiLineString") {
       for (size_t i = 0; i + 1 < geom.points.size(); ++i) {
-        auto [x1, y1] = Project(geom.points[i].lon, geom.points[i].lat,
-                                 lon_min, lon_max, lat_min, lat_max);
-        auto [x2, y2] = Project(geom.points[i + 1].lon,
-                                 geom.points[i + 1].lat, lon_min, lon_max,
-                                 lat_min, lat_max);
+        auto [x1, y1] = project(geom.points[i].lon, geom.points[i].lat);
+        auto [x2, y2] = project(geom.points[i+1].lon, geom.points[i+1].lat);
         c.DrawPointLine(x1, y1, x2, y2, line_color_);
       }
     } else if (geom.type == "Polygon") {
-      for (const auto& ring : geom.rings) {
-        DrawRing(c, ring, lon_min, lon_max, lat_min, lat_max, line_color_);
-      }
+      for (const auto& ring : geom.rings)
+        DrawRing(c, ring, project, line_color_);
     } else if (geom.type == "MultiPolygon") {
-      for (const auto& poly : geom.multipolygon) {
-        for (const auto& ring : poly) {
-          DrawRing(c, ring, lon_min, lon_max, lat_min, lat_max, line_color_);
-        }
-      }
+      for (const auto& poly : geom.multipolygon)
+        for (const auto& ring : poly)
+          DrawRing(c, ring, project, line_color_);
     }
   }
 
-  // Draw center crosshair when zoomed
+  // Crosshair when zoomed in
   if (zoom_ > 1.5) {
-    int cx = canvas_w_ / 2;
-    int cy = canvas_h_ / 2;
-    c.DrawPointLine(cx - 4, cy, cx + 4, cy, ftxui::Color::White);
-    c.DrawPointLine(cx, cy - 4, cx, cy + 4, ftxui::Color::White);
+    int cx = dot_w / 2;
+    int cy = dot_h / 2;
+    c.DrawPointLine(cx - 6, cy, cx + 6, cy, ftxui::Color::White);
+    c.DrawPointLine(cx, cy - 6, cx, cy + 6, ftxui::Color::White);
   }
-
-  return c;
 }
 
 // ── Event handling ────────────────────────────────────────────────────────────
@@ -368,9 +350,12 @@ GeoMap& GeoMap::OnSelect(std::function<void(const GeoFeature&)> fn) {
 ftxui::Component GeoMap::Build() {
   auto impl = impl_;
 
+  // canvas(2, 4, fn) sets a 1-char minimum size.
+  // FTXUI's CanvasFunctionNode::Render() creates the Canvas at the ACTUAL
+  // allocated box size (box_w*2 dots × box_h*4 dots), so the map always
+  // fills every available braille dot at maximum resolution.
   auto renderer = Renderer([impl]() -> Element {
-    Canvas c = impl->RenderCanvas();
-    return canvas(std::move(c));
+    return canvas(2, 4, [impl](Canvas& c) { impl->DrawOnto(c); }) | flex;
   });
 
   return CatchEvent(renderer, [impl](Event event) -> bool {

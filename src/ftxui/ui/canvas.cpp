@@ -198,13 +198,7 @@ ftxui::Element BrailleCanvas::Render() const {
   int w_dots = w_chars_ * 2;
   int h_dots = h_chars_ * 4;
 
-  // Capture everything needed by value.
   auto cmds_copy = cmds_;
-
-  // The canvas(w, h, fn) element uses w/h as minimum-size hints, but at
-  // Render() time the actual canvas passed to fn is sized to the allocated
-  // box.  Pass the actual dimensions to each command so coordinate mapping
-  // always reflects the real draw area.
   return ftxui::canvas(w_dots, h_dots, [cmds_copy](ftxui::Canvas& c) {
     int w = c.width();
     int h = c.height();
@@ -212,6 +206,19 @@ ftxui::Element BrailleCanvas::Render() const {
       cmd(c, w, h);
     }
   });
+}
+
+ftxui::Element BrailleCanvas::RenderFlex() const {
+  auto cmds_copy = cmds_;
+  // canvas(2, 4, fn) → min 1 char; the canvas passed to fn is sized to the
+  // actual allocated box so every braille dot is used at full resolution.
+  return ftxui::canvas(2, 4, [cmds_copy](ftxui::Canvas& c) {
+    int w = c.width();
+    int h = c.height();
+    for (const auto& cmd : cmds_copy) {
+      cmd(c, w, h);
+    }
+  }) | ftxui::flex;
 }
 
 }  // namespace ftxui::ui
