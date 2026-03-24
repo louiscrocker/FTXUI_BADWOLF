@@ -90,7 +90,15 @@ void SetTheme(const Theme& theme);
 /// @brief Return the currently active theme.
 const Theme& GetTheme();
 
-/// @brief Temporarily apply a theme, then restore the previous one on scope exit.
+/// @brief Save the active theme to a file (key=value format).
+/// Returns true on success.
+bool SaveTheme(std::string_view path);
+
+/// @brief Load and apply a theme from a saved file.
+/// Returns true on success; leaves the theme unchanged on failure.
+bool LoadTheme(std::string_view path);
+
+/// @brief RAII guard that restores the previous theme on destruction.
 class ScopedTheme {
  public:
   explicit ScopedTheme(const Theme& theme);

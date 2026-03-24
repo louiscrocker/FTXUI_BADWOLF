@@ -151,4 +151,110 @@ ComponentDecorator WithHelp(
   };
 }
 
+// ── WithDrawer ────────────────────────────────────────────────────────────────
+
+Component WithDrawer(Component parent,
+                     DrawerSide side,
+                     std::string_view title,
+                     Component content,
+                     const bool* show,
+                     int panel_size) {
+  auto title_str = std::string(title);
+  return Renderer(Container::Tab({parent, content}, nullptr),
+                  [parent, content, show, side, title_str, panel_size]() -> Element {
+    if (!*show) return parent->Render();
+    const Theme& t = GetTheme();
+
+    Element panel = vbox({
+        text(" " + title_str + " ") | bold | color(t.primary),
+        separatorLight(),
+        content->Render() | flex,
+    }) | borderStyled(t.border_style, t.border_color) |
+        size(WIDTH, EQUAL, panel_size);
+
+    Element base = parent->Render() | flex;
+
+    switch (side) {
+      case DrawerSide::Left:
+        return hbox({ panel, base });
+      case DrawerSide::Right:
+        return hbox({ base, panel });
+      case DrawerSide::Bottom:
+        return vbox({ base, panel | size(HEIGHT, EQUAL, panel_size / 2) });
+    }
+    return base;
+  });
+}
+
+ComponentDecorator WithDrawer(DrawerSide side,
+                               std::string_view title,
+                               Component content,
+                               const bool* show,
+                               int panel_size) {
+  return [side, title = std::string(title), content, show,
+          panel_size](Component parent) -> Component {
+    return WithDrawer(std::move(parent), side, title, content, show, panel_size);
+  };
+}
+
+// ── WithModal ─────────────────────────────────────────────────────────────────
+
+Component WithModal(Component parent,
+                    std::string_view title,
+                    Component content,
+                    std::vector<ModalButton> buttons,
+                    const bool* show) {
+  // Build button components
+  Components btn_comps;
+  for (auto& b : buttons) {
+    btn_comps.push_back(Button(b.label, b.action));
+  }
+  auto btn_row = Container::Horizontal(btn_comps);
+  auto modal_inner = Container::Vertical({content, btn_row});
+
+  return Renderer(
+      Container::Tab({parent, modal_inner}, nullptr),
+      [parent, content, btn_comps, btn_row, show,
+       title_str = std::string(title), buttons]() -> Element {
+        if (!*show) return parent->Render();
+        const Theme& t = GetTheme();
+
+        // Build button row elements
+        Elements btn_elems;
+        btn_elems.push_back(filler());
+        for (size_t i = 0; i < btn_comps.size(); ++i) {
+          if (i > 0) btn_elems.push_back(text(" "));
+          Element be = btn_comps[i]->Render();
+          if (buttons[i].is_primary) be = be | color(t.primary);
+          btn_elems.push_back(be);
+        }
+
+        Element modal = vbox({
+            text(" " + title_str + " ") | bold | color(t.primary) | hcenter,
+            separatorLight(),
+            content->Render() | xflex,
+            separatorEmpty(),
+            hbox(btn_elems),
+        }) | borderStyled(t.border_style, t.border_color) |
+            size(WIDTH, EQUAL, 50) | size(HEIGHT, LESS_THAN, 20) |
+            hcenter | vcenter;
+
+        return dbox({
+            parent->Render(),
+            modal | clear_under,
+        });
+      });
+}
+
+ComponentDecorator WithModal(std::string_view title,
+                             Component content,
+                             std::vector<ModalButton> buttons,
+                             const bool* show) {
+  return [title = std::string(title), content, buttons = std::move(buttons),
+          show](Component parent) -> Component {
+    return WithModal(std::move(parent), title, content, buttons, show);
+  };
+}
+
 }  // namespace ftxui::ui
+

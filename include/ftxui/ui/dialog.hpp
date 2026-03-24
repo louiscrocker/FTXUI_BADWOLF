@@ -87,6 +87,71 @@ ftxui::Component WithHelp(
     const bool* show,
     std::function<void()> on_close = {});
 
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// @brief Side for a Drawer overlay.
+enum class DrawerSide { Left, Right, Bottom };
+
+/// @brief Overlay a slide-in drawer panel on top of @p parent.
+///
+/// The drawer renders @p content in a panel anchored to the chosen side.
+/// It is shown when *show is true.
+///
+/// @code
+/// bool show_drawer = false;
+/// auto settings = Renderer([]{ return text("Settings"); });
+/// main_comp = ui::WithDrawer(main_comp, DrawerSide::Right, "Settings",
+///                            settings, &show_drawer);
+/// // Toggle with:  show_drawer = !show_drawer;
+/// @endcode
+ftxui::Component WithDrawer(ftxui::Component parent,
+                             DrawerSide side,
+                             std::string_view title,
+                             ftxui::Component content,
+                             const bool* show,
+                             int size = 40);
+
+ftxui::ComponentDecorator WithDrawer(DrawerSide side,
+                                     std::string_view title,
+                                     ftxui::Component content,
+                                     const bool* show,
+                                     int size = 40);
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// @brief A button definition for WithModal.
+struct ModalButton {
+  std::string          label;
+  std::function<void()> action;
+  bool                 is_primary = false;  ///< Render with primary color.
+};
+
+/// @brief Overlay a general-purpose modal dialog on top of @p parent.
+///
+/// @param title    Title bar text.
+/// @param content  Body component rendered inside the modal.
+/// @param buttons  Row of action buttons (right-aligned).
+/// @param show     Pointer to boolean that controls visibility.
+///
+/// @code
+/// bool show_modal = false;
+/// auto body = Renderer([]{ return paragraph("Are you sure?"); });
+/// main_comp = ui::WithModal(main_comp, "Confirm", body,
+///     {{"Cancel",  [&]{ show_modal=false; },         false},
+///      {"Delete",  [&]{ do_delete(); show_modal=false; }, true}},
+///     &show_modal);
+/// @endcode
+ftxui::Component WithModal(ftxui::Component parent,
+                            std::string_view title,
+                            ftxui::Component content,
+                            std::vector<ModalButton> buttons,
+                            const bool* show);
+
+ftxui::ComponentDecorator WithModal(std::string_view title,
+                                    ftxui::Component content,
+                                    std::vector<ModalButton> buttons,
+                                    const bool* show);
+
 }  // namespace ftxui::ui
 
 #endif  // FTXUI_UI_DIALOG_HPP

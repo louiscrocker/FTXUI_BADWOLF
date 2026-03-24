@@ -3,6 +3,12 @@
 // the LICENSE file.
 #include "ftxui/ui/theme.hpp"
 
+#include <cstring>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <unordered_map>
+
 namespace ftxui::ui {
 
 namespace {
@@ -169,4 +175,94 @@ Decorator Theme::MutedTextDecorator() const {
   return color(text_muted);
 }
 
+// ── Theme persistence ─────────────────────────────────────────────────────────
+
+namespace {
+
+// Serialize Color as its raw 32-bit memory value. Color is a 4-byte struct
+// (ColorType uint8 + r,g,b uint8) — stable across platforms for this use case.
+std::string ColorToString(Color c) {
+  uint32_t raw = 0;
+  std::memcpy(&raw, &c, sizeof(Color));
+  return std::to_string(raw);
+}
+
+Color ColorFromString(const std::string& s) {
+  if (s.empty()) return Color::Default;
+  try {
+    uint32_t raw = static_cast<uint32_t>(std::stoul(s));
+    Color c;
+    std::memcpy(&c, &raw, sizeof(Color));
+    return c;
+  } catch (...) {
+    return Color::Default;
+  }
+}
+
+}  // namespace
+
+bool SaveTheme(std::string_view path) {
+  std::string path_str{path};
+  std::ofstream f{path_str};
+  if (!f) return false;
+  const Theme& t = GetTheme();
+#define W(key, val) f << (key) << "=" << ColorToString(val) << "\n"
+  W("primary",          t.primary);
+  W("secondary",        t.secondary);
+  W("accent",           t.accent);
+  W("error_color",      t.error_color);
+  W("warning_color",    t.warning_color);
+  W("success_color",    t.success_color);
+  W("text",             t.text);
+  W("text_muted",       t.text_muted);
+  W("border_color",     t.border_color);
+  W("button_bg_normal", t.button_bg_normal);
+  W("button_fg_normal", t.button_fg_normal);
+  W("button_bg_active", t.button_bg_active);
+  W("button_fg_active", t.button_fg_active);
+#undef W
+  f << "border_style=" << static_cast<int>(t.border_style) << "\n";
+  f << "animations=" << (t.animations_enabled ? "1" : "0") << "\n";
+  return f.good();
+}
+
+bool LoadTheme(std::string_view path) {
+  std::string path_str{path};
+  std::ifstream f{path_str};
+  if (!f) return false;
+
+  std::unordered_map<std::string, std::string> kv;
+  std::string line;
+  while (std::getline(f, line)) {
+    auto eq = line.find('=');
+    if (eq == std::string::npos) continue;
+    kv[line.substr(0, eq)] = line.substr(eq + 1);
+  }
+
+  Theme t = GetTheme();
+#define R(key, field) if (kv.count(key)) t.field = ColorFromString(kv.at(key))
+  R("primary",          primary);
+  R("secondary",        secondary);
+  R("accent",           accent);
+  R("error_color",      error_color);
+  R("warning_color",    warning_color);
+  R("success_color",    success_color);
+  R("text",             text);
+  R("text_muted",       text_muted);
+  R("border_color",     border_color);
+  R("button_bg_normal", button_bg_normal);
+  R("button_fg_normal", button_fg_normal);
+  R("button_bg_active", button_bg_active);
+  R("button_fg_active", button_fg_active);
+#undef R
+  if (kv.count("border_style"))
+    t.border_style = static_cast<BorderStyle>(std::stoi(kv.at("border_style")));
+  if (kv.count("animations"))
+    t.animations_enabled = (kv.at("animations") == "1");
+
+  SetTheme(t);
+  return true;
+}
+
 }  // namespace ftxui::ui
+

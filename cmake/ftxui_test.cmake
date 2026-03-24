@@ -78,6 +78,37 @@ gtest_discover_tests(ftxui-tests
   DISCOVERY_TIMEOUT 600
 )
 
+add_executable(ftxui_ui_test
+  src/ftxui/ui/state_test.cpp
+  src/ftxui/ui/theme_test.cpp
+  src/ftxui/ui/keymap_test.cpp
+  src/ftxui/ui/router_test.cpp
+  src/ftxui/ui/logpanel_test.cpp
+  src/ftxui/ui/datatable_test.cpp
+)
+
+target_link_libraries(ftxui_ui_test
+  PRIVATE ui
+  PRIVATE GTest::gtest
+  PRIVATE GTest::gtest_main
+)
+
+target_include_directories(ftxui_ui_test
+  PRIVATE src
+)
+
+target_compile_features(ftxui_ui_test PRIVATE cxx_std_20)
+set_target_properties(ftxui_ui_test PROPERTIES UNITY_BUILD OFF)
+
+if (FTXUI_MICROSOFT_TERMINAL_FALLBACK)
+  target_compile_definitions(ftxui_ui_test
+    PRIVATE "FTXUI_MICROSOFT_TERMINAL_FALLBACK")
+endif()
+
+gtest_discover_tests(ftxui_ui_test
+  DISCOVERY_TIMEOUT 600
+)
+
 #set(CMAKE_CTEST_ARGUMENTS "--rerun-failed --output-on-failure")
 #set_tests_properties(gen_init_queries PROPERTIES FIXTURES_SETUP f_init_queries)
 #set_tests_properties(test PROPERTIES  FIXTURES_REQUIRED f_init_queries)
