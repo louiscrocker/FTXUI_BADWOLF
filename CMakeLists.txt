@@ -208,12 +208,22 @@ add_library(ui
   include/ftxui/ui/geomap.hpp
   src/ftxui/ui/geojson.cpp
   src/ftxui/ui/geomap.cpp
+  include/ftxui/ui/process_panel.hpp
+  src/ftxui/ui/process_panel.cpp
+  include/ftxui/ui/globe.hpp
+  src/ftxui/ui/globe.cpp
   include/ftxui/ui/world_map_data.hpp
   src/ftxui/ui/world_map_data.cpp
   include/ftxui/ui/filepicker.hpp
   include/ftxui/ui/config_editor.hpp
   src/ftxui/ui/filepicker.cpp
   src/ftxui/ui/config_editor.cpp
+  include/ftxui/ui/markdown.hpp
+  src/ftxui/ui/markdown.cpp
+  include/ftxui/ui/virtual_list.hpp
+  src/ftxui/ui/virtual_list.cpp
+  include/ftxui/ui/sortable_table.hpp
+  src/ftxui/ui/sortable_table.cpp
 )
 
 target_link_libraries(dom PUBLIC screen)
