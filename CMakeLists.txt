@@ -158,18 +158,60 @@ add_library(component
   src/ftxui/component/window.cpp
 )
 
+add_library(ui
+  include/ftxui/ui.hpp
+  include/ftxui/ui/app.hpp
+  include/ftxui/ui/background_task.hpp
+  include/ftxui/ui/command_palette.hpp
+  include/ftxui/ui/datatable.hpp
+  include/ftxui/ui/dialog.hpp
+  include/ftxui/ui/form.hpp
+  include/ftxui/ui/keymap.hpp
+  include/ftxui/ui/layout.hpp
+  include/ftxui/ui/list.hpp
+  include/ftxui/ui/log_panel.hpp
+  include/ftxui/ui/mvu.hpp
+  include/ftxui/ui/notification.hpp
+  include/ftxui/ui/router.hpp
+  include/ftxui/ui/tree.hpp
+  include/ftxui/ui/command_palette.hpp
+  include/ftxui/ui/progress.hpp
+  include/ftxui/ui/simple_table.hpp
+  include/ftxui/ui/state.hpp
+  include/ftxui/ui/theme.hpp
+  include/ftxui/ui/widgets.hpp
+  include/ftxui/ui/wizard.hpp
+  src/ftxui/ui/dialog.cpp
+  src/ftxui/ui/form.cpp
+  src/ftxui/ui/keymap.cpp
+  src/ftxui/ui/layout.cpp
+  src/ftxui/ui/log_panel.cpp
+  src/ftxui/ui/notification.cpp
+  src/ftxui/ui/progress.cpp
+  src/ftxui/ui/simple_table.cpp
+  src/ftxui/ui/theme.cpp
+  src/ftxui/ui/tree.cpp
+  src/ftxui/ui/router.cpp
+  src/ftxui/ui/command_palette.cpp
+  src/ftxui/ui/widgets.cpp
+  src/ftxui/ui/wizard.cpp
+)
+
 target_link_libraries(dom PUBLIC screen)
 target_link_libraries(component PUBLIC dom)
+target_link_libraries(ui PUBLIC component)
 
 include(cmake/ftxui_set_options.cmake)
 ftxui_set_options(screen)
 ftxui_set_options(dom)
 ftxui_set_options(component)
+ftxui_set_options(ui)
 
 include(cmake/ftxui_coverage.cmake)
 ftxui_check_coverage(screen)
 ftxui_check_coverage(dom)
 ftxui_check_coverage(component)
+ftxui_check_coverage(ui)
 
 include(cmake/ftxui_test.cmake)
 include(cmake/ftxui_benchmark.cmake)
