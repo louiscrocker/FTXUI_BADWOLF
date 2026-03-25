@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI — LLM Bridge: Natural Language → UI</title>
+  <meta name="description" content="Talk to your terminal UI in plain English. FTXUI's LLM Bridge converts natural language into live BadWolf components — no external dependencies required.">
+  <meta property="og:title" content="FTXUI LLM Bridge — Natural Language UI">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+  <style>
+    /* ── LLM Bridge page extras ──────────────────────────────────────── */
+    .terminal-demo {
+      background: #0d1117;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      position: relative;
+    }
+    .terminal-demo .bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 1rem;
+    }
+    .terminal-demo .bar span {
+      width: 12px; height: 12px; border-radius: 50%;
+    }
+    .terminal-demo .bar .red    { background:#ff5f57; }
+    .terminal-demo .bar .yellow { background:#ffbd2e; }
+    .terminal-demo .bar .green  { background:#28c941; }
+    .terminal-prompt  { color: #79c0ff; }
+    .terminal-output  { color: #e6edf3; }
+    .terminal-comment { color: #8b949e; }
+    .terminal-highlight { color: #56d364; font-weight: bold; }
+    .terminal-error   { color: #f85149; }
+    .terminal-muted   { color: #8b949e; }
+
+    .arch-diagram {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 1.5rem 2rem;
+      font-family: monospace;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      color: #e6edf3;
+      overflow-x: auto;
+    }
+    .arch-arrow { color: #79c0ff; }
+    .arch-box   { color: #56d364; font-weight: bold; }
+    .arch-label { color: #e3b341; }
+
+    .keyword-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+    .keyword-table th {
+      background: rgba(121,192,255,0.12);
+      color: #79c0ff;
+      padding: 0.6rem 1rem;
+      text-align: left;
+      font-weight: 700;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .keyword-table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      color: #e6edf3;
+    }
+    .keyword-table tr:last-child td { border-bottom: none; }
+    .keyword-table tr:hover td { background: rgba(255,255,255,0.03); }
+    .kw-intent { color: #56d364; font-weight: 600; font-family: monospace; }
+    .kw-words  { color: #e3b341; font-family: monospace; font-size: 0.8rem; }
+
+    .setup-step {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+    }
+    .step-num {
+      min-width: 2rem;
+      height: 2rem;
+      background: var(--glass-primary, rgba(121,192,255,0.15));
+      border: 1px solid rgba(121,192,255,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #79c0ff;
+      font-size: 0.9rem;
+    }
+    .step-body { flex: 1; }
+    .step-body h4 { margin: 0 0 0.4rem; color: #e6edf3; }
+    .step-body p  { margin: 0 0 0.5rem; color: #8b949e; font-size: 0.9rem; }
+
+    .example-prompt-pill {
+      display: inline-block;
+      background: rgba(86,211,100,0.1);
+      border: 1px solid rgba(86,211,100,0.25);
+      border-radius: 999px;
+      padding: 0.25rem 0.9rem;
+      font-size: 0.82rem;
+      color: #56d364;
+      font-family: monospace;
+      margin: 0.25rem;
+    }
+
+    .glass-card-llm {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .glass-card-llm h3 {
+      margin-top: 0;
+      color: #79c0ff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<!-- Navigation -->
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">FTXUI</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Getting Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+      <a href="deep-dive.html" class="nav-link">Deep Dive</a>
+      <a href="executive.html" class="nav-link">Executive Brief</a>
+      <a href="collab.html" class="nav-link">Collab</a>
+      <a href="llm-bridge.html" class="nav-link nav-link-active">LLM Bridge</a>
+    </div>
+    <div class="nav-actions">
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
+        GitHub ↗
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section style="padding: 7rem 2rem 3rem; text-align:center; max-width:900px; margin:0 auto;">
+  <div style="display:inline-block;background:rgba(86,211,100,0.1);border:1px solid rgba(86,211,100,0.3);border-radius:999px;padding:0.35rem 1.1rem;font-size:0.8rem;color:#56d364;margin-bottom:1.5rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">
+    New in BadWolf
+  </div>
+  <h1 style="font-size:clamp(2.2rem,6vw,3.8rem);font-weight:900;line-height:1.1;margin:0 0 1.25rem;background:linear-gradient(135deg,#79c0ff 0%,#56d364 60%,#e3b341 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+    Talk to your UI
+  </h1>
+  <p style="font-size:1.2rem;color:#8b949e;max-width:640px;margin:0 auto 2rem;line-height:1.65;">
+    Describe a terminal UI component in plain English. The LLM Bridge converts
+    your words into a live <strong style="color:#e6edf3;">BadWolf component</strong> —
+    no external LLM required.
+  </p>
+
+  <!-- Example prompts -->
+  <div style="margin-bottom:2.5rem;">
+    <span class="example-prompt-pill">"show me a table of users"</span>
+    <span class="example-prompt-pill">"plot server metrics chart"</span>
+    <span class="example-prompt-pill">"create a form for registration"</span>
+    <span class="example-prompt-pill">"show world map"</span>
+    <span class="example-prompt-pill">"monitor server logs"</span>
+  </div>
+
+  <!-- Quick-start code -->
+  <div class="terminal-demo" style="text-align:left;max-width:660px;margin:0 auto;">
+    <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+    <span class="terminal-comment">// One-liner: parse English → live component</span><br>
+    <span class="terminal-output">auto comp = </span><span class="terminal-highlight">UIGenerator::GenerateFromText</span><span class="terminal-output">(</span><br>
+    <span class="terminal-output">    </span><span class="terminal-muted">"show me a dashboard"</span><span class="terminal-output">);</span><br>
+    <br>
+    <span class="terminal-comment">// Full pipeline</span><br>
+    <span class="terminal-output">auto intent = NLParser::Parse(</span><span class="terminal-muted">"table of servers"</span><span class="terminal-output">);</span><br>
+    <span class="terminal-comment">// → Intent{ type=TABLE, entity="servers" }</span><br>
+    <span class="terminal-output">auto comp   = UIGenerator::Generate(intent);</span><br>
+    <br>
+    <span class="terminal-comment">// With Ollama (if running at localhost:11434)</span><br>
+    <span class="terminal-output">auto intent = LLMAdapter::QueryLLM(</span><span class="terminal-muted">"show users"</span><span class="terminal-output">);</span><br>
+    <br>
+    <span class="terminal-comment">// Interactive REPL — type English, get live UI</span><br>
+    <span class="terminal-output">Run(</span><span class="terminal-highlight">LLMRepl()</span><span class="terminal-output">);</span>
+  </div>
+</section>
+
+<!-- Architecture -->
+<section style="max-width:960px;margin:0 auto;padding:2rem;">
+  <h2 style="text-align:center;color:#e6edf3;margin-bottom:2rem;">Architecture</h2>
+  <div class="arch-diagram">
+<pre style="margin:0;color:inherit;">
+  <span class="arch-label">"show me a table of users"</span>
+           │
+           ▼
+  <span class="arch-box">┌─────────────────────────────────────────────────┐</span>
+  <span class="arch-box">│               NLParser::Parse()                 │</span>
+  <span class="arch-box">│  keyword matching · entity extraction · fields  │</span>
+  <span class="arch-box">└────────────────────┬────────────────────────────┘</span>
+                       │
+           <span class="arch-arrow">↓  UIIntent{ type=TABLE, entity="users" }</span>
+                       │
+  <span class="arch-box">┌────────────────────▼────────────────────────────┐</span>
+  <span class="arch-box">│              UIGenerator::Generate()            │</span>
+  <span class="arch-box">│   TABLE·CHART·FORM·DASHBOARD·MAP·LOG·PROGRESS   │</span>
+  <span class="arch-box">└────────────────────┬────────────────────────────┘</span>
+                       │
+           <span class="arch-arrow">↓  ftxui::Component  (live, interactive)</span>
+                       │
+  <span class="arch-box">┌────────────────────▼────────────────────────────┐</span>
+  <span class="arch-box">│          Terminal: DataTable&lt;User&gt;              │</span>
+  <span class="arch-box">│  ┌──────┬────────────────────┬───────┬────────┐ │</span>
+  <span class="arch-box">│  │ Name │ Email              │ Role  │ Status │ │</span>
+  <span class="arch-box">│  ├──────┼────────────────────┼───────┼────────┤ │</span>
+  <span class="arch-box">│  │Alice │ alice@example.com  │ Admin │ Active │ │</span>
+  <span class="arch-box">│  │Bob   │ bob@example.com    │Editor │ Active │ │</span>
+  <span class="arch-box">│  └──────┴────────────────────┴───────┴────────┘ │</span>
+  <span class="arch-box">└─────────────────────────────────────────────────┘</span>
+
+  <span class="terminal-comment">Optional: replace NLParser with Ollama / OpenAI</span>
+  <span class="arch-box">LLMAdapter::QueryLLM(prompt)</span>
+    <span class="arch-arrow">→ POST /api/generate  (localhost:11434)</span>
+    <span class="arch-arrow">→ parse JSON response → UIIntent</span>
+    <span class="arch-arrow">→ fallback: NLParser if Ollama unavailable</span></pre>
+  </div>
+</section>
+
+<!-- Live terminal screenshots -->
+<section style="max-width:960px;margin:0 auto;padding:2rem;">
+  <h2 style="text-align:center;color:#e6edf3;margin-bottom:2rem;">Live Terminal Previews</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:1.5rem;">
+
+    <!-- TABLE example -->
+    <div class="glass-card-llm">
+      <h3>TABLE</h3>
+      <p style="color:#8b949e;font-size:0.9rem;margin:0 0 1rem;">"show me a table of users"</p>
+      <div class="terminal-demo">
+        <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre style="margin:0;color:#e6edf3;font-size:0.78rem;">┌──────────┬──────────────────────┬────────┬────────┐
+│ <span style="color:#79c0ff;font-weight:bold">Name    </span> │ <span style="color:#79c0ff;font-weight:bold">Email               </span> │ <span style="color:#79c0ff;font-weight:bold">Role  </span> │ <span style="color:#79c0ff;font-weight:bold">Status</span> │
+├──────────┼──────────────────────┼────────┼────────┤
+│ Alice    │ alice@example.com    │ Admin  │ Active │
+│ Bob      │ bob@example.com      │ Editor │ Active │
+│ Carol    │ carol@example.com    │ Viewer │Inactive│
+│ Dave     │ dave@example.com     │ Admin  │ Active │
+└──────────┴──────────────────────┴────────┴────────┘</pre>
+      </div>
+    </div>
+
+    <!-- CHART example -->
+    <div class="glass-card-llm">
+      <h3>CHART</h3>
+      <p style="color:#8b949e;font-size:0.9rem;margin:0 0 1rem;">"display a chart of server metrics"</p>
+      <div class="terminal-demo">
+        <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre style="margin:0;color:#e6edf3;font-size:0.78rem;"> 100 ┤                                          
+  80 ┤   ⣿⣿⡇    ⣿⣿⡇    ⣿⣿⡇    ⣿⣿⡇         
+  60 ┤ ⣿⣿  ⣿⣿⣿⣿  ⣿⣿⣿⣿  ⣿⣿⣿⣿  ⣿⣿    ···  
+  40 ┤⣿      ⣿      ⣿      ⣿      ⣿  ···    
+  20 ┤                                 ···    
+   0 ┼──────────────────────────────────────
+     └ <span style="color:#00bcd4">─── Series A</span>   <span style="color:#ffeb3b">· · · Series B</span></pre>
+      </div>
+    </div>
+
+    <!-- DASHBOARD example -->
+    <div class="glass-card-llm">
+      <h3>DASHBOARD</h3>
+      <p style="color:#8b949e;font-size:0.9rem;margin:0 0 1rem;">"show me a dashboard overview"</p>
+      <div class="terminal-demo">
+        <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre style="margin:0;color:#e6edf3;font-size:0.78rem;">┌─ <span style="color:#79c0ff">Servers</span> ────────┐ ┌─ <span style="color:#79c0ff">Metrics</span> ─────────┐
+│ web-01  42% OK   │ │ Req/s   1245 ↑   │
+│ web-02  88% Warn │ │ Latency  142 →   │
+│ db-01   23% Crit │ │ Errors   0.4 ↓   │
+└──────────────────┘ └──────────────────┘
+┌─ <span style="color:#79c0ff">Resources</span> ──────────────────────────────┐
+│ CPU  [██████████░░░░░░░░░░] 42%         │
+│ Mem  [████████████████░░░░] 77%         │
+│ Disk [████░░░░░░░░░░░░░░░░] 23%         │
+└────────────────────────────────────────┘</pre>
+      </div>
+    </div>
+
+    <!-- FORM example -->
+    <div class="glass-card-llm">
+      <h3>FORM</h3>
+      <p style="color:#8b949e;font-size:0.9rem;margin:0 0 1rem;">"create a form for user registration"</p>
+      <div class="terminal-demo">
+        <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre style="margin:0;color:#e6edf3;font-size:0.78rem;">┌─ <span style="color:#79c0ff">Users Form</span> ──────────────────────────────┐
+│                                           │
+│  Name     │ Alice                         │
+│  Email    │ alice@example.com             │
+│  Password │ ●●●●●●●●                      │
+│                                           │
+│           [  Submit  ]  [  Cancel  ]      │
+└───────────────────────────────────────────┘</pre>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- LLMRepl screenshot -->
+<section style="max-width:960px;margin:0 auto;padding:2rem;">
+  <h2 style="text-align:center;color:#e6edf3;margin-bottom:2rem;">Interactive REPL</h2>
+  <p style="text-align:center;color:#8b949e;margin-bottom:1.5rem;">
+    <code>LLMRepl()</code> — type English in the input field, get a live component preview.
+    History sidebar · status bar · <kbd>Ctrl+H</kbd> help overlay.
+  </p>
+  <div class="terminal-demo">
+    <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre style="margin:0;color:#e6edf3;font-size:0.78rem;">┌─ <span style="color:#79c0ff">History</span> ──────────┐┌─ <span style="color:#79c0ff">Preview: show me a table of users</span> ─────────┐
+│ show me a table…  ││ ┌──────┬──────────────────┬───────┬────────┐  │
+│ plot server metri ││ │ Name │ Email            │ Role  │ Status │  │
+│ create a form for ││ ├──────┼──────────────────┼───────┼────────┤  │
+│ show world map    ││ │Alice │ alice@example.com│ Admin │ Active │  │
+│                   ││ │Bob   │ bob@example.com  │Editor │ Active │  │
+│                   ││ └──────┴──────────────────┴───────┴────────┘  │
+│                   ││                                                │
+│                   ││                                                │
+└───────────────────┘└────────────────────────────────────────────────┘
+────────────────────────────────────────────────────────────────────────
+ <span style="color:#56d364">❯</span> Describe a UI component...█
+────────────────────────────────────────────────────────────────────────
+ NLP: <span style="color:#56d364">Rule-based NLP</span>                                    Ctrl+H: help</pre>
+  </div>
+</section>
+
+<!-- Keyword reference -->
+<section style="max-width:960px;margin:0 auto;padding:2rem;">
+  <h2 style="text-align:center;color:#e6edf3;margin-bottom:2rem;">NLParser Keyword Reference</h2>
+  <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;">
+    <table class="keyword-table">
+      <thead>
+        <tr>
+          <th>Intent Type</th>
+          <th>Trigger Keywords</th>
+          <th>Example Prompt</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="kw-intent">TABLE</span></td>
+          <td><span class="kw-words">table, list, show, display, rows, columns</span></td>
+          <td><em>"show me a table of users"</em></td>
+        </tr>
+        <tr>
+          <td><span class="kw-intent">CHART</span></td>
+          <td><span class="kw-words">chart, graph, plot, histogram, sparkline</span></td>
+          <td><em>"plot server metrics"</em></td>
+        </tr>
+        <tr>
+          <td><span class="kw-intent">FORM</span></td>
+          <td><span class="kw-words">form, input, create, edit, add</span></td>
+          <td><em>"create a form for registration"</em></td>
+        </tr>
+        <tr>
+          <td><span class="kw-intent">DASHBOARD</span></td>
+          <td><span class="kw-words">dashboard, overview, monitor</span></td>
+          <td><em>"show me a dashboard overview"</em></td>
+        </tr>
+        <tr>
+          <td><span class="kw-intent">MAP</span></td>
+          <td><span class="kw-words">map, world, geo</span></td>
+          <td><em>"display a world map"</em></td>
+        </tr>
+        <tr>
+          <td><span class="kw-intent">LOG</span></td>
+          <td><span class="kw-words">log, events, history</span></td>
+          <td><em>"monitor server logs"</em></td>
+        </tr>
+        <tr>
+          <td><span class="kw-intent">PROGRESS</span></td>
+          <td><span class="kw-words">progress, loading, status</span></td>
+          <td><em>"show loading progress"</em></td>
+        </tr>
+        <tr>
+          <td><span class="kw-intent">UNKNOWN</span></td>
+          <td><em>(no match)</em></td>
+          <td><em>"xyzzy bloop"</em></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="color:#8b949e;font-size:0.85rem;margin-top:1rem;text-align:center;">
+    Matching is <strong style="color:#e6edf3;">case-insensitive</strong>.
+    Entity extraction: noun after trigger verb ("show <em>users</em>", "of <em>servers</em>").
+    Field extraction: "with columns <em>name, email</em>".
+    Option extraction: "in <em>blue</em>", "<em>large</em> size", "with <em>border</em>".
+  </p>
+</section>
+
+<!-- Ollama setup -->
+<section style="max-width:960px;margin:0 auto;padding:2rem;">
+  <h2 style="text-align:center;color:#e6edf3;margin-bottom:2rem;">Setup: Ollama Integration</h2>
+  <p style="color:#8b949e;text-align:center;margin-bottom:2rem;">
+    Upgrade from rule-based NLP to a real LLM for richer understanding. No API key required.
+  </p>
+  <div class="glass-card-llm">
+    <div class="setup-step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Install Ollama</h4>
+        <p>Download from <a href="https://ollama.ai" target="_blank" rel="noopener" style="color:#79c0ff;">ollama.ai</a> or via Homebrew:</p>
+        <div class="terminal-demo"><div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><code class="terminal-prompt">brew install ollama</code></div>
+      </div>
+    </div>
+    <div class="setup-step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Pull a model</h4>
+        <p>Any instruction-following model works. llama3 is recommended:</p>
+        <div class="terminal-demo"><div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><code class="terminal-prompt">ollama pull llama3</code></div>
+      </div>
+    </div>
+    <div class="setup-step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>Start the server</h4>
+        <p>Ollama listens on <code style="color:#56d364;">localhost:11434</code> by default:</p>
+        <div class="terminal-demo"><div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div><code class="terminal-prompt">ollama serve</code></div>
+      </div>
+    </div>
+    <div class="setup-step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h4>That's it</h4>
+        <p>
+          <code>LLMAdapter::OllamaAvailable()</code> auto-detects the running server.
+          The bridge sends a structured system prompt that instructs the LLM to return JSON.
+          If Ollama is not running, the bridge silently falls back to the built-in rule-based parser.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OpenAI setup -->
+<section style="max-width:960px;margin:0 auto;padding:2rem;">
+  <h2 style="text-align:center;color:#e6edf3;margin-bottom:2rem;">Setup: OpenAI Integration</h2>
+  <div class="glass-card-llm">
+    <div class="setup-step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Set your API key</h4>
+        <div class="terminal-demo"><div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<code class="terminal-prompt">export OPENAI_API_KEY="sk-..."</code></div>
+      </div>
+    </div>
+    <div class="setup-step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Check availability</h4>
+        <div class="terminal-demo"><div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre style="margin:0;"><code class="terminal-output">if (LLMAdapter::OpenAIAvailable()) {
+    // key is set — you can extend QueryLLM for HTTPS
+}</code></pre></div>
+        <p>
+          <code>OpenAIAvailable()</code> checks for the <code>OPENAI_API_KEY</code> environment variable.
+          The current LLM bridge routes HTTP traffic to Ollama (plain HTTP, no TLS dependency).
+          For OpenAI HTTPS calls, extend <code>LLMAdapter::QueryLLM()</code> with a TLS-capable socket layer.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- System prompt -->
+<section style="max-width:960px;margin:0 auto;padding:2rem;">
+  <h2 style="text-align:center;color:#e6edf3;margin-bottom:2rem;">LLM System Prompt</h2>
+  <p style="color:#8b949e;text-align:center;margin-bottom:1.5rem;">
+    <code>LLMAdapter::SystemPrompt()</code> teaches the LLM to return structured JSON:
+  </p>
+  <div class="terminal-demo">
+    <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre style="margin:0;color:#e6edf3;font-size:0.82rem;">You are a UI generator assistant. The user will describe a terminal UI
+component in plain English. You must respond with ONLY valid JSON in
+this exact format (no markdown, no explanation):
+<span style="color:#56d364;">{"type":"TABLE","entity":"users","fields":["name","email"],"options":{}}</span>
+
+Valid types: TABLE, CHART, FORM, DASHBOARD, MAP, LOG, PROGRESS, UNKNOWN.
+Set entity to the data subject (e.g. "users", "servers").
+Set fields to column names if mentioned, otherwise [].
+Set options to {} unless color/size/border is specified.
+Respond ONLY with the JSON object.</pre>
+  </div>
+</section>
+
+<!-- Code examples -->
+<section style="max-width:960px;margin:0 auto;padding:2rem 2rem 4rem;">
+  <h2 style="text-align:center;color:#e6edf3;margin-bottom:2rem;">Code Examples</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:1.5rem;">
+
+    <div class="glass-card-llm">
+      <h3>One-shot generation</h3>
+      <div class="terminal-demo">
+        <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre style="margin:0;color:#e6edf3;font-size:0.8rem;"><span class="terminal-comment">// #include "ftxui/ui/llm_bridge.hpp"</span>
+<span class="terminal-comment">// using namespace ftxui::ui;</span>
+
+auto comp = UIGenerator::GenerateFromText(
+    <span class="terminal-muted">"show me a dashboard"</span>);
+
+App::TerminalOutput().Loop(comp);</pre>
+      </div>
+    </div>
+
+    <div class="glass-card-llm">
+      <h3>Full pipeline</h3>
+      <div class="terminal-demo">
+        <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre style="margin:0;color:#e6edf3;font-size:0.8rem;">auto intent = NLParser::Parse(
+    <span class="terminal-muted">"show users with columns name, email"</span>);
+<span class="terminal-comment">// intent.type   == IntentType::TABLE</span>
+<span class="terminal-comment">// intent.entity == "users"</span>
+<span class="terminal-comment">// intent.fields == ["name","email"]</span>
+
+auto comp = UIGenerator::Generate(intent);
+Run(comp);</pre>
+      </div>
+    </div>
+
+    <div class="glass-card-llm">
+      <h3>Interactive REPL</h3>
+      <div class="terminal-demo">
+        <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre style="margin:0;color:#e6edf3;font-size:0.8rem;"><span class="terminal-comment">// Full REPL: type English → live preview</span>
+SetTheme(Theme::Dark());
+Run(LLMRepl());</pre>
+      </div>
+    </div>
+
+    <div class="glass-card-llm">
+      <h3>Add "?" help to any component</h3>
+      <div class="terminal-demo">
+        <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre style="margin:0;color:#e6edf3;font-size:0.8rem;">auto my_table = DataTable&lt;User&gt;()
+    .Column(<span class="terminal-muted">"Name"</span>, ...)
+    .Data(&amp;users)
+    .Build();
+
+<span class="terminal-comment">// Attach a "?" explain button</span>
+auto with_help = WithLLMHelp(my_table,
+    <span class="terminal-muted">"User Table"</span>);
+
+Run(with_help);</pre>
+      </div>
+    </div>
+
+    <div class="glass-card-llm">
+      <h3>Multi-intent parsing</h3>
+      <div class="terminal-demo">
+        <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre style="margin:0;color:#e6edf3;font-size:0.8rem;">auto intents = NLParser::ParseMulti(
+    <span class="terminal-muted">"show users table and plot metrics"</span>);
+<span class="terminal-comment">// → [Intent{TABLE, "users"},</span>
+<span class="terminal-comment">//     Intent{CHART, "metrics"}]</span>
+
+std::vector&lt;Component&gt; comps;
+for (auto&amp; i : intents)
+    comps.push_back(UIGenerator::Generate(i));</pre>
+      </div>
+    </div>
+
+    <div class="glass-card-llm">
+      <h3>Ollama LLM query</h3>
+      <div class="terminal-demo">
+        <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre style="margin:0;color:#e6edf3;font-size:0.8rem;"><span class="terminal-comment">// Requires: ollama serve (localhost:11434)</span>
+if (LLMAdapter::OllamaAvailable()) {
+    auto intent = LLMAdapter::QueryLLM(
+        <span class="terminal-muted">"show a sorted list of files"</span>,
+        <span class="terminal-muted">"llama3"</span>);
+    auto comp = UIGenerator::Generate(intent);
+    Run(comp);
+} else {
+    <span class="terminal-comment">// auto-fallback to NLParser</span>
+    Run(UIGenerator::GenerateFromText(...));
+}</pre>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="glass-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span style="font-size:1.75rem;font-weight:900;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">FTXUI</span>
+        <p>The C++ Terminal UI Framework. React-inspired, zero-dependency, production-ready.</p>
+        <p class="footer-tagline">Zero dependencies. Bare metal speed. Maximum beauty.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Docs</h4>
+        <a href="getting-started.html">Getting Started</a>
+        <a href="api.html">API Reference</a>
+        <a href="features.html">Features</a>
+        <a href="examples.html">Examples</a>
+        <a href="llm-bridge.html">LLM Bridge</a>
+      </div>
+      <div class="footer-col">
+        <h4>Learn</h4>
+        <a href="deep-dive.html">Technical Deep Dive</a>
+        <a href="executive.html">Executive Brief</a>
+        <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <a href="https://github.com/louiscrocker/FTXUI_BADWOLF/discussions" target="_blank" rel="noopener">Discussions</a>
+        <a href="https://github.com/louiscrocker/FTXUI_BADWOLF/releases" target="_blank" rel="noopener">Releases</a>
+        <a href="https://github.com/louiscrocker/FTXUI_BADWOLF/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 FTXUI Contributors. MIT License.</span>
+      <span>Zero dependencies. Bare metal speed. Maximum beauty.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
