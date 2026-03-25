@@ -118,3 +118,11 @@ out/
 !bindings/**/*.toml
 !bindings/rust/src/*.rs
 build/
+
+# python directory (pybind11 bindings package):
+!python/src/**/*.cpp
+!python/pyftxui/**/*.py
+!python/pyftxui/**/*.pyi
+!python/**/*.toml
+!python/setup.py
+!python/examples/**/*.py
