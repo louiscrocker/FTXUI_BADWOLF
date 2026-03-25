@@ -3,6 +3,7 @@ option(FTXUI_BUILD_EXAMPLES "Set to ON to build examples" OFF)
 option(FTXUI_BUILD_MODULES "Build the C++20 modules" OFF)
 option(FTXUI_BUILD_TESTS "Set to ON to build tests" OFF)
 option(FTXUI_BUILD_C_BINDINGS "Build C language bindings (libftxui-c)" OFF)
+option(FTXUI_BUILD_PYTHON_BINDINGS "Build Python bindings via pybind11" OFF)
 option(FTXUI_BUILD_TESTS_FUZZER "Set to ON to enable fuzzing" OFF)
 option(FTXUI_CLANG_TIDY "Execute clang-tidy" OFF)
 option(FTXUI_DEV_WARNINGS "Enable more compiler warnings and warnings as errors" OFF)
@@ -282,4 +283,17 @@ endif()
 # ./tools/generate_examples_modules.sh
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/examples_modules/CMakeLists.txt")
   add_subdirectory(examples_modules)
+endif()
+
+# ── Python bindings ──────────────────────────────────────────────────────────
+if(FTXUI_BUILD_PYTHON_BINDINGS)
+  find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+  include(FetchContent)
+  FetchContent_Declare(
+    pybind11
+    GIT_REPOSITORY https://github.com/pybind/pybind11.git
+    GIT_TAG        v2.11.1
+  )
+  FetchContent_MakeAvailable(pybind11)
+  add_subdirectory(python)
 endif()
