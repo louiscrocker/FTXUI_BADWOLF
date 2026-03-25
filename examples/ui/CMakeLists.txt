@@ -44,6 +44,7 @@ example(llm_demo)
 example(registry_demo)
 example(live_demo)
 example(sysmon_demo)
+example(json_demo)
 example(typewriter_demo)
 example(color_demo)
 

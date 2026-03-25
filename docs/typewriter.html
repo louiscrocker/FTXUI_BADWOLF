@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI — Console Typewriter Engine</title>
+  <meta name="description" content="FTXUI typewriter animation, scrollable console, REPL prompt — character-by-character text animation for terminal UIs.">
+  <meta property="og:title" content="FTXUI — Console Typewriter Engine">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">FTXUI</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Getting Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+      <a href="deep-dive.html" class="nav-link">Deep Dive</a>
+      <a href="executive.html" class="nav-link">Executive Brief</a>
+      <a href="collab.html" class="nav-link">Collab</a>
+      <a href="typewriter.html" class="nav-link active">Typewriter</a>
+    </div>
+    <div class="nav-actions">
+      <span class="star-badge">⭐ Star</span>
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section style="padding:6rem 2rem 3rem;text-align:center;">
+  <span class="section-label">Animation · Console · REPL</span>
+  <h1 style="font-size:clamp(2rem,4vw,3.5rem);font-weight:900;margin-bottom:1rem;">
+    Console <span class="gradient-text">Typewriter Engine</span>
+  </h1>
+  <p style="font-size:1.1rem;color:var(--text-secondary);max-width:680px;margin:0 auto 2rem;">
+    Character-by-character text animation, scrollable styled consoles, and interactive REPL prompts —
+    all driven by the 60 fps <code style="color:var(--teal-light)">AnimationLoop</code>. Zero boilerplate.
+  </p>
+</section>
+
+<!-- ASCII demo -->
+<section style="padding:0 2rem 3rem;max-width:900px;margin:0 auto;">
+  <div class="glass-card" style="padding:2rem;font-family:monospace;font-size:0.9rem;line-height:1.8;">
+    <div style="color:var(--text-secondary);margin-bottom:1rem;">// Terminal output preview</div>
+    <pre style="margin:0;color:#00ff41;overflow-x:auto;">
+┌──────────────────────────────────────────────────────────────┐
+│  INITIATING BADWOLF SYSTEMS..._                              │
+│                                                              │
+│  &gt; help                                                      │
+│  Commands: help  status  clear  version  echo &lt;text&gt;         │
+│  &gt; status                                                    │
+│  ALL SYSTEMS NOMINAL | CPU: 12% | MEM: 245MB | Uptime: 3d   │
+│  &gt; _                                                         │
+└──────────────────────────────────────────────────────────────┘</pre>
+  </div>
+</section>
+
+<!-- Components overview -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1.5rem;">Components</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;">
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">⌨️</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">TypewriterText</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Animate any string character by character at configurable speed.</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🎬</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">TypewriterSequence</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Chain animations with pauses and clear steps using a fluent builder.</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">📟</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">Console</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Scrollable output with Info/Warn/Error/Success and animated TypePrint.</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">💬</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">ConsolePrompt</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Full REPL with history navigation, prompt customization, and handler callback.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TypewriterText -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1rem;">TypewriterText</h2>
+  <p style="color:var(--text-secondary);margin-bottom:1.5rem;">
+    Returns a <code style="color:var(--teal-light)">Component</code> that renders text one character at a time,
+    driven by the global <code style="color:var(--teal-light)">AnimationLoop</code>.
+  </p>
+  <div class="glass-card" style="padding:2rem;font-family:monospace;font-size:0.9rem;line-height:1.8;overflow-x:auto;">
+<pre style="margin:0;color:var(--text-primary);">#include "ftxui/ui/typewriter.hpp"
+
+using namespace ftxui::ui;
+
+// Basic usage
+auto tw = TypewriterText("Hello, World!");
+
+// Custom config
+TypewriterConfig cfg;
+cfg.chars_per_second = 50;
+cfg.show_cursor      = true;
+cfg.cursor_char      = '|';
+cfg.cursor_blink     = true;
+cfg.blink_hz         = 2;
+cfg.on_complete      = [] { std::cout &lt;&lt; "Done!\n"; };
+cfg.on_char          = [](char c) { /* fired per char */ };
+
+auto tw = TypewriterText("FTXUI BadWolf ready.", cfg);
+ftxui::ui::RunFullscreen(tw);</pre>
+  </div>
+</section>
+
+<!-- TypewriterConfig reference table -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1rem;">TypewriterConfig Reference</h2>
+  <div class="glass-card" style="padding:0;overflow:hidden;">
+    <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+      <thead>
+        <tr style="background:rgba(255,255,255,0.05);">
+          <th style="padding:1rem;text-align:left;color:var(--teal-light);border-bottom:1px solid rgba(255,255,255,0.1);">Field</th>
+          <th style="padding:1rem;text-align:left;color:var(--teal-light);border-bottom:1px solid rgba(255,255,255,0.1);">Type</th>
+          <th style="padding:1rem;text-align:left;color:var(--teal-light);border-bottom:1px solid rgba(255,255,255,0.1);">Default</th>
+          <th style="padding:1rem;text-align:left;color:var(--teal-light);border-bottom:1px solid rgba(255,255,255,0.1);">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.8rem 1rem;font-family:monospace;color:#a8d8ea;">chars_per_second</td>
+          <td style="padding:0.8rem 1rem;color:var(--text-secondary);">int</td>
+          <td style="padding:0.8rem 1rem;font-family:monospace;">30</td>
+          <td style="padding:0.8rem 1rem;color:var(--text-secondary);">Typing speed. 0 = instant display.</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.8rem 1rem;font-family:monospace;color:#a8d8ea;">show_cursor</td>
+          <td style="padding:0.8rem 1rem;color:var(--text-secondary);">bool</td>
+          <td style="padding:0.8rem 1rem;font-family:monospace;">true</td>
+          <td style="padding:0.8rem 1rem;color:var(--text-secondary);">Show cursor glyph while typing.</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.8rem 1rem;font-family:monospace;color:#a8d8ea;">cursor_char</td>
+          <td style="padding:0.8rem 1rem;color:var(--text-secondary);">char</td>
+          <td style="padding:0.8rem 1rem;font-family:monospace;">'_'</td>
+          <td style="padding:0.8rem 1rem;color:var(--text-secondary);">The cursor glyph (e.g. '_', '|', '█').</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.8rem 1rem;font-family:monospace;color:#a8d8ea;">cursor_blink</td>
+          <td style="padding:0.8rem 1rem;color:var(--text-secondary);">bool</td>
+          <td style="padding:0.8rem 1rem;font-family:monospace;">true</td>
+          <td style="padding:0.8rem 1rem;color:var(--text-secondary);">Animate cursor visibility.</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.8rem 1rem;font-family:monospace;color:#a8d8ea;">blink_hz</td>
+          <td style="padding:0.8rem 1rem;color:var(--text-secondary);">int</td>
+          <td style="padding:0.8rem 1rem;font-family:monospace;">2</td>
+          <td style="padding:0.8rem 1rem;color:var(--text-secondary);">Cursor blink rate in Hz.</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.8rem 1rem;font-family:monospace;color:#a8d8ea;">on_complete</td>
+          <td style="padding:0.8rem 1rem;color:var(--text-secondary);">function&lt;void()&gt;</td>
+          <td style="padding:0.8rem 1rem;font-family:monospace;">null</td>
+          <td style="padding:0.8rem 1rem;color:var(--text-secondary);">Fires once when all chars displayed.</td>
+        </tr>
+        <tr>
+          <td style="padding:0.8rem 1rem;font-family:monospace;color:#a8d8ea;">on_char</td>
+          <td style="padding:0.8rem 1rem;color:var(--text-secondary);">function&lt;void(char)&gt;</td>
+          <td style="padding:0.8rem 1rem;font-family:monospace;">null</td>
+          <td style="padding:0.8rem 1rem;color:var(--text-secondary);">Fires for each character displayed.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- TypewriterSequence -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1rem;">TypewriterSequence</h2>
+  <p style="color:var(--text-secondary);margin-bottom:1.5rem;">
+    Chain multiple animations using a fluent builder. Steps execute in order with optional pauses and clears.
+  </p>
+  <div class="glass-card" style="padding:2rem;font-family:monospace;font-size:0.9rem;line-height:1.8;overflow-x:auto;">
+<pre style="margin:0;color:var(--text-primary);">TypewriterConfig matrix;
+matrix.chars_per_second = 20;
+
+auto seq = TypewriterSequence()
+    .Then("INITIATING BADWOLF SYSTEMS...", matrix)
+    .Pause(std::chrono::milliseconds(600))
+    .Then("\nLOADING MODULES...", matrix)
+    .Pause(std::chrono::milliseconds(400))
+    .Clear()
+    .Then("ALL SYSTEMS NOMINAL.", matrix)
+    .OnComplete([] { /* sequence finished */ })
+    .Build();
+
+ftxui::ui::RunFullscreen(seq);</pre>
+  </div>
+</section>
+
+<!-- Console -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1rem;">Console</h2>
+  <p style="color:var(--text-secondary);margin-bottom:1.5rem;">
+    A thread-safe scrollable output console with styled log levels and animated typewriter output.
+  </p>
+  <div class="glass-card" style="padding:2rem;font-family:monospace;font-size:0.9rem;line-height:1.8;overflow-x:auto;">
+<pre style="margin:0;color:var(--text-primary);">auto con = Console::Create(500);  // max 500 lines
+
+// Styled log helpers
+con-&gt;Info("Server started on port 8080");     // cyan
+con-&gt;Warn("Memory usage at 87%");             // yellow
+con-&gt;Error("Connection pool exhausted");      // red bold
+con-&gt;Success("Task completed in 42ms");       // green
+
+// Plain output
+con-&gt;PrintLine("Hello, World!", Color::White);
+con-&gt;PrintBold("=== Section Header ===");
+
+// Animated typewriter output
+TypewriterConfig tw;
+tw.chars_per_second = 40;
+con-&gt;TypePrint("Streaming 50,000 rows...", tw, Color::GreenLight);
+
+// Clear all lines
+con-&gt;Clear();
+
+// Build and run
+auto comp = con-&gt;Build(" Application Log ");
+ftxui::ui::RunFullscreen(comp);</pre>
+  </div>
+</section>
+
+<!-- ConsolePrompt getting started -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1rem;">ConsolePrompt — Getting Started</h2>
+  <p style="color:var(--text-secondary);margin-bottom:1.5rem;">
+    A full REPL component combining a scrollable console output with an interactive input line.
+    Supports command history via ↑/↓ arrows, customizable prompt, and typewriter responses.
+  </p>
+  <div class="glass-card" style="padding:2rem;font-family:monospace;font-size:0.9rem;line-height:1.8;overflow-x:auto;">
+<pre style="margin:0;color:var(--text-primary);">auto con = Console::Create();
+con-&gt;PrintBold("Welcome to MyApp REPL v1.0");
+con-&gt;Info("Type 'help' to get started.");
+
+ConsolePromptConfig cfg;
+cfg.prompt_str        = "myapp&gt; ";
+cfg.prompt_color      = Color::GreenLight;
+cfg.placeholder       = "enter command...";
+cfg.history_size      = 100;
+cfg.typewriter_output = true;
+
+cfg.handler = [](const std::string&amp; cmd) -&gt; std::string {
+    if (cmd == "help")    return "Commands: help quit version";
+    if (cmd == "version") return "myapp v1.0.0";
+    if (cmd == "quit") {
+        if (App* a = App::Active()) a-&gt;Exit();
+        return "";
+    }
+    return "[ERROR] Unknown: " + cmd;
+};
+
+auto prompt = ConsolePrompt(con, cfg);
+ftxui::ui::RunFullscreen(prompt);</pre>
+  </div>
+</section>
+
+<!-- Star Wars example -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1rem;">Example: Star Wars Opening Crawl</h2>
+  <p style="color:var(--text-secondary);margin-bottom:1.5rem;">
+    Recreate the iconic Star Wars scrolling text using <code style="color:var(--teal-light)">TypewriterSequence</code>
+    with yellow color and dramatic pauses.
+  </p>
+  <div class="glass-card" style="padding:2rem;font-family:monospace;font-size:0.9rem;line-height:1.8;overflow-x:auto;">
+<pre style="margin:0;color:var(--text-primary);">TypewriterConfig crawl;
+crawl.chars_per_second = 15;
+crawl.show_cursor      = false;
+
+auto comp = TypewriterSequence()
+    .Then("A long time ago in a galaxy far,\nfar away....", crawl)
+    .Pause(std::chrono::milliseconds(1000))
+    .Clear()
+    .Then("STAR\nWARS", crawl)
+    .Pause(std::chrono::milliseconds(500))
+    .Then("\n\nEpisode IV\nA NEW HOPE\n", crawl)
+    .Pause(std::chrono::milliseconds(300))
+    .Then("It is a period of civil war.\n"
+          "Rebel spaceships, striking\n"
+          "from a hidden base...", crawl)
+    .OnComplete([] {
+        if (App* a = App::Active()) a-&gt;Exit();
+    })
+    .Build();
+
+// Render in yellow — the classic crawl color
+auto wrapped = Renderer(comp, [comp]() -&gt; Element {
+    return comp-&gt;Render() | color(Color::Yellow) | hcenter;
+});
+
+ftxui::ui::RunFullscreen(wrapped);</pre>
+  </div>
+</section>
+
+<!-- WithTypewriter -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1rem;">WithTypewriter — Intro Animations</h2>
+  <p style="color:var(--text-secondary);margin-bottom:1.5rem;">
+    Wrap any component with a typewriter intro. The intro plays first; when complete,
+    the real component is revealed.
+  </p>
+  <div class="glass-card" style="padding:2rem;font-family:monospace;font-size:0.9rem;line-height:1.8;overflow-x:auto;">
+<pre style="margin:0;color:var(--text-primary);">auto my_dashboard = BuildDashboard();
+
+TypewriterConfig intro;
+intro.chars_per_second = 40;
+
+auto app = WithTypewriter(
+    my_dashboard,
+    "BADWOLF OS v1.0  INITIALIZING...",
+    intro);
+
+ftxui::ui::RunFullscreen(app);</pre>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer style="padding:3rem 2rem;text-align:center;border-top:1px solid rgba(255,255,255,0.1);margin-top:4rem;">
+  <div style="max-width:900px;margin:0 auto;display:flex;gap:3rem;flex-wrap:wrap;justify-content:space-between;">
+    <div style="text-align:left;">
+      <h4 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--text-secondary);">PAGES</h4>
+      <a href="getting-started.html" style="display:block;color:var(--text-secondary);font-size:0.85rem;margin-bottom:0.5rem;text-decoration:none;">Getting Started</a>
+      <a href="api.html" style="display:block;color:var(--text-secondary);font-size:0.85rem;margin-bottom:0.5rem;text-decoration:none;">API Reference</a>
+      <a href="features.html" style="display:block;color:var(--text-secondary);font-size:0.85rem;margin-bottom:0.5rem;text-decoration:none;">Features</a>
+      <a href="typewriter.html" style="display:block;color:var(--teal-light);font-size:0.85rem;margin-bottom:0.5rem;text-decoration:none;">Typewriter Engine</a>
+    </div>
+    <div style="text-align:left;">
+      <h4 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--text-secondary);">LINKS</h4>
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" style="display:block;color:var(--text-secondary);font-size:0.85rem;margin-bottom:0.5rem;text-decoration:none;">GitHub</a>
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF/issues" target="_blank" rel="noopener" style="display:block;color:var(--text-secondary);font-size:0.85rem;margin-bottom:0.5rem;text-decoration:none;">Issues</a>
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF/blob/main/LICENSE" target="_blank" rel="noopener" style="display:block;color:var(--text-secondary);font-size:0.85rem;margin-bottom:0.5rem;text-decoration:none;">MIT License</a>
+    </div>
+  </div>
+  <div style="margin-top:2rem;color:var(--text-secondary);font-size:0.85rem;">
+    <span>Built with C++20 • <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" class="text-link" target="_blank" rel="noopener">Star on GitHub ⭐</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

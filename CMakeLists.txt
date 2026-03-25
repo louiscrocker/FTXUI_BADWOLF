@@ -267,6 +267,8 @@ add_library(ui
   src/ftxui/ui/wasm_bridge.cpp
   include/ftxui/ui/typewriter.hpp
   src/ftxui/ui/typewriter.cpp
+  include/ftxui/ui/json.hpp
+  src/ftxui/ui/json.cpp
 )
 
 target_link_libraries(dom PUBLIC screen)

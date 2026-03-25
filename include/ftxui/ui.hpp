@@ -106,5 +106,6 @@
 #include "ftxui/ui/widgets.hpp"
 #include "ftxui/ui/wizard.hpp"
 #include "ftxui/ui/world_map_data.hpp"
+#include "ftxui/ui/json.hpp"
 
 #endif  // FTXUI_UI_HPP

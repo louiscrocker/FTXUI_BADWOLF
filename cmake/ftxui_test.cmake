@@ -103,6 +103,7 @@ add_executable(ftxui_ui_test
   src/ftxui/ui/webgl_test.cpp
   src/ftxui/ui/typewriter_test.cpp
   src/ftxui/ui/rich_text_test.cpp
+  src/ftxui/ui/json_test.cpp
 )
 
 target_link_libraries(ftxui_ui_test
