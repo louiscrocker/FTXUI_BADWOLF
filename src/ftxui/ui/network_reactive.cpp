@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <sys/select.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -24,8 +25,9 @@
 
 namespace ftxui::ui {
 
-// ── Wire protocol helpers ─────────────────────────────────────────────────────
-// Messages are framed as: [4-byte LE length][payload bytes]
+// ── Wire protocol helpers
+// ───────────────────────────────────────────────────── Messages are framed as:
+// [4-byte LE length][payload bytes]
 
 namespace {
 
@@ -39,14 +41,20 @@ bool SendMessage(int fd, const std::string& payload) {
   hdr[2] = static_cast<uint8_t>((len >> 16) & 0xFF);
   hdr[3] = static_cast<uint8_t>((len >> 24) & 0xFF);
 
-  if (::send(fd, hdr, 4, MSG_NOSIGNAL) != 4) return false;
-  if (len == 0) return true;
+  if (::send(fd, hdr, 4, MSG_NOSIGNAL) != 4) {
+    return false;
+  }
+  if (len == 0) {
+    return true;
+  }
   ssize_t sent = 0;
   while (sent < static_cast<ssize_t>(len)) {
     ssize_t n = ::send(fd, payload.data() + sent,
                        static_cast<size_t>(len) - static_cast<size_t>(sent),
                        MSG_NOSIGNAL);
-    if (n <= 0) return false;
+    if (n <= 0) {
+      return false;
+    }
     sent += n;
   }
   return true;
@@ -58,7 +66,9 @@ bool RecvMessage(int fd, std::string& out) {
   ssize_t got = 0;
   while (got < 4) {
     ssize_t n = ::recv(fd, hdr + got, static_cast<size_t>(4 - got), 0);
-    if (n <= 0) return false;
+    if (n <= 0) {
+      return false;
+    }
     got += n;
   }
   const uint32_t len = static_cast<uint32_t>(hdr[0]) |
@@ -70,15 +80,19 @@ bool RecvMessage(int fd, std::string& out) {
     out.clear();
     return true;
   }
-  if (len > 64 * 1024 * 1024) return false;  // sanity limit: 64 MB
+  if (len > 64 * 1024 * 1024) {
+    return false;  // sanity limit: 64 MB
+  }
 
   out.resize(len);
   ssize_t received = 0;
   while (received < static_cast<ssize_t>(len)) {
-    ssize_t n = ::recv(fd, out.data() + received,
-                       static_cast<size_t>(len) - static_cast<size_t>(received),
-                       0);
-    if (n <= 0) return false;
+    ssize_t n =
+        ::recv(fd, out.data() + received,
+               static_cast<size_t>(len) - static_cast<size_t>(received), 0);
+    if (n <= 0) {
+      return false;
+    }
     received += n;
   }
   return true;
@@ -86,7 +100,8 @@ bool RecvMessage(int fd, std::string& out) {
 
 }  // namespace
 
-// ── NetworkReactiveServer::Impl ───────────────────────────────────────────────
+// ── NetworkReactiveServer::Impl
+// ───────────────────────────────────────────────
 
 struct NetworkReactiveServer::Impl {
   std::shared_ptr<Reactive<std::string>> state_;
@@ -104,7 +119,9 @@ struct NetworkReactiveServer::Impl {
   ~Impl() { DoStop(); }
 
   void DoStop() {
-    if (!running_.exchange(false)) return;
+    if (!running_.exchange(false)) {
+      return;
+    }
 
     // Remove the state listener
     if (state_ && state_listener_id_ >= 0) {
@@ -119,7 +136,9 @@ struct NetworkReactiveServer::Impl {
       server_fd_ = -1;
     }
 
-    if (accept_thread_.joinable()) accept_thread_.join();
+    if (accept_thread_.joinable()) {
+      accept_thread_.join();
+    }
 
     // Close all client sockets
     std::lock_guard<std::mutex> lk(clients_mutex_);
@@ -140,27 +159,45 @@ struct NetworkReactiveServer::Impl {
     }
     for (int fd : dead) {
       ::close(fd);
-      client_fds_.erase(
-          std::remove(client_fds_.begin(), client_fds_.end(), fd),
-          client_fds_.end());
+      client_fds_.erase(std::remove(client_fds_.begin(), client_fds_.end(), fd),
+                        client_fds_.end());
     }
   }
 
   void AcceptLoop() {
+    // Use select() with timeout so we can check running_ periodically
     while (running_.load()) {
+      fd_set read_fds;
+      FD_ZERO(&read_fds);
+      FD_SET(server_fd_, &read_fds);
+      struct timeval tv{};
+      tv.tv_sec = 0;
+      tv.tv_usec = 100000;  // 100 ms
+
+      int sel = ::select(server_fd_ + 1, &read_fds, nullptr, nullptr, &tv);
+      if (sel <= 0) {
+        continue;
+      }
+      if (!FD_ISSET(server_fd_, &read_fds)) {
+        continue;
+      }
+
       sockaddr_in client_addr{};
       socklen_t client_len = sizeof(client_addr);
-      int client_fd =
-          ::accept(server_fd_, reinterpret_cast<sockaddr*>(&client_addr),
-                   &client_len);
+      int client_fd = ::accept(
+          server_fd_, reinterpret_cast<sockaddr*>(&client_addr), &client_len);
       if (client_fd < 0) {
-        if (!running_.load()) break;
+        if (!running_.load()) {
+          break;
+        }
         continue;
       }
 
       // Send current state immediately
       std::string current;
-      if (state_) current = state_->Get();
+      if (state_) {
+        current = state_->Get();
+      }
       SendMessage(client_fd, current);
 
       {
@@ -174,8 +211,10 @@ struct NetworkReactiveServer::Impl {
 // ── NetworkReactiveServer public API ─────────────────────────────────────────
 
 std::shared_ptr<NetworkReactiveServer> NetworkReactiveServer::Create(
-    std::shared_ptr<Reactive<std::string>> state, uint16_t port) {
-  auto srv = std::shared_ptr<NetworkReactiveServer>(new NetworkReactiveServer());
+    std::shared_ptr<Reactive<std::string>> state,
+    uint16_t port) {
+  auto srv =
+      std::shared_ptr<NetworkReactiveServer>(new NetworkReactiveServer());
   srv->impl_ = std::make_shared<Impl>();
   srv->impl_->state_ = std::move(state);
   srv->impl_->port_ = port;
@@ -184,10 +223,14 @@ std::shared_ptr<NetworkReactiveServer> NetworkReactiveServer::Create(
 
 void NetworkReactiveServer::Start() {
   auto& impl = *impl_;
-  if (impl.running_.load()) return;
+  if (impl.running_.load()) {
+    return;
+  }
 
   impl.server_fd_ = ::socket(AF_INET, SOCK_STREAM, 0);
-  if (impl.server_fd_ < 0) return;
+  if (impl.server_fd_ < 0) {
+    return;
+  }
 
   int opt = 1;
   ::setsockopt(impl.server_fd_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
@@ -241,7 +284,8 @@ uint16_t NetworkReactiveServer::Port() const {
 
 NetworkReactiveServer::~NetworkReactiveServer() = default;
 
-// ── NetworkReactiveClient::Impl ───────────────────────────────────────────────
+// ── NetworkReactiveClient::Impl
+// ───────────────────────────────────────────────
 
 struct NetworkReactiveClient::Impl {
   std::string host_;
@@ -254,11 +298,26 @@ struct NetworkReactiveClient::Impl {
   std::atomic<bool> connected_{false};
   std::thread recv_thread_;
 
+  // Active connection fd (so DoDisconnect can close it to unblock recv)
+  std::mutex fd_mutex_;
+  int active_fd_ = -1;
+
   ~Impl() { DoDisconnect(); }
 
   void DoDisconnect() {
     running_.store(false);
-    if (recv_thread_.joinable()) recv_thread_.join();
+    // Close active fd to unblock any pending recv()
+    {
+      std::lock_guard<std::mutex> lk(fd_mutex_);
+      if (active_fd_ >= 0) {
+        ::shutdown(active_fd_, SHUT_RDWR);
+        ::close(active_fd_);
+        active_fd_ = -1;
+      }
+    }
+    if (recv_thread_.joinable()) {
+      recv_thread_.join();
+    }
   }
 
   void RecvLoop() {
@@ -266,7 +325,7 @@ struct NetworkReactiveClient::Impl {
       // Attempt to connect
       int fd = ::socket(AF_INET, SOCK_STREAM, 0);
       if (fd < 0) {
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
         continue;
       }
 
@@ -281,35 +340,52 @@ struct NetworkReactiveClient::Impl {
       hints.ai_socktype = SOCK_STREAM;
       bool resolved = false;
       if (::getaddrinfo(host_.c_str(), nullptr, &hints, &res) == 0 && res) {
-        const auto* sin =
-            reinterpret_cast<const sockaddr_in*>(res->ai_addr);
+        const auto* sin = reinterpret_cast<const sockaddr_in*>(res->ai_addr);
         addr.sin_addr = sin->sin_addr;
         resolved = true;
         ::freeaddrinfo(res);
       }
 
-      if (!resolved || ::connect(fd, reinterpret_cast<sockaddr*>(&addr),
-                                  sizeof(addr)) < 0) {
+      if (!resolved ||
+          ::connect(fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0) {
         ::close(fd);
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
         continue;
       }
 
+      // Register active fd
+      {
+        std::lock_guard<std::mutex> lk(fd_mutex_);
+        if (!running_.load()) {
+          ::close(fd);
+          return;
+        }
+        active_fd_ = fd;
+      }
       connected_.store(true);
 
       // Receive messages until disconnect
       while (running_.load()) {
         std::string msg;
-        if (!RecvMessage(fd, msg)) break;
+        if (!RecvMessage(fd, msg)) {
+          break;
+        }
         state_->Set(msg);
       }
 
       connected_.store(false);
-      ::close(fd);
+
+      {
+        std::lock_guard<std::mutex> lk(fd_mutex_);
+        if (active_fd_ == fd) {
+          ::close(fd);
+          active_fd_ = -1;
+        }
+      }
 
       if (running_.load()) {
-        // Retry after 2 seconds
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        // Retry after 200ms
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
       }
     }
   }
@@ -318,7 +394,8 @@ struct NetworkReactiveClient::Impl {
 // ── NetworkReactiveClient public API ─────────────────────────────────────────
 
 std::shared_ptr<NetworkReactiveClient> NetworkReactiveClient::Connect(
-    std::string host, uint16_t port) {
+    std::string host,
+    uint16_t port) {
   auto client =
       std::shared_ptr<NetworkReactiveClient>(new NetworkReactiveClient());
   client->impl_ = std::make_shared<Impl>();

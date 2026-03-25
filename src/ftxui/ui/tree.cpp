@@ -19,7 +19,8 @@ using namespace ftxui;
 
 namespace ftxui::ui {
 
-// ── TreeNode factories ────────────────────────────────────────────────────────
+// ── TreeNode factories
+// ────────────────────────────────────────────────────────
 
 TreeNode TreeNode::Leaf(std::string_view label,
                         std::function<void()> on_select) {
@@ -33,11 +34,13 @@ TreeNode TreeNode::Branch(std::string_view label,
                   std::move(on_select)};
 }
 
-// ── Internal recursive builder ────────────────────────────────────────────────
+// ── Internal recursive builder
+// ────────────────────────────────────────────────
 
 namespace {
 
-Component BuildNode(const TreeNode& node, int depth,
+Component BuildNode(const TreeNode& node,
+                    int depth,
                     const std::function<void(const std::string&)>& global_cb) {
   std::string indent(static_cast<size_t>(depth) * 2, ' ');
 
@@ -78,20 +81,21 @@ Component BuildNode(const TreeNode& node, int depth,
   Component result = Collapsible(indent + label, child_container);
 
   if (branch_on_select || global_cb) {
-    result = CatchEvent(result, [branch_on_select, label,
-                                 global_cb](Event e) -> bool {
-      if (e == Event::Return) {
-        if (branch_on_select) {
-          branch_on_select();
-        }
-        if (global_cb) {
-          global_cb(label);
-        }
-        // Return false so Collapsible can also toggle on Enter.
-        return false;
-      }
-      return false;
-    });
+    result = CatchEvent(result,
+                        [branch_on_select, label, global_cb](Event e) -> bool {
+                          if (e == Event::Return) {
+                            if (branch_on_select) {
+                              branch_on_select();
+                            }
+                            if (global_cb) {
+                              global_cb(label);
+                            }
+                            // Return false so Collapsible can also toggle on
+                            // Enter.
+                            return false;
+                          }
+                          return false;
+                        });
   }
 
   return result;
@@ -99,7 +103,8 @@ Component BuildNode(const TreeNode& node, int depth,
 
 }  // namespace
 
-// ── Tree ──────────────────────────────────────────────────────────────────────
+// ── Tree
+// ──────────────────────────────────────────────────────────────────────
 
 Tree& Tree::Node(TreeNode node) {
   roots_.push_back(std::move(node));

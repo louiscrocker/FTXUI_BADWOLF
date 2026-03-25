@@ -61,12 +61,11 @@ class DataContext {
 
   // ── Constructors ───────────────────────────────────────────────────────────
 
-  DataContext()
-      : reactive_(std::make_shared<ftxui::ui::Reactive<T>>()) {}
+  DataContext() : reactive_(std::make_shared<ftxui::ui::Reactive<T>>()) {}
 
   explicit DataContext(T initial)
-      : reactive_(std::make_shared<ftxui::ui::Reactive<T>>(std::move(initial))) {
-  }
+      : reactive_(
+            std::make_shared<ftxui::ui::Reactive<T>>(std::move(initial))) {}
 
   // ── Provide ────────────────────────────────────────────────────────────────
 
@@ -101,7 +100,8 @@ class DataContext {
   // ── Thread-local context stack ─────────────────────────────────────────────
 
   static std::vector<std::shared_ptr<ftxui::ui::Reactive<T>>>& GetStack() {
-    static thread_local std::vector<std::shared_ptr<ftxui::ui::Reactive<T>>> stack;
+    static thread_local std::vector<std::shared_ptr<ftxui::ui::Reactive<T>>>
+        stack;
     return stack;
   }
 

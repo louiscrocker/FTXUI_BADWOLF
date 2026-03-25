@@ -73,9 +73,9 @@ class ConfigEditor {
   // ── Value accessors ────────────────────────────────────────────────────────
 
   std::string GetString(std::string_view key) const;
-  int         GetInt(std::string_view key) const;
-  float       GetFloat(std::string_view key) const;
-  bool        GetBool(std::string_view key) const;
+  int GetInt(std::string_view key) const;
+  float GetFloat(std::string_view key) const;
+  bool GetBool(std::string_view key) const;
 
   // ── Persistence ────────────────────────────────────────────────────────────
 

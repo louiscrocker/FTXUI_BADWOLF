@@ -24,31 +24,43 @@
 using namespace ftxui;
 using namespace ftxui::ui;
 
-// ── Model ─────────────────────────────────────────────────────────────────────
+// ── Model
+// ─────────────────────────────────────────────────────────────────────
 
 struct Model {
   int count = 0;
 };
 
-// ── Messages ──────────────────────────────────────────────────────────────────
+// ── Messages
+// ──────────────────────────────────────────────────────────────────
 
 enum class Msg { Increment, Decrement, Reset, Quit };
 
-// ── Update (pure reducer) ─────────────────────────────────────────────────────
+// ── Update (pure reducer)
+// ─────────────────────────────────────────────────────
 
 Model Update(Model m, Msg msg) {
   switch (msg) {
-    case Msg::Increment: m.count++;  break;
-    case Msg::Decrement: m.count--;  break;
-    case Msg::Reset:     m.count = 0; break;
+    case Msg::Increment:
+      m.count++;
+      break;
+    case Msg::Decrement:
+      m.count--;
+      break;
+    case Msg::Reset:
+      m.count = 0;
+      break;
     case Msg::Quit:
-      if (App* app = App::Active()) app->Exit();
+      if (App* app = App::Active()) {
+        app->Exit();
+      }
       break;
   }
   return m;
 }
 
-// ── View (pure DOM — no component objects constructed here) ───────────────────
+// ── View (pure DOM — no component objects constructed here)
+// ───────────────────
 
 Element View(const Model& m) {
   const Theme& t = GetTheme();
@@ -71,11 +83,12 @@ Element View(const Model& m) {
                  text("[q] quit       ") | color(t.error_color),
              }),
          }) |
-         borderStyled(t.border_style, t.border_color) |
-         size(WIDTH, EQUAL, 36) | center;
+         borderStyled(t.border_style, t.border_color) | size(WIDTH, EQUAL, 36) |
+         center;
 }
 
-// ── Entry point ───────────────────────────────────────────────────────────────
+// ── Entry point
+// ───────────────────────────────────────────────────────────────
 
 int main() {
   SetTheme(Theme::Dracula());
@@ -87,8 +100,9 @@ int main() {
 
   auto dispatch = [model](Msg msg) {
     *model = Update(*model, msg);
-    if (App* app = App::Active())
+    if (App* app = App::Active()) {
       app->PostEvent(Event::Custom);  // trigger redraw
+    }
   };
 
   // Renderer: calls View() on every frame.
@@ -96,12 +110,26 @@ int main() {
 
   // CatchEvent: translates key presses into typed messages.
   comp |= CatchEvent([dispatch](Event event) -> bool {
-    if (!event.is_character()) return false;
+    if (!event.is_character()) {
+      return false;
+    }
     const std::string& ch = event.character();
-    if (ch == "+") { dispatch(Msg::Increment); return true; }
-    if (ch == "-") { dispatch(Msg::Decrement); return true; }
-    if (ch == "r") { dispatch(Msg::Reset);     return true; }
-    if (ch == "q") { dispatch(Msg::Quit);      return true; }
+    if (ch == "+") {
+      dispatch(Msg::Increment);
+      return true;
+    }
+    if (ch == "-") {
+      dispatch(Msg::Decrement);
+      return true;
+    }
+    if (ch == "r") {
+      dispatch(Msg::Reset);
+      return true;
+    }
+    if (ch == "q") {
+      dispatch(Msg::Quit);
+      return true;
+    }
     return false;
   });
 

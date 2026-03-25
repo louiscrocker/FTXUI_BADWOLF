@@ -59,13 +59,13 @@ class Grid {
 
  private:
   struct CellEntry {
-    ftxui::Element    element;    // static cell (may be nullptr)
-    ftxui::Component  component;  // interactive cell (may be nullptr)
+    ftxui::Element element;      // static cell (may be nullptr)
+    ftxui::Component component;  // interactive cell (may be nullptr)
   };
 
-  int               cols_     = 2;
-  int               gap_      = 0;
-  int               row_gap_  = 0;
+  int cols_ = 2;
+  int gap_ = 0;
+  int row_gap_ = 0;
   std::vector<CellEntry> cells_;
 };
 

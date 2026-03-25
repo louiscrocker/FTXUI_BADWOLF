@@ -39,8 +39,7 @@ class ReactiveList {
  public:
   ReactiveList() = default;
 
-  explicit ReactiveList(std::vector<T> initial)
-      : items_(std::move(initial)) {}
+  explicit ReactiveList(std::vector<T> initial) : items_(std::move(initial)) {}
 
   // ── Mutating operations ───────────────────────────────────────────────────
 
@@ -155,14 +154,15 @@ class ReactiveList {
     return mirror;
   }
 
-  /// @brief Fire all OnChange listeners.  Called internally after every mutation.
+  /// @brief Fire all OnChange listeners.  Called internally after every
+  /// mutation.
   void Notify() {
     std::vector<std::function<void(const std::vector<T>&)>> snapshot;
     std::vector<T> items_copy;
     {
       std::lock_guard<std::mutex> lk(mutex_);
-      snapshot    = listeners_;
-      items_copy  = items_;
+      snapshot = listeners_;
+      items_copy = items_;
       // Update mirror reactive if it exists.
       if (reactive_mirror_) {
         reactive_mirror_->Set(items_copy);

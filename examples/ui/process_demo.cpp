@@ -4,8 +4,8 @@
 
 /// @file process_demo.cpp
 ///
-/// Demonstrates ui::ProcessPanel — a subprocess runner that streams stdout/stderr
-/// into scrollable log panels.
+/// Demonstrates ui::ProcessPanel — a subprocess runner that streams
+/// stdout/stderr into scrollable log panels.
 ///
 /// Three panels are shown side by side:
 ///   1. ls -la /usr/local/bin        (auto-starts)
@@ -79,27 +79,41 @@ int main() {
     // Bottom status bar.
     std::string focused_label = "[" + std::to_string(focused + 1) + "]";
     Element status_bar = hbox({
-      text(" Active: ") | dim,
-      text(focused_label) | bold | color(t.primary),
-      text("  1/2/3=select  S=start  X=stop  C=clear  Q=quit") | dim,
+        text(" Active: ") | dim,
+        text(focused_label) | bold | color(t.primary),
+        text("  1/2/3=select  S=start  X=stop  C=clear  Q=quit") | dim,
     });
 
     return vbox({
-      hbox(std::move(panel_cols)) | flex,
-      separator(),
-      status_bar,
-    }) | flex;
+               hbox(std::move(panel_cols)) | flex,
+               separator(),
+               status_bar,
+           }) |
+           flex;
   });
 
   root |= CatchEvent([&](Event e) -> bool {
     if (e == Event::Character('q') || e == Event::Character('Q')) {
-      for (auto& p : panels) p->Stop();
-      if (App* a = App::Active()) a->Exit();
+      for (auto& p : panels) {
+        p->Stop();
+      }
+      if (App* a = App::Active()) {
+        a->Exit();
+      }
       return true;
     }
-    if (e == Event::Character('1')) { focused = 0; return true; }
-    if (e == Event::Character('2')) { focused = 1; return true; }
-    if (e == Event::Character('3')) { focused = 2; return true; }
+    if (e == Event::Character('1')) {
+      focused = 0;
+      return true;
+    }
+    if (e == Event::Character('2')) {
+      focused = 1;
+      return true;
+    }
+    if (e == Event::Character('3')) {
+      focused = 2;
+      return true;
+    }
     if (e == Event::Character('s') || e == Event::Character('S')) {
       panels[focused]->Start();
       return true;

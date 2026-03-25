@@ -21,8 +21,8 @@
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/screen/color.hpp"
 #include "ftxui/ui/app.hpp"
-#include "ftxui/ui/globe.hpp"
 #include "ftxui/ui/geomap.hpp"
+#include "ftxui/ui/globe.hpp"
 #include "ftxui/ui/log_panel.hpp"
 #include "ftxui/ui/markdown.hpp"
 #include "ftxui/ui/reactive.hpp"
@@ -81,7 +81,7 @@ ftxui_element_t ftxui_text_bold(const char* str) {
 
 ftxui_element_t ftxui_text_colored(const char* str, ftxui_color_t color) {
   return new ftxui_element_s{ftxui::text(str ? str : "") |
-                              ftxui::color(to_color(color))};
+                             ftxui::color(to_color(color))};
 }
 
 ftxui_element_t ftxui_separator(void) {
@@ -146,7 +146,8 @@ ftxui_element_t ftxui_center(ftxui_element_t inner) {
 }
 
 ftxui_element_t ftxui_spinner(int frame_index) {
-  return new ftxui_element_s{ftxui::spinner(0, static_cast<size_t>(frame_index))};
+  return new ftxui_element_s{
+      ftxui::spinner(0, static_cast<size_t>(frame_index))};
 }
 
 ftxui_element_t ftxui_markdown(const char* markdown_text) {
@@ -157,8 +158,8 @@ ftxui_element_t ftxui_markdown(const char* markdown_text) {
 /* ── Components ──────────────────────────────────────────────────────────── */
 
 ftxui_component_t ftxui_button(const char* label,
-                                void (*on_click)(void* userdata),
-                                void* userdata) {
+                               void (*on_click)(void* userdata),
+                               void* userdata) {
   std::string lbl = label ? label : "";
   auto cb = [on_click, userdata]() {
     if (on_click) {
@@ -169,7 +170,7 @@ ftxui_component_t ftxui_button(const char* label,
 }
 
 ftxui_component_t ftxui_renderer(ftxui_element_t (*render_fn)(void* userdata),
-                                  void* userdata) {
+                                 void* userdata) {
   auto fn = [render_fn, userdata]() -> ftxui::Element {
     if (!render_fn) {
       return ftxui::text("");
@@ -186,9 +187,9 @@ ftxui_component_t ftxui_renderer(ftxui_element_t (*render_fn)(void* userdata),
 }
 
 ftxui_component_t ftxui_catch_event(ftxui_component_t inner,
-                                     int (*handler)(const char* event_str,
-                                                    void* userdata),
-                                     void* userdata) {
+                                    int (*handler)(const char* event_str,
+                                                   void* userdata),
+                                    void* userdata) {
   if (!inner) {
     return nullptr;
   }
@@ -208,7 +209,7 @@ ftxui_component_t ftxui_catch_event(ftxui_component_t inner,
 }
 
 ftxui_component_t ftxui_container_vertical(ftxui_component_t* children,
-                                            size_t count) {
+                                           size_t count) {
   ftxui::Components comps;
   comps.reserve(count);
   for (size_t i = 0; i < count; ++i) {
@@ -220,7 +221,7 @@ ftxui_component_t ftxui_container_vertical(ftxui_component_t* children,
 }
 
 ftxui_component_t ftxui_container_horizontal(ftxui_component_t* children,
-                                              size_t count) {
+                                             size_t count) {
   ftxui::Components comps;
   comps.reserve(count);
   for (size_t i = 0; i < count; ++i) {
@@ -312,7 +313,7 @@ void ftxui_log_panel_debug(ftxui_log_panel_t panel, const char* msg) {
 }
 
 ftxui_component_t ftxui_log_panel_build(ftxui_log_panel_t panel,
-                                         const char* title) {
+                                        const char* title) {
   if (!panel || !panel->panel) {
     return nullptr;
   }
@@ -345,12 +346,11 @@ int ftxui_reactive_int_get(ftxui_reactive_int_t r) {
 }
 
 void ftxui_reactive_int_on_change(ftxui_reactive_int_t r,
-                                   void (*fn)(int value, void* userdata),
-                                   void* userdata) {
+                                  void (*fn)(int value, void* userdata),
+                                  void* userdata) {
   if (r && r->reactive && fn) {
-    r->reactive->OnChange([fn, userdata](const int& val) {
-      fn(val, userdata);
-    });
+    r->reactive->OnChange(
+        [fn, userdata](const int& val) { fn(val, userdata); });
   }
 }
 
@@ -379,12 +379,11 @@ float ftxui_reactive_float_get(ftxui_reactive_float_t r) {
 }
 
 void ftxui_reactive_float_on_change(ftxui_reactive_float_t r,
-                                     void (*fn)(float value, void* userdata),
-                                     void* userdata) {
+                                    void (*fn)(float value, void* userdata),
+                                    void* userdata) {
   if (r && r->reactive && fn) {
-    r->reactive->OnChange([fn, userdata](const float& val) {
-      fn(val, userdata);
-    });
+    r->reactive->OnChange(
+        [fn, userdata](const float& val) { fn(val, userdata); });
   }
 }
 

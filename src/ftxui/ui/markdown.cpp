@@ -50,9 +50,8 @@ std::vector<Span> ParseInline(std::string_view line) {
   size_t i = 0;
   while (i < line.size()) {
     // Bold: **text** or __text__
-    if (i + 1 < line.size() &&
-        ((line[i] == '*' && line[i + 1] == '*') ||
-         (line[i] == '_' && line[i + 1] == '_'))) {
+    if (i + 1 < line.size() && ((line[i] == '*' && line[i + 1] == '*') ||
+                                (line[i] == '_' && line[i + 1] == '_'))) {
       char delim = line[i];
       // Search for the closing delimiter pair
       std::string close_pat = {delim, delim};
@@ -76,7 +75,8 @@ std::vector<Span> ParseInline(std::string_view line) {
         if (end != std::string_view::npos && end != i + 1) {
           flush_plain();
           spans.push_back({SpanKind::Italic,
-                           std::string(line.substr(i + 1, end - i - 1)), {}});
+                           std::string(line.substr(i + 1, end - i - 1)),
+                           {}});
           i = end + 1;
           continue;
         }
@@ -99,8 +99,7 @@ std::vector<Span> ParseInline(std::string_view line) {
     if (line[i] == '[') {
       size_t close_bracket = line.find(']', i + 1);
       if (close_bracket != std::string_view::npos &&
-          close_bracket + 1 < line.size() &&
-          line[close_bracket + 1] == '(') {
+          close_bracket + 1 < line.size() && line[close_bracket + 1] == '(') {
         size_t close_paren = line.find(')', close_bracket + 2);
         if (close_paren != std::string_view::npos) {
           flush_plain();
@@ -108,7 +107,8 @@ std::vector<Span> ParseInline(std::string_view line) {
               std::string(line.substr(i + 1, close_bracket - i - 1));
           std::string url = std::string(
               line.substr(close_bracket + 2, close_paren - close_bracket - 2));
-          spans.push_back({SpanKind::Link, std::move(link_text), std::move(url)});
+          spans.push_back(
+              {SpanKind::Link, std::move(link_text), std::move(url)});
           i = close_paren + 1;
           continue;
         }
@@ -167,7 +167,8 @@ Element RenderInline(std::string_view line) {
 
 std::string_view Trim(std::string_view s) {
   size_t start = 0;
-  while (start < s.size() && std::isspace(static_cast<unsigned char>(s[start]))) {
+  while (start < s.size() &&
+         std::isspace(static_cast<unsigned char>(s[start]))) {
     ++start;
   }
   size_t end = s.size();
@@ -181,15 +182,23 @@ std::string_view Trim(std::string_view s) {
 
 bool IsHorizontalRule(std::string_view line) {
   std::string_view trimmed = Trim(line);
-  if (trimmed.size() < 3) return false;
+  if (trimmed.size() < 3) {
+    return false;
+  }
   char c = trimmed[0];
-  if (c != '-' && c != '_' && c != '*') return false;
+  if (c != '-' && c != '_' && c != '*') {
+    return false;
+  }
   for (char ch : trimmed) {
-    if (ch != c && ch != ' ') return false;
+    if (ch != c && ch != ' ') {
+      return false;
+    }
   }
   size_t count = 0;
   for (char ch : trimmed) {
-    if (ch == c) ++count;
+    if (ch == c) {
+      ++count;
+    }
   }
   return count >= 3;
 }
@@ -208,7 +217,8 @@ std::vector<std::string_view> SplitLines(std::string_view text) {
   return lines;
 }
 
-// ─── Main Markdown renderer ───────────────────────────────────────────────────
+// ─── Main Markdown renderer
+// ───────────────────────────────────────────────────
 
 Elements RenderMarkdown(std::string_view md) {
   const Theme& t = GetTheme();
@@ -262,22 +272,26 @@ Elements RenderMarkdown(std::string_view md) {
 
     std::string_view trimmed = Trim(line);
 
-    // ── Blank line ────────────────────────────────────────────────────────────
+    // ── Blank line
+    // ────────────────────────────────────────────────────────────
     if (trimmed.empty()) {
       result.push_back(text(""));
       continue;
     }
 
-    // ── Horizontal rule ───────────────────────────────────────────────────────
+    // ── Horizontal rule
+    // ───────────────────────────────────────────────────────
     if (IsHorizontalRule(trimmed)) {
       result.push_back(separator());
       continue;
     }
 
-    // ── Headings ──────────────────────────────────────────────────────────────
+    // ── Headings
+    // ──────────────────────────────────────────────────────────────
     if (trimmed.size() >= 2 && trimmed[0] == '#') {
       int level = 0;
-      while (level < static_cast<int>(trimmed.size()) && trimmed[level] == '#') {
+      while (level < static_cast<int>(trimmed.size()) &&
+             trimmed[level] == '#') {
         ++level;
       }
       std::string_view heading_text = Trim(trimmed.substr(level));
@@ -296,29 +310,29 @@ Elements RenderMarkdown(std::string_view md) {
       continue;
     }
 
-    // ── Blockquote ────────────────────────────────────────────────────────────
+    // ── Blockquote
+    // ────────────────────────────────────────────────────────────
     if (trimmed.size() >= 2 && trimmed[0] == '>' && trimmed[1] == ' ') {
       std::string_view content = Trim(trimmed.substr(2));
-      result.push_back(
-          hbox({
-              text("  ┃ ") | color(t.text_muted),
-              RenderInline(content) | color(t.text_muted),
-          }) |
-          dim);
+      result.push_back(hbox({
+                           text("  ┃ ") | color(t.text_muted),
+                           RenderInline(content) | color(t.text_muted),
+                       }) |
+                       dim);
       continue;
     }
     if (!trimmed.empty() && trimmed[0] == '>') {
       std::string_view content = Trim(trimmed.substr(1));
-      result.push_back(
-          hbox({
-              text("  ┃ ") | color(t.text_muted),
-              RenderInline(content) | color(t.text_muted),
-          }) |
-          dim);
+      result.push_back(hbox({
+                           text("  ┃ ") | color(t.text_muted),
+                           RenderInline(content) | color(t.text_muted),
+                       }) |
+                       dim);
       continue;
     }
 
-    // ── Unordered list ────────────────────────────────────────────────────────
+    // ── Unordered list
+    // ────────────────────────────────────────────────────────
     if (trimmed.size() >= 2 &&
         (trimmed[0] == '-' || trimmed[0] == '*' || trimmed[0] == '+') &&
         trimmed[1] == ' ') {
@@ -353,7 +367,8 @@ Elements RenderMarkdown(std::string_view md) {
       }
     }
 
-    // ── Plain paragraph ───────────────────────────────────────────────────────
+    // ── Plain paragraph
+    // ───────────────────────────────────────────────────────
     result.push_back(RenderInline(trimmed) | flex);
   }
 

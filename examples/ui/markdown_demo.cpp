@@ -124,11 +124,8 @@ int main() {
 
   // Layout: left editor | right preview, split 50/50
   int split_size = 50;
-  auto layout = ResizableSplitLeft(
-      editor | flex | border,
-      preview | flex | border,
-      &split_size
-  );
+  auto layout = ResizableSplitLeft(editor | flex | border,
+                                   preview | flex | border, &split_size);
 
   // Status bar
   auto root = Renderer(layout, [&]() -> Element {
@@ -154,7 +151,9 @@ int main() {
     if (event.is_character()) {
       const std::string& ch = event.character();
       if (ch == "q" || ch == "Q") {
-        if (App* a = App::Active()) a->Exit();
+        if (App* a = App::Active()) {
+          a->Exit();
+        }
         return true;
       }
       if (ch == "t" || ch == "T") {

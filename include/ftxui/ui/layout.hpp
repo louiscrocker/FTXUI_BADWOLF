@@ -14,7 +14,8 @@
 
 namespace ftxui::ui {
 
-// ── Panels ────────────────────────────────────────────────────────────────────
+// ── Panels
+// ────────────────────────────────────────────────────────────────────
 
 /// @brief Wrap a component in a titled, bordered panel.
 ftxui::Component Panel(std::string_view title, ftxui::Component content);
@@ -23,7 +24,8 @@ ftxui::Component Panel(std::string_view title, ftxui::Component content);
 ftxui::Component Panel(std::string_view title,
                        std::function<ftxui::Element()> render);
 
-// ── Layout containers ─────────────────────────────────────────────────────────
+// ── Layout containers
+// ─────────────────────────────────────────────────────────
 
 /// @brief Horizontal container where all children grow equally.
 /// Equivalent to Container::Horizontal with each child wrapped in flex.
@@ -32,7 +34,8 @@ ftxui::Component Row(ftxui::Components children);
 /// @brief Vertical container where all children are stacked.
 ftxui::Component Column(ftxui::Components children);
 
-// ── Status bar ────────────────────────────────────────────────────────────────
+// ── Status bar
+// ────────────────────────────────────────────────────────────────
 
 /// @brief A fixed 1-row bar at the bottom of a layout.
 ///
@@ -47,7 +50,8 @@ ftxui::Component Column(ftxui::Components children);
 ftxui::Component StatusBar(std::function<std::string()> text_fn);
 ftxui::Component StatusBar(std::function<ftxui::Element()> render_fn);
 
-// ── Scrollable frame ──────────────────────────────────────────────────────────
+// ── Scrollable frame
+// ──────────────────────────────────────────────────────────
 
 /// @brief Wrap a component in a vertically-scrollable frame.
 ftxui::Component ScrollView(ftxui::Component content);
@@ -55,7 +59,8 @@ ftxui::Component ScrollView(ftxui::Component content);
 /// @brief Scrollable frame with a titled border.
 ftxui::Component ScrollView(std::string_view title, ftxui::Component content);
 
-// ── Labeled row ───────────────────────────────────────────────────────────────
+// ── Labeled row
+// ───────────────────────────────────────────────────────────────
 
 /// @brief Wrap a component in a "Label :  [component]" row.
 ///
@@ -64,7 +69,8 @@ ftxui::Component Labeled(std::string_view label,
                          ftxui::Component content,
                          int label_width = 14);
 
-// ── Resizable splits ──────────────────────────────────────────────────────────
+// ── Resizable splits
+// ──────────────────────────────────────────────────────────
 
 /// @brief Side-by-side resizable split.
 ///
@@ -79,7 +85,8 @@ ftxui::Component VSplit(ftxui::Component top,
                         ftxui::Component bottom,
                         int* split_pos = nullptr);
 
-// ── Tab view ──────────────────────────────────────────────────────────────────
+// ── Tab view
+// ──────────────────────────────────────────────────────────────────
 
 /// @brief Horizontal tab bar that switches between pages.
 ///

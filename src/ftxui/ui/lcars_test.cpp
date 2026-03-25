@@ -19,7 +19,8 @@ class LCARSTest : public ::testing::Test {
   void TearDown() override { SetTheme(Theme::Default()); }
 };
 
-// ── Theme presets ─────────────────────────────────────────────────────────────
+// ── Theme presets
+// ─────────────────────────────────────────────────────────────
 
 TEST_F(LCARSTest, Theme_LCARS_NotDefault) {
   auto t = Theme::LCARS();
@@ -46,7 +47,8 @@ TEST_F(LCARSTest, Theme_Matrix_NotDefault) {
   EXPECT_NE(t.primary, Theme::Default().primary);
 }
 
-// ── LCARSPanel ────────────────────────────────────────────────────────────────
+// ── LCARSPanel
+// ────────────────────────────────────────────────────────────────
 
 TEST_F(LCARSTest, LCARSPanel_BuildsOk) {
   auto panel = LCARSPanel("STATUS", text("content"));
@@ -63,7 +65,8 @@ TEST_F(LCARSTest, LCARSPanel_WithExplicitColor) {
   Render(screen, panel);
 }
 
-// ── LCARSBar ──────────────────────────────────────────────────────────────────
+// ── LCARSBar
+// ──────────────────────────────────────────────────────────────────
 
 TEST_F(LCARSTest, LCARSBar_EmptySegments) {
   auto bar = LCARSBar({});
@@ -74,7 +77,7 @@ TEST_F(LCARSTest, LCARSBar_EmptySegments) {
 
 TEST_F(LCARSTest, LCARSBar_MultipleSegments) {
   auto bar = LCARSBar({{"SHIELDS", Color::RGB(255, 153, 0)},
-                        {"WEAPONS", Color::RGB(153, 153, 255)}});
+                       {"WEAPONS", Color::RGB(153, 153, 255)}});
   EXPECT_NE(bar, nullptr);
   auto screen = Screen::Create(Dimension::Fixed(60), Dimension::Fixed(2));
   Render(screen, bar);
@@ -113,8 +116,8 @@ TEST_F(LCARSTest, LCARSButton_WithColor) {
 
 TEST_F(LCARSTest, LCARSScreen_BuildsOk) {
   auto sidebar = Renderer([] { return text("sidebar"); });
-  auto main    = Renderer([] { return text("main"); });
-  auto screen  = LCARSScreen("ENTERPRISE", sidebar, main);
+  auto main = Renderer([] { return text("main"); });
+  auto screen = LCARSScreen("ENTERPRISE", sidebar, main);
   EXPECT_NE(screen, nullptr);
 }
 

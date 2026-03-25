@@ -18,11 +18,11 @@ namespace ftxui::ui {
 
 /// @brief State of a single particle.
 struct Particle {
-  float x, y;           ///< Position in canvas dot coordinates.
-  float vx, vy;         ///< Velocity in dots per second.
-  float lifetime;       ///< Remaining lifetime in seconds.
-  float max_lifetime;   ///< Initial lifetime (for alpha fade).
-  float size;           ///< Radius in dots (1.0 = single dot).
+  float x, y;          ///< Position in canvas dot coordinates.
+  float vx, vy;        ///< Velocity in dots per second.
+  float lifetime;      ///< Remaining lifetime in seconds.
+  float max_lifetime;  ///< Initial lifetime (for alpha fade).
+  float size;          ///< Radius in dots (1.0 = single dot).
 };
 
 // ---------------------------------------------------------------------------
@@ -31,17 +31,17 @@ struct Particle {
 
 /// @brief Configuration for a ParticleSystem emitter.
 struct ParticleConfig {
-  float emit_x = 0.0f;          ///< Emission point X (dot coords).
-  float emit_y = 0.0f;          ///< Emission point Y (dot coords).
-  float emit_radius = 2.0f;     ///< Random spread radius around emit point.
-  float speed_min = 20.0f;      ///< Min initial speed (dots/sec).
-  float speed_max = 60.0f;      ///< Max initial speed (dots/sec).
-  float angle_min = 0.0f;       ///< Emission angle range start (radians).
-  float angle_max = 6.2831853f; ///< Emission angle range end (full circle).
-  float lifetime_min = 0.5f;    ///< Min particle lifetime (seconds).
-  float lifetime_max = 1.5f;    ///< Max particle lifetime (seconds).
-  float gravity = 30.0f;        ///< Downward acceleration (dots/sec²).
-  int   emit_rate = 20;         ///< Particles emitted per second.
+  float emit_x = 0.0f;           ///< Emission point X (dot coords).
+  float emit_y = 0.0f;           ///< Emission point Y (dot coords).
+  float emit_radius = 2.0f;      ///< Random spread radius around emit point.
+  float speed_min = 20.0f;       ///< Min initial speed (dots/sec).
+  float speed_max = 60.0f;       ///< Max initial speed (dots/sec).
+  float angle_min = 0.0f;        ///< Emission angle range start (radians).
+  float angle_max = 6.2831853f;  ///< Emission angle range end (full circle).
+  float lifetime_min = 0.5f;     ///< Min particle lifetime (seconds).
+  float lifetime_max = 1.5f;     ///< Max particle lifetime (seconds).
+  float gravity = 30.0f;         ///< Downward acceleration (dots/sec²).
+  int emit_rate = 20;            ///< Particles emitted per second.
 };
 
 // ---------------------------------------------------------------------------
@@ -66,7 +66,8 @@ class ParticleSystem {
   explicit ParticleSystem(ParticleConfig config = {});
   ~ParticleSystem();
 
-  /// @brief Begin emitting particles; registers an AnimationLoop frame callback.
+  /// @brief Begin emitting particles; registers an AnimationLoop frame
+  /// callback.
   void Start();
 
   /// @brief Stop emitting new particles (existing particles finish naturally).
@@ -110,7 +111,8 @@ class ParticleSystem {
 std::shared_ptr<ParticleSystem> Explosion(float x, float y);
 
 /// @brief Thruster: directional stream (e.g. for a rocket/ship exhaust).
-/// @param angle_rad Direction the thrust comes FROM (particles go opposite way).
+/// @param angle_rad Direction the thrust comes FROM (particles go opposite
+/// way).
 std::shared_ptr<ParticleSystem> Thruster(float x, float y, float angle_rad);
 
 /// @brief Warp: horizontal streaks flying past at warp speed.

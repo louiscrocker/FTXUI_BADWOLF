@@ -3,7 +3,8 @@
 // the LICENSE file.
 
 /// @file state_demo.cpp
-/// Demonstrates ui::State<T> reactive wrappers and ui::RunAsync background tasks.
+/// Demonstrates ui::State<T> reactive wrappers and ui::RunAsync background
+/// tasks.
 
 #include <chrono>
 #include <string>
@@ -22,16 +23,17 @@ int main() {
   SetTheme(Theme::Nord());
 
   // ── Reactive state ─────────────────────────────────────────────────────────
-  State<int>         counter(0);
+  State<int> counter(0);
   State<std::string> message("(press keys below)");
-  State<bool>        loading(false);
+  State<bool> loading(false);
   State<std::string> async_result("(not started)");
 
   // ── Main view ──────────────────────────────────────────────────────────────
   auto comp = Renderer([&]() -> Element {
     const Theme& t = GetTheme();
     return vbox({
-               text("  ui::State<T> Demo  ") | bold | hcenter | color(t.primary),
+               text("  ui::State<T> Demo  ") | bold | hcenter |
+                   color(t.primary),
                separatorLight(),
 
                separatorEmpty(),
@@ -65,16 +67,28 @@ int main() {
 
   // ── Keybindings ────────────────────────────────────────────────────────────
   comp |= CatchEvent([&](Event event) -> bool {
-    if (!event.is_character()) return false;
+    if (!event.is_character()) {
+      return false;
+    }
     const std::string& ch = event.character();
 
-    if (ch == "+") { counter.Mutate([](int& v){ v++; }); return true; }
-    if (ch == "-") { counter.Mutate([](int& v){ v--; }); return true; }
-    if (ch == "r") { counter.Set(0); return true; }
+    if (ch == "+") {
+      counter.Mutate([](int& v) { v++; });
+      return true;
+    }
+    if (ch == "-") {
+      counter.Mutate([](int& v) { v--; });
+      return true;
+    }
+    if (ch == "r") {
+      counter.Set(0);
+      return true;
+    }
 
     if (ch == "m") {
       int n = *counter;
-      message.Set("Counter is " + std::to_string(n) + (n%2==0 ? " (even)" : " (odd)"));
+      message.Set("Counter is " + std::to_string(n) +
+                  (n % 2 == 0 ? " (even)" : " (odd)"));
       return true;
     }
 
@@ -98,7 +112,9 @@ int main() {
     }
 
     if (ch == "q") {
-      if (App* a = App::Active()) a->Exit();
+      if (App* a = App::Active()) {
+        a->Exit();
+      }
       return true;
     }
     return false;

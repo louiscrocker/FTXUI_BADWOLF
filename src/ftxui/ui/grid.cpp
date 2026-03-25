@@ -38,14 +38,16 @@ ftxui::Component Grid::Build() {
   // Collect interactive children for Container::Horizontal navigation.
   ftxui::Components all_components;
   for (auto& c : cells_) {
-    if (c.component) all_components.push_back(c.component);
+    if (c.component) {
+      all_components.push_back(c.component);
+    }
   }
 
   // Snapshot config & cells for the renderer closure.
-  auto cells    = cells_;
-  int  cols     = cols_;
-  int  gap      = gap_;
-  int  row_gap  = row_gap_;
+  auto cells = cells_;
+  int cols = cols_;
+  int gap = gap_;
+  int row_gap = row_gap_;
 
   ftxui::Component container;
   if (all_components.empty()) {
@@ -56,13 +58,13 @@ ftxui::Component Grid::Build() {
 
       for (size_t i = 0; i < cells.size(); ++i) {
         // Render cell
-        ftxui::Element cell = cells[i].element ? cells[i].element
-                                               : ftxui::text("") | ftxui::flex;
+        ftxui::Element cell =
+            cells[i].element ? cells[i].element : ftxui::text("") | ftxui::flex;
         row_cells.push_back(cell | ftxui::flex);
 
         // Insert gap between cells (not after last in row)
         bool last_in_row = ((int(i) + 1) % cols == 0);
-        bool last_cell   = (i + 1 == cells.size());
+        bool last_cell = (i + 1 == cells.size());
 
         if (!last_in_row && gap > 0) {
           row_cells.push_back(ftxui::text(std::string(gap, ' ')));
@@ -70,8 +72,11 @@ ftxui::Component Grid::Build() {
 
         if (last_in_row || last_cell) {
           // Pad incomplete last row
-          while ((int)row_cells.size() < cols + (cols - 1) * (gap > 0 ? 1 : 0)) {
-            if (gap > 0) row_cells.push_back(ftxui::text(std::string(gap, ' ')));
+          while ((int)row_cells.size() <
+                 cols + (cols - 1) * (gap > 0 ? 1 : 0)) {
+            if (gap > 0) {
+              row_cells.push_back(ftxui::text(std::string(gap, ' ')));
+            }
             row_cells.push_back(ftxui::filler());
           }
           rows.push_back(ftxui::hbox(row_cells));
@@ -82,7 +87,9 @@ ftxui::Component Grid::Build() {
         }
       }
 
-      if (rows.empty()) return ftxui::text("");
+      if (rows.empty()) {
+        return ftxui::text("");
+      }
       return ftxui::vbox(rows);
     });
   } else {
@@ -105,7 +112,7 @@ ftxui::Component Grid::Build() {
         row_cells.push_back(cell);
 
         bool last_in_row = ((int(i) + 1) % cols == 0);
-        bool last_cell   = (i + 1 == cells.size());
+        bool last_cell = (i + 1 == cells.size());
 
         if (!last_in_row && gap > 0) {
           row_cells.push_back(ftxui::text(std::string(gap, ' ')));
@@ -123,7 +130,9 @@ ftxui::Component Grid::Build() {
         }
       }
 
-      if (rows.empty()) return ftxui::text("");
+      if (rows.empty()) {
+        return ftxui::text("");
+      }
       return ftxui::vbox(rows);
     });
   }

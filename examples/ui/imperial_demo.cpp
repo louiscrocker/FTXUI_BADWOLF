@@ -30,7 +30,8 @@ struct DeathStarState {
 
 DeathStarState g_ds;
 
-Element StatusRow(const std::string& label, const std::string& status,
+Element StatusRow(const std::string& label,
+                  const std::string& status,
                   Color status_color) {
   const Theme& t = GetTheme();
   return hbox({
@@ -65,9 +66,9 @@ int main() {
   auto content = Renderer([]() -> Element {
     const Theme& th = GetTheme();
     int superlaser = g_ds.superlaser.load();
-    int shields    = g_ds.shields.load();
-    int hull       = g_ds.hull.load();
-    int power      = g_ds.power.load();
+    int shields = g_ds.shields.load();
+    int hull = g_ds.hull.load();
+    int power = g_ds.power.load();
 
     Color sl_color = superlaser > 80 ? th.error_color : th.warning_color;
 
@@ -95,25 +96,24 @@ int main() {
                separatorEmpty(),
                text("SYSTEM STATUS") | bold | color(th.secondary),
                separatorEmpty(),
-               StatusRow("Hyperdrive",     "OPERATIONAL", th.success_color),
-               StatusRow("Tractor Beam",   "STANDBY",     th.text_muted),
-               StatusRow("Turbolasers",    "ARMED",       th.warning_color),
-               StatusRow("Ion Cannon",     "CHARGED",     th.primary),
-               StatusRow("Life Support",   "NOMINAL",     th.success_color),
-               StatusRow("Detention Block","SECURED",     th.success_color),
+               StatusRow("Hyperdrive", "OPERATIONAL", th.success_color),
+               StatusRow("Tractor Beam", "STANDBY", th.text_muted),
+               StatusRow("Turbolasers", "ARMED", th.warning_color),
+               StatusRow("Ion Cannon", "CHARGED", th.primary),
+               StatusRow("Life Support", "NOMINAL", th.success_color),
+               StatusRow("Detention Block", "SECURED", th.success_color),
                separatorEmpty(),
                separator() | color(th.border_color),
                separatorEmpty(),
-               text("Press r=Red Alert  y=Yellow  c=All Clear  q=Quit") |
-                   dim | color(th.text_muted) | hcenter,
+               text("Press r=Red Alert  y=Yellow  c=All Clear  q=Quit") | dim |
+                   color(th.text_muted) | hcenter,
            }) |
            flex;
   });
 
   auto ui = Renderer(content, [content]() -> Element {
     const Theme& th = GetTheme();
-    return content->Render() |
-           borderStyled(HEAVY, th.border_color);
+    return content->Render() | borderStyled(HEAVY, th.border_color);
   });
 
   ui |= CatchEvent([](Event e) -> bool {
@@ -130,7 +130,9 @@ int main() {
       return true;
     }
     if (e == Event::Character('q')) {
-      if (App* a = App::Active()) a->Exit();
+      if (App* a = App::Active()) {
+        a->Exit();
+      }
       return true;
     }
     return false;

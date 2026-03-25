@@ -17,12 +17,13 @@ struct Row {
   std::string value;
 };
 
-// ── Build with no data ──────────────────────────────────────────────────────────
+// ── Build with no data
+// ──────────────────────────────────────────────────────────
 
 TEST(DataTableTest, BuildWithNoDataDoesNotCrash) {
   DataTable<Row> table;
   table.Column("Name", [](const Row& r) { return r.name; })
-       .Column("Value", [](const Row& r) { return r.value; });
+      .Column("Value", [](const Row& r) { return r.value; });
   // No .Data() call — data pointer is nullptr.
   auto comp = table.Build();
   ASSERT_NE(comp, nullptr);
@@ -33,8 +34,8 @@ TEST(DataTableTest, BuildWithEmptyVectorDoesNotCrash) {
   std::vector<Row> rows;
   DataTable<Row> table;
   table.Column("Name", [](const Row& r) { return r.name; })
-       .Column("Value", [](const Row& r) { return r.value; })
-       .Data(&rows);
+      .Column("Value", [](const Row& r) { return r.value; })
+      .Data(&rows);
   auto comp = table.Build();
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);
@@ -49,19 +50,21 @@ TEST(DataTableTest, BuildWithNoColumnsDoesNotCrash) {
   ASSERT_NE(comp->Render(), nullptr);
 }
 
-// ── Data renders without crash ─────────────────────────────────────────────────
+// ── Data renders without crash
+// ─────────────────────────────────────────────────
 
 TEST(DataTableTest, BuildWithDataRendersOk) {
   std::vector<Row> rows = {{"Alice", "100"}, {"Bob", "200"}, {"Carol", "300"}};
   DataTable<Row> table;
   table.Column("Name", [](const Row& r) { return r.name; })
-       .Column("Value", [](const Row& r) { return r.value; })
-       .Data(&rows);
+      .Column("Value", [](const Row& r) { return r.value; })
+      .Data(&rows);
   auto comp = table.Build();
   ASSERT_NE(comp->Render(), nullptr);
 }
 
-// ── OnSelect callback ──────────────────────────────────────────────────────────
+// ── OnSelect callback
+// ──────────────────────────────────────────────────────────
 
 TEST(DataTableTest, OnSelectFiresOnArrowDown) {
   std::vector<Row> rows = {{"Alice", "1"}, {"Bob", "2"}, {"Carol", "3"}};
@@ -71,13 +74,13 @@ TEST(DataTableTest, OnSelectFiresOnArrowDown) {
 
   DataTable<Row> table;
   table.Column("Name", [](const Row& r) { return r.name; })
-       .Column("Value", [](const Row& r) { return r.value; })
-       .Data(&rows)
-       .Selectable(true)
-       .OnSelect([&](const Row& row, size_t idx) {
-         selected_index = idx;
-         selected_name = row.name;
-       });
+      .Column("Value", [](const Row& r) { return r.value; })
+      .Data(&rows)
+      .Selectable(true)
+      .OnSelect([&](const Row& row, size_t idx) {
+        selected_index = idx;
+        selected_name = row.name;
+      });
   auto comp = table.Build();
   comp->Render();  // Initialize internal state.
 
@@ -93,9 +96,9 @@ TEST(DataTableTest, OnSelectDoesNotFireWhenAlreadyAtBottom) {
 
   DataTable<Row> table;
   table.Column("Name", [](const Row& r) { return r.name; })
-       .Data(&rows)
-       .Selectable(true)
-       .OnSelect([&](const Row&, size_t) { select_count++; });
+      .Data(&rows)
+      .Selectable(true)
+      .OnSelect([&](const Row&, size_t) { select_count++; });
   auto comp = table.Build();
   comp->Render();
 
@@ -110,18 +113,19 @@ TEST(DataTableTest, OnSelectFiresOnArrowUp) {
 
   DataTable<Row> table;
   table.Column("Name", [](const Row& r) { return r.name; })
-       .Data(&rows)
-       .Selectable(true)
-       .OnSelect([&](const Row& row, size_t) { last_selected = row.name; });
+      .Data(&rows)
+      .Selectable(true)
+      .OnSelect([&](const Row& row, size_t) { last_selected = row.name; });
   auto comp = table.Build();
   comp->Render();
 
   comp->OnEvent(ftxui::Event::ArrowDown);  // -> Bob
-  comp->OnEvent(ftxui::Event::ArrowUp);   // -> Alice
+  comp->OnEvent(ftxui::Event::ArrowUp);    // -> Alice
   EXPECT_EQ(last_selected, "Alice");
 }
 
-// ── OnActivate callback ────────────────────────────────────────────────────────
+// ── OnActivate callback
+// ────────────────────────────────────────────────────────
 
 TEST(DataTableTest, OnActivateFiresOnEnter) {
   std::vector<Row> rows = {{"Alice", "1"}, {"Bob", "2"}};
@@ -130,12 +134,12 @@ TEST(DataTableTest, OnActivateFiresOnEnter) {
 
   DataTable<Row> table;
   table.Column("Name", [](const Row& r) { return r.name; })
-       .Data(&rows)
-       .Selectable(true)
-       .OnActivate([&](const Row& row, size_t) {
-         activated = true;
-         activated_name = row.name;
-       });
+      .Data(&rows)
+      .Selectable(true)
+      .OnActivate([&](const Row& row, size_t) {
+        activated = true;
+        activated_name = row.name;
+      });
   auto comp = table.Build();
   comp->Render();
 
@@ -150,9 +154,9 @@ TEST(DataTableTest, OnActivateFiresOnCorrectRow) {
 
   DataTable<Row> table;
   table.Column("Name", [](const Row& r) { return r.name; })
-       .Data(&rows)
-       .Selectable(true)
-       .OnActivate([&](const Row& row, size_t) { activated_name = row.name; });
+      .Data(&rows)
+      .Selectable(true)
+      .OnActivate([&](const Row& row, size_t) { activated_name = row.name; });
   auto comp = table.Build();
   comp->Render();
 
@@ -162,7 +166,8 @@ TEST(DataTableTest, OnActivateFiresOnCorrectRow) {
   EXPECT_EQ(activated_name, "Carol");
 }
 
-// ── Sorting ────────────────────────────────────────────────────────────────────
+// ── Sorting
+// ────────────────────────────────────────────────────────────────────
 
 TEST(DataTableTest, SortingWithLessThanKeyReordersRows) {
   // Start with data in reverse alphabetical order.
@@ -172,11 +177,11 @@ TEST(DataTableTest, SortingWithLessThanKeyReordersRows) {
 
   DataTable<Row> table;
   table.Column("Name", [](const Row& r) { return r.name; })
-       .Column("Value", [](const Row& r) { return r.value; })
-       .Data(&rows)
-       .Selectable(true)
-       .Sortable(true)
-       .OnActivate([&](const Row& row, size_t) { first_activated = row.name; });
+      .Column("Value", [](const Row& r) { return r.value; })
+      .Data(&rows)
+      .Selectable(true)
+      .Sortable(true)
+      .OnActivate([&](const Row& row, size_t) { first_activated = row.name; });
   auto comp = table.Build();
   comp->Render();
 
@@ -186,7 +191,7 @@ TEST(DataTableTest, SortingWithLessThanKeyReordersRows) {
   // Actually from the impl: '<' decrements sort_column; -1 -> cols.size()-1
   comp->OnEvent(ftxui::Event::Character("<"));  // sort by Value (index 1)
   comp->OnEvent(ftxui::Event::Character("<"));  // sort by Name  (index 0)
-  comp->Render();  // Re-render with sort applied.
+  comp->Render();                               // Re-render with sort applied.
 
   // Now rows should be sorted ascending by Name: Alice, Bob, Charlie.
   // Row at index 0 in visible list is Alice.
@@ -199,9 +204,9 @@ TEST(DataTableTest, SortingWithGreaterThanKeyAdvancesColumn) {
 
   DataTable<Row> table;
   table.Column("Name", [](const Row& r) { return r.name; })
-       .Data(&rows)
-       .Selectable(true)
-       .Sortable(true);
+      .Data(&rows)
+      .Selectable(true)
+      .Sortable(true);
   auto comp = table.Build();
   comp->Render();
 
@@ -214,8 +219,8 @@ TEST(DataTableTest, SortingDisabledIgnoresLessGreaterKeys) {
   std::vector<Row> rows = {{"B", "2"}, {"A", "1"}};
   DataTable<Row> table;
   table.Column("Name", [](const Row& r) { return r.name; })
-       .Data(&rows)
-       .Sortable(false);
+      .Data(&rows)
+      .Sortable(false);
   auto comp = table.Build();
   comp->Render();
 
@@ -225,7 +230,8 @@ TEST(DataTableTest, SortingDisabledIgnoresLessGreaterKeys) {
   ASSERT_NE(comp->Render(), nullptr);
 }
 
-// ── Filter ─────────────────────────────────────────────────────────────────────
+// ── Filter
+// ─────────────────────────────────────────────────────────────────────
 
 TEST(DataTableTest, FilterHidesNonMatchingRows) {
   std::vector<Row> rows = {{"Alice", "1"}, {"Bob", "2"}, {"Carol", "3"}};
@@ -234,12 +240,12 @@ TEST(DataTableTest, FilterHidesNonMatchingRows) {
   bool alice_activated = false;
   DataTable<Row> table;
   table.Column("Name", [](const Row& r) { return r.name; })
-       .Data(&rows)
-       .Selectable(true)
-       .FilterText(&filter)
-       .OnActivate([&](const Row& row, size_t) {
-         alice_activated = (row.name == "Alice");
-       });
+      .Data(&rows)
+      .Selectable(true)
+      .FilterText(&filter)
+      .OnActivate([&](const Row& row, size_t) {
+        alice_activated = (row.name == "Alice");
+      });
   auto comp = table.Build();
   comp->Render();
 
@@ -248,26 +254,30 @@ TEST(DataTableTest, FilterHidesNonMatchingRows) {
   EXPECT_TRUE(alice_activated);
 }
 
-// ── AlternateRows option ───────────────────────────────────────────────────────
+// ── AlternateRows option
+// ───────────────────────────────────────────────────────
 
 TEST(DataTableTest, AlternateRowsDoesNotCrash) {
   std::vector<Row> rows = {{"A", "1"}, {"B", "2"}, {"C", "3"}};
   DataTable<Row> table;
   table.Column("Name", [](const Row& r) { return r.name; })
-       .Data(&rows)
-       .AlternateRows(true);
+      .Data(&rows)
+      .AlternateRows(true);
   auto comp = table.Build();
   ASSERT_NE(comp->Render(), nullptr);
 }
 
-// ── Fixed-width columns ────────────────────────────────────────────────────────
+// ── Fixed-width columns
+// ────────────────────────────────────────────────────────
 
 TEST(DataTableTest, FixedWidthColumnDoesNotCrash) {
   std::vector<Row> rows = {{"Alice", "1"}};
   DataTable<Row> table;
-  table.Column("Name", [](const Row& r) { return r.name; }, 10)
-       .Column("Value", [](const Row& r) { return r.value; }, 5)
-       .Data(&rows);
+  table.Column(
+           "Name", [](const Row& r) { return r.name; }, 10)
+      .Column(
+          "Value", [](const Row& r) { return r.value; }, 5)
+      .Data(&rows);
   auto comp = table.Build();
   ASSERT_NE(comp->Render(), nullptr);
 }

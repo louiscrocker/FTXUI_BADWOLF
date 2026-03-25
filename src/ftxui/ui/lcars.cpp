@@ -25,7 +25,8 @@ Color EffectiveColor(Color c) {
 }
 }  // namespace
 
-// ── LCARSPanel ────────────────────────────────────────────────────────────────
+// ── LCARSPanel
+// ────────────────────────────────────────────────────────────────
 
 Element LCARSPanel(std::string title, Element content, Color c) {
   c = EffectiveColor(c);
@@ -56,10 +57,12 @@ Element LCARSPanel(std::string title, Element content, Color c) {
   });
 }
 
-// ── LCARSButton ───────────────────────────────────────────────────────────────
+// ── LCARSButton
+// ───────────────────────────────────────────────────────────────
 
-Component LCARSButton(std::string label, std::function<void()> on_click,
-                       Color c) {
+Component LCARSButton(std::string label,
+                      std::function<void()> on_click,
+                      Color c) {
   c = EffectiveColor(c);
   auto opt = ButtonOption::Animated(Color::Default, c, c, Color::Black);
   opt.transform = [label, c](const EntryState& state) -> Element {
@@ -72,14 +75,14 @@ Component LCARSButton(std::string label, std::function<void()> on_click,
   return Button(label, std::move(on_click), opt);
 }
 
-// ── LCARSBar ──────────────────────────────────────────────────────────────────
+// ── LCARSBar
+// ──────────────────────────────────────────────────────────────────
 
 Element LCARSBar(std::vector<std::pair<std::string, Color>> segments) {
   Elements parts;
   for (auto& [label, seg_color] : segments) {
-    parts.push_back(
-        text(" " + label + " ") | bold | color(Color::Black) |
-        bgcolor(seg_color));
+    parts.push_back(text(" " + label + " ") | bold | color(Color::Black) |
+                    bgcolor(seg_color));
     parts.push_back(text(" "));
   }
   return hbox(std::move(parts));
@@ -100,8 +103,9 @@ Element LCARSReadout(std::string label, std::string value, Color label_color) {
 
 // ── LCARSScreen ──────────────────────────────────────────────────────────────
 
-Component LCARSScreen(std::string title, Component sidebar,
-                       Component main_content) {
+Component LCARSScreen(std::string title,
+                      Component sidebar,
+                      Component main_content) {
   const Theme& t = GetTheme();
   Color primary = t.primary;
 
@@ -110,15 +114,14 @@ Component LCARSScreen(std::string title, Component sidebar,
                     // Top title bar.
                     auto title_bar = hbox({
                         text("") | bgcolor(primary) | size(WIDTH, EQUAL, 3),
-                        text(" " + title + " ") | bold |
-                            color(Color::Black) | bgcolor(primary),
+                        text(" " + title + " ") | bold | color(Color::Black) |
+                            bgcolor(primary),
                         filler() | bgcolor(primary),
                     });
 
                     // Body: sidebar + separator + main.
                     auto body = hbox({
-                        sidebar->Render() |
-                            size(WIDTH, LESS_THAN, 22),
+                        sidebar->Render() | size(WIDTH, LESS_THAN, 22),
                         separator() | color(primary),
                         main_content->Render() | flex,
                     });

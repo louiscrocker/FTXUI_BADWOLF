@@ -20,13 +20,14 @@
 
 namespace ftxui::ui {
 
-// ── Field kinds ───────────────────────────────────────────────────────────────
+// ── Field kinds
+// ───────────────────────────────────────────────────────────────
 
 enum class FieldKind { String, Int, Float, Bool, Section };
 
 struct Field {
   FieldKind kind = FieldKind::String;
-  std::string key;          // empty for Section entries
+  std::string key;  // empty for Section entries
   std::string description;
 
   // All non-bool values are stored as strings in the input buffer.
@@ -41,7 +42,8 @@ struct Field {
   ftxui::Component component;
 };
 
-// ── Impl ──────────────────────────────────────────────────────────────────────
+// ── Impl
+// ──────────────────────────────────────────────────────────────────────
 
 struct ConfigEditor::Impl {
   std::string file_path;
@@ -124,11 +126,13 @@ struct ConfigEditor::Impl {
   }
 };
 
-// ── Constructor ───────────────────────────────────────────────────────────────
+// ── Constructor
+// ───────────────────────────────────────────────────────────────
 
 ConfigEditor::ConfigEditor() : impl_(std::make_shared<Impl>()) {}
 
-// ── Fluent setters ────────────────────────────────────────────────────────────
+// ── Fluent setters
+// ────────────────────────────────────────────────────────────
 
 ConfigEditor& ConfigEditor::File(std::string_view path) {
   impl_->file_path = std::string(path);
@@ -209,7 +213,8 @@ ConfigEditor& ConfigEditor::OnChange(std::function<void()> fn) {
   return *this;
 }
 
-// ── Value accessors ───────────────────────────────────────────────────────────
+// ── Value accessors
+// ───────────────────────────────────────────────────────────
 
 std::string ConfigEditor::GetString(std::string_view key) const {
   const Field* f = impl_->FindField(key);
@@ -251,7 +256,8 @@ bool ConfigEditor::GetBool(std::string_view key) const {
   return f->bool_value;
 }
 
-// ── Persistence ───────────────────────────────────────────────────────────────
+// ── Persistence
+// ───────────────────────────────────────────────────────────────
 
 bool ConfigEditor::Save() const {
   return impl_->SaveToFile();
@@ -261,7 +267,8 @@ bool ConfigEditor::Load() {
   return impl_->LoadFromFile();
 }
 
-// ── Build ─────────────────────────────────────────────────────────────────────
+// ── Build
+// ─────────────────────────────────────────────────────────────────────
 
 ftxui::Component ConfigEditor::Build() {
   auto s = impl_;
@@ -284,8 +291,7 @@ ftxui::Component ConfigEditor::Build() {
         const Theme& t = GetTheme();
         return ftxui::vbox({
             ftxui::separatorLight(),
-            ftxui::text(" " + label) | ftxui::bold |
-                ftxui::color(t.primary),
+            ftxui::text(" " + label) | ftxui::bold | ftxui::color(t.primary),
         });
       });
     } else if (f.kind == FieldKind::Bool) {
@@ -306,15 +312,16 @@ ftxui::Component ConfigEditor::Build() {
 
       auto checkbox = ftxui::Checkbox(key, bool_ptr, opt);
 
-      f.component = ftxui::Renderer(checkbox, [checkbox, key, desc]() -> ftxui::Element {
-        const Theme& t = GetTheme();
-        ftxui::Element cb_el = checkbox->Render();
-        ftxui::Element desc_el =
-            desc.empty() ? ftxui::text("")
-                         : ftxui::text("  " + desc) |
-                               ftxui::color(t.text_muted) | ftxui::dim;
-        return ftxui::hbox({cb_el, desc_el, ftxui::filler()});
-      });
+      f.component =
+          ftxui::Renderer(checkbox, [checkbox, key, desc]() -> ftxui::Element {
+            const Theme& t = GetTheme();
+            ftxui::Element cb_el = checkbox->Render();
+            ftxui::Element desc_el =
+                desc.empty() ? ftxui::text("")
+                             : ftxui::text("  " + desc) |
+                                   ftxui::color(t.text_muted) | ftxui::dim;
+            return ftxui::hbox({cb_el, desc_el, ftxui::filler()});
+          });
     } else {
       // TextInput for String/Int/Float
       std::string key = f.key;
@@ -333,48 +340,49 @@ ftxui::Component ConfigEditor::Build() {
       // Inline validation for Int/Float
       auto input_comp = ftxui::Input(buf_ptr, opt);
 
-      f.component = ftxui::Renderer(input_comp, [input_comp, key, desc, kind, buf_ptr]() -> ftxui::Element {
-        const Theme& t = GetTheme();
-        bool focused = input_comp->Focused();
+      f.component = ftxui::Renderer(
+          input_comp,
+          [input_comp, key, desc, kind, buf_ptr]() -> ftxui::Element {
+            const Theme& t = GetTheme();
+            bool focused = input_comp->Focused();
 
-        // Validation
-        bool valid = true;
-        if (kind == FieldKind::Int) {
-          try {
-            std::stoi(*buf_ptr);
-          } catch (...) {
-            valid = buf_ptr->empty();
-          }
-        } else if (kind == FieldKind::Float) {
-          try {
-            std::stof(*buf_ptr);
-          } catch (...) {
-            valid = buf_ptr->empty();
-          }
-        }
+            // Validation
+            bool valid = true;
+            if (kind == FieldKind::Int) {
+              try {
+                std::stoi(*buf_ptr);
+              } catch (...) {
+                valid = buf_ptr->empty();
+              }
+            } else if (kind == FieldKind::Float) {
+              try {
+                std::stof(*buf_ptr);
+              } catch (...) {
+                valid = buf_ptr->empty();
+              }
+            }
 
-        // Label
-        std::string padded = key;
-        while (static_cast<int>(padded.size()) < 16) {
-          padded += ' ';
-        }
-        ftxui::Element lbl = ftxui::text(padded + ": ") | ftxui::dim;
+            // Label
+            std::string padded = key;
+            while (static_cast<int>(padded.size()) < 16) {
+              padded += ' ';
+            }
+            ftxui::Element lbl = ftxui::text(padded + ": ") | ftxui::dim;
 
-        ftxui::Element inp = input_comp->Render() | ftxui::flex;
-        if (!valid) {
-          inp = inp | ftxui::color(t.error_color);
-        } else if (focused) {
-          inp = inp | ftxui::color(t.primary);
-        }
+            ftxui::Element inp = input_comp->Render() | ftxui::flex;
+            if (!valid) {
+              inp = inp | ftxui::color(t.error_color);
+            } else if (focused) {
+              inp = inp | ftxui::color(t.primary);
+            }
 
-        ftxui::Element desc_el =
-            desc.empty()
-                ? ftxui::text("")
-                : ftxui::text("  " + desc) | ftxui::color(t.text_muted) |
-                      ftxui::dim;
+            ftxui::Element desc_el =
+                desc.empty() ? ftxui::text("")
+                             : ftxui::text("  " + desc) |
+                                   ftxui::color(t.text_muted) | ftxui::dim;
 
-        return ftxui::hbox({lbl, inp, desc_el});
-      });
+            return ftxui::hbox({lbl, inp, desc_el});
+          });
     }
     field_components.push_back(f.component);
   }
@@ -426,9 +434,8 @@ ftxui::Component ConfigEditor::Build() {
     rows.push_back(ftxui::separator());
 
     // Status bar
-    ftxui::Element status_el =
-        ftxui::hbox({ftxui::filler(),
-                     ftxui::text(*status_ptr) | ftxui::color(t.accent)});
+    ftxui::Element status_el = ftxui::hbox(
+        {ftxui::filler(), ftxui::text(*status_ptr) | ftxui::color(t.accent)});
     rows.push_back(status_el);
 
     return ftxui::vbox(std::move(rows));

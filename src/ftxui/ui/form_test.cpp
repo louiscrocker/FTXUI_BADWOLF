@@ -47,8 +47,7 @@ TEST(FormTest, CheckBuildsAndRenders) {
 
 TEST(FormTest, SubmitBuildsAndRenders) {
   bool submitted = false;
-  auto comp =
-      Form().Submit("OK", [&] { submitted = true; }).Build();
+  auto comp = Form().Submit("OK", [&] { submitted = true; }).Build();
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);
 }
@@ -67,11 +66,8 @@ TEST(FormTest, CancelBuildsAndRenders) {
 
 TEST(FormTest, SectionAndSeparatorRender) {
   std::string val;
-  auto comp = Form()
-                  .Section("Personal")
-                  .Field("Name", &val)
-                  .Separator()
-                  .Build();
+  auto comp =
+      Form().Section("Personal").Field("Name", &val).Separator().Build();
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);
 }

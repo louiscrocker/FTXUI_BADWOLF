@@ -40,8 +40,7 @@ int main() {
   auto fade_tween = Animate(0.0f, 1.0f, 0.8f, Easing::EaseOut);
 
   // Progress gauge bounces 0 → 1 repeatedly.
-  auto gauge_tween =
-      std::make_shared<Tween>(0.0f, 1.0f, 2.0f, Easing::Bounce);
+  auto gauge_tween = std::make_shared<Tween>(0.0f, 1.0f, 2.0f, Easing::Bounce);
   gauge_tween->OnComplete([&] {
     gauge_tween->Reset();
     gauge_tween->Start();
@@ -75,13 +74,15 @@ int main() {
     // Update rain emitter to span the top.
     rain->SetPosition(static_cast<float>(w) / 2.0f, 0.0f);
 
-    return canvas(2, 4, [&](Canvas& c) {
-      warp->Render(c);
-      rain->Render(c);
-      for (auto& ex : explosions) {
-        ex->Render(c);
-      }
-    }) | flex;
+    return canvas(2, 4,
+                  [&](Canvas& c) {
+                    warp->Render(c);
+                    rain->Render(c);
+                    for (auto& ex : explosions) {
+                      ex->Render(c);
+                    }
+                  }) |
+           flex;
   });
 
   // ── Central info panel ────────────────────────────────────────────────────
@@ -94,19 +95,21 @@ int main() {
     std::string rain_label = rain_on.load() ? "[ON]" : "[off]";
 
     auto panel = vbox({
-        text("  ✦  Animation Demo  ✦") | bold | color(Color::Cyan) | hcenter,
-        separator(),
-        hbox({text("Warp streaks: ") | color(Color::White),
-              text(warp_label) | color(Color::Yellow)}),
-        hbox({text("Rain:         ") | color(Color::White),
-              text(rain_label) | color(Color::Blue)}),
-        separator(),
-        text("Bouncing gauge:") | color(Color::GrayLight),
-        gauge(gauge_val) | color(Color::GreenLight),
-        separator(),
-        text("[w] warp  [r] rain  [e] explosion  [q] quit") |
-            color(Color::GrayDark),
-    }) | border;
+                     text("  ✦  Animation Demo  ✦") | bold |
+                         color(Color::Cyan) | hcenter,
+                     separator(),
+                     hbox({text("Warp streaks: ") | color(Color::White),
+                           text(warp_label) | color(Color::Yellow)}),
+                     hbox({text("Rain:         ") | color(Color::White),
+                           text(rain_label) | color(Color::Blue)}),
+                     separator(),
+                     text("Bouncing gauge:") | color(Color::GrayLight),
+                     gauge(gauge_val) | color(Color::GreenLight),
+                     separator(),
+                     text("[w] warp  [r] rain  [e] explosion  [q] quit") |
+                         color(Color::GrayDark),
+                 }) |
+                 border;
 
     // Apply dim when still fading in.
     if (fade < 0.7f) {
@@ -132,7 +135,9 @@ int main() {
 
   auto app_comp = CatchEvent(root, [&](Event event) -> bool {
     if (event == Event::Character('q') || event == Event::Character('Q')) {
-      if (App* a = App::Active()) a->Exit();
+      if (App* a = App::Active()) {
+        a->Exit();
+      }
       return true;
     }
     if (event == Event::Character('w') || event == Event::Character('W')) {
@@ -158,8 +163,8 @@ int main() {
     if (event == Event::Character('e') || event == Event::Character('E')) {
       int w = canvas_w.load();
       int h = canvas_h.load();
-      auto ex = Explosion(static_cast<float>(w) / 2.0f,
-                          static_cast<float>(h) / 2.0f);
+      auto ex =
+          Explosion(static_cast<float>(w) / 2.0f, static_cast<float>(h) / 2.0f);
       ex->Start();
       explosions.push_back(ex);
       // Keep explosion list small — drop finished ones.
@@ -179,7 +184,9 @@ int main() {
   // Clean up: stop all particle systems.
   warp->Stop();
   rain->Stop();
-  for (auto& ex : explosions) ex->Stop();
+  for (auto& ex : explosions) {
+    ex->Stop();
+  }
 
   return 0;
 }

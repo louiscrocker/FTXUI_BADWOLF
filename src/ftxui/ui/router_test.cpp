@@ -15,13 +15,14 @@ ftxui::Component MakeStub(const std::string& name) {
   return ftxui::Renderer([name] { return ftxui::text(name); });
 }
 
-// ── Build / Default route ──────────────────────────────────────────────────────
+// ── Build / Default route
+// ──────────────────────────────────────────────────────
 
 TEST(RouterTest, CurrentReturnsDefaultRouteAfterBuild) {
   Router router;
   router.Route("home", MakeStub("home"))
-        .Route("other", MakeStub("other"))
-        .Default("home");
+      .Route("other", MakeStub("other"))
+      .Default("home");
 
   auto root = router.Build();
   EXPECT_EQ(router.Current(), "home");
@@ -44,13 +45,14 @@ TEST(RouterTest, RenderWithNoRoutesDoesNotCrash) {
   ASSERT_NE(elem, nullptr);
 }
 
-// ── Push ───────────────────────────────────────────────────────────────────────
+// ── Push
+// ───────────────────────────────────────────────────────────────────────
 
 TEST(RouterTest, PushChangesCurrentRoute) {
   Router router;
   router.Route("home", MakeStub("home"))
-        .Route("settings", MakeStub("settings"))
-        .Default("home");
+      .Route("settings", MakeStub("settings"))
+      .Default("home");
   router.Build();
 
   EXPECT_EQ(router.Current(), "home");
@@ -64,18 +66,20 @@ TEST(RouterTest, PushUnknownRouteIsNoOp) {
   router.Build();
 
   EXPECT_EQ(router.Current(), "home");
-  // Pushing an unknown route should not crash and should leave current unchanged.
+  // Pushing an unknown route should not crash and should leave current
+  // unchanged.
   router.Push("nonexistent");
   EXPECT_EQ(router.Current(), "home");
 }
 
-// ── Pop ────────────────────────────────────────────────────────────────────────
+// ── Pop
+// ────────────────────────────────────────────────────────────────────────
 
 TEST(RouterTest, PopReturnsToPreviousRoute) {
   Router router;
   router.Route("home", MakeStub("home"))
-        .Route("settings", MakeStub("settings"))
-        .Default("home");
+      .Route("settings", MakeStub("settings"))
+      .Default("home");
   router.Build();
 
   router.Push("settings");
@@ -109,8 +113,8 @@ TEST(RouterTest, CanGoBackFalseOnRoot) {
 TEST(RouterTest, CanGoBackTrueAfterPush) {
   Router router;
   router.Route("home", MakeStub("home"))
-        .Route("detail", MakeStub("detail"))
-        .Default("home");
+      .Route("detail", MakeStub("detail"))
+      .Default("home");
   router.Build();
 
   EXPECT_FALSE(router.CanGoBack());
@@ -120,14 +124,15 @@ TEST(RouterTest, CanGoBackTrueAfterPush) {
   EXPECT_FALSE(router.CanGoBack());
 }
 
-// ── Replace ────────────────────────────────────────────────────────────────────
+// ── Replace
+// ────────────────────────────────────────────────────────────────────
 
 TEST(RouterTest, ReplaceChangesCurrentWithoutAddingHistory) {
   Router router;
   router.Route("home", MakeStub("home"))
-        .Route("a", MakeStub("a"))
-        .Route("b", MakeStub("b"))
-        .Default("home");
+      .Route("a", MakeStub("a"))
+      .Route("b", MakeStub("b"))
+      .Default("home");
   router.Build();
 
   router.Push("a");
@@ -152,17 +157,19 @@ TEST(RouterTest, ReplaceUnknownRouteIsNoOp) {
   EXPECT_EQ(router.Current(), "home");
 }
 
-// ── Lazy factory routes ────────────────────────────────────────────────────────
+// ── Lazy factory routes
+// ────────────────────────────────────────────────────────
 
 TEST(RouterTest, LazyFactoryRouteCreatesComponentOnFirstRender) {
   int create_count = 0;
   Router router;
   router.Route("home", MakeStub("home"))
-        .Route("lazy", [&create_count]() -> ftxui::Component {
-          create_count++;
-          return MakeStub("lazy");
-        })
-        .Default("home");
+      .Route("lazy",
+             [&create_count]() -> ftxui::Component {
+               create_count++;
+               return MakeStub("lazy");
+             })
+      .Default("home");
   auto root = router.Build();
 
   EXPECT_EQ(create_count, 0);
@@ -181,7 +188,8 @@ TEST(RouterTest, LazyFactoryRouteCreatesComponentOnFirstRender) {
   EXPECT_EQ(create_count, 1);
 }
 
-// ── OnNavigate callback ────────────────────────────────────────────────────────
+// ── OnNavigate callback
+// ────────────────────────────────────────────────────────
 
 TEST(RouterTest, OnNavigateCallbackFires) {
   std::string last_from;
@@ -189,12 +197,12 @@ TEST(RouterTest, OnNavigateCallbackFires) {
 
   Router router;
   router.Route("home", MakeStub("home"))
-        .Route("other", MakeStub("other"))
-        .Default("home")
-        .OnNavigate([&](std::string_view from, std::string_view to) {
-          last_from = from;
-          last_to = to;
-        });
+      .Route("other", MakeStub("other"))
+      .Default("home")
+      .OnNavigate([&](std::string_view from, std::string_view to) {
+        last_from = from;
+        last_to = to;
+      });
   router.Build();
 
   router.Push("other");
@@ -204,13 +212,14 @@ TEST(RouterTest, OnNavigateCallbackFires) {
   EXPECT_EQ(last_to, "home");
 }
 
-// ── Multiple Build calls share state ──────────────────────────────────────────
+// ── Multiple Build calls share state
+// ──────────────────────────────────────────
 
 TEST(RouterTest, MultipleBuildCallsShareNavState) {
   Router router;
   router.Route("home", MakeStub("home"))
-        .Route("page2", MakeStub("page2"))
-        .Default("home");
+      .Route("page2", MakeStub("page2"))
+      .Default("home");
 
   auto root1 = router.Build();
   auto root2 = router.Build();

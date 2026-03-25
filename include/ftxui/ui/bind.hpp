@@ -36,8 +36,8 @@ class Bind {
  public:
   /// @brief Construct an owning Bind – creates an internal Reactive<T>.
   explicit Bind(T initial = T{})
-      : reactive_(std::make_shared<ftxui::ui::Reactive<T>>(std::move(initial))) {
-  }
+      : reactive_(
+            std::make_shared<ftxui::ui::Reactive<T>>(std::move(initial))) {}
 
   /// @brief Construct a non-owning Bind wrapping an existing Reactive<T>.
   explicit Bind(std::shared_ptr<ftxui::ui::Reactive<T>> reactive)
@@ -108,7 +108,7 @@ Bind<T> MakeBind(std::shared_ptr<ftxui::ui::Reactive<T>> r) {
 ///
 /// @ingroup ui
 template <typename T, typename F>
-Bind<F> MakeLens(Bind<T>& model, F T::*field) {
+Bind<F> MakeLens(Bind<T>& model, F T::* field) {
   // Create a Reactive<F> initialised from the model's current field value.
   auto r = std::make_shared<ftxui::ui::Reactive<F>>(model.Get().*field);
 
@@ -116,7 +116,7 @@ Bind<F> MakeLens(Bind<T>& model, F T::*field) {
   auto suppressing = std::make_shared<bool>(false);
 
   auto model_reactive = model.AsReactive();
-  auto weak_r         = std::weak_ptr<ftxui::ui::Reactive<F>>(r);
+  auto weak_r = std::weak_ptr<ftxui::ui::Reactive<F>>(r);
 
   // Model → field: when the whole model changes, update the field reactive.
   model.Subscribe([weak_r, field, suppressing](const T& val) {

@@ -229,7 +229,7 @@ TEST(ParticleSystem, UpdateAdvancesParticles) {
   ParticleSystem ps(cfg);
 
   // Manually update without starting the loop callback.
-  ps.Update(0.1f);   // emits ~10 particles
+  ps.Update(0.1f);  // emits ~10 particles
   EXPECT_GT(ps.LiveCount(), 0);
   // After another dt particles should still be alive (lifetime = 5s).
   ps.Update(0.1f);
@@ -250,7 +250,7 @@ TEST(ParticleSystem, ClearRemovesAll) {
 
 TEST(ParticleSystem, StopPreventsNewEmission) {
   ParticleConfig cfg;
-  cfg.emit_rate = 0;   // no auto-emission
+  cfg.emit_rate = 0;  // no auto-emission
   cfg.lifetime_min = 0.01f;
   cfg.lifetime_max = 0.01f;
   ParticleSystem ps(cfg);

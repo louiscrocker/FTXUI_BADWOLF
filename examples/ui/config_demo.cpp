@@ -21,17 +21,17 @@ int main() {
   // Build the ConfigEditor. Values are persisted to "config_demo.cfg".
   auto cfg = std::make_shared<ConfigEditor>();
   *cfg = ConfigEditor()
-      .File("config_demo.cfg")
-      .Title("Application Settings")
-      .String("server_host",   "localhost",    "Hostname or IP address")
-      .Int("server_port",      8080,           "Port number (1-65535)")
-      .Bool("enable_tls",      false,          "Use TLS encryption")
-      .Bool("debug_mode",      false,          "Enable debug logging")
-      .Float("timeout_sec",    30.0f,          "Request timeout in seconds")
-      .Section("Appearance")
-      .String("theme",         "Default",      "Theme name (Default/Dark/Nord)")
-      .String("font_family",   "monospace",    "Terminal font family")
-      .Int("font_size",        12,             "Font size in points");
+             .File("config_demo.cfg")
+             .Title("Application Settings")
+             .String("server_host", "localhost", "Hostname or IP address")
+             .Int("server_port", 8080, "Port number (1-65535)")
+             .Bool("enable_tls", false, "Use TLS encryption")
+             .Bool("debug_mode", false, "Enable debug logging")
+             .Float("timeout_sec", 30.0f, "Request timeout in seconds")
+             .Section("Appearance")
+             .String("theme", "Default", "Theme name (Default/Dark/Nord)")
+             .String("font_family", "monospace", "Terminal font family")
+             .Int("font_size", 12, "Font size in points");
 
   auto editor = cfg->Build();
 
@@ -50,19 +50,18 @@ int main() {
     return vbox({
         text(" Preview") | bold | color(t.primary),
         separator(),
-        row("server_host",  cfg->GetString("server_host")),
-        row("server_port",  std::to_string(cfg->GetInt("server_port"))),
-        row("enable_tls",   cfg->GetBool("enable_tls") ? "true" : "false"),
-        row("debug_mode",   cfg->GetBool("debug_mode") ? "true" : "false"),
-        row("timeout_sec",  std::to_string(cfg->GetFloat("timeout_sec"))),
+        row("server_host", cfg->GetString("server_host")),
+        row("server_port", std::to_string(cfg->GetInt("server_port"))),
+        row("enable_tls", cfg->GetBool("enable_tls") ? "true" : "false"),
+        row("debug_mode", cfg->GetBool("debug_mode") ? "true" : "false"),
+        row("timeout_sec", std::to_string(cfg->GetFloat("timeout_sec"))),
         separator(),
-        row("theme",        cfg->GetString("theme")),
-        row("font_family",  cfg->GetString("font_family")),
-        row("font_size",    std::to_string(cfg->GetInt("font_size"))),
+        row("theme", cfg->GetString("theme")),
+        row("font_family", cfg->GetString("font_family")),
+        row("font_size", std::to_string(cfg->GetInt("font_size"))),
         filler(),
         separator(),
-        text(" Values update live as you type") |
-            color(t.text_muted) | dim,
+        text(" Values update live as you type") | color(t.text_muted) | dim,
     });
   });
 

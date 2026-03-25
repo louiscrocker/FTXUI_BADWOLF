@@ -22,14 +22,15 @@ namespace ftxui::ui {
 /// @param content  The element rendered in the main content area.
 /// @param color    The LCARS accent color (defaults to theme primary).
 /// @ingroup ui
-ftxui::Element LCARSPanel(std::string title, ftxui::Element content,
-                           ftxui::Color color = ftxui::Color::Default);
+ftxui::Element LCARSPanel(std::string title,
+                          ftxui::Element content,
+                          ftxui::Color color = ftxui::Color::Default);
 
 /// @brief LCARS-style button (rounded pill shape).
 /// @ingroup ui
 ftxui::Component LCARSButton(std::string label,
-                              std::function<void()> on_click,
-                              ftxui::Color color = ftxui::Color::Default);
+                             std::function<void()> on_click,
+                             ftxui::Color color = ftxui::Color::Default);
 
 /// @brief LCARS status bar — horizontal series of colored label segments.
 /// @ingroup ui
@@ -38,14 +39,15 @@ ftxui::Element LCARSBar(
 
 /// @brief LCARS data readout — right-aligned label + value pair.
 /// @ingroup ui
-ftxui::Element LCARSReadout(std::string label, std::string value,
-                              ftxui::Color label_color = ftxui::Color::Default);
+ftxui::Element LCARSReadout(std::string label,
+                            std::string value,
+                            ftxui::Color label_color = ftxui::Color::Default);
 
 /// @brief Full LCARS screen layout: title bar + side column + main content.
 /// @ingroup ui
 ftxui::Component LCARSScreen(std::string title,
-                               ftxui::Component sidebar,
-                               ftxui::Component main_content);
+                             ftxui::Component sidebar,
+                             ftxui::Component main_content);
 
 }  // namespace ftxui::ui
 

@@ -56,7 +56,7 @@ class MVU {
  public:
   using UpdateFn =
       std::function<TModel(TModel, TMsg)>;  ///< Pure reducer function.
-  using ViewFn = std::function<Element(  ///< Render function.
+  using ViewFn = std::function<Element(     ///< Render function.
       const TModel&,
       std::function<void(TMsg)>  ///< dispatch — send a message
       )>;
@@ -117,7 +117,8 @@ class MVU {
   ViewFn view_;
 };
 
-// ── Convenience free functions ────────────────────────────────────────────────
+// ── Convenience free functions
+// ────────────────────────────────────────────────
 
 /// @brief Run an MVU app on the terminal output.
 template <typename TModel, typename TMsg>

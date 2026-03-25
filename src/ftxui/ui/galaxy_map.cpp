@@ -26,12 +26,14 @@ using namespace ftxui;
 
 namespace ftxui::ui {
 
-// ── Constants ─────────────────────────────────────────────────────────────────
+// ── Constants
+// ─────────────────────────────────────────────────────────────────
 
 static constexpr double kPi = 3.14159265358979323846;
 static constexpr double kDeg2Rad = kPi / 180.0;
 
-// ── Orthographic projection ───────────────────────────────────────────────────
+// ── Orthographic projection
+// ───────────────────────────────────────────────────
 
 namespace {
 
@@ -40,9 +42,13 @@ struct ProjResult {
   bool visible;
 };
 
-inline ProjResult OrthoProject(double lon, double lat, double lon0,
-                                double lat0, double cx, double cy,
-                                double radius) {
+inline ProjResult OrthoProject(double lon,
+                               double lat,
+                               double lon0,
+                               double lat0,
+                               double cx,
+                               double cy,
+                               double radius) {
   const double lam = lon * kDeg2Rad;
   const double phi = lat * kDeg2Rad;
   const double lam0 = lon0 * kDeg2Rad;
@@ -59,13 +65,13 @@ inline ProjResult OrthoProject(double lon, double lat, double lon0,
                    std::sin(phi0) * std::cos(phi) * std::cos(lam - lam0);
 
   return {static_cast<int>(std::round(cx + x * radius)),
-          static_cast<int>(std::round(cy - y * radius)),
-          true};
+          static_cast<int>(std::round(cy - y * radius)), true};
 }
 
 }  // namespace
 
-// ── Impl ──────────────────────────────────────────────────────────────────────
+// ── Impl
+// ──────────────────────────────────────────────────────────────────────
 
 struct GalaxyMap::Impl {
   // Data
@@ -98,16 +104,24 @@ struct GalaxyMap::Impl {
   }
 
   void StartAnimationThread() {
-    if (running_.load()) return;
+    if (running_.load()) {
+      return;
+    }
     running_.store(true);
     anim_thread_ = std::thread([this]() {
       while (running_.load()) {
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
-        if (!running_.load()) break;
+        if (!running_.load()) {
+          break;
+        }
         if (rotate_speed_ != 0.0f) {
           center_ra_ += static_cast<double>(rotate_speed_) * 0.05;
-          if (center_ra_ > 360.0) center_ra_ -= 360.0;
-          if (center_ra_ < 0.0) center_ra_ += 360.0;
+          if (center_ra_ > 360.0) {
+            center_ra_ -= 360.0;
+          }
+          if (center_ra_ < 0.0) {
+            center_ra_ += 360.0;
+          }
           if (App* a = App::Active()) {
             a->Post([] {});
           }
@@ -130,7 +144,8 @@ struct GalaxyMap::Impl {
   }
 };
 
-// ── Canvas rendering ──────────────────────────────────────────────────────────
+// ── Canvas rendering
+// ──────────────────────────────────────────────────────────
 
 void GalaxyMap::Impl::DrawOnto(ftxui::Canvas& c) const {
   const int dot_w = c.width();
@@ -142,7 +157,9 @@ void GalaxyMap::Impl::DrawOnto(ftxui::Canvas& c) const {
   const double cx = dot_w / 2.0;
   const double cy = dot_h / 2.0;
 
-  if (radius < 4.0) return;
+  if (radius < 4.0) {
+    return;
+  }
 
   const double lon0 = center_ra_;
   const double lat0 = center_dec_;
@@ -220,9 +237,11 @@ void GalaxyMap::Impl::DrawOnto(ftxui::Canvas& c) const {
   // Stars
   for (size_t i = 0; i < stars_.size(); ++i) {
     const auto& star = stars_[i];
-    const auto p = project(static_cast<double>(star.ra),
-                            static_cast<double>(star.dec));
-    if (!p.visible) continue;
+    const auto p =
+        project(static_cast<double>(star.ra), static_cast<double>(star.dec));
+    if (!p.visible) {
+      continue;
+    }
 
     // Distance shading: closer stars are brighter
     ftxui::Color col = star.color;
@@ -243,9 +262,11 @@ void GalaxyMap::Impl::DrawOnto(ftxui::Canvas& c) const {
   // Fleet markers
   const auto fleets = AllFleets();
   for (const auto& fleet : fleets) {
-    const auto p = project(static_cast<double>(fleet.ra),
-                            static_cast<double>(fleet.dec));
-    if (!p.visible) continue;
+    const auto p =
+        project(static_cast<double>(fleet.ra), static_cast<double>(fleet.dec));
+    if (!p.visible) {
+      continue;
+    }
     // Draw a small cross for fleets
     c.DrawPoint(p.px, p.py, true, fleet.color);
     c.DrawPoint(p.px + 1, p.py, true, fleet.color);
@@ -255,27 +276,36 @@ void GalaxyMap::Impl::DrawOnto(ftxui::Canvas& c) const {
   }
 }
 
-// ── Event handling ────────────────────────────────────────────────────────────
+// ── Event handling
+// ────────────────────────────────────────────────────────────
 
 bool GalaxyMap::Impl::HandleEvent(ftxui::Event event) {
   if (event == Event::ArrowLeft) {
     center_ra_ -= 5.0;
-    if (center_ra_ < 0.0) center_ra_ += 360.0;
+    if (center_ra_ < 0.0) {
+      center_ra_ += 360.0;
+    }
     return true;
   }
   if (event == Event::ArrowRight) {
     center_ra_ += 5.0;
-    if (center_ra_ >= 360.0) center_ra_ -= 360.0;
+    if (center_ra_ >= 360.0) {
+      center_ra_ -= 360.0;
+    }
     return true;
   }
   if (event == Event::ArrowUp) {
     center_dec_ += 5.0;
-    if (center_dec_ > 90.0) center_dec_ = 90.0;
+    if (center_dec_ > 90.0) {
+      center_dec_ = 90.0;
+    }
     return true;
   }
   if (event == Event::ArrowDown) {
     center_dec_ -= 5.0;
-    if (center_dec_ < -90.0) center_dec_ = -90.0;
+    if (center_dec_ < -90.0) {
+      center_dec_ = -90.0;
+    }
     return true;
   }
   if (event == Event::Character('+') || event == Event::Character('=')) {
@@ -305,7 +335,8 @@ bool GalaxyMap::Impl::HandleEvent(ftxui::Event event) {
   return false;
 }
 
-// ── Builder ───────────────────────────────────────────────────────────────────
+// ── Builder
+// ───────────────────────────────────────────────────────────────────
 
 GalaxyMap::GalaxyMap() : impl_(std::make_shared<Impl>()) {}
 
@@ -391,7 +422,8 @@ ftxui::Component GalaxyMap::Build() {
   });
 }
 
-// ── StarFields namespace ──────────────────────────────────────────────────────
+// ── StarFields namespace
+// ──────────────────────────────────────────────────────
 
 namespace StarFields {
 
@@ -437,22 +469,21 @@ std::vector<StarObject> Procedural(int count, int seed) {
   };
 
   const ftxui::Color star_colors[] = {
-      ftxui::Color::White,      ftxui::Color::GrayLight,
-      ftxui::Color::CyanLight,  ftxui::Color::YellowLight,
-      ftxui::Color::BlueLight,  ftxui::Color::RedLight,
+      ftxui::Color::White,     ftxui::Color::GrayLight,
+      ftxui::Color::CyanLight, ftxui::Color::YellowLight,
+      ftxui::Color::BlueLight, ftxui::Color::RedLight,
   };
-  constexpr size_t kNumColors =
-      sizeof(star_colors) / sizeof(star_colors[0]);
+  constexpr size_t kNumColors = sizeof(star_colors) / sizeof(star_colors[0]);
 
   for (int i = 0; i < count; ++i) {
     StarObject s;
     s.ra = static_cast<float>(next_rand() * 360.0);
     // Uniform distribution over sphere surface: dec = asin(2*u - 1)
-    s.dec = static_cast<float>(
-        std::asin(2.0 * next_rand() - 1.0) * 180.0 / kPi);
+    s.dec =
+        static_cast<float>(std::asin(2.0 * next_rand() - 1.0) * 180.0 / kPi);
     s.distance = static_cast<float>(next_rand() * 1000.0);
-    s.color = star_colors[static_cast<size_t>(next_rand() * kNumColors) %
-                           kNumColors];
+    s.color =
+        star_colors[static_cast<size_t>(next_rand() * kNumColors) % kNumColors];
     s.symbol = '*';
     stars.push_back(std::move(s));
   }

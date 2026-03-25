@@ -88,8 +88,7 @@ TEST(TextInputTest, OnChangeCallbackDoesNotCrashOnBuild) {
 
 TEST(TextInputTest, OnSubmitCallbackDoesNotCrashOnBuild) {
   bool submitted = false;
-  auto comp =
-      TextInput("X").OnSubmit([&] { submitted = true; }).Build();
+  auto comp = TextInput("X").OnSubmit([&] { submitted = true; }).Build();
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);
 }
@@ -110,7 +109,7 @@ TEST(TextInputTest, AllOptionsTogetherBuildsOk) {
                   .Placeholder("Enter text")
                   .MaxLength(20)
                   .Validate([](std::string_view s) { return !s.empty(); },
-                             "Cannot be empty")
+                            "Cannot be empty")
                   .OnChange([&] { changed = true; })
                   .OnSubmit([&] { submitted = true; })
                   .LabelWidth(10)

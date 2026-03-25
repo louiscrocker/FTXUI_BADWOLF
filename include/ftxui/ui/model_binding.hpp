@@ -15,7 +15,8 @@
 //   #include "ftxui/ui/model_binding.hpp"   // pulls in bind.hpp + form.hpp
 //
 // Example:
-//   struct LoginForm { std::string username, password; bool remember = false; };
+//   struct LoginForm { std::string username, password; bool remember = false;
+//   };
 //
 //   auto model = MakeBind<LoginForm>();
 //   auto form  = Form()
@@ -29,7 +30,8 @@
 
 #include "ftxui/ui/bind.hpp"
 
-// form.hpp provides the BindField / BindPassword / BindCheckbox template methods.
+// form.hpp provides the BindField / BindPassword / BindCheckbox template
+// methods.
 #include "ftxui/ui/form.hpp"
 
 // Re-export MakeLens for users who only include this header.

@@ -23,27 +23,28 @@ int main() {
     const Theme& t = GetTheme();
     return vbox({
         separatorEmpty(),
-        text("Welcome to FTXUI Project Setup!") | bold | hcenter | color(t.primary),
+        text("Welcome to FTXUI Project Setup!") | bold | hcenter |
+            color(t.primary),
         separatorEmpty(),
-        paragraph(
-            "This wizard will guide you through creating a new FTXUI "
-            "project. You will choose a name, configure options, and "
-            "review your selections before finishing.") | xflex,
+        paragraph("This wizard will guide you through creating a new FTXUI "
+                  "project. You will choose a name, configure options, and "
+                  "review your selections before finishing.") |
+            xflex,
         separatorEmpty(),
     });
   });
 
   // Step 2 — Project name
   std::string proj_name;
-  auto input_name  = Input(&proj_name, "my-app");
+  auto input_name = Input(&proj_name, "my-app");
   auto step2_inner = Container::Vertical({input_name});
-  auto step2       = Renderer(step2_inner, [&]() -> Element {
+  auto step2 = Renderer(step2_inner, [&]() -> Element {
     const Theme& t = GetTheme();
     return vbox({
         separatorEmpty(),
         text("Project Name") | bold | color(t.primary),
         separatorEmpty(),
-        hbox({ text("  Name: ") | dim, input_name->Render() | flex }),
+        hbox({text("  Name: ") | dim, input_name->Render() | flex}),
         separatorEmpty(),
         text("  Enter a name for your new project.") | dim,
     });
@@ -54,9 +55,9 @@ int main() {
   int tgt_sel = 0;
   bool add_tests = true;
   auto radio_target = Radiobox(&tgt_opts, &tgt_sel);
-  auto chk_tests    = Checkbox("Include unit tests", &add_tests);
-  auto step3_inner  = Container::Vertical({radio_target, chk_tests});
-  auto step3        = Renderer(step3_inner, [&]() -> Element {
+  auto chk_tests = Checkbox("Include unit tests", &add_tests);
+  auto step3_inner = Container::Vertical({radio_target, chk_tests});
+  auto step3 = Renderer(step3_inner, [&]() -> Element {
     const Theme& t = GetTheme();
     return vbox({
         separatorEmpty(),
@@ -77,9 +78,9 @@ int main() {
         separatorEmpty(),
         text("Review Your Configuration") | bold | color(t.primary),
         separatorEmpty(),
-        hbox({ text("  Name:   ") | dim, text(name_val) | bold }),
-        hbox({ text("  Target: ") | dim, text(tgt_opts[tgt_sel]) | bold }),
-        hbox({ text("  Tests:  ") | dim, text(add_tests ? "Yes" : "No") | bold }),
+        hbox({text("  Name:   ") | dim, text(name_val) | bold}),
+        hbox({text("  Target: ") | dim, text(tgt_opts[tgt_sel]) | bold}),
+        hbox({text("  Tests:  ") | dim, text(add_tests ? "Yes" : "No") | bold}),
         separatorEmpty(),
         text("  Click Finish to create the project.") | color(t.accent),
     });
@@ -87,17 +88,21 @@ int main() {
 
   std::string result_msg;
   auto comp = Wizard("  New Project Setup  ")
-                  .Step("Welcome",  step1)
-                  .Step("Name",     step2)
-                  .Step("Options",  step3)
-                  .Step("Review",   step4)
-                  .OnComplete([&]{
-                      result_msg = "Created: " +
-                          (proj_name.empty() ? "my-app" : proj_name);
-                      if (App* a = App::Active()) a->Exit();
+                  .Step("Welcome", step1)
+                  .Step("Name", step2)
+                  .Step("Options", step3)
+                  .Step("Review", step4)
+                  .OnComplete([&] {
+                    result_msg = "Created: " +
+                                 (proj_name.empty() ? "my-app" : proj_name);
+                    if (App* a = App::Active()) {
+                      a->Exit();
+                    }
                   })
-                  .OnCancel([]{
-                      if (App* a = App::Active()) a->Exit();
+                  .OnCancel([] {
+                    if (App* a = App::Active()) {
+                      a->Exit();
+                    }
                   })
                   .Build();
 

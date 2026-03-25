@@ -11,7 +11,8 @@
 
 namespace ftxui::ui {
 
-// ── Badge ─────────────────────────────────────────────────────────────────────
+// ── Badge
+// ─────────────────────────────────────────────────────────────────────
 
 /// @brief Add a small numeric badge to any element.
 ///
@@ -23,14 +24,15 @@ ftxui::Decorator Badge(int count, ftxui::Color color = ftxui::Color::Red);
 
 /// @brief Add a small text badge to any element.
 ftxui::Decorator Badge(std::string_view label,
-                        ftxui::Color color = ftxui::Color::Red);
+                       ftxui::Color color = ftxui::Color::Red);
 
 /// @brief Wrap @p base element with a numeric badge overlay.
 ftxui::Element WithBadge(ftxui::Element base,
-                          int count,
-                          ftxui::Color color = ftxui::Color::Red);
+                         int count,
+                         ftxui::Color color = ftxui::Color::Red);
 
-// ── Empty state ───────────────────────────────────────────────────────────────
+// ── Empty state
+// ───────────────────────────────────────────────────────────────
 
 /// @brief Render a centered empty-state placeholder.
 ///
@@ -40,10 +42,11 @@ ftxui::Element WithBadge(ftxui::Element base,
 /// }
 /// @endcode
 ftxui::Element EmptyState(std::string_view icon,
-                           std::string_view title,
-                           std::string_view subtitle = "");
+                          std::string_view title,
+                          std::string_view subtitle = "");
 
-// ── Divider with label ────────────────────────────────────────────────────────
+// ── Divider with label
+// ────────────────────────────────────────────────────────
 
 /// @brief A horizontal separator with a centered label.
 ///
@@ -52,7 +55,8 @@ ftxui::Element EmptyState(std::string_view icon,
 /// @endcode
 ftxui::Element LabeledSeparator(std::string_view label);
 
-// ── Kbd shortcut hint ─────────────────────────────────────────────────────────
+// ── Kbd shortcut hint
+// ─────────────────────────────────────────────────────────
 
 /// @brief Render a single keyboard shortcut hint box.
 ///

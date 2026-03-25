@@ -88,9 +88,8 @@ TEST_F(AlertTest, AlertSystem_OnChangeFiredOnRed) {
 TEST_F(AlertTest, AlertSystem_OnChangeFiredOnAllClear) {
   AlertLevel last = AlertLevel::Red;
   AlertSystem::Instance().Red("A");
-  AlertSystem::Instance().OnChange([&](AlertLevel lv, std::string /*msg*/) {
-    last = lv;
-  });
+  AlertSystem::Instance().OnChange(
+      [&](AlertLevel lv, std::string /*msg*/) { last = lv; });
   AlertSystem::Instance().AllClear();
   EXPECT_EQ(last, AlertLevel::AllClear);
 }

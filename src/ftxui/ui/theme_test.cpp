@@ -15,7 +15,8 @@ class ThemeTest : public ::testing::Test {
   void TearDown() override { SetTheme(Theme::Default()); }
 };
 
-// ── GetTheme / SetTheme ────────────────────────────────────────────────────────
+// ── GetTheme / SetTheme
+// ────────────────────────────────────────────────────────
 
 TEST_F(ThemeTest, GetThemeReturnsValidTheme) {
   const Theme& t = GetTheme();
@@ -35,9 +36,9 @@ TEST_F(ThemeTest, SetThemeChangesActiveTheme) {
 TEST_F(ThemeTest, SetThemeFluentSetters) {
   Theme t;
   t.WithPrimary(Color::Magenta)
-   .WithSecondary(Color::Yellow)
-   .WithBorderStyle(LIGHT)
-   .WithAnimations(false);
+      .WithSecondary(Color::Yellow)
+      .WithBorderStyle(LIGHT)
+      .WithAnimations(false);
   SetTheme(t);
 
   EXPECT_EQ(GetTheme().primary, Color::Magenta);
@@ -46,7 +47,8 @@ TEST_F(ThemeTest, SetThemeFluentSetters) {
   EXPECT_FALSE(GetTheme().animations_enabled);
 }
 
-// ── ScopedTheme ────────────────────────────────────────────────────────────────
+// ── ScopedTheme
+// ────────────────────────────────────────────────────────────────
 
 TEST_F(ThemeTest, ScopedThemeRestoresPreviousTheme) {
   Theme before = GetTheme();
@@ -80,7 +82,8 @@ TEST_F(ThemeTest, ScopedThemeNestedRestoresCorrectly) {
   EXPECT_EQ(GetTheme().primary, Theme::Default().primary);
 }
 
-// ── Preset themes ─────────────────────────────────────────────────────────────
+// ── Preset themes
+// ─────────────────────────────────────────────────────────────
 
 // Default theme primary is Color::Cyan — all other presets must differ.
 

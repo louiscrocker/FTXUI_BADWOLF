@@ -51,7 +51,9 @@ int main() {
 
   auto app_comp = CatchEvent(root, [](Event e) -> bool {
     if (e == Event::Character('q') || e == Event::Character('Q')) {
-      if (App* a = App::Active()) a->Exit();
+      if (App* a = App::Active()) {
+        a->Exit();
+      }
       return true;
     }
     return false;

@@ -127,15 +127,15 @@ class VirtualList {
     // Wire up ReactiveList if provided.
     if (s->reactive_list) {
       auto items = std::make_shared<std::vector<T>>(s->reactive_list->Items());
-      s->owned_items    = items;
-      s->items          = items.get();
+      s->owned_items = items;
+      s->items = items.get();
       s->filtered_dirty = true;
 
       auto weak_s = std::weak_ptr<State>(s);
       s->reactive_list->OnChange([weak_s](const std::vector<T>& new_items) {
         if (auto state = weak_s.lock()) {
-          state->owned_items    = std::make_shared<std::vector<T>>(new_items);
-          state->items          = state->owned_items.get();
+          state->owned_items = std::make_shared<std::vector<T>>(new_items);
+          state->items = state->owned_items.get();
           state->filtered_dirty = true;
         }
         // PostEvent already called by ReactiveList::Notify().

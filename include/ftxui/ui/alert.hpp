@@ -71,7 +71,8 @@ class AlertSystem {
   std::vector<std::function<void(AlertLevel, std::string)>> listeners_;
 };
 
-// ── Convenience free functions ────────────────────────────────────────────────
+// ── Convenience free functions
+// ────────────────────────────────────────────────
 
 inline void RedAlert(std::string msg = "RED ALERT") {
   AlertSystem::Instance().Red(std::move(msg));

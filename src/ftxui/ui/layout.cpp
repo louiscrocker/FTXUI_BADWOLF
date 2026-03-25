@@ -16,7 +16,8 @@ using namespace ftxui;
 
 namespace ftxui::ui {
 
-// ── Panel ─────────────────────────────────────────────────────────────────────
+// ── Panel
+// ─────────────────────────────────────────────────────────────────────
 
 Component Panel(std::string_view title, Component content) {
   std::string t{title};
@@ -35,7 +36,8 @@ Component Panel(std::string_view title, std::function<Element()> render) {
   });
 }
 
-// ── Row ───────────────────────────────────────────────────────────────────────
+// ── Row
+// ───────────────────────────────────────────────────────────────────────
 
 Component Row(Components children) {
   auto captured = std::make_shared<Components>(children);
@@ -50,7 +52,8 @@ Component Row(Components children) {
   });
 }
 
-// ── Column ────────────────────────────────────────────────────────────────────
+// ── Column
+// ────────────────────────────────────────────────────────────────────
 
 Component Column(Components children) {
   auto captured = std::make_shared<Components>(children);
@@ -65,13 +68,14 @@ Component Column(Components children) {
   });
 }
 
-// ── Status bar ────────────────────────────────────────────────────────────────
+// ── Status bar
+// ────────────────────────────────────────────────────────────────
 
 Component StatusBar(std::function<std::string()> text_fn) {
   return StatusBar([text_fn]() -> Element {
     const Theme& t = GetTheme();
-    return hbox({text(" " + text_fn() + " ") | xflex}) |
-           bgcolor(t.secondary) | color(t.button_fg_active);
+    return hbox({text(" " + text_fn() + " ") | xflex}) | bgcolor(t.secondary) |
+           color(t.button_fg_active);
   });
 }
 
@@ -79,7 +83,8 @@ Component StatusBar(std::function<Element()> render_fn) {
   return Renderer([render_fn]() -> Element { return render_fn(); });
 }
 
-// ── Scroll view ───────────────────────────────────────────────────────────────
+// ── Scroll view
+// ───────────────────────────────────────────────────────────────
 
 Component ScrollView(Component content) {
   return Renderer(content, [content]() -> Element {
@@ -97,7 +102,8 @@ Component ScrollView(std::string_view title, Component content) {
   });
 }
 
-// ── Labeled ───────────────────────────────────────────────────────────────────
+// ── Labeled
+// ───────────────────────────────────────────────────────────────────
 
 Component Labeled(std::string_view label, Component content, int label_width) {
   std::string lbl{label};
@@ -111,7 +117,8 @@ Component Labeled(std::string_view label, Component content, int label_width) {
   });
 }
 
-// ── Splits ────────────────────────────────────────────────────────────────────
+// ── Splits
+// ────────────────────────────────────────────────────────────────────
 
 Component HSplit(Component left, Component right, int* split_pos) {
   if (split_pos) {
@@ -146,7 +153,8 @@ Component VSplit(Component top, Component bottom, int* split_pos) {
   });
 }
 
-// ── Tab view ──────────────────────────────────────────────────────────────────
+// ── Tab view
+// ──────────────────────────────────────────────────────────────────
 
 Component TabView(const std::vector<std::string>& tabs,
                   Components pages,

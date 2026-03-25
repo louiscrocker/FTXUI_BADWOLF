@@ -17,7 +17,8 @@ using namespace ftxui;
 
 namespace ftxui::ui {
 
-// ── Internal implementation ───────────────────────────────────────────────────
+// ── Internal implementation
+// ───────────────────────────────────────────────────
 
 struct Form::Impl {
   enum class Kind {
@@ -48,22 +49,25 @@ struct Form::Impl {
   int label_width = 14;
 };
 
-// ── Constructor ───────────────────────────────────────────────────────────────
+// ── Constructor
+// ───────────────────────────────────────────────────────────────
 
 Form::Form() : impl_(std::make_shared<Impl>()) {}
 
-// ── Reactive binding helper ───────────────────────────────────────────────────
+// ── Reactive binding helper
+// ───────────────────────────────────────────────────
 
 Form& Form::AddComponent(std::string_view label, ftxui::Component c) {
   Impl::Entry e;
-  e.kind      = Impl::Kind::Field;  // renders the same as a text field row
-  e.label     = std::string(label);
+  e.kind = Impl::Kind::Field;  // renders the same as a text field row
+  e.label = std::string(label);
   e.component = std::move(c);
   impl_->entries.push_back(std::move(e));
   return *this;
 }
 
-// ── Field builders ────────────────────────────────────────────────────────────
+// ── Field builders
+// ────────────────────────────────────────────────────────────
 
 Form& Form::Field(std::string_view label,
                   std::string* value,
@@ -204,7 +208,8 @@ Form& Form::LabelWidth(int width) {
   return *this;
 }
 
-// ── Build ─────────────────────────────────────────────────────────────────────
+// ── Build
+// ─────────────────────────────────────────────────────────────────────
 
 Component Form::Build() const {
   // Collect focusable components in vertical order.
@@ -266,8 +271,7 @@ Component Form::Build() const {
         default:
           if (needs_label_prefix(e.kind)) {
             // "Label         : [field]"
-            auto lbl =
-                text(e.label + " :") | size(WIDTH, EQUAL, lw);
+            auto lbl = text(e.label + " :") | size(WIDTH, EQUAL, lw);
             rows.push_back(
                 hbox({lbl, text(" "), e.component->Render() | xflex}));
           } else {

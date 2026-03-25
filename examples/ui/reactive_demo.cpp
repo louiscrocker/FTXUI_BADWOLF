@@ -34,7 +34,9 @@ using namespace std::chrono_literals;
 // ---------------------------------------------------------------------------
 
 static std::string PadRight(std::string s, int width) {
-  while (static_cast<int>(s.size()) < width) s += ' ';
+  while (static_cast<int>(s.size()) < width) {
+    s += ' ';
+  }
   return s;
 }
 
@@ -51,7 +53,8 @@ int main() {
   // Derived label: recomputes whenever counter changes.
   auto counter_label = MakeComputed(
       [](int v) -> std::string {
-        return "Count: " + std::to_string(v) + (v % 2 == 0 ? "  (even)" : "  (odd)");
+        return "Count: " + std::to_string(v) +
+               (v % 2 == 0 ? "  (even)" : "  (odd)");
       },
       counter);
 
@@ -90,8 +93,9 @@ int main() {
 
       for (int i = 0; i < 3; ++i) {
         float base = 10.f + static_cast<float>(i) * 15.f;
-        float jitter = base * 0.3f * static_cast<float>(
-                                         std::sin(t + static_cast<double>(i) * 1.2));
+        float jitter =
+            base * 0.3f *
+            static_cast<float>(std::sin(t + static_cast<double>(i) * 1.2));
         float v = base + jitter;
 
         rows[i].current.Set(v);
@@ -131,12 +135,11 @@ int main() {
 
     // ── Latency section ────────────────────────────────────────────────────
     std::vector<Element> latency_rows;
-    latency_rows.push_back(
-        hbox({
-            text(PadRight("Service", 18)) | bold | color(t.text_muted),
-            text(PadRight("ms", 8)) | bold | color(t.text_muted),
-            text("Trend (last 40 samples)") | bold | color(t.text_muted),
-        }));
+    latency_rows.push_back(hbox({
+        text(PadRight("Service", 18)) | bold | color(t.text_muted),
+        text(PadRight("ms", 8)) | bold | color(t.text_muted),
+        text("Trend (last 40 samples)") | bold | color(t.text_muted),
+    }));
     latency_rows.push_back(separatorLight());
 
     for (int i = 0; i < 3; ++i) {
@@ -144,17 +147,16 @@ int main() {
       const std::vector<float>& hist = rows[i].history.Get();
 
       // Choose colour by latency magnitude.
-      Color val_color = (cur < 20.f) ? t.success_color
+      Color val_color = (cur < 20.f)   ? t.success_color
                         : (cur < 35.f) ? t.warning_color
                                        : t.error_color;
 
-      latency_rows.push_back(
-          hbox({
-              text(PadRight(rows[i].name, 18)) | color(t.text),
-              text(PadRight(std::to_string(static_cast<int>(cur)) + "ms", 8)) |
-                  bold | color(val_color),
-              Sparkline(hist, 36, val_color),
-          }));
+      latency_rows.push_back(hbox({
+          text(PadRight(rows[i].name, 18)) | color(t.text),
+          text(PadRight(std::to_string(static_cast<int>(cur)) + "ms", 8)) |
+              bold | color(val_color),
+          Sparkline(hist, 36, val_color),
+      }));
     }
     latency_rows.push_back(separatorEmpty());
     latency_rows.push_back(
@@ -173,14 +175,13 @@ int main() {
         borderStyled(t.border_style, t.border_color);
 
     // ── Controls ────────────────────────────────────────────────────────────
-    Element controls =
-        hbox({
-            text(" q / Esc ") | bold | color(t.secondary),
-            text(" quit   ") | dim,
-            text(" r ") | bold | color(t.secondary),
-            text(" reset counter ") | dim,
-        }) |
-        hcenter;
+    Element controls = hbox({
+                           text(" q / Esc ") | bold | color(t.secondary),
+                           text(" quit   ") | dim,
+                           text(" r ") | bold | color(t.secondary),
+                           text(" reset counter ") | dim,
+                       }) |
+                       hcenter;
 
     return vbox({
                text("  ui::Reactive<T> Demo  ") | bold | color(t.primary) |
@@ -198,7 +199,9 @@ int main() {
   // ── Key bindings ──────────────────────────────────────────────────────────
   ui |= CatchEvent([&](Event event) -> bool {
     if (event == Event::Character('q') || event == Event::Escape) {
-      if (App* app = App::Active()) app->Exit();
+      if (App* app = App::Active()) {
+        app->Exit();
+      }
       return true;
     }
     if (event == Event::Character('r')) {

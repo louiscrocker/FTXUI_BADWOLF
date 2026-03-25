@@ -47,8 +47,12 @@ int main() {
     Elements rows;
     for (const auto& line : log_lines) {
       Color c = t.text;
-      if (line.find("[WARN]") != std::string::npos) c = t.warning_color;
-      if (line.find("[ERROR]") != std::string::npos) c = t.error_color;
+      if (line.find("[WARN]") != std::string::npos) {
+        c = t.warning_color;
+      }
+      if (line.find("[ERROR]") != std::string::npos) {
+        c = t.error_color;
+      }
       rows.push_back(text(line) | color(c));
     }
     return vbox(std::move(rows));
@@ -95,8 +99,7 @@ int main() {
   // ── Tab view ───────────────────────────────────────────────────────────────
   int tab_sel = 0;
   auto tabs = TabView({"Main", "Settings", "About"},
-                       {main_view | flex, settings, about},
-                       &tab_sel);
+                      {main_view | flex, settings, about}, &tab_sel);
 
   // ── Status bar ─────────────────────────────────────────────────────────────
   std::string status_msg = "Ready  │  Use Tab/Shift+Tab to navigate";
@@ -109,43 +112,48 @@ int main() {
   bool show_help = false;
 
   layout |= Keymap()
-                .Bind("q",
-                      [] {
-                        if (App* a = App::Active()) a->Exit();
-                      },
-                      "Quit")
-                .Bind("1",
-                      [&] {
-                        tab_sel = 0;
-                        status_msg = "Main view";
-                      },
-                      "Main tab")
-                .Bind("2",
-                      [&] {
-                        tab_sel = 1;
-                        status_msg = "Settings";
-                      },
-                      "Settings tab")
-                .Bind("3",
-                      [&] {
-                        tab_sel = 2;
-                        status_msg = "About";
-                      },
-                      "About tab")
-                .Bind("?", [&] { show_help = true; }, "Help")
+                .Bind(
+                    "q",
+                    [] {
+                      if (App* a = App::Active()) {
+                        a->Exit();
+                      }
+                    },
+                    "Quit")
+                .Bind(
+                    "1",
+                    [&] {
+                      tab_sel = 0;
+                      status_msg = "Main view";
+                    },
+                    "Main tab")
+                .Bind(
+                    "2",
+                    [&] {
+                      tab_sel = 1;
+                      status_msg = "Settings";
+                    },
+                    "Settings tab")
+                .Bind(
+                    "3",
+                    [&] {
+                      tab_sel = 2;
+                      status_msg = "About";
+                    },
+                    "About tab")
+                .Bind(
+                    "?", [&] { show_help = true; }, "Help")
                 .AsDecorator();
 
   // ── Help overlay ───────────────────────────────────────────────────────────
-  layout |= WithHelp(
-      "Keyboard Shortcuts",
-      {{"q",             "Quit"},
-       {"1 / 2 / 3",     "Switch tabs"},
-       {"Tab",           "Next focusable field"},
-       {"Shift+Tab",     "Previous field"},
-       {"←→ (in split)", "Resize panels"},
-       {"?",             "Show this help"}},
-      &show_help,
-      [&] { show_help = false; });
+  layout |= WithHelp("Keyboard Shortcuts",
+                     {{"q", "Quit"},
+                      {"1 / 2 / 3", "Switch tabs"},
+                      {"Tab", "Next focusable field"},
+                      {"Shift+Tab", "Previous field"},
+                      {"←→ (in split)", "Resize panels"},
+                      {"?", "Show this help"}},
+                     &show_help, [&] { show_help = false; });
 
   App::Fullscreen().Loop(layout);
   return 0;

@@ -55,8 +55,12 @@ class GeoMap {
 
   /// Draw a great-circle arc between two (lon,lat) positions.
   /// @param steps  number of interpolation segments (default 32)
-  GeoMap& AddArc(double lon1, double lat1, double lon2, double lat2,
-                 ftxui::Color color, int steps = 32);
+  GeoMap& AddArc(double lon1,
+                 double lat1,
+                 double lon2,
+                 double lat2,
+                 ftxui::Color color,
+                 int steps = 32);
 
   ftxui::Component Build();
 

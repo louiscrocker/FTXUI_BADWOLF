@@ -57,55 +57,60 @@ int main() {
   auto sidebar = Renderer([]() -> Element {
     const Theme& th = GetTheme();
     return vbox({
-        LCARSBar({{"NAV",    Color::RGB(255, 153,   0)},
-                  {"OPS",    Color::RGB(153, 153, 255)}}),
-        separatorEmpty(),
-        LCARSReadout("STARDATE", "47634." + std::to_string(g_ship.stardate_frac.load())),
-        LCARSReadout("SECTOR",   "001-J"),
-        LCARSReadout("CREW",     "1012"),
-        separatorEmpty(),
-        text("SYSTEMS") | bold | color(th.primary),
-        separatorEmpty(),
-        LCARSReadout("Warp Core",    "NOMINAL",    th.success_color),
-        LCARSReadout("Life Support", "NOMINAL",    th.success_color),
-        LCARSReadout("Sensors",      "ACTIVE",     th.success_color),
-        LCARSReadout("Phasers",      "ARMED",      th.warning_color),
-        LCARSReadout("Torpedoes",    "12 REMAIN",  th.text),
-        LCARSReadout("Shields",      "RAISED",     th.warning_color),
-    }) | flex;
+               LCARSBar({{"NAV", Color::RGB(255, 153, 0)},
+                         {"OPS", Color::RGB(153, 153, 255)}}),
+               separatorEmpty(),
+               LCARSReadout(
+                   "STARDATE",
+                   "47634." + std::to_string(g_ship.stardate_frac.load())),
+               LCARSReadout("SECTOR", "001-J"),
+               LCARSReadout("CREW", "1012"),
+               separatorEmpty(),
+               text("SYSTEMS") | bold | color(th.primary),
+               separatorEmpty(),
+               LCARSReadout("Warp Core", "NOMINAL", th.success_color),
+               LCARSReadout("Life Support", "NOMINAL", th.success_color),
+               LCARSReadout("Sensors", "ACTIVE", th.success_color),
+               LCARSReadout("Phasers", "ARMED", th.warning_color),
+               LCARSReadout("Torpedoes", "12 REMAIN", th.text),
+               LCARSReadout("Shields", "RAISED", th.warning_color),
+           }) |
+           flex;
   });
 
   // ── Main content ──────────────────────────────────────────────────────────
   auto main_content = Renderer([]() -> Element {
     const Theme& th = GetTheme();
     int shields = g_ship.shields.load();
-    int hull    = g_ship.hull.load();
-    int warp    = g_ship.warp_power.load();
+    int hull = g_ship.hull.load();
+    int warp = g_ship.warp_power.load();
 
-    Color shields_color = shields > 70 ? th.success_color
-                        : shields > 30 ? th.warning_color
-                                       : th.error_color;
+    Color shields_color = shields > 70   ? th.success_color
+                          : shields > 30 ? th.warning_color
+                                         : th.error_color;
 
     return vbox({
-        separatorEmpty(),
-        text("USS ENTERPRISE NCC-1701-D") | bold | color(th.primary) | hcenter,
-        separatorEmpty(),
-        separator() | color(th.border_color),
-        separatorEmpty(),
-        hbox({text("WARP SPEED:  ") | color(th.text_muted),
-              GaugeBar(warp, th.primary)}),
-        separatorEmpty(),
-        hbox({text("SHIELDS:     ") | color(th.text_muted),
-              GaugeBar(shields, shields_color)}),
-        separatorEmpty(),
-        hbox({text("HULL INTGTY: ") | color(th.text_muted),
-              GaugeBar(hull, th.success_color)}),
-        separatorEmpty(),
-        separator() | color(th.border_color),
-        separatorEmpty(),
-        text("Press r=Red Alert  y=Yellow Alert  c=All Clear  q=Quit") |
-            dim | color(th.text_muted) | hcenter,
-    }) | flex;
+               separatorEmpty(),
+               text("USS ENTERPRISE NCC-1701-D") | bold | color(th.primary) |
+                   hcenter,
+               separatorEmpty(),
+               separator() | color(th.border_color),
+               separatorEmpty(),
+               hbox({text("WARP SPEED:  ") | color(th.text_muted),
+                     GaugeBar(warp, th.primary)}),
+               separatorEmpty(),
+               hbox({text("SHIELDS:     ") | color(th.text_muted),
+                     GaugeBar(shields, shields_color)}),
+               separatorEmpty(),
+               hbox({text("HULL INTGTY: ") | color(th.text_muted),
+                     GaugeBar(hull, th.success_color)}),
+               separatorEmpty(),
+               separator() | color(th.border_color),
+               separatorEmpty(),
+               text("Press r=Red Alert  y=Yellow Alert  c=All Clear  q=Quit") |
+                   dim | color(th.text_muted) | hcenter,
+           }) |
+           flex;
   });
 
   // ── Full LCARS chrome ──────────────────────────────────────────────────────
@@ -126,7 +131,9 @@ int main() {
       return true;
     }
     if (e == Event::Character('q')) {
-      if (App* a = App::Active()) a->Exit();
+      if (App* a = App::Active()) {
+        a->Exit();
+      }
       return true;
     }
     return false;

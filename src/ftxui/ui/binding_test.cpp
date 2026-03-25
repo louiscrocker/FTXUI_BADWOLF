@@ -92,7 +92,7 @@ TEST(BindTest, AsReactive_ReturnsSameReactive) {
 
 TEST(BindTest, OwningBind_ReactiveIsShared) {
   auto b1 = MakeBind<int>(10);
-  auto r  = b1.AsReactive();
+  auto r = b1.AsReactive();
   r->Set(20);
   EXPECT_EQ(b1.Get(), 20);
 }
@@ -102,8 +102,8 @@ TEST(BindTest, OwningBind_ReactiveIsShared) {
 // ============================================================================
 
 TEST(ReactiveListTest, Push_TriggersOnChange) {
-  auto list       = MakeReactiveList<int>({1, 2, 3});
-  int  call_count = 0;
+  auto list = MakeReactiveList<int>({1, 2, 3});
+  int call_count = 0;
   list->OnChange([&](const std::vector<int>&) { call_count++; });
   list->Push(4);
   EXPECT_EQ(call_count, 1);
@@ -111,8 +111,8 @@ TEST(ReactiveListTest, Push_TriggersOnChange) {
 }
 
 TEST(ReactiveListTest, Remove_TriggersOnChange) {
-  auto list       = MakeReactiveList<int>({10, 20, 30});
-  int  call_count = 0;
+  auto list = MakeReactiveList<int>({10, 20, 30});
+  int call_count = 0;
   list->OnChange([&](const std::vector<int>&) { call_count++; });
   list->Remove(1);
   EXPECT_EQ(call_count, 1);
@@ -122,8 +122,8 @@ TEST(ReactiveListTest, Remove_TriggersOnChange) {
 }
 
 TEST(ReactiveListTest, Clear_TriggersOnChange) {
-  auto list       = MakeReactiveList<std::string>({"a", "b", "c"});
-  int  call_count = 0;
+  auto list = MakeReactiveList<std::string>({"a", "b", "c"});
+  int call_count = 0;
   list->OnChange([&](const std::vector<std::string>&) { call_count++; });
   list->Clear();
   EXPECT_EQ(call_count, 1);
@@ -131,8 +131,8 @@ TEST(ReactiveListTest, Clear_TriggersOnChange) {
 }
 
 TEST(ReactiveListTest, Replace_TriggersOnChange) {
-  auto list       = MakeReactiveList<int>({1, 2});
-  int  call_count = 0;
+  auto list = MakeReactiveList<int>({1, 2});
+  int call_count = 0;
   list->OnChange([&](const std::vector<int>&) { call_count++; });
   list->Replace({5, 6, 7});
   EXPECT_EQ(call_count, 1);
@@ -162,7 +162,7 @@ TEST(ReactiveListTest, Size_AfterPush) {
 
 TEST(ReactiveListTest, AsReactive_SyncsWithList) {
   auto list = MakeReactiveList<int>({1, 2});
-  auto r    = list->AsReactive();
+  auto r = list->AsReactive();
   ASSERT_NE(r, nullptr);
 
   int change_count = 0;
@@ -173,8 +173,8 @@ TEST(ReactiveListTest, AsReactive_SyncsWithList) {
 }
 
 TEST(ReactiveListTest, Insert_TriggersOnChange) {
-  auto list       = MakeReactiveList<int>({1, 3});
-  int  call_count = 0;
+  auto list = MakeReactiveList<int>({1, 3});
+  int call_count = 0;
   list->OnChange([&](const std::vector<int>&) { call_count++; });
   list->Insert(1, 2);
   EXPECT_EQ(call_count, 1);
@@ -182,8 +182,8 @@ TEST(ReactiveListTest, Insert_TriggersOnChange) {
 }
 
 TEST(ReactiveListTest, Set_TriggersOnChange) {
-  auto list       = MakeReactiveList<int>({1, 2, 3});
-  int  call_count = 0;
+  auto list = MakeReactiveList<int>({1, 2, 3});
+  int call_count = 0;
   list->OnChange([&](const std::vector<int>&) { call_count++; });
   list->Set(1, 99);
   EXPECT_EQ(call_count, 1);
@@ -213,13 +213,13 @@ struct Point {
 };
 
 TEST(LensTest, Lens_ReadField) {
-  auto model  = MakeBind<Point>(Point{3, 7});
+  auto model = MakeBind<Point>(Point{3, 7});
   auto x_lens = MakeLens(model, &Point::x);
   EXPECT_EQ(x_lens.Get(), 3);
 }
 
 TEST(LensTest, Lens_WriteFieldUpdatesModel) {
-  auto model  = MakeBind<Point>(Point{0, 0});
+  auto model = MakeBind<Point>(Point{0, 0});
   auto x_lens = MakeLens(model, &Point::x);
   x_lens.Set(42);
   EXPECT_EQ(model.Get().x, 42);
@@ -227,14 +227,14 @@ TEST(LensTest, Lens_WriteFieldUpdatesModel) {
 }
 
 TEST(LensTest, Lens_ModelUpdateNotifiesLens) {
-  auto model  = MakeBind<Point>(Point{0, 0});
+  auto model = MakeBind<Point>(Point{0, 0});
   auto x_lens = MakeLens(model, &Point::x);
   model.Set(Point{99, 1});
   EXPECT_EQ(x_lens.Get(), 99);
 }
 
 TEST(LensTest, Lens_MultipleFields_Independent) {
-  auto model  = MakeBind<Point>(Point{1, 2});
+  auto model = MakeBind<Point>(Point{1, 2});
   auto x_lens = MakeLens(model, &Point::x);
   auto y_lens = MakeLens(model, &Point::y);
 
@@ -252,7 +252,7 @@ TEST(LensTest, Lens_String_RoundTrip) {
     std::string name;
     int age = 0;
   };
-  auto model     = MakeBind<S>(S{"Alice", 30});
+  auto model = MakeBind<S>(S{"Alice", 30});
   auto name_lens = MakeLens(model, &S::name);
   name_lens.Set("Bob");
   EXPECT_EQ(model.Get().name, "Bob");
@@ -275,14 +275,14 @@ TEST(DataContextTest, Create_ReturnsNonNull) {
 }
 
 TEST(DataContextTest, Use_ReturnsContextWhenProvided) {
-  auto dc           = DataContext<int>::Create(42);
-  bool found        = false;
-  int  found_value  = -1;
+  auto dc = DataContext<int>::Create(42);
+  bool found = false;
+  int found_value = -1;
 
   auto inner = ftxui::Renderer([&]() -> ftxui::Element {
     auto ctx = DataContext<int>::Use();
     if (ctx) {
-      found       = true;
+      found = true;
       found_value = ctx->Get();
     }
     return ftxui::text("");
@@ -298,9 +298,8 @@ TEST(DataContextTest, Use_ReturnsContextWhenProvided) {
 TEST(DataContextTest, Use_ReturnsNullptrAfterProvideScope) {
   auto dc = DataContext<int>::Create(10);
 
-  auto inner = ftxui::Renderer([]() -> ftxui::Element {
-    return ftxui::text("");
-  });
+  auto inner =
+      ftxui::Renderer([]() -> ftxui::Element { return ftxui::text(""); });
 
   auto root = dc->Provide(inner);
   root->Render();
@@ -332,21 +331,25 @@ TEST(DataContextTest, NestedContext_InnerShadowsOuter) {
 }
 
 TEST(DataContextTest, DifferentTypes_NoInterference) {
-  auto int_dc    = DataContext<int>::Create(100);
-  auto str_dc    = DataContext<std::string>::Create("hello");
+  auto int_dc = DataContext<int>::Create(100);
+  auto str_dc = DataContext<std::string>::Create("hello");
 
-  int         int_seen = -1;
+  int int_seen = -1;
   std::string str_seen;
 
   auto leaf = ftxui::Renderer([&]() -> ftxui::Element {
     auto ic = DataContext<int>::Use();
     auto sc = DataContext<std::string>::Use();
-    if (ic) int_seen = ic->Get();
-    if (sc) str_seen = sc->Get();
+    if (ic) {
+      int_seen = ic->Get();
+    }
+    if (sc) {
+      str_seen = sc->Get();
+    }
     return ftxui::text("");
   });
 
-  auto with_str  = str_dc->Provide(leaf);
+  auto with_str = str_dc->Provide(leaf);
   auto with_both = int_dc->Provide(with_str);
   with_both->Render();
 
@@ -366,44 +369,44 @@ TEST(ReactiveDecoratorsTest, ShowIf_TrueReturnsElement) {
 }
 
 TEST(ReactiveDecoratorsTest, ShowIf_FalseReturnsEmpty) {
-  auto cond   = std::make_shared<Reactive<bool>>(false);
+  auto cond = std::make_shared<Reactive<bool>>(false);
   auto result = ShowIf(ftxui::text("hidden"), cond);
   // emptyElement() is non-null but renders nothing.
   ASSERT_NE(result, nullptr);
 }
 
 TEST(ReactiveDecoratorsTest, HideIf_TrueReturnsEmpty) {
-  auto cond   = std::make_shared<Reactive<bool>>(true);
+  auto cond = std::make_shared<Reactive<bool>>(true);
   auto result = HideIf(ftxui::text("should hide"), cond);
   ASSERT_NE(result, nullptr);
 }
 
 TEST(ReactiveDecoratorsTest, HideIf_FalseReturnsElement) {
-  auto cond   = std::make_shared<Reactive<bool>>(false);
+  auto cond = std::make_shared<Reactive<bool>>(false);
   auto result = HideIf(ftxui::text("visible"), cond);
   ASSERT_NE(result, nullptr);
 }
 
 TEST(ReactiveDecoratorsTest, BindText_ReturnsCurrentValue) {
-  auto r      = std::make_shared<Reactive<std::string>>("hello");
+  auto r = std::make_shared<Reactive<std::string>>("hello");
   auto result = BindText(r);
   ASSERT_NE(result, nullptr);
 }
 
 TEST(ReactiveDecoratorsTest, BindText_Bold_BuildsOk) {
-  auto r      = std::make_shared<Reactive<std::string>>("bold");
+  auto r = std::make_shared<Reactive<std::string>>("bold");
   auto result = BindText(r, true);
   ASSERT_NE(result, nullptr);
 }
 
 TEST(ReactiveDecoratorsTest, BindText_NotBold_BuildsOk) {
-  auto r      = std::make_shared<Reactive<std::string>>("normal");
+  auto r = std::make_shared<Reactive<std::string>>("normal");
   auto result = BindText(r, false);
   ASSERT_NE(result, nullptr);
 }
 
 TEST(ReactiveDecoratorsTest, BindColor_BuildsOk) {
-  auto c      = std::make_shared<Reactive<ftxui::Color>>(ftxui::Color::Red);
+  auto c = std::make_shared<Reactive<ftxui::Color>>(ftxui::Color::Red);
   auto result = BindColor(ftxui::text("colored"), c);
   ASSERT_NE(result, nullptr);
 }
@@ -417,17 +420,15 @@ TEST(ReactiveDecoratorsTest, ReactiveBox_BuildsOk) {
 TEST(ReactiveDecoratorsTest, ForEach_BuildsOk) {
   auto list = MakeReactiveList<std::string>({"a", "b", "c"});
   auto comp = ForEach<std::string>(
-      list,
-      [](const std::string& s, bool /*sel*/) { return ftxui::text(s); });
+      list, [](const std::string& s, bool /*sel*/) { return ftxui::text(s); });
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);
 }
 
 TEST(ReactiveDecoratorsTest, ForEach_Empty_BuildsOk) {
   auto list = MakeReactiveList<int>();
-  auto comp = ForEach<int>(list, [](const int& i, bool) {
-    return ftxui::text(std::to_string(i));
-  });
+  auto comp = ForEach<int>(
+      list, [](const int& i, bool) { return ftxui::text(std::to_string(i)); });
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);
 }
@@ -437,21 +438,21 @@ TEST(ReactiveDecoratorsTest, ForEach_Empty_BuildsOk) {
 // ============================================================================
 
 TEST(BindingIntegrationTest, TextInputBind_BuildsOk) {
-  auto b    = MakeBind<std::string>("initial");
+  auto b = MakeBind<std::string>("initial");
   auto comp = TextInput("Label").Bind(b).Build();
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);
 }
 
 TEST(BindingIntegrationTest, TextInputBind_InitialValueFromReactive) {
-  auto b    = MakeBind<std::string>("prefilled");
+  auto b = MakeBind<std::string>("prefilled");
   auto comp = TextInput("Name").Bind(b).Build();
   // The component renders without crash; value is initialised.
   ASSERT_NE(comp->Render(), nullptr);
 }
 
 TEST(BindingIntegrationTest, TextInputBind_ExternalUpdate_NocrashOnRender) {
-  auto b    = MakeBind<std::string>("initial");
+  auto b = MakeBind<std::string>("initial");
   auto comp = TextInput("Name").Bind(b).Build();
   comp->Render();
   // External update via reactive.
@@ -465,11 +466,11 @@ TEST(BindingIntegrationTest, Form_BindField_BuildsOk) {
     std::string pass;
   };
   auto model = MakeBind<Login>();
-  auto comp  = Form()
-                   .Title("Login")
-                   .BindField("User", model, &Login::user)
-                   .BindPassword("Pass", model, &Login::pass)
-                   .Build();
+  auto comp = Form()
+                  .Title("Login")
+                  .BindField("User", model, &Login::user)
+                  .BindPassword("Pass", model, &Login::pass)
+                  .Build();
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);
 }
@@ -479,18 +480,15 @@ TEST(BindingIntegrationTest, Form_BindCheckbox_BuildsOk) {
     bool dark_mode = false;
   };
   auto model = MakeBind<Prefs>();
-  auto comp  = Form()
-                   .BindCheckbox("Dark mode", model, &Prefs::dark_mode)
-                   .Build();
+  auto comp =
+      Form().BindCheckbox("Dark mode", model, &Prefs::dark_mode).Build();
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);
 }
 
 TEST(BindingIntegrationTest, VirtualList_BindList_BuildsOk) {
   auto list = MakeReactiveList<std::string>({"alpha", "beta"});
-  auto comp = VirtualList<std::string>()
-                  .BindList(list)
-                  .Build();
+  auto comp = VirtualList<std::string>().BindList(list).Build();
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);
 }
@@ -508,19 +506,21 @@ TEST(BindingIntegrationTest, DataTable_BindList_BuildsOk) {
     std::string name;
     int value = 0;
   };
-  auto list = MakeReactiveList<Row>(
-      {Row{"alpha", 1}, Row{"beta", 2}});
-  auto comp = DataTable<Row>()
-                  .Column("Name", [](const Row& r) { return r.name; })
-                  .Column("Val",  [](const Row& r) { return std::to_string(r.value); })
-                  .BindList(list)
-                  .Build();
+  auto list = MakeReactiveList<Row>({Row{"alpha", 1}, Row{"beta", 2}});
+  auto comp =
+      DataTable<Row>()
+          .Column("Name", [](const Row& r) { return r.name; })
+          .Column("Val", [](const Row& r) { return std::to_string(r.value); })
+          .BindList(list)
+          .Build();
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);
 }
 
 TEST(BindingIntegrationTest, DataTable_BindList_UpdatesOnMutation) {
-  struct Item { std::string label; };
+  struct Item {
+    std::string label;
+  };
   auto list = MakeReactiveList<Item>({{"first"}});
   auto comp = DataTable<Item>()
                   .Column("Label", [](const Item& i) { return i.label; })

@@ -18,7 +18,8 @@ using namespace ftxui;
 
 namespace ftxui::ui {
 
-// ── ThemedProgressBar ─────────────────────────────────────────────────────────
+// ── ThemedProgressBar
+// ─────────────────────────────────────────────────────────
 
 Component ThemedProgressBar(float* progress, std::string_view label) {
   std::string lbl{label};
@@ -26,13 +27,17 @@ Component ThemedProgressBar(float* progress, std::string_view label) {
 }
 
 Component ThemedProgressBar(std::function<float()> progress_fn,
-                              std::string_view label) {
+                            std::string_view label) {
   std::string lbl{label};
   return Renderer([progress_fn = std::move(progress_fn), lbl]() -> Element {
     const Theme& t = GetTheme();
     float p = progress_fn();
-    if (p < 0.f) p = 0.f;
-    if (p > 1.f) p = 1.f;
+    if (p < 0.f) {
+      p = 0.f;
+    }
+    if (p > 1.f) {
+      p = 1.f;
+    }
 
     int pct = static_cast<int>(p * 100.f);
     auto bar = gauge(p) | color(t.primary) | xflex;
@@ -51,15 +56,19 @@ Component ThemedProgressBar(std::function<float()> progress_fn,
   });
 }
 
-// ── WithSpinner ───────────────────────────────────────────────────────────────
+// ── WithSpinner
+// ───────────────────────────────────────────────────────────────
 
 namespace {
 
-// Renders the spinner overlay element (frame animated via RequestAnimationFrame).
+// Renders the spinner overlay element (frame animated via
+// RequestAnimationFrame).
 Element SpinnerOverlayElement(std::string_view message,
-                               bool visible,
-                               size_t& frame_counter) {
-  if (!visible) return emptyElement();
+                              bool visible,
+                              size_t& frame_counter) {
+  if (!visible) {
+    return emptyElement();
+  }
 
   const Theme& t = GetTheme();
   ++frame_counter;
@@ -67,8 +76,7 @@ Element SpinnerOverlayElement(std::string_view message,
   auto spin = spinner(3, frame_counter) | color(t.primary);
   auto overlay = hbox({
                      spin,
-                     text(" " + std::string(message)) | bold |
-                         color(t.text),
+                     text(" " + std::string(message)) | bold | color(t.text),
                  }) |
                  borderStyled(t.border_style, t.primary) | center;
 
@@ -82,10 +90,10 @@ Element SpinnerOverlayElement(std::string_view message,
 }  // namespace
 
 Component WithSpinner(Component parent,
-                       std::string_view message,
-                       const bool* show) {
+                      std::string_view message,
+                      const bool* show) {
   return WithSpinner(std::move(parent), message,
-                      [show]() -> bool { return *show; });
+                     [show]() -> bool { return *show; });
 }
 
 ComponentDecorator WithSpinner(std::string_view message, const bool* show) {
@@ -95,8 +103,8 @@ ComponentDecorator WithSpinner(std::string_view message, const bool* show) {
 }
 
 Component WithSpinner(Component parent,
-                       std::string_view message,
-                       std::function<bool()> is_visible) {
+                      std::string_view message,
+                      std::function<bool()> is_visible) {
   std::string msg{message};
   auto frame = std::make_shared<size_t>(0);
 
@@ -122,7 +130,7 @@ Component WithSpinner(Component parent,
 }
 
 ComponentDecorator WithSpinner(std::string_view message,
-                                std::function<bool()> is_visible) {
+                               std::function<bool()> is_visible) {
   return [message = std::string(message),
           is_visible = std::move(is_visible)](Component comp) -> Component {
     return WithSpinner(std::move(comp), message, is_visible);

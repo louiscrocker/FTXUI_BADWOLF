@@ -24,20 +24,19 @@ int main() {
   SetTheme(Theme::Nord());
 
   // ── State ──────────────────────────────────────────────────────────────────
-  State<float>       upload(0.f);
-  State<float>       download(0.f);
-  State<float>       processing(0.f);
-  State<bool>        spinner_visible(false);
+  State<float> upload(0.f);
+  State<float> download(0.f);
+  State<float> processing(0.f);
+  State<bool> spinner_visible(false);
   State<std::string> status("Idle");
 
   // ── Progress bars ──────────────────────────────────────────────────────────
-  auto bar_upload     = ThemedProgressBar(upload.Ptr(),      "Upload  ");
-  auto bar_download   = ThemedProgressBar(download.Ptr(),    "Download");
-  auto bar_processing = ThemedProgressBar(processing.Ptr(),  "Process ");
+  auto bar_upload = ThemedProgressBar(upload.Ptr(), "Upload  ");
+  auto bar_download = ThemedProgressBar(download.Ptr(), "Download");
+  auto bar_processing = ThemedProgressBar(processing.Ptr(), "Process ");
 
-  auto progress_section = Container::Vertical({
-      bar_upload, bar_download, bar_processing
-  });
+  auto progress_section =
+      Container::Vertical({bar_upload, bar_download, bar_processing});
 
   // ── Main layout ────────────────────────────────────────────────────────────
   auto comp = Renderer(progress_section, [&]() -> Element {
@@ -71,7 +70,9 @@ int main() {
 
   // ── Keybindings ────────────────────────────────────────────────────────────
   comp |= CatchEvent([&](Event event) -> bool {
-    if (!event.is_character()) return false;
+    if (!event.is_character()) {
+      return false;
+    }
     const auto& ch = event.character();
 
     if (ch == "s") {
@@ -105,12 +106,14 @@ int main() {
     }
 
     if (ch == "x") {
-      spinner_visible.Mutate([](bool& v){ v = !v; });
+      spinner_visible.Mutate([](bool& v) { v = !v; });
       return true;
     }
 
     if (ch == "q") {
-      if (App* a = App::Active()) a->Exit();
+      if (App* a = App::Active()) {
+        a->Exit();
+      }
       return true;
     }
     return false;

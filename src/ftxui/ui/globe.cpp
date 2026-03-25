@@ -23,12 +23,14 @@ using namespace ftxui;
 
 namespace ftxui::ui {
 
-// ── Constants ─────────────────────────────────────────────────────────────────
+// ── Constants
+// ─────────────────────────────────────────────────────────────────
 
 static constexpr double kPi = 3.14159265358979323846;
 static constexpr double kDeg2Rad = kPi / 180.0;
 
-// ── Impl ──────────────────────────────────────────────────────────────────────
+// ── Impl
+// ──────────────────────────────────────────────────────────────────────
 
 struct GlobeMap::Impl {
   // Config
@@ -59,21 +61,30 @@ struct GlobeMap::Impl {
   bool HandleEvent(ftxui::Event event);
 };
 
-// ── Animation thread ──────────────────────────────────────────────────────────
+// ── Animation thread
+// ──────────────────────────────────────────────────────────
 
 void GlobeMap::Impl::StartAnimationThread() {
-  if (running_.load()) return;  // already started
+  if (running_.load()) {
+    return;  // already started
+  }
   running_.store(true);
 
   anim_thread_ = std::thread([this]() {
     while (running_.load()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
-      if (!running_.load()) break;
+      if (!running_.load()) {
+        break;
+      }
 
       if (speed_ != 0.0) {
         rotation_lon_ += speed_;
-        if (rotation_lon_ > 360.0) rotation_lon_ -= 360.0;
-        if (rotation_lon_ < -360.0) rotation_lon_ += 360.0;
+        if (rotation_lon_ > 360.0) {
+          rotation_lon_ -= 360.0;
+        }
+        if (rotation_lon_ < -360.0) {
+          rotation_lon_ += 360.0;
+        }
       }
 
       if (App* a = App::Active()) {
@@ -92,8 +103,12 @@ struct ProjectResult {
   bool visible;
 };
 
-inline ProjectResult OrthoProject(double lon, double lat, double lon0,
-                                  double lat0, double cx, double cy,
+inline ProjectResult OrthoProject(double lon,
+                                  double lat,
+                                  double lon0,
+                                  double lat0,
+                                  double cx,
+                                  double cy,
                                   double radius) {
   const double lam = lon * kDeg2Rad;
   const double phi = lat * kDeg2Rad;
@@ -117,21 +132,23 @@ inline ProjectResult OrthoProject(double lon, double lat, double lon0,
 
 }  // namespace
 
-// ── Canvas rendering ──────────────────────────────────────────────────────────
+// ── Canvas rendering
+// ──────────────────────────────────────────────────────────
 
 void GlobeMap::Impl::DrawOnto(ftxui::Canvas& c) const {
   const int dot_w = c.width();
   const int dot_h = c.height();
 
   // Globe geometry
-  const double radius =
-      static_cast<double>(std::min(dot_w, dot_h)) / 2.0 - 4.0;
+  const double radius = static_cast<double>(std::min(dot_w, dot_h)) / 2.0 - 4.0;
   const double cx = dot_w / 2.0;
   const double cy = dot_h / 2.0;
   const double lon0 = rotation_lon_;
   const double lat0 = center_lat_;
 
-  if (radius < 4.0) return;
+  if (radius < 4.0) {
+    return;
+  }
 
   // Draw disc background (faint circle border)
   {
@@ -188,7 +205,9 @@ void GlobeMap::Impl::DrawOnto(ftxui::Canvas& c) const {
 
   // Ring drawing helper — only draws segment if both endpoints are visible
   auto drawRing = [&](const GeoRing& ring, ftxui::Color col) {
-    if (ring.size() < 2) return;
+    if (ring.size() < 2) {
+      return;
+    }
     for (size_t i = 0; i + 1 < ring.size(); ++i) {
       const auto p1 = project(ring[i].lon, ring[i].lat);
       const auto p2 = project(ring[i + 1].lon, ring[i + 1].lat);
@@ -211,7 +230,9 @@ void GlobeMap::Impl::DrawOnto(ftxui::Canvas& c) const {
     if (geom.type == "Point" || geom.type == "MultiPoint") {
       for (const auto& pt : geom.points) {
         const auto p = project(pt.lon, pt.lat);
-        if (p.visible) c.DrawPoint(p.px, p.py, true, point_color_);
+        if (p.visible) {
+          c.DrawPoint(p.px, p.py, true, point_color_);
+        }
       }
     } else if (geom.type == "LineString" || geom.type == "MultiLineString") {
       for (size_t i = 0; i + 1 < geom.points.size(); ++i) {
@@ -222,15 +243,21 @@ void GlobeMap::Impl::DrawOnto(ftxui::Canvas& c) const {
         }
       }
     } else if (geom.type == "Polygon") {
-      for (const auto& ring : geom.rings) drawRing(ring, line_color_);
+      for (const auto& ring : geom.rings) {
+        drawRing(ring, line_color_);
+      }
     } else if (geom.type == "MultiPolygon") {
-      for (const auto& poly : geom.multipolygon)
-        for (const auto& ring : poly) drawRing(ring, line_color_);
+      for (const auto& poly : geom.multipolygon) {
+        for (const auto& ring : poly) {
+          drawRing(ring, line_color_);
+        }
+      }
     }
   }
 }
 
-// ── Event handling ────────────────────────────────────────────────────────────
+// ── Event handling
+// ────────────────────────────────────────────────────────────
 
 bool GlobeMap::Impl::HandleEvent(ftxui::Event event) {
   if (event == Event::ArrowLeft) {
@@ -243,12 +270,16 @@ bool GlobeMap::Impl::HandleEvent(ftxui::Event event) {
   }
   if (event == Event::ArrowUp) {
     center_lat_ += 5.0;
-    if (center_lat_ > 90.0) center_lat_ = 90.0;
+    if (center_lat_ > 90.0) {
+      center_lat_ = 90.0;
+    }
     return true;
   }
   if (event == Event::ArrowDown) {
     center_lat_ -= 5.0;
-    if (center_lat_ < -90.0) center_lat_ = -90.0;
+    if (center_lat_ < -90.0) {
+      center_lat_ = -90.0;
+    }
     return true;
   }
   if (event == Event::Character('+') || event == Event::Character('=')) {
@@ -266,7 +297,8 @@ bool GlobeMap::Impl::HandleEvent(ftxui::Event event) {
   return false;
 }
 
-// ── GlobeMap builder ──────────────────────────────────────────────────────────
+// ── GlobeMap builder
+// ──────────────────────────────────────────────────────────
 
 GlobeMap::GlobeMap() : impl_(std::make_shared<Impl>()) {
   impl_->collection_ = ParseGeoJSON(WorldMapGeoJSON());

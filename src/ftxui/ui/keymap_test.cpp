@@ -22,7 +22,8 @@ bool KeyFires(const std::string& key_str, ftxui::Event event_to_send) {
   return fired;
 }
 
-// ── Single character bindings ──────────────────────────────────────────────────
+// ── Single character bindings
+// ──────────────────────────────────────────────────
 
 TEST(KeymapTest, SingleCharQ) {
   EXPECT_TRUE(KeyFires("q", ftxui::Event::Character('q')));
@@ -36,7 +37,8 @@ TEST(KeymapTest, SingleCharDoesNotFireOnWrongChar) {
   EXPECT_FALSE(KeyFires("q", ftxui::Event::Character('w')));
 }
 
-// ── Named keys ─────────────────────────────────────────────────────────────────
+// ── Named keys
+// ─────────────────────────────────────────────────────────────────
 
 TEST(KeymapTest, EscapeKey) {
   EXPECT_TRUE(KeyFires("Escape", ftxui::Event::Escape));
@@ -78,7 +80,8 @@ TEST(KeymapTest, RightKey) {
   EXPECT_TRUE(KeyFires("Right", ftxui::Event::ArrowRight));
 }
 
-// ── Function keys ──────────────────────────────────────────────────────────────
+// ── Function keys
+// ──────────────────────────────────────────────────────────────
 
 TEST(KeymapTest, F1Key) {
   EXPECT_TRUE(KeyFires("F1", ftxui::Event::F1));
@@ -88,7 +91,8 @@ TEST(KeymapTest, F12Key) {
   EXPECT_TRUE(KeyFires("F12", ftxui::Event::F12));
 }
 
-// ── Ctrl combos ────────────────────────────────────────────────────────────────
+// ── Ctrl combos
+// ────────────────────────────────────────────────────────────────
 
 TEST(KeymapTest, CtrlC) {
   EXPECT_TRUE(KeyFires("Ctrl+c", ftxui::Event::CtrlC));
@@ -106,7 +110,8 @@ TEST(KeymapTest, CtrlZ) {
   EXPECT_TRUE(KeyFires("Ctrl+z", ftxui::Event::CtrlZ));
 }
 
-// ── Unknown key ────────────────────────────────────────────────────────────────
+// ── Unknown key
+// ────────────────────────────────────────────────────────────────
 
 TEST(KeymapTest, UnknownKeyDoesNotCrash) {
   // An unknown key string should produce no match but not crash.
@@ -118,7 +123,8 @@ TEST(KeymapTest, UnknownKeyDoesNotFireOnCustomEvent) {
   EXPECT_FALSE(KeyFires("NotAKey", ftxui::Event::Return));
 }
 
-// ── Multiple bindings ──────────────────────────────────────────────────────────
+// ── Multiple bindings
+// ──────────────────────────────────────────────────────────
 
 TEST(KeymapTest, MultipleBindingsIndependent) {
   int q_count = 0;
@@ -138,7 +144,8 @@ TEST(KeymapTest, MultipleBindingsIndependent) {
   EXPECT_EQ(esc_count, 1);
 }
 
-// ── AsDecorator ────────────────────────────────────────────────────────────────
+// ── AsDecorator
+// ────────────────────────────────────────────────────────────────
 
 TEST(KeymapTest, AsDecoratorAppliesBindings) {
   bool fired = false;
@@ -150,7 +157,8 @@ TEST(KeymapTest, AsDecoratorAppliesBindings) {
   EXPECT_TRUE(fired);
 }
 
-// ── HelpElement ────────────────────────────────────────────────────────────────
+// ── HelpElement
+// ────────────────────────────────────────────────────────────────
 
 TEST(KeymapTest, HelpElementDoesNotCrash) {
   Keymap km;

@@ -30,9 +30,8 @@ namespace ftxui::ui {
 /// auto table = ui::DataTable<Employee>()
 ///     .Column("Name",   [](const Employee& e){ return e.name; })
 ///     .Column("Dept",   [](const Employee& e){ return e.dept; })
-///     .Column("Salary", [](const Employee& e){ return "$"+std::to_string(e.salary); }, 10)
-///     .Data(&employees)
-///     .Selectable(true)
+///     .Column("Salary", [](const Employee& e){ return
+///     "$"+std::to_string(e.salary); }, 10) .Data(&employees) .Selectable(true)
 ///     .Sortable(true)
 ///     .OnSelect([](const Employee& e, size_t i){ /* ... */ })
 ///     .OnActivate([](const Employee& e, size_t i){ /* ... */ })
@@ -130,16 +129,14 @@ class DataTable {
       state->data = state->reactive_list_copy.get();
 
       state->reactive_list->OnChange([state](const std::vector<T>& new_items) {
-        state->reactive_list_copy =
-            std::make_shared<std::vector<T>>(new_items);
+        state->reactive_list_copy = std::make_shared<std::vector<T>>(new_items);
         state->data = state->reactive_list_copy.get();
         // PostEvent already called by ReactiveList::Notify().
       });
     }
 
-    auto renderer = ftxui::Renderer([state]() -> ftxui::Element {
-      return Render(state);
-    });
+    auto renderer =
+        ftxui::Renderer([state]() -> ftxui::Element { return Render(state); });
 
     return ftxui::CatchEvent(renderer, [state](ftxui::Event event) -> bool {
       return HandleEvent(state, event);
@@ -179,8 +176,9 @@ class DataTable {
   // ── Helpers ────────────────────────────────────────────────────────────────
 
   static std::string ToLower(std::string s) {
-    std::transform(s.begin(), s.end(), s.begin(),
-                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) {
+      return static_cast<char>(std::tolower(c));
+    });
     return s;
   }
 
@@ -219,12 +217,11 @@ class DataTable {
     if (s->sort_column >= 0 &&
         s->sort_column < static_cast<int>(s->columns.size())) {
       const auto& col = s->columns[static_cast<size_t>(s->sort_column)];
-      std::stable_sort(indices.begin(), indices.end(),
-                       [&](size_t a, size_t b) {
-                         auto va = col.getter((*s->data)[a]);
-                         auto vb = col.getter((*s->data)[b]);
-                         return s->sort_ascending ? (va < vb) : (va > vb);
-                       });
+      std::stable_sort(indices.begin(), indices.end(), [&](size_t a, size_t b) {
+        auto va = col.getter((*s->data)[a]);
+        auto vb = col.getter((*s->data)[b]);
+        return s->sort_ascending ? (va < vb) : (va > vb);
+      });
     }
 
     return indices;
@@ -242,8 +239,8 @@ class DataTable {
 
     // Clamp selection into range.
     if (!visible.empty()) {
-      s->selected =
-          std::max(0, std::min(s->selected, static_cast<int>(visible.size()) - 1));
+      s->selected = std::max(
+          0, std::min(s->selected, static_cast<int>(visible.size()) - 1));
     }
 
     // ── Build Element matrix ──────────────────────────────────────────────
@@ -260,8 +257,8 @@ class DataTable {
         if (s->sortable && s->sort_column == ci) {
           h += s->sort_ascending ? " \u25b2" : " \u25bc";
         }
-        ftxui::Element cell = ftxui::text(h) | ftxui::bold |
-                              ftxui::color(theme.primary);
+        ftxui::Element cell =
+            ftxui::text(h) | ftxui::bold | ftxui::color(theme.primary);
         const int w = s->columns[static_cast<size_t>(ci)].width;
         if (w > 0) {
           cell = cell | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, w);
@@ -286,7 +283,8 @@ class DataTable {
         std::string val = col.getter((*s->data)[di]);
         if (col.width > 0 && static_cast<int>(val.size()) > col.width) {
           // Truncate with ellipsis (UTF-8 '…' = 3 bytes)
-          val = val.substr(0, static_cast<size_t>(col.width) - 1) + "\xe2\x80\xa6";
+          val = val.substr(0, static_cast<size_t>(col.width) - 1) +
+                "\xe2\x80\xa6";
         }
 
         ftxui::Element cell = ftxui::text(val);
@@ -312,8 +310,8 @@ class DataTable {
       std::string msg = s->filter_text && !s->filter_text->empty()
                             ? "No matching rows"
                             : "No data";
-      rows.push_back({ftxui::text(msg) | ftxui::color(theme.text_muted) |
-                      ftxui::hcenter});
+      rows.push_back(
+          {ftxui::text(msg) | ftxui::color(theme.text_muted) | ftxui::hcenter});
     }
 
     // ── Table decorators ──────────────────────────────────────────────────
@@ -336,8 +334,7 @@ class DataTable {
   }
 
   // Handle keyboard events; return true if consumed.
-  static bool HandleEvent(const std::shared_ptr<State>& s,
-                          ftxui::Event event) {
+  static bool HandleEvent(const std::shared_ptr<State>& s, ftxui::Event event) {
     if (!s->data) {
       return false;
     }

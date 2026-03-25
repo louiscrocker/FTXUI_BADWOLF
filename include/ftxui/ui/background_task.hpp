@@ -4,10 +4,10 @@
 #ifndef FTXUI_UI_BACKGROUND_TASK_HPP
 #define FTXUI_UI_BACKGROUND_TASK_HPP
 
+#include <atomic>
 #include <functional>
 #include <memory>
 #include <thread>
-#include <atomic>
 
 #include "ftxui/component/app.hpp"
 #include "ftxui/component/task.hpp"
@@ -105,13 +105,17 @@ class AsyncHandle {
                  app, cancelled]() mutable {
       T result = work();
 
-      if (cancelled->load()) return;
+      if (cancelled->load()) {
+        return;
+      }
 
       if (app) {
         Closure closure = [result = std::move(result),
                            on_complete = std::move(on_complete),
                            cancelled]() mutable {
-          if (!cancelled->load()) on_complete(std::move(result));
+          if (!cancelled->load()) {
+            on_complete(std::move(result));
+          }
         };
         app->Post(std::move(closure));
       } else if (!cancelled->load()) {
@@ -127,7 +131,7 @@ class AsyncHandle {
 /// @brief Start a cancellable background task and return a handle.
 template <typename T>
 std::shared_ptr<AsyncHandle<T>> MakeAsync(std::function<T()> work,
-                                           std::function<void(T)> on_complete) {
+                                          std::function<void(T)> on_complete) {
   auto handle = std::make_shared<AsyncHandle<T>>();
   handle->Start(std::move(work), std::move(on_complete));
   return handle;

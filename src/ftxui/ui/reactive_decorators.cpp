@@ -15,7 +15,7 @@
 namespace ftxui::ui {
 
 ftxui::Element ShowIf(ftxui::Element e,
-                       std::shared_ptr<Reactive<bool>> condition) {
+                      std::shared_ptr<Reactive<bool>> condition) {
   if (condition && condition->Get()) {
     return e;
   }
@@ -23,7 +23,7 @@ ftxui::Element ShowIf(ftxui::Element e,
 }
 
 ftxui::Element HideIf(ftxui::Element e,
-                       std::shared_ptr<Reactive<bool>> condition) {
+                      std::shared_ptr<Reactive<bool>> condition) {
   if (condition && condition->Get()) {
     return ftxui::emptyElement();
   }
@@ -38,7 +38,7 @@ ftxui::Element BindText(std::shared_ptr<Reactive<std::string>> text_reactive) {
 }
 
 ftxui::Element BindText(std::shared_ptr<Reactive<std::string>> text_reactive,
-                         bool is_bold) {
+                        bool is_bold) {
   auto e = BindText(std::move(text_reactive));
   if (is_bold) {
     return e | ftxui::bold;
@@ -46,8 +46,9 @@ ftxui::Element BindText(std::shared_ptr<Reactive<std::string>> text_reactive,
   return e;
 }
 
-ftxui::Element BindColor(ftxui::Element e,
-                          std::shared_ptr<Reactive<ftxui::Color>> color_reactive) {
+ftxui::Element BindColor(
+    ftxui::Element e,
+    std::shared_ptr<Reactive<ftxui::Color>> color_reactive) {
   if (!color_reactive) {
     return e;
   }
@@ -55,10 +56,11 @@ ftxui::Element BindColor(ftxui::Element e,
 }
 
 ftxui::Component ReactiveBox(std::function<ftxui::Element()> render_fn,
-                               std::vector<std::shared_ptr<void>> /*deps*/) {
-  return ftxui::Renderer([render_fn = std::move(render_fn)]() -> ftxui::Element {
-    return render_fn();
-  });
+                             std::vector<std::shared_ptr<void>> /*deps*/) {
+  return ftxui::Renderer(
+      [render_fn = std::move(render_fn)]() -> ftxui::Element {
+        return render_fn();
+      });
 }
 
 }  // namespace ftxui::ui

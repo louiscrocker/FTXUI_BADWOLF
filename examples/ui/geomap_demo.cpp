@@ -19,8 +19,8 @@
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/screen/color.hpp"
 #include "ftxui/ui/app.hpp"
-#include "ftxui/ui/geomap.hpp"
 #include "ftxui/ui/geojson.hpp"
+#include "ftxui/ui/geomap.hpp"
 
 using namespace ftxui;
 using namespace ftxui::ui;
@@ -90,15 +90,16 @@ static const char kWorldGeoJSON[] = R"GEO({
 int main() {
   std::string selected = "None";
 
-  auto map_comp = GeoMap()
-      .Data(kWorldGeoJSON)
-      .SetProjection(Projection::Equirectangular)
-      .LineColor(Color::Green)
-      .PointColor(Color::Yellow)
-      .ShowGraticule(true)
-      .GraticuleStep(30.0f)
-      .OnSelect([&](const GeoFeature& f) { selected = f.name(); })
-      .Build();
+  auto map_comp =
+      GeoMap()
+          .Data(kWorldGeoJSON)
+          .SetProjection(Projection::Equirectangular)
+          .LineColor(Color::Green)
+          .PointColor(Color::Yellow)
+          .ShowGraticule(true)
+          .GraticuleStep(30.0f)
+          .OnSelect([&](const GeoFeature& f) { selected = f.name(); })
+          .Build();
 
   auto root = Renderer(map_comp, [&]() -> Element {
     return vbox({
@@ -110,8 +111,9 @@ int main() {
             text(" Selected: ") | bold,
             text(selected) | color(Color::Yellow),
             filler(),
-            text("[←→↑↓] pan  [+/-] zoom  [R] reset  [Enter] select  [Q] quit")
-                | color(Color::GrayDark),
+            text(
+                "[←→↑↓] pan  [+/-] zoom  [R] reset  [Enter] select  [Q] quit") |
+                color(Color::GrayDark),
             text(" "),
         }),
     });

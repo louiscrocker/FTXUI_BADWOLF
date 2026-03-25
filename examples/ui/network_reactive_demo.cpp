@@ -32,11 +32,11 @@ using namespace ftxui::ui;
 
 static constexpr uint16_t kPort = 8765;
 
-// ── Server mode ───────────────────────────────────────────────────────────────
+// ── Server mode
+// ───────────────────────────────────────────────────────────────
 
 int RunServer() {
-  auto state =
-      std::make_shared<Reactive<std::string>>("Fleet Status: NOMINAL");
+  auto state = std::make_shared<Reactive<std::string>>("Fleet Status: NOMINAL");
   auto server = NetworkReactiveServer::Create(state, kPort);
   server->Start();
 
@@ -46,10 +46,8 @@ int RunServer() {
   // Background thread: update state every second
   std::thread updater([&]() {
     const std::string statuses[] = {
-        "Fleet Status: NOMINAL",
-        "Fleet Status: YELLOW ALERT",
-        "Fleet Status: RED ALERT",
-        "Fleet Status: SHIELDS UP",
+        "Fleet Status: NOMINAL",   "Fleet Status: YELLOW ALERT",
+        "Fleet Status: RED ALERT", "Fleet Status: SHIELDS UP",
         "Fleet Status: WARP 9",
     };
     constexpr int kNumStatuses = 5;
@@ -60,38 +58,43 @@ int RunServer() {
           statuses[static_cast<size_t>(tick) % kNumStatuses];
       new_status += "  [tick=" + std::to_string(tick) + "]";
       state->Set(new_status);
-      if (App* a = App::Active()) a->Post([] {});
+      if (App* a = App::Active()) {
+        a->Post([] {});
+      }
     }
   });
 
   auto root = Renderer([&]() -> Element {
     return vbox({
-        text(" ★  NETWORK REACTIVE — SERVER MODE  ★") | bold |
-            color(Color::CyanLight) | hcenter,
-        separator(),
-        hbox({
-            text(" Port: ") | color(Color::GrayLight),
-            text(std::to_string(kPort)) | bold | color(Color::Yellow),
-            filler(),
-            text(" Clients: ") | color(Color::GrayLight),
-            text(std::to_string(server->ConnectedClients())) | bold |
-                color(Color::GreenLight),
-            text(" "),
-        }),
-        separator(),
-        text(" Current state:") | color(Color::GrayLight),
-        text("  " + state->Get()) | bold | color(Color::White),
-        separator(),
-        text(" Tick: " + std::to_string(tick)) | color(Color::GrayDark),
-        separator(),
-        text(" q = quit") | color(Color::GrayDark),
-    }) | border;
+               text(" ★  NETWORK REACTIVE — SERVER MODE  ★") | bold |
+                   color(Color::CyanLight) | hcenter,
+               separator(),
+               hbox({
+                   text(" Port: ") | color(Color::GrayLight),
+                   text(std::to_string(kPort)) | bold | color(Color::Yellow),
+                   filler(),
+                   text(" Clients: ") | color(Color::GrayLight),
+                   text(std::to_string(server->ConnectedClients())) | bold |
+                       color(Color::GreenLight),
+                   text(" "),
+               }),
+               separator(),
+               text(" Current state:") | color(Color::GrayLight),
+               text("  " + state->Get()) | bold | color(Color::White),
+               separator(),
+               text(" Tick: " + std::to_string(tick)) | color(Color::GrayDark),
+               separator(),
+               text(" q = quit") | color(Color::GrayDark),
+           }) |
+           border;
   });
 
   auto app_comp = CatchEvent(root, [&](Event e) -> bool {
     if (e == Event::Character('q') || e == Event::Character('Q')) {
       running.store(false);
-      if (App* a = App::Active()) a->Exit();
+      if (App* a = App::Active()) {
+        a->Exit();
+      }
       return true;
     }
     return false;
@@ -101,11 +104,14 @@ int RunServer() {
 
   running.store(false);
   server->Stop();
-  if (updater.joinable()) updater.join();
+  if (updater.joinable()) {
+    updater.join();
+  }
   return 0;
 }
 
-// ── Client mode ───────────────────────────────────────────────────────────────
+// ── Client mode
+// ───────────────────────────────────────────────────────────────
 
 int RunClient(const std::string& host) {
   auto client = NetworkReactiveClient::Connect(host, kPort);
@@ -113,7 +119,9 @@ int RunClient(const std::string& host) {
 
   // Subscribe to trigger UI refresh
   state->OnChange([](const std::string&) {
-    if (App* a = App::Active()) a->Post([] {});
+    if (App* a = App::Active()) {
+      a->Post([] {});
+    }
   });
 
   auto root = Renderer([&]() -> Element {
@@ -122,29 +130,32 @@ int RunClient(const std::string& host) {
         client->Connected() ? Color::GreenLight : Color::YellowLight;
 
     return vbox({
-        text(" ★  NETWORK REACTIVE — CLIENT MODE  ★") | bold |
-            color(Color::CyanLight) | hcenter,
-        separator(),
-        hbox({
-            text(" Server: ") | color(Color::GrayLight),
-            text(host + ":" + std::to_string(kPort)) | bold |
-                color(Color::Yellow),
-            filler(),
-            text(" Status: ") | color(Color::GrayLight),
-            text(conn_str) | bold | color(conn_color),
-            text(" "),
-        }),
-        separator(),
-        text(" Mirrored state:") | color(Color::GrayLight),
-        text("  " + state->Get()) | bold | color(Color::White),
-        separator(),
-        text(" q = quit") | color(Color::GrayDark),
-    }) | border;
+               text(" ★  NETWORK REACTIVE — CLIENT MODE  ★") | bold |
+                   color(Color::CyanLight) | hcenter,
+               separator(),
+               hbox({
+                   text(" Server: ") | color(Color::GrayLight),
+                   text(host + ":" + std::to_string(kPort)) | bold |
+                       color(Color::Yellow),
+                   filler(),
+                   text(" Status: ") | color(Color::GrayLight),
+                   text(conn_str) | bold | color(conn_color),
+                   text(" "),
+               }),
+               separator(),
+               text(" Mirrored state:") | color(Color::GrayLight),
+               text("  " + state->Get()) | bold | color(Color::White),
+               separator(),
+               text(" q = quit") | color(Color::GrayDark),
+           }) |
+           border;
   });
 
   auto app_comp = CatchEvent(root, [&](Event e) -> bool {
     if (e == Event::Character('q') || e == Event::Character('Q')) {
-      if (App* a = App::Active()) a->Exit();
+      if (App* a = App::Active()) {
+        a->Exit();
+      }
       return true;
     }
     return false;
@@ -156,7 +167,8 @@ int RunClient(const std::string& host) {
   return 0;
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────────
+// ── Main
+// ──────────────────────────────────────────────────────────────────────
 
 int main(int argc, char** argv) {
   if (argc >= 2 && std::string(argv[1]) == "--server") {
@@ -169,19 +181,23 @@ int main(int argc, char** argv) {
   // Default: show usage
   auto root = Renderer([]() -> Element {
     return vbox({
-        text(" Network Reactive Demo") | bold | color(Color::CyanLight) |
-            hcenter,
-        separator(),
-        text("  Run as server:  ./network_reactive_demo --server"),
-        text("  Run as client:  ./network_reactive_demo --client 127.0.0.1"),
-        separator(),
-        text(" q = quit") | color(Color::GrayDark),
-    }) | border;
+               text(" Network Reactive Demo") | bold | color(Color::CyanLight) |
+                   hcenter,
+               separator(),
+               text("  Run as server:  ./network_reactive_demo --server"),
+               text("  Run as client:  ./network_reactive_demo --client "
+                    "127.0.0.1"),
+               separator(),
+               text(" q = quit") | color(Color::GrayDark),
+           }) |
+           border;
   });
 
   auto app_comp = CatchEvent(root, [](Event e) -> bool {
     if (e == Event::Character('q') || e == Event::Character('Q')) {
-      if (App* a = App::Active()) a->Exit();
+      if (App* a = App::Active()) {
+        a->Exit();
+      }
       return true;
     }
     return false;

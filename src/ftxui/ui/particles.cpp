@@ -17,7 +17,7 @@ namespace {
 // Pseudo-random float in [lo, hi].
 float Rand(float lo, float hi) {
   return lo + (hi - lo) * (static_cast<float>(std::rand()) /
-                            static_cast<float>(RAND_MAX));
+                           static_cast<float>(RAND_MAX));
 }
 
 }  // namespace
@@ -122,10 +122,14 @@ void ParticleSystem::Render(ftxui::Canvas& c) const {
   const int h = c.height();
   for (const auto& p : particles_) {
     float alpha = p.lifetime / p.max_lifetime;
-    if (alpha < 0.1f) continue;
+    if (alpha < 0.1f) {
+      continue;
+    }
     int px = static_cast<int>(p.x);
     int py = static_cast<int>(p.y);
-    if (px < 0 || px >= w || py < 0 || py >= h) continue;
+    if (px < 0 || px >= w || py < 0 || py >= h) {
+      continue;
+    }
     c.DrawPoint(px, py, true);
   }
 }
@@ -177,10 +181,10 @@ std::shared_ptr<ParticleSystem> WarpStreaks() {
   ParticleConfig cfg;
   cfg.emit_x = 0.0f;
   cfg.emit_y = 20.0f;
-  cfg.emit_radius = 50.0f;   // Wide vertical spread
+  cfg.emit_radius = 50.0f;  // Wide vertical spread
   cfg.speed_min = 80.0f;
   cfg.speed_max = 200.0f;
-  cfg.angle_min = -0.2f;     // Mostly rightward
+  cfg.angle_min = -0.2f;  // Mostly rightward
   cfg.angle_max = 0.2f;
   cfg.lifetime_min = 0.3f;
   cfg.lifetime_max = 0.8f;
@@ -194,14 +198,14 @@ std::shared_ptr<ParticleSystem> Rain() {
   ParticleConfig cfg;
   cfg.emit_x = 40.0f;
   cfg.emit_y = 0.0f;
-  cfg.emit_radius = 80.0f;   // Wide horizontal spread
+  cfg.emit_radius = 80.0f;  // Wide horizontal spread
   cfg.speed_min = 30.0f;
   cfg.speed_max = 60.0f;
   cfg.angle_min = kPi / 2.0f - 0.2f;  // Mostly downward
   cfg.angle_max = kPi / 2.0f + 0.2f;
   cfg.lifetime_min = 0.8f;
   cfg.lifetime_max = 1.8f;
-  cfg.gravity = 0.0f;   // velocity already points down; gravity = free bonus
+  cfg.gravity = 0.0f;  // velocity already points down; gravity = free bonus
   cfg.emit_rate = 25;
   return std::make_shared<ParticleSystem>(cfg);
 }
@@ -217,7 +221,7 @@ std::shared_ptr<ParticleSystem> Sparkle(float x, float y) {
   cfg.angle_max = 6.2831853f;
   cfg.lifetime_min = 0.2f;
   cfg.lifetime_max = 0.6f;
-  cfg.gravity = -5.0f;   // slight upward drift
+  cfg.gravity = -5.0f;  // slight upward drift
   cfg.emit_rate = 15;
   return std::make_shared<ParticleSystem>(cfg);
 }

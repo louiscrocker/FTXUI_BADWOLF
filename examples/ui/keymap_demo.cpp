@@ -25,8 +25,8 @@ int main() {
   std::string last_key;
   int action_count = 0;
   bool show_confirm = false;
-  bool show_alert   = false;
-  bool show_help    = false;
+  bool show_alert = false;
+  bool show_help = false;
 
   // ── Main content ───────────────────────────────────────────────────────────
   auto content = Renderer([&]() -> Element {
@@ -49,7 +49,8 @@ int main() {
                vbox({
                    text("Keybindings:") | dim | hcenter,
                    separatorEmpty(),
-                   text("  s  →  trigger action (count++)") | color(t.text_muted),
+                   text("  s  →  trigger action (count++)") |
+                       color(t.text_muted),
                    text("  d  →  open confirm dialog") | color(t.text_muted),
                    text("  e  →  open alert dialog") | color(t.text_muted),
                    text("  ?  →  keyboard help overlay") | color(t.text_muted),
@@ -62,35 +63,42 @@ int main() {
 
   // ── Keybindings ────────────────────────────────────────────────────────────
   content |= Keymap()
-                 .Bind("s",
-                       [&] {
-                         last_key = "s";
-                         ++action_count;
-                       },
-                       "Trigger action")
-                 .Bind("d",
-                       [&] {
-                         last_key = "d";
-                         show_confirm = true;
-                       },
-                       "Open confirm dialog")
-                 .Bind("e",
-                       [&] {
-                         last_key = "e";
-                         show_alert = true;
-                       },
-                       "Open alert dialog")
-                 .Bind("?",
-                       [&] {
-                         last_key = "?";
-                         show_help = true;
-                       },
-                       "Keybinding help")
-                 .Bind("q",
-                       [] {
-                         if (App* a = App::Active()) a->Exit();
-                       },
-                       "Quit")
+                 .Bind(
+                     "s",
+                     [&] {
+                       last_key = "s";
+                       ++action_count;
+                     },
+                     "Trigger action")
+                 .Bind(
+                     "d",
+                     [&] {
+                       last_key = "d";
+                       show_confirm = true;
+                     },
+                     "Open confirm dialog")
+                 .Bind(
+                     "e",
+                     [&] {
+                       last_key = "e";
+                       show_alert = true;
+                     },
+                     "Open alert dialog")
+                 .Bind(
+                     "?",
+                     [&] {
+                       last_key = "?";
+                       show_help = true;
+                     },
+                     "Keybinding help")
+                 .Bind(
+                     "q",
+                     [] {
+                       if (App* a = App::Active()) {
+                         a->Exit();
+                       }
+                     },
+                     "Quit")
                  .AsDecorator();
 
   // ── Dialogs ────────────────────────────────────────────────────────────────
@@ -107,22 +115,17 @@ int main() {
       },
       &show_confirm);
 
-  content |= WithAlert(
-      "Notice",
-      "This is an informational alert.\n"
-      "Press OK to dismiss it.",
-      &show_alert,
-      [&] { show_alert = false; });
+  content |= WithAlert("Notice",
+                       "This is an informational alert.\n"
+                       "Press OK to dismiss it.",
+                       &show_alert, [&] { show_alert = false; });
 
   const std::vector<std::pair<std::string, std::string>> bindings = {
-      {"s",      "Trigger action"},
-      {"d",      "Confirm dialog"},
-      {"e",      "Alert dialog"},
-      {"?",      "This help"},
-      {"q",      "Quit"},
+      {"s", "Trigger action"}, {"d", "Confirm dialog"}, {"e", "Alert dialog"},
+      {"?", "This help"},      {"q", "Quit"},
   };
   content |= WithHelp("Keyboard Shortcuts", bindings, &show_help,
-                       [&] { show_help = false; });
+                      [&] { show_help = false; });
 
   App::FitComponent().Loop(content);
   return 0;

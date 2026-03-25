@@ -31,7 +31,7 @@ using namespace ftxui::ui;
 struct LoginModel {
   std::string username;
   std::string password;
-  bool        remember_me = false;
+  bool remember_me = false;
 };
 
 struct Employee {
@@ -43,7 +43,7 @@ struct Employee {
 
 struct AppState {
   std::string current_user = "guest";
-  bool        dark_mode    = true;
+  bool dark_mode = true;
 };
 
 int main() {
@@ -54,21 +54,24 @@ int main() {
   auto login_model = MakeBind<LoginModel>();
 
   // Layer 2 form
-  auto login_form = Form()
-                        .Title("Login")
-                        .BindField("Username", login_model, &LoginModel::username)
-                        .BindPassword("Password", login_model, &LoginModel::password)
-                        .BindCheckbox("Remember me", login_model, &LoginModel::remember_me)
-                        .Submit("Submit", [] {})
-                        .Build();
+  auto login_form =
+      Form()
+          .Title("Login")
+          .BindField("Username", login_model, &LoginModel::username)
+          .BindPassword("Password", login_model, &LoginModel::password)
+          .BindCheckbox("Remember me", login_model, &LoginModel::remember_me)
+          .Submit("Submit", [] {})
+          .Build();
 
   // ── Layer 3: ReactiveList + DataTable ────────────────────────────────────
   auto employees = MakeReactiveList<Employee>(
       {{"Alice", "Eng"}, {"Bob", "HR"}, {"Carol", "Eng"}});
 
   auto table = DataTable<Employee>()
-                   .Column("Name", [](const Employee& e) { return e.name; }, 12)
-                   .Column("Dept", [](const Employee& e) { return e.dept; }, 8)
+                   .Column(
+                       "Name", [](const Employee& e) { return e.name; }, 12)
+                   .Column(
+                       "Dept", [](const Employee& e) { return e.dept; }, 8)
                    .BindList(employees)
                    .Selectable(true)
                    .Build();
@@ -94,18 +97,17 @@ int main() {
   auto is_visible = std::make_shared<Reactive<bool>>(true);
 
   // Toggle button (created outside render lambda).
-  auto toggle_btn = Button("Toggle Panel", [&] {
-    is_visible->Set(!is_visible->Get());
-  });
+  auto toggle_btn =
+      Button("Toggle Panel", [&] { is_visible->Set(!is_visible->Get()); });
 
   // Status label using BindText.
   auto name_reactive = login_model.AsReactive();
-  auto status_label  = Renderer([&]() -> Element {
+  auto status_label = Renderer([&]() -> Element {
     auto data = login_model.Get();
-    std::string msg = "User: " +
-                      (data.username.empty() ? "(none)" : data.username) +
-                      " | Employees: " + std::to_string(employees->Size()) +
-                      " | Remember: " + (data.remember_me ? "yes" : "no");
+    std::string msg =
+        "User: " + (data.username.empty() ? "(none)" : data.username) +
+        " | Employees: " + std::to_string(employees->Size()) +
+        " | Remember: " + (data.remember_me ? "yes" : "no");
     return text(msg) | color(t.text_muted) | hcenter;
   });
 
@@ -113,12 +115,11 @@ int main() {
     return vbox({
                text(" Details ") | bold | color(t.primary) | hcenter,
                separatorLight(),
-               ShowIf(
-                   vbox({
-                       text("  This panel can be toggled.") | color(t.text),
-                       text("  Use ShowIf to show/hide reactively.") | dim,
-                   }),
-                   is_visible),
+               ShowIf(vbox({
+                          text("  This panel can be toggled.") | color(t.text),
+                          text("  Use ShowIf to show/hide reactively.") | dim,
+                      }),
+                      is_visible),
            }) |
            borderLight | size(WIDTH, EQUAL, 30);
   });
@@ -151,7 +152,9 @@ int main() {
 
   root |= CatchEvent([&](Event event) -> bool {
     if (event == Event::Character('q') || event == Event::Escape) {
-      if (App* app = App::Active()) app->Exit();
+      if (App* app = App::Active()) {
+        app->Exit();
+      }
       return true;
     }
     return false;
@@ -159,24 +162,29 @@ int main() {
 
   auto framed = Renderer(root, [&]() -> Element {
     return vbox({
-               text("  Data Binding Demo  ") | bold | color(t.primary) | hcenter,
+               text("  Data Binding Demo  ") | bold | color(t.primary) |
+                   hcenter,
                separatorLight(),
                hbox({
                    vbox({
-                       text(" Layer 2: BindModel Form ") | bold | color(t.secondary) | hcenter,
+                       text(" Layer 2: BindModel Form ") | bold |
+                           color(t.secondary) | hcenter,
                        login_form->Render() | border | flex,
                    }) | size(WIDTH, EQUAL, 35),
                    separator(),
                    vbox({
-                       text(" Layer 3: ReactiveList + DataTable ") | bold | color(t.secondary) | hcenter,
+                       text(" Layer 3: ReactiveList + DataTable ") | bold |
+                           color(t.secondary) | hcenter,
                        table->Render() | flex,
                        separatorLight(),
                        hbox({btn_add->Render(), text(" "), btn_remove->Render(),
-                             text(" "), btn_clear->Render()}) | hcenter,
+                             text(" "), btn_clear->Render()}) |
+                           hcenter,
                    }) | flex,
                    separator(),
                    vbox({
-                       text(" Layers 4 & 5 ") | bold | color(t.secondary) | hcenter,
+                       text(" Layers 4 & 5 ") | bold | color(t.secondary) |
+                           hcenter,
                        toggle_btn->Render() | hcenter,
                        detail_panel->Render(),
                        separatorLight(),

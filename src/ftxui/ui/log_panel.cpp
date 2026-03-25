@@ -20,7 +20,8 @@ using namespace ftxui;
 
 namespace ftxui::ui {
 
-// ── Impl ──────────────────────────────────────────────────────────────────────
+// ── Impl
+// ──────────────────────────────────────────────────────────────────────
 
 struct LogPanel::Impl {
   std::deque<Entry> entries;
@@ -29,7 +30,8 @@ struct LogPanel::Impl {
   LogLevel min_level = LogLevel::Trace;
 };
 
-// ── Timestamp helper ──────────────────────────────────────────────────────────
+// ── Timestamp helper
+// ──────────────────────────────────────────────────────────
 
 namespace {
 
@@ -50,22 +52,32 @@ std::string CurrentTimestamp() {
 
 int LevelValue(LogLevel level) {
   switch (level) {
-    case LogLevel::Trace: return 0;
-    case LogLevel::Debug: return 1;
-    case LogLevel::Info:  return 2;
-    case LogLevel::Warn:  return 3;
-    case LogLevel::Error: return 4;
+    case LogLevel::Trace:
+      return 0;
+    case LogLevel::Debug:
+      return 1;
+    case LogLevel::Info:
+      return 2;
+    case LogLevel::Warn:
+      return 3;
+    case LogLevel::Error:
+      return 4;
   }
   return 0;
 }
 
 const char* LevelLabel(LogLevel level) {
   switch (level) {
-    case LogLevel::Trace: return "[TRC]";
-    case LogLevel::Debug: return "[DBG]";
-    case LogLevel::Info:  return "[INF]";
-    case LogLevel::Warn:  return "[WRN]";
-    case LogLevel::Error: return "[ERR]";
+    case LogLevel::Trace:
+      return "[TRC]";
+    case LogLevel::Debug:
+      return "[DBG]";
+    case LogLevel::Info:
+      return "[INF]";
+    case LogLevel::Warn:
+      return "[WRN]";
+    case LogLevel::Error:
+      return "[ERR]";
   }
   return "[INF]";
 }
@@ -86,7 +98,8 @@ Element LevelElement(LogLevel level, const Theme& t) {
   return text(label);
 }
 
-Element MessageElement(LogLevel level, const std::string& message,
+Element MessageElement(LogLevel level,
+                       const std::string& message,
                        const Theme& t) {
   switch (level) {
     case LogLevel::Trace:
@@ -104,7 +117,8 @@ Element MessageElement(LogLevel level, const std::string& message,
 
 }  // namespace
 
-// ── Factory ───────────────────────────────────────────────────────────────────
+// ── Factory
+// ───────────────────────────────────────────────────────────────────
 
 std::shared_ptr<LogPanel> LogPanel::Create(size_t max_lines) {
   auto panel = std::shared_ptr<LogPanel>(new LogPanel());
@@ -113,25 +127,36 @@ std::shared_ptr<LogPanel> LogPanel::Create(size_t max_lines) {
   return panel;
 }
 
-// ── Logging ───────────────────────────────────────────────────────────────────
+// ── Logging
+// ───────────────────────────────────────────────────────────────────
 
 void LogPanel::Log(std::string_view message, LogLevel level) {
   auto impl = impl_;
   std::lock_guard<std::mutex> lock(impl->mutex);
-  impl->entries.push_back(
-      {std::string(message), level, CurrentTimestamp()});
+  impl->entries.push_back({std::string(message), level, CurrentTimestamp()});
   while (impl->entries.size() > impl->max_lines) {
     impl->entries.pop_front();
   }
 }
 
-void LogPanel::Trace(std::string_view message) { Log(message, LogLevel::Trace); }
-void LogPanel::Debug(std::string_view message) { Log(message, LogLevel::Debug); }
-void LogPanel::Info(std::string_view message)  { Log(message, LogLevel::Info); }
-void LogPanel::Warn(std::string_view message)  { Log(message, LogLevel::Warn); }
-void LogPanel::Error(std::string_view message) { Log(message, LogLevel::Error); }
+void LogPanel::Trace(std::string_view message) {
+  Log(message, LogLevel::Trace);
+}
+void LogPanel::Debug(std::string_view message) {
+  Log(message, LogLevel::Debug);
+}
+void LogPanel::Info(std::string_view message) {
+  Log(message, LogLevel::Info);
+}
+void LogPanel::Warn(std::string_view message) {
+  Log(message, LogLevel::Warn);
+}
+void LogPanel::Error(std::string_view message) {
+  Log(message, LogLevel::Error);
+}
 
-// ── Management ────────────────────────────────────────────────────────────────
+// ── Management
+// ────────────────────────────────────────────────────────────────
 
 void LogPanel::Clear() {
   std::lock_guard<std::mutex> lock(impl_->mutex);
@@ -151,7 +176,8 @@ void LogPanel::SetMinLevel(LogLevel level) {
   impl_->min_level = level;
 }
 
-// ── Build ─────────────────────────────────────────────────────────────────────
+// ── Build
+// ─────────────────────────────────────────────────────────────────────
 
 Component LogPanel::Build(std::string_view title) const {
   auto impl = impl_;

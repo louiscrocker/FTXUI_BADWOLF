@@ -18,7 +18,8 @@ using namespace ftxui;
 
 namespace ftxui::ui {
 
-// ── Confirm dialog ────────────────────────────────────────────────────────────
+// ── Confirm dialog
+// ────────────────────────────────────────────────────────────
 
 Component WithConfirm(Component parent,
                       std::string_view message,
@@ -48,16 +49,17 @@ Component WithConfirm(Component parent,
 }
 
 ComponentDecorator WithConfirm(std::string_view message,
-                                std::function<void()> on_yes,
-                                std::function<void()> on_no,
-                                const bool* show) {
+                               std::function<void()> on_yes,
+                               std::function<void()> on_no,
+                               const bool* show) {
   return [message = std::string(message), on_yes = std::move(on_yes),
           on_no = std::move(on_no), show](Component comp) -> Component {
     return WithConfirm(std::move(comp), message, on_yes, on_no, show);
   };
 }
 
-// ── Alert dialog ──────────────────────────────────────────────────────────────
+// ── Alert dialog
+// ──────────────────────────────────────────────────────────────
 
 Component WithAlert(Component parent,
                     std::string_view title,
@@ -87,16 +89,17 @@ Component WithAlert(Component parent,
 }
 
 ComponentDecorator WithAlert(std::string_view title,
-                              std::string_view message,
-                              const bool* show,
-                              std::function<void()> on_close) {
+                             std::string_view message,
+                             const bool* show,
+                             std::function<void()> on_close) {
   return [title = std::string(title), message = std::string(message), show,
           on_close = std::move(on_close)](Component comp) -> Component {
     return WithAlert(std::move(comp), title, message, show, on_close);
   };
 }
 
-// ── Help dialog ───────────────────────────────────────────────────────────────
+// ── Help dialog
+// ───────────────────────────────────────────────────────────────
 
 Component WithHelp(
     Component parent,
@@ -113,26 +116,27 @@ Component WithHelp(
   auto btn_close =
       ftxui::Button("  Close  ", close_fn, ButtonOption::Animated());
 
-  auto modal_comp = Renderer(btn_close, [ttl, bindings_copy, btn_close]() -> Element {
-    const Theme& t = GetTheme();
-    Elements rows;
-    rows.push_back(text(" " + ttl + " ") | bold | hcenter);
-    rows.push_back(separatorLight());
+  auto modal_comp =
+      Renderer(btn_close, [ttl, bindings_copy, btn_close]() -> Element {
+        const Theme& t = GetTheme();
+        Elements rows;
+        rows.push_back(text(" " + ttl + " ") | bold | hcenter);
+        rows.push_back(separatorLight());
 
-    // Two-column layout: key | description
-    for (const auto& [key, desc] : *bindings_copy) {
-      rows.push_back(hbox({
-          text(key) | bold | color(t.primary) | size(WIDTH, EQUAL, 12),
-          text(desc),
-      }));
-    }
-    rows.push_back(separatorEmpty());
-    rows.push_back(btn_close->Render() | hcenter);
+        // Two-column layout: key | description
+        for (const auto& [key, desc] : *bindings_copy) {
+          rows.push_back(hbox({
+              text(key) | bold | color(t.primary) | size(WIDTH, EQUAL, 12),
+              text(desc),
+          }));
+        }
+        rows.push_back(separatorEmpty());
+        rows.push_back(btn_close->Render() | hcenter);
 
-    return vbox(std::move(rows)) |
-           borderStyled(t.border_style, t.secondary) |
-           size(WIDTH, GREATER_THAN, 36) | center;
-  });
+        return vbox(std::move(rows)) |
+               borderStyled(t.border_style, t.secondary) |
+               size(WIDTH, GREATER_THAN, 36) | center;
+      });
 
   parent |= Modal(modal_comp, show);
   return parent;
@@ -144,14 +148,14 @@ ComponentDecorator WithHelp(
     const bool* show,
     std::function<void()> on_close) {
   return [title = std::string(title),
-          bindings =
-              std::vector<std::pair<std::string, std::string>>(bindings),
+          bindings = std::vector<std::pair<std::string, std::string>>(bindings),
           show, on_close = std::move(on_close)](Component comp) -> Component {
     return WithHelp(std::move(comp), title, bindings, show, on_close);
   };
 }
 
-// ── WithDrawer ────────────────────────────────────────────────────────────────
+// ── WithDrawer
+// ────────────────────────────────────────────────────────────────
 
 Component WithDrawer(Component parent,
                      DrawerSide side,
@@ -160,44 +164,51 @@ Component WithDrawer(Component parent,
                      const bool* show,
                      int panel_size) {
   auto title_str = std::string(title);
-  return Renderer(Container::Tab({parent, content}, nullptr),
-                  [parent, content, show, side, title_str, panel_size]() -> Element {
-    if (!*show) return parent->Render();
-    const Theme& t = GetTheme();
+  return Renderer(
+      Container::Tab({parent, content}, nullptr),
+      [parent, content, show, side, title_str, panel_size]() -> Element {
+        if (!*show) {
+          return parent->Render();
+        }
+        const Theme& t = GetTheme();
 
-    Element panel = vbox({
-        text(" " + title_str + " ") | bold | color(t.primary),
-        separatorLight(),
-        content->Render() | flex,
-    }) | borderStyled(t.border_style, t.border_color) |
-        size(WIDTH, EQUAL, panel_size);
+        Element panel =
+            vbox({
+                text(" " + title_str + " ") | bold | color(t.primary),
+                separatorLight(),
+                content->Render() | flex,
+            }) |
+            borderStyled(t.border_style, t.border_color) |
+            size(WIDTH, EQUAL, panel_size);
 
-    Element base = parent->Render() | flex;
+        Element base = parent->Render() | flex;
 
-    switch (side) {
-      case DrawerSide::Left:
-        return hbox({ panel, base });
-      case DrawerSide::Right:
-        return hbox({ base, panel });
-      case DrawerSide::Bottom:
-        return vbox({ base, panel | size(HEIGHT, EQUAL, panel_size / 2) });
-    }
-    return base;
-  });
+        switch (side) {
+          case DrawerSide::Left:
+            return hbox({panel, base});
+          case DrawerSide::Right:
+            return hbox({base, panel});
+          case DrawerSide::Bottom:
+            return vbox({base, panel | size(HEIGHT, EQUAL, panel_size / 2)});
+        }
+        return base;
+      });
 }
 
 ComponentDecorator WithDrawer(DrawerSide side,
-                               std::string_view title,
-                               Component content,
-                               const bool* show,
-                               int panel_size) {
+                              std::string_view title,
+                              Component content,
+                              const bool* show,
+                              int panel_size) {
   return [side, title = std::string(title), content, show,
           panel_size](Component parent) -> Component {
-    return WithDrawer(std::move(parent), side, title, content, show, panel_size);
+    return WithDrawer(std::move(parent), side, title, content, show,
+                      panel_size);
   };
 }
 
-// ── WithModal ─────────────────────────────────────────────────────────────────
+// ── WithModal
+// ─────────────────────────────────────────────────────────────────
 
 Component WithModal(Component parent,
                     std::string_view title,
@@ -216,28 +227,36 @@ Component WithModal(Component parent,
       Container::Tab({parent, modal_inner}, nullptr),
       [parent, content, btn_comps, btn_row, show,
        title_str = std::string(title), buttons]() -> Element {
-        if (!*show) return parent->Render();
+        if (!*show) {
+          return parent->Render();
+        }
         const Theme& t = GetTheme();
 
         // Build button row elements
         Elements btn_elems;
         btn_elems.push_back(filler());
         for (size_t i = 0; i < btn_comps.size(); ++i) {
-          if (i > 0) btn_elems.push_back(text(" "));
+          if (i > 0) {
+            btn_elems.push_back(text(" "));
+          }
           Element be = btn_comps[i]->Render();
-          if (buttons[i].is_primary) be = be | color(t.primary);
+          if (buttons[i].is_primary) {
+            be = be | color(t.primary);
+          }
           btn_elems.push_back(be);
         }
 
-        Element modal = vbox({
-            text(" " + title_str + " ") | bold | color(t.primary) | hcenter,
-            separatorLight(),
-            content->Render() | xflex,
-            separatorEmpty(),
-            hbox(btn_elems),
-        }) | borderStyled(t.border_style, t.border_color) |
-            size(WIDTH, EQUAL, 50) | size(HEIGHT, LESS_THAN, 20) |
-            hcenter | vcenter;
+        Element modal =
+            vbox({
+                text(" " + title_str + " ") | bold | color(t.primary) | hcenter,
+                separatorLight(),
+                content->Render() | xflex,
+                separatorEmpty(),
+                hbox(btn_elems),
+            }) |
+            borderStyled(t.border_style, t.border_color) |
+            size(WIDTH, EQUAL, 50) | size(HEIGHT, LESS_THAN, 20) | hcenter |
+            vcenter;
 
         return dbox({
             parent->Render(),
@@ -257,4 +276,3 @@ ComponentDecorator WithModal(std::string_view title,
 }
 
 }  // namespace ftxui::ui
-

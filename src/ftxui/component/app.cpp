@@ -437,8 +437,9 @@ void App::PreMain() {
     std::swap(suspended_screen_, g_active_screen);
     // Reset cursor position to the top of the screen and clear the screen.
     suspended_screen_->TerminalSend(suspended_screen_->ResetCursorPosition());
-    suspended_screen_->ResetPosition(suspended_screen_->internal_->output_buffer,
-                                     /*clear=*/true);
+    suspended_screen_->ResetPosition(
+        suspended_screen_->internal_->output_buffer,
+        /*clear=*/true);
     suspended_screen_->dimx_ = 0;
     suspended_screen_->dimy_ = 0;
 
@@ -926,7 +927,7 @@ void App::Draw(Component component) {
 
   if (frame_count_ != 0) {
     // Reset the cursor position to the lower left corner to start drawing the
-    // new frame. 
+    // new frame.
     ResetPosition(internal_->output_buffer, resized);
 
     // If the terminal width decrease, the terminal emulator will start wrapping
@@ -1015,7 +1016,7 @@ void App::Draw(Component component) {
 // private
 std::string App::ResetCursorPosition() {
   std::string result = std::move(reset_cursor_position_);
-  reset_cursor_position_= "";
+  reset_cursor_position_ = "";
   return result;
 }
 

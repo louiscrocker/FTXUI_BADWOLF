@@ -24,7 +24,8 @@ using namespace ftxui;
 
 namespace ftxui::ui {
 
-// ── Impl ──────────────────────────────────────────────────────────────────────
+// ── Impl
+// ──────────────────────────────────────────────────────────────────────
 
 struct Router::Impl {
   using FactoryFn = std::function<Component()>;
@@ -92,7 +93,8 @@ struct Router::Impl {
   }
 };
 
-// ── RouterComponent ───────────────────────────────────────────────────────────
+// ── RouterComponent
+// ───────────────────────────────────────────────────────────
 
 namespace {
 
@@ -127,7 +129,8 @@ class RouterComponent : public ComponentBase {
 
 }  // namespace
 
-// ── Router ────────────────────────────────────────────────────────────────────
+// ── Router
+// ────────────────────────────────────────────────────────────────────
 
 Router::Router() : impl_(std::make_shared<Impl>()) {}
 Router::~Router() = default;

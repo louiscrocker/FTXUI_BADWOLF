@@ -212,13 +212,15 @@ ftxui::Element BrailleCanvas::RenderFlex() const {
   auto cmds_copy = cmds_;
   // canvas(2, 4, fn) → min 1 char; the canvas passed to fn is sized to the
   // actual allocated box so every braille dot is used at full resolution.
-  return ftxui::canvas(2, 4, [cmds_copy](ftxui::Canvas& c) {
-    int w = c.width();
-    int h = c.height();
-    for (const auto& cmd : cmds_copy) {
-      cmd(c, w, h);
-    }
-  }) | ftxui::flex;
+  return ftxui::canvas(2, 4,
+                       [cmds_copy](ftxui::Canvas& c) {
+                         int w = c.width();
+                         int h = c.height();
+                         for (const auto& cmd : cmds_copy) {
+                           cmd(c, w, h);
+                         }
+                       }) |
+         ftxui::flex;
 }
 
 }  // namespace ftxui::ui

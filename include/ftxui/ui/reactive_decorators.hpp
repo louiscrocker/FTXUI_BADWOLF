@@ -30,11 +30,11 @@ namespace ftxui::ui {
 /// Renderer([&]{ return vbox({ ShowIf(spinner, is_loading) }); })
 /// @endcode
 ftxui::Element ShowIf(ftxui::Element e,
-                       std::shared_ptr<Reactive<bool>> condition);
+                      std::shared_ptr<Reactive<bool>> condition);
 
 /// @brief Return @p e when @p condition is false, otherwise emptyElement().
 ftxui::Element HideIf(ftxui::Element e,
-                       std::shared_ptr<Reactive<bool>> condition);
+                      std::shared_ptr<Reactive<bool>> condition);
 
 // ---------------------------------------------------------------------------
 // BindText
@@ -51,15 +51,16 @@ ftxui::Element BindText(std::shared_ptr<Reactive<std::string>> text_reactive);
 
 /// @brief Render with optional bold decoration.
 ftxui::Element BindText(std::shared_ptr<Reactive<std::string>> text_reactive,
-                         bool bold);
+                        bool bold);
 
 // ---------------------------------------------------------------------------
 // BindColor
 // ---------------------------------------------------------------------------
 
 /// @brief Apply the current color from @p color_reactive to element @p e.
-ftxui::Element BindColor(ftxui::Element e,
-                          std::shared_ptr<Reactive<ftxui::Color>> color_reactive);
+ftxui::Element BindColor(
+    ftxui::Element e,
+    std::shared_ptr<Reactive<ftxui::Color>> color_reactive);
 
 // ---------------------------------------------------------------------------
 // ReactiveBox
@@ -71,7 +72,7 @@ ftxui::Element BindColor(ftxui::Element e,
 /// explicit dependency tracking; the component already re-renders on every
 /// UI event (including those posted by reactive updates).
 ftxui::Component ReactiveBox(std::function<ftxui::Element()> render_fn,
-                               std::vector<std::shared_ptr<void>> deps = {});
+                             std::vector<std::shared_ptr<void>> deps = {});
 
 // ---------------------------------------------------------------------------
 // ForEach<T>
@@ -105,8 +106,8 @@ ftxui::Component ForEach(
     int selected = 0;
   };
 
-  auto state      = std::make_shared<State>();
-  state->list     = list;
+  auto state = std::make_shared<State>();
+  state->list = list;
   state->renderer = std::move(renderer);
   state->on_select = std::move(on_select);
 
@@ -125,7 +126,7 @@ ftxui::Component ForEach(
 
   auto comp = ftxui::Renderer([state]() -> ftxui::Element {
     const auto items = state->list->Items();
-    const int  n     = static_cast<int>(items.size());
+    const int n = static_cast<int>(items.size());
 
     if (n > 0 && state->selected >= n) {
       state->selected = n - 1;

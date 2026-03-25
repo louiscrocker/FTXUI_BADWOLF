@@ -26,15 +26,15 @@ struct UserProfile {
   std::string name;
   std::string email;
   std::string bio;
-  bool        active = true;
+  bool active = true;
 };
 
 int main() {
   SetTheme(Theme::Nord());
   const Theme& t = GetTheme();
 
-  auto model = MakeBind<UserProfile>(UserProfile{"Alice", "alice@example.com",
-                                                  "Software engineer.", true});
+  auto model = MakeBind<UserProfile>(
+      UserProfile{"Alice", "alice@example.com", "Software engineer.", true});
 
   auto log = LogPanel::Create(20);
 
@@ -52,9 +52,9 @@ int main() {
 
   auto form = Form()
                   .Title("User Profile")
-                  .BindField("Name",  model, &UserProfile::name)
+                  .BindField("Name", model, &UserProfile::name)
                   .BindField("Email", model, &UserProfile::email)
-                  .BindField("Bio",   model, &UserProfile::bio)
+                  .BindField("Bio", model, &UserProfile::bio)
                   .BindCheckbox("Active", model, &UserProfile::active)
                   .Build();
 
@@ -66,7 +66,9 @@ int main() {
 
   root |= CatchEvent([&](Event event) -> bool {
     if (event == Event::Character('q') || event == Event::Escape) {
-      if (App* app = App::Active()) app->Exit();
+      if (App* app = App::Active()) {
+        app->Exit();
+      }
       return true;
     }
     return false;
@@ -76,16 +78,19 @@ int main() {
     auto d = model.Get();
 
     // Live preview.
-    Element preview = vbox({
-        text(" Live Preview ") | bold | color(t.primary) | hcenter,
-        separatorLight(),
-        hbox({text("  Name   : ") | dim, text(d.name)   | color(t.accent)}),
-        hbox({text("  Email  : ") | dim, text(d.email)  | color(t.accent)}),
-        hbox({text("  Bio    : ") | dim, text(d.bio)    | color(t.text_muted)}),
-        hbox({text("  Active : ") | dim,
-              text(d.active ? "yes" : "no") |
-                  color(d.active ? t.success_color : t.error_color)}),
-    }) | border | size(WIDTH, EQUAL, 38);
+    Element preview =
+        vbox({
+            text(" Live Preview ") | bold | color(t.primary) | hcenter,
+            separatorLight(),
+            hbox({text("  Name   : ") | dim, text(d.name) | color(t.accent)}),
+            hbox({text("  Email  : ") | dim, text(d.email) | color(t.accent)}),
+            hbox(
+                {text("  Bio    : ") | dim, text(d.bio) | color(t.text_muted)}),
+            hbox({text("  Active : ") | dim,
+                  text(d.active ? "yes" : "no") |
+                      color(d.active ? t.success_color : t.error_color)}),
+        }) |
+        border | size(WIDTH, EQUAL, 38);
 
     return vbox({
                text("  BindModel Demo  ") | bold | color(t.primary) | hcenter,
@@ -95,7 +100,8 @@ int main() {
                        form->Render() | flex,
                        separatorLight(),
                        hbox({btn_submit->Render(), text(" "),
-                             btn_reset->Render()}) | hcenter,
+                             btn_reset->Render()}) |
+                           hcenter,
                    }) | size(WIDTH, EQUAL, 36),
                    separator(),
                    vbox({

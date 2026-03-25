@@ -30,7 +30,8 @@ namespace ftxui::ui {
 ///     .Data(&items)
 ///     .Render([](const std::string& s, bool sel) -> ftxui::Element {
 ///         auto e = ftxui::text(s);
-///         return sel ? e | ftxui::bold | ftxui::color(ftxui::ui::GetTheme().primary) : e;
+///         return sel ? e | ftxui::bold |
+///         ftxui::color(ftxui::ui::GetTheme().primary) : e;
 ///     })
 ///     .Filterable(true)
 ///     .OnActivate([](const std::string& s, size_t i){ /* ... */ })
@@ -64,7 +65,8 @@ class List {
 
   // ── Behavior ───────────────────────────────────────────────────────────────
 
-  /// @brief Show a search bar and filter items as the user types. Default: false.
+  /// @brief Show a search bar and filter items as the user types. Default:
+  /// false.
   List& Filterable(bool v) {
     state_->filterable = v;
     return *this;
@@ -105,9 +107,8 @@ class List {
   ftxui::Component Build() {
     auto state = state_;
 
-    auto renderer = ftxui::Renderer([state]() -> ftxui::Element {
-      return Render(state);
-    });
+    auto renderer =
+        ftxui::Renderer([state]() -> ftxui::Element { return Render(state); });
 
     return ftxui::CatchEvent(renderer, [state](ftxui::Event event) -> bool {
       return HandleEvent(state, event);
@@ -135,8 +136,11 @@ class List {
   // ── Helpers ────────────────────────────────────────────────────────────────
 
   // Convert an item to a string for default rendering and filtering.
-  static std::string ItemToString(const std::shared_ptr<State>& s, const T& item) {
-    if (s->labeler) return s->labeler(item);
+  static std::string ItemToString(const std::shared_ptr<State>& s,
+                                  const T& item) {
+    if (s->labeler) {
+      return s->labeler(item);
+    }
     if constexpr (std::is_same_v<std::decay_t<T>, std::string>) {
       return item;
     } else if constexpr (std::is_convertible_v<T, std::string_view>) {
@@ -149,8 +153,9 @@ class List {
   }
 
   static std::string ToLower(std::string s) {
-    std::transform(s.begin(), s.end(), s.begin(),
-                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) {
+      return static_cast<char>(std::tolower(c));
+    });
     return s;
   }
 
@@ -200,8 +205,8 @@ class List {
 
     // Clamp selection into range.
     if (!visible.empty()) {
-      s->selected =
-          std::max(0, std::min(s->selected, static_cast<int>(visible.size()) - 1));
+      s->selected = std::max(
+          0, std::min(s->selected, static_cast<int>(visible.size()) - 1));
     }
 
     ftxui::Elements items;
@@ -245,8 +250,7 @@ class List {
   }
 
   // Handle keyboard events; return true if consumed.
-  static bool HandleEvent(const std::shared_ptr<State>& s,
-                          ftxui::Event event) {
+  static bool HandleEvent(const std::shared_ptr<State>& s, ftxui::Event event) {
     const auto visible = ComputeVisible(s);
     const int n = static_cast<int>(visible.size());
 

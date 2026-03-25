@@ -26,7 +26,8 @@ using namespace ftxui;
 
 namespace ftxui::ui {
 
-// ── Impl ──────────────────────────────────────────────────────────────────────
+// ── Impl
+// ──────────────────────────────────────────────────────────────────────
 
 struct ProcessPanel::Impl {
   std::string command;
@@ -45,7 +46,8 @@ struct ProcessPanel::Impl {
   std::shared_ptr<LogPanel> log{LogPanel::Create(1000)};
 };
 
-// ── Factory ───────────────────────────────────────────────────────────────────
+// ── Factory
+// ───────────────────────────────────────────────────────────────────
 
 std::shared_ptr<ProcessPanel> ProcessPanel::Create() {
   auto panel = std::shared_ptr<ProcessPanel>(new ProcessPanel());
@@ -53,7 +55,8 @@ std::shared_ptr<ProcessPanel> ProcessPanel::Create() {
   return panel;
 }
 
-// ── Builder ───────────────────────────────────────────────────────────────────
+// ── Builder
+// ───────────────────────────────────────────────────────────────────
 
 ProcessPanel::Builder::Builder() : panel_(ProcessPanel::Create()) {}
 
@@ -85,11 +88,14 @@ ProcessPanel::Builder& ProcessPanel::Builder::OnOutput(
 }
 
 ftxui::Component ProcessPanel::Builder::Build(const std::string& title) {
-  if (auto_start_) panel_->Start();
+  if (auto_start_) {
+    panel_->Start();
+  }
   return panel_->Build(title);
 }
 
-// ── Configuration ─────────────────────────────────────────────────────────────
+// ── Configuration
+// ─────────────────────────────────────────────────────────────
 
 void ProcessPanel::SetCommand(const std::string& cmd) {
   impl_->command = cmd;
@@ -112,10 +118,13 @@ void ProcessPanel::OnOutput(std::function<void(const std::string& line)> fn) {
   impl_->on_output = std::move(fn);
 }
 
-// ── Control ───────────────────────────────────────────────────────────────────
+// ── Control
+// ───────────────────────────────────────────────────────────────────
 
 void ProcessPanel::Start() {
-  if (impl_->running) return;
+  if (impl_->running) {
+    return;
+  }
   if (impl_->command.empty()) {
     impl_->log->Warn("No command set.");
     return;
@@ -187,16 +196,24 @@ void ProcessPanel::Start() {
         std::string line = partial.substr(0, pos);
         partial = partial.substr(pos + 1);
         impl->log->Info(line);
-        if (impl->on_output) impl->on_output(line);
-        if (App* a = App::Active()) a->Post([] {});
+        if (impl->on_output) {
+          impl->on_output(line);
+        }
+        if (App* a = App::Active()) {
+          a->Post([] {});
+        }
       }
     }
 
     // Flush any trailing partial line (no trailing newline).
     if (!partial.empty()) {
       impl->log->Info(partial);
-      if (impl->on_output) impl->on_output(partial);
-      if (App* a = App::Active()) a->Post([] {});
+      if (impl->on_output) {
+        impl->on_output(partial);
+      }
+      if (App* a = App::Active()) {
+        a->Post([] {});
+      }
     }
 
     {
@@ -222,8 +239,12 @@ void ProcessPanel::Start() {
     impl->exit_code = code;
     impl->running = false;
 
-    if (App* a = App::Active()) a->Post([] {});
-    if (impl->on_complete) impl->on_complete(code);
+    if (App* a = App::Active()) {
+      a->Post([] {});
+    }
+    if (impl->on_complete) {
+      impl->on_complete(code);
+    }
   }).detach();
 }
 
@@ -246,7 +267,8 @@ int ProcessPanel::ExitCode() const {
   return impl_->exit_code;
 }
 
-// ── Build ─────────────────────────────────────────────────────────────────────
+// ── Build
+// ─────────────────────────────────────────────────────────────────────
 
 ftxui::Component ProcessPanel::Build(const std::string& title) {
   auto self = shared_from_this();
@@ -254,12 +276,12 @@ ftxui::Component ProcessPanel::Build(const std::string& title) {
 
   // Create buttons ONCE here — never inside the Renderer lambda.
   auto btn_start = Button(" ▶ START ", [self]() { self->Start(); });
-  auto btn_stop  = Button(" ■ STOP ",  [self]() { self->Stop(); });
+  auto btn_stop = Button(" ■ STOP ", [self]() { self->Stop(); });
   auto btn_clear = Button(" ✗ CLEAR ", [self]() { self->Clear(); });
 
   auto log_comp = impl->log->Build();
 
-  auto btn_row  = Container::Horizontal({btn_start, btn_stop, btn_clear});
+  auto btn_row = Container::Horizontal({btn_start, btn_stop, btn_clear});
   auto container = Container::Vertical({btn_row, log_comp});
 
   return Renderer(
@@ -271,42 +293,42 @@ ftxui::Component ProcessPanel::Build(const std::string& title) {
         Color dot_color;
         std::string status_text;
         if (impl->running) {
-          dot_color   = t.success_color;
+          dot_color = t.success_color;
           status_text = "Running";
         } else if (impl->exit_code == 0) {
-          dot_color   = t.text_muted;
+          dot_color = t.text_muted;
           status_text = "Done (0)";
         } else if (impl->exit_code > 0) {
-          dot_color   = t.error_color;
-          status_text = "Error (" + std::to_string(impl->exit_code.load()) + ")";
+          dot_color = t.error_color;
+          status_text =
+              "Error (" + std::to_string(impl->exit_code.load()) + ")";
         } else {
-          dot_color   = t.text_muted;
+          dot_color = t.text_muted;
           status_text = "Idle";
         }
 
         // Top info bar: command + status + control buttons.
         Element top_bar = hbox({
-          text(" cmd: ") | color(t.text_muted) | dim,
-          text(impl->command) | color(t.text) | flex,
-          text("  Status: ") | dim,
-          text("● ") | color(dot_color),
-          text(status_text + "  "),
-          btn_start->Render(),
-          text(" "),
-          btn_stop->Render(),
-          text(" "),
-          btn_clear->Render(),
-          text(" "),
+            text(" cmd: ") | color(t.text_muted) | dim,
+            text(impl->command) | color(t.text) | flex,
+            text("  Status: ") | dim,
+            text("● ") | color(dot_color),
+            text(status_text + "  "),
+            btn_start->Render(),
+            text(" "),
+            btn_stop->Render(),
+            text(" "),
+            btn_clear->Render(),
+            text(" "),
         });
 
-        return window(
-            text(" " + title + " "),
-            vbox({
-              top_bar,
-              separatorLight(),
-              log_comp->Render() | flex,
-            }) | flex,
-            t.border_style);
+        return window(text(" " + title + " "),
+                      vbox({
+                          top_bar,
+                          separatorLight(),
+                          log_comp->Render() | flex,
+                      }) | flex,
+                      t.border_style);
       });
 }
 

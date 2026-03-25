@@ -50,8 +50,12 @@ float Bounce(float t) {
 }
 
 float Elastic(float t) {
-  if (t <= 0.0f) return 0.0f;
-  if (t >= 1.0f) return 1.0f;
+  if (t <= 0.0f) {
+    return 0.0f;
+  }
+  if (t >= 1.0f) {
+    return 1.0f;
+  }
   constexpr float kPi = 3.14159265358979323846f;
   constexpr float p = 0.3f;
   return std::pow(2.0f, -10.0f * t) *
@@ -71,7 +75,9 @@ float Spring(float t) {
 // Tween
 // ---------------------------------------------------------------------------
 
-Tween::Tween(float from, float to, float duration_seconds,
+Tween::Tween(float from,
+             float to,
+             float duration_seconds,
              std::function<float(float)> easing)
     : from_(from),
       to_(to),
@@ -96,10 +102,17 @@ bool Tween::Done() const {
 }
 
 float Tween::Progress() const {
-  if (!started_) return 0.0f;
-  if (done_) return 1.0f;
-  if (duration_ <= 0.0f) return 1.0f;
-  auto elapsed = std::chrono::duration<float>(Clock::now() - start_time_).count();
+  if (!started_) {
+    return 0.0f;
+  }
+  if (done_) {
+    return 1.0f;
+  }
+  if (duration_ <= 0.0f) {
+    return 1.0f;
+  }
+  auto elapsed =
+      std::chrono::duration<float>(Clock::now() - start_time_).count();
   float t = elapsed / duration_;
   return std::max(0.0f, std::min(1.0f, t));
 }
@@ -124,7 +137,9 @@ Tween& Tween::OnComplete(std::function<void()> fn) {
 }
 
 void Tween::Tick() {
-  if (!started_ || done_) return;
+  if (!started_ || done_) {
+    return;
+  }
   if (duration_ <= 0.0f) {
     done_ = true;
   } else {
@@ -213,7 +228,9 @@ void AnimationLoop::Run() {
 
     std::this_thread::sleep_until(next_tick);
 
-    if (!running_.load()) break;
+    if (!running_.load()) {
+      break;
+    }
 
     float dt = std::chrono::duration<float>(interval).count();
 
@@ -234,12 +251,11 @@ void AnimationLoop::Run() {
     // Remove finished tweens from the main list.
     {
       std::lock_guard<std::mutex> lock(mutex_);
-      tweens_.erase(
-          std::remove_if(tweens_.begin(), tweens_.end(),
-                         [](const std::shared_ptr<Tween>& t) {
-                           return t->Done();
-                         }),
-          tweens_.end());
+      tweens_.erase(std::remove_if(tweens_.begin(), tweens_.end(),
+                                   [](const std::shared_ptr<Tween>& t) {
+                                     return t->Done();
+                                   }),
+                    tweens_.end());
     }
 
     // Call per-frame callbacks.
@@ -258,8 +274,10 @@ void AnimationLoop::Run() {
 // Free-function helpers
 // ---------------------------------------------------------------------------
 
-std::shared_ptr<Tween> Animate(float from, float to, float duration,
-                                std::function<float(float)> easing) {
+std::shared_ptr<Tween> Animate(float from,
+                               float to,
+                               float duration,
+                               std::function<float(float)> easing) {
   auto tween = std::make_shared<Tween>(from, to, duration, std::move(easing));
   AnimationLoop::Instance().Add(tween);
   tween->Start();

@@ -25,7 +25,8 @@
 using namespace ftxui;
 using namespace ftxui::ui;
 
-// ── Model ─────────────────────────────────────────────────────────────────────
+// ── Model
+// ─────────────────────────────────────────────────────────────────────
 
 struct TodoItem {
   std::string text;
@@ -39,18 +40,28 @@ struct Model {
   Filter filter = Filter::All;
 };
 
-// ── Messages ──────────────────────────────────────────────────────────────────
+// ── Messages
+// ──────────────────────────────────────────────────────────────────
 
-struct MsgAddItem   { std::string text; };
-struct MsgToggle    { size_t index; };
-struct MsgRemove    { size_t index; };
-struct MsgSetFilter { Filter filter; };
-struct MsgQuit      {};
+struct MsgAddItem {
+  std::string text;
+};
+struct MsgToggle {
+  size_t index;
+};
+struct MsgRemove {
+  size_t index;
+};
+struct MsgSetFilter {
+  Filter filter;
+};
+struct MsgQuit {};
 
-using Msg = std::variant<MsgAddItem, MsgToggle, MsgRemove,
-                          MsgSetFilter, MsgQuit>;
+using Msg =
+    std::variant<MsgAddItem, MsgToggle, MsgRemove, MsgSetFilter, MsgQuit>;
 
-// ── Update ────────────────────────────────────────────────────────────────────
+// ── Update
+// ────────────────────────────────────────────────────────────────────
 
 Model Update(Model m, Msg msg) {
   return std::visit(
@@ -66,20 +77,22 @@ Model Update(Model m, Msg msg) {
           }
         } else if constexpr (std::is_same_v<T, MsgRemove>) {
           if (ev.index < m.items.size()) {
-            m.items.erase(m.items.begin() +
-                          static_cast<ptrdiff_t>(ev.index));
+            m.items.erase(m.items.begin() + static_cast<ptrdiff_t>(ev.index));
           }
         } else if constexpr (std::is_same_v<T, MsgSetFilter>) {
           m.filter = ev.filter;
         } else if constexpr (std::is_same_v<T, MsgQuit>) {
-          if (App* a = App::Active()) a->Exit();
+          if (App* a = App::Active()) {
+            a->Exit();
+          }
         }
         return m;
       },
       msg);
 }
 
-// ── View ──────────────────────────────────────────────────────────────────────
+// ── View
+// ──────────────────────────────────────────────────────────────────────
 
 Element View(const Model& m) {
   const Theme& t = GetTheme();
@@ -107,17 +120,20 @@ Element View(const Model& m) {
   size_t visible = 0;
   for (size_t i = 0; i < m.items.size(); ++i) {
     const auto& item = m.items[i];
-    if (m.filter == Filter::Active   && item.done)  continue;
-    if (m.filter == Filter::Completed && !item.done) continue;
+    if (m.filter == Filter::Active && item.done) {
+      continue;
+    }
+    if (m.filter == Filter::Completed && !item.done) {
+      continue;
+    }
     ++visible;
 
     auto chk = item.done ? text("[✔] ") | color(t.accent)
                          : text("[ ] ") | color(t.text_muted);
-    auto lbl = item.done
-                   ? text(item.text) | dim | strikethrough
-                   : text(item.text);
-    auto idx_hint = text(std::to_string(i + 1) + ".") |
-                    color(t.text_muted) | size(WIDTH, EQUAL, 3);
+    auto lbl =
+        item.done ? text(item.text) | dim | strikethrough : text(item.text);
+    auto idx_hint = text(std::to_string(i + 1) + ".") | color(t.text_muted) |
+                    size(WIDTH, EQUAL, 3);
 
     items.push_back(hbox({idx_hint, chk, lbl | xflex}));
   }
@@ -135,7 +151,9 @@ Element View(const Model& m) {
   // Footer stats.
   size_t done_count = 0;
   for (const auto& it : m.items) {
-    if (it.done) ++done_count;
+    if (it.done) {
+      ++done_count;
+    }
   }
   auto footer = hbox({
       text("  " + std::to_string(m.items.size() - done_count) + " remaining"),
@@ -158,24 +176,26 @@ Element View(const Model& m) {
          size(WIDTH, GREATER_THAN, 52) | center;
 }
 
-// ── Entry point ───────────────────────────────────────────────────────────────
+// ── Entry point
+// ───────────────────────────────────────────────────────────────
 
 int main() {
   SetTheme(Theme::Nord());
 
   Model initial;
   initial.items = {
-      {"Learn FTXUI",       true},
+      {"Learn FTXUI", true},
       {"Build something cool", false},
-      {"Profit!",           false},
+      {"Profit!", false},
   };
 
   auto model = std::make_shared<Model>(std::move(initial));
 
   auto dispatch = [model](Msg msg) {
     *model = Update(*model, msg);
-    if (App* app = App::Active())
+    if (App* app = App::Active()) {
       app->PostEvent(Event::Custom);
+    }
   };
 
   // The Input component is stateful (cursor, text buffer) — keep it outside
@@ -187,8 +207,8 @@ int main() {
     dispatch(MsgAddItem{*input_buf});
     input_buf->clear();
   };
-  auto input_comp = Input(input_buf.get(), "Add a task and press Enter…",
-                           input_opt);
+  auto input_comp =
+      Input(input_buf.get(), "Add a task and press Enter…", input_opt);
 
   // Content view: Input + MVU-rendered section stacked.
   auto content = Container::Vertical({input_comp});
@@ -203,17 +223,20 @@ int main() {
   });
 
   // Keymap for shortcuts.
-  root |= Keymap()
-              .Bind("q", [dispatch] { dispatch(MsgQuit{}); }, "Quit")
-              .Bind("1", [dispatch] { dispatch(MsgSetFilter{Filter::All}); },
-                    "Show all")
-              .Bind("2",
-                    [dispatch] { dispatch(MsgSetFilter{Filter::Active}); },
-                    "Show active")
-              .Bind("3",
-                    [dispatch] { dispatch(MsgSetFilter{Filter::Completed}); },
-                    "Show done")
-              .AsDecorator();
+  root |=
+      Keymap()
+          .Bind(
+              "q", [dispatch] { dispatch(MsgQuit{}); }, "Quit")
+          .Bind(
+              "1", [dispatch] { dispatch(MsgSetFilter{Filter::All}); },
+              "Show all")
+          .Bind(
+              "2", [dispatch] { dispatch(MsgSetFilter{Filter::Active}); },
+              "Show active")
+          .Bind(
+              "3", [dispatch] { dispatch(MsgSetFilter{Filter::Completed}); },
+              "Show done")
+          .AsDecorator();
 
   App::FitComponent().Loop(root);
   return 0;

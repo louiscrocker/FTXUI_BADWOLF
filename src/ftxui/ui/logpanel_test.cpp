@@ -12,7 +12,8 @@
 namespace ftxui::ui {
 namespace {
 
-// ── Create ─────────────────────────────────────────────────────────────────────
+// ── Create
+// ─────────────────────────────────────────────────────────────────────
 
 TEST(LogPanelTest, CreateReturnsNonNull) {
   auto log = LogPanel::Create();
@@ -24,14 +25,16 @@ TEST(LogPanelTest, CreateWithMaxLines) {
   ASSERT_NE(log, nullptr);
 }
 
-// ── Log / level helpers ────────────────────────────────────────────────────────
+// ── Log / level helpers
+// ────────────────────────────────────────────────────────
 
 TEST(LogPanelTest, LogAddsEntries) {
   auto log = LogPanel::Create();
   log->Info("hello");
   log->Info("world");
 
-  // Build a component and render — if entries were added the render won't crash.
+  // Build a component and render — if entries were added the render won't
+  // crash.
   auto comp = log->Build("test");
   ASSERT_NE(comp, nullptr);
   auto elem = comp->Render();
@@ -58,7 +61,8 @@ TEST(LogPanelTest, LogWithExplicitLevel) {
   ASSERT_NE(log->Build()->Render(), nullptr);
 }
 
-// ── Clear ──────────────────────────────────────────────────────────────────────
+// ── Clear
+// ──────────────────────────────────────────────────────────────────────
 
 TEST(LogPanelTest, ClearRemovesAllEntries) {
   auto log = LogPanel::Create();
@@ -69,7 +73,8 @@ TEST(LogPanelTest, ClearRemovesAllEntries) {
   ASSERT_NE(log->Build()->Render(), nullptr);
 }
 
-// ── SetMaxLines ────────────────────────────────────────────────────────────────
+// ── SetMaxLines
+// ────────────────────────────────────────────────────────────────
 
 TEST(LogPanelTest, SetMaxLinesTrimsOldEntries) {
   auto log = LogPanel::Create(1000);
@@ -90,7 +95,8 @@ TEST(LogPanelTest, MaxLinesEnforcedDuringLog) {
   ASSERT_NE(log->Build()->Render(), nullptr);
 }
 
-// ── SetMinLevel ────────────────────────────────────────────────────────────────
+// ── SetMinLevel
+// ────────────────────────────────────────────────────────────────
 
 TEST(LogPanelTest, SetMinLevelFiltersEntries) {
   auto log = LogPanel::Create();
@@ -125,7 +131,8 @@ TEST(LogPanelTest, SetMinLevelErrorHidesNonErrors) {
   ASSERT_NE(log->Build()->Render(), nullptr);
 }
 
-// ── Build with title ──────────────────────────────────────────────────────────
+// ── Build with title
+// ──────────────────────────────────────────────────────────
 
 TEST(LogPanelTest, BuildWithTitleDoesNotCrash) {
   auto log = LogPanel::Create();
@@ -143,7 +150,8 @@ TEST(LogPanelTest, BuildWithoutTitleDoesNotCrash) {
   ASSERT_NE(comp->Render(), nullptr);
 }
 
-// ── Thread safety ──────────────────────────────────────────────────────────────
+// ── Thread safety
+// ──────────────────────────────────────────────────────────────
 
 TEST(LogPanelTest, ThreadSafetyNoCrash) {
   constexpr int kThreads = 10;

@@ -20,7 +20,8 @@ namespace fs = std::filesystem;
 
 namespace ftxui::ui {
 
-// ── Internal state ────────────────────────────────────────────────────────────
+// ── Internal state
+// ────────────────────────────────────────────────────────────
 
 struct FilePicker::Impl {
   fs::path current_dir;
@@ -70,7 +71,8 @@ struct FilePicker::Impl {
     std::sort(files.begin(), files.end());
 
     // ".." entry always first (unless we are at root)
-    if (current_dir.has_parent_path() && current_dir != current_dir.root_path()) {
+    if (current_dir.has_parent_path() &&
+        current_dir != current_dir.root_path()) {
       entries.push_back(current_dir / "..");
     }
 
@@ -83,7 +85,8 @@ struct FilePicker::Impl {
   }
 };
 
-// ── Builder ───────────────────────────────────────────────────────────────────
+// ── Builder
+// ───────────────────────────────────────────────────────────────────
 
 FilePicker::FilePicker() : impl_(std::make_shared<Impl>()) {
   impl_->current_dir = fs::current_path();
@@ -103,8 +106,7 @@ FilePicker& FilePicker::StartDir(std::string_view path) {
   return *this;
 }
 
-FilePicker& FilePicker::Filter(
-    std::function<bool(const fs::path&)> fn) {
+FilePicker& FilePicker::Filter(std::function<bool(const fs::path&)> fn) {
   impl_->filter = std::move(fn);
   return *this;
 }
@@ -114,19 +116,18 @@ FilePicker& FilePicker::ShowHidden(bool v) {
   return *this;
 }
 
-FilePicker& FilePicker::OnSelect(
-    std::function<void(const fs::path&)> fn) {
+FilePicker& FilePicker::OnSelect(std::function<void(const fs::path&)> fn) {
   impl_->on_select = std::move(fn);
   return *this;
 }
 
-FilePicker& FilePicker::OnConfirm(
-    std::function<void(const fs::path&)> fn) {
+FilePicker& FilePicker::OnConfirm(std::function<void(const fs::path&)> fn) {
   impl_->on_confirm = std::move(fn);
   return *this;
 }
 
-// ── Build ─────────────────────────────────────────────────────────────────────
+// ── Build
+// ─────────────────────────────────────────────────────────────────────
 
 ftxui::Component FilePicker::Build() {
   auto s = impl_;
@@ -145,17 +146,16 @@ ftxui::Component FilePicker::Build() {
     }
 
     ftxui::Element breadcrumb =
-        ftxui::hbox({ftxui::text(" "),
-                     ftxui::text(crumb) | ftxui::color(theme.primary) |
-                         ftxui::bold,
-                     ftxui::filler()}) |
+        ftxui::hbox(
+            {ftxui::text(" "),
+             ftxui::text(crumb) | ftxui::color(theme.primary) | ftxui::bold,
+             ftxui::filler()}) |
         ftxui::bgcolor(ftxui::Color::Default);
 
     // File list
     ftxui::Elements rows;
     if (s->entries.empty()) {
-      rows.push_back(ftxui::text(" (empty)") |
-                     ftxui::color(theme.text_muted));
+      rows.push_back(ftxui::text(" (empty)") | ftxui::color(theme.text_muted));
     } else {
       for (int i = 0; i < static_cast<int>(s->entries.size()); ++i) {
         const fs::path& p = s->entries[static_cast<size_t>(i)];
@@ -182,8 +182,7 @@ ftxui::Component FilePicker::Build() {
         }
 
         if (sel) {
-          row = row | ftxui::bold |
-                ftxui::bgcolor(ftxui::Color::GrayDark);
+          row = row | ftxui::bold | ftxui::bgcolor(ftxui::Color::GrayDark);
         }
 
         rows.push_back(std::move(row));
@@ -191,16 +190,16 @@ ftxui::Component FilePicker::Build() {
     }
 
     ftxui::Element list_el = ftxui::vbox(std::move(rows)) |
-                              ftxui::vscroll_indicator | ftxui::yframe |
-                              ftxui::flex;
+                             ftxui::vscroll_indicator | ftxui::yframe |
+                             ftxui::flex;
 
     // Selected path bar
     std::string sel_str = s->selected_path.empty()
                               ? " No file selected"
                               : " " + s->selected_path.string();
     ftxui::Element status =
-        ftxui::hbox({ftxui::text(sel_str) |
-                         ftxui::color(theme.text_muted) | ftxui::flex}) |
+        ftxui::hbox({ftxui::text(sel_str) | ftxui::color(theme.text_muted) |
+                     ftxui::flex}) |
         ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, 1);
 
     return ftxui::vbox({

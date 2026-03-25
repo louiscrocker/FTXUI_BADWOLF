@@ -210,23 +210,18 @@ class Computed {
   /// Prefer MakeComputed() for cleaner syntax.
   template <typename Fn, typename... Deps>
   explicit Computed(Fn&& fn, Reactive<Deps>&... deps) {
-    auto inner = std::make_shared<Reactive<T>>(
-        std::invoke(fn, deps.Get()...));
+    auto inner = std::make_shared<Reactive<T>>(std::invoke(fn, deps.Get()...));
     inner_ = inner;
 
     auto weak = std::weak_ptr<Reactive<T>>(inner);
-    auto fn_ptr =
-        std::make_shared<std::decay_t<Fn>>(std::forward<Fn>(fn));
+    auto fn_ptr = std::make_shared<std::decay_t<Fn>>(std::forward<Fn>(fn));
     // Store raw pointers to each dep; deps must outlive this Computed.
-    auto dep_ptrs =
-        std::make_shared<std::tuple<Reactive<Deps>*...>>(&deps...);
+    auto dep_ptrs = std::make_shared<std::tuple<Reactive<Deps>*...>>(&deps...);
 
     auto update = [weak, fn_ptr, dep_ptrs]() {
       if (auto v = weak.lock()) {
         T new_val = std::apply(
-            [&](auto*... dep) {
-              return std::invoke(*fn_ptr, dep->Get()...);
-            },
+            [&](auto*... dep) { return std::invoke(*fn_ptr, dep->Get()...); },
             *dep_ptrs);
         v->Set(std::move(new_val));
       }

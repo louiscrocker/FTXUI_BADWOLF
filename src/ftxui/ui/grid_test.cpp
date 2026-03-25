@@ -23,10 +23,7 @@ TEST(GridTest, SingleColumnEmptyGridRenders) {
 }
 
 TEST(GridTest, TwoCellsTwoColumnRenders) {
-  auto comp = Grid(2)
-                  .Cell(ftxui::text("A"))
-                  .Cell(ftxui::text("B"))
-                  .Build();
+  auto comp = Grid(2).Cell(ftxui::text("A")).Cell(ftxui::text("B")).Build();
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);
 }
@@ -88,20 +85,14 @@ TEST(GridTest, CellComponentMoreThanColumnCount) {
 
 TEST(GridTest, MixedCellAndCellComponentRenders) {
   auto btn = ftxui::Button("Click", [] {});
-  auto comp = Grid(2)
-                  .Cell(ftxui::text("Label"))
-                  .CellComponent(btn)
-                  .Build();
+  auto comp = Grid(2).Cell(ftxui::text("Label")).CellComponent(btn).Build();
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);
 }
 
 TEST(GridTest, GapDoesNotCrash) {
-  auto comp = Grid(2)
-                  .Cell(ftxui::text("A"))
-                  .Cell(ftxui::text("B"))
-                  .Gap(2)
-                  .Build();
+  auto comp =
+      Grid(2).Cell(ftxui::text("A")).Cell(ftxui::text("B")).Gap(2).Build();
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);
 }

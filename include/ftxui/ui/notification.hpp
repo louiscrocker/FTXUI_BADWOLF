@@ -15,10 +15,10 @@ enum class Severity { Info, Success, Warning, Error, Debug };
 
 // Post a notification. Thread-safe. The notification auto-dismisses after
 // `duration`. Pass duration = 0 for a persistent notification.
-void Notify(std::string_view message,
-            Severity severity = Severity::Info,
-            std::chrono::milliseconds duration =
-                std::chrono::milliseconds(3000));
+void Notify(
+    std::string_view message,
+    Severity severity = Severity::Info,
+    std::chrono::milliseconds duration = std::chrono::milliseconds(3000));
 
 // Clear all active notifications.
 void ClearNotifications();

@@ -20,17 +20,17 @@ int main() {
   SetTheme(Theme::Dracula());
 
   // ── Data ───────────────────────────────────────────────────────────────────
-  const std::vector<std::string> headers = {
-      "Package", "Version", "License", "Downloads"};
+  const std::vector<std::string> headers = {"Package", "Version", "License",
+                                            "Downloads"};
   const std::vector<std::vector<std::string>> rows = {
-      {"ftxui",     "6.1.9", "MIT",     "1.2M"},
-      {"bubbletea", "0.27",  "MIT",     "890K"},
-      {"tview",     "0.38",  "MIT",     "420K"},
-      {"termbox",   "1.1.1", "MIT",     "310K"},
-      {"gocui",     "1.0.0", "Apache",  "180K"},
-      {"tcell",     "2.7.1", "Apache",  "560K"},
-      {"ncurses",   "6.4",   "MIT",     "42M"},
-      {"blessed",   "0.1.8", "MIT",     "220K"},
+      {"ftxui", "6.1.9", "MIT", "1.2M"},
+      {"bubbletea", "0.27", "MIT", "890K"},
+      {"tview", "0.38", "MIT", "420K"},
+      {"termbox", "1.1.1", "MIT", "310K"},
+      {"gocui", "1.0.0", "Apache", "180K"},
+      {"tcell", "2.7.1", "Apache", "560K"},
+      {"ncurses", "6.4", "MIT", "42M"},
+      {"blessed", "0.1.8", "MIT", "220K"},
   };
 
   // ── Widgets demo ───────────────────────────────────────────────────────────
@@ -76,7 +76,8 @@ int main() {
             text(" to quit"),
         }) | hcenter,
         separatorEmpty(),
-        ui::EmptyState("📦", "No packages selected", "Use arrow keys to select"),
+        ui::EmptyState("📦", "No packages selected",
+                       "Use arrow keys to select"),
     });
 
     return vbox({
@@ -84,10 +85,12 @@ int main() {
                    color(t.primary),
                separatorLight(),
                separatorEmpty(),
-               text("With alternate rows + separators:") | bold | color(t.secondary),
+               text("With alternate rows + separators:") | bold |
+                   color(t.secondary),
                table1,
                separatorEmpty(),
-               text("Plain (no alt rows, no separators):") | bold | color(t.secondary),
+               text("Plain (no alt rows, no separators):") | bold |
+                   color(t.secondary),
                table2,
                separatorEmpty(),
                widgets_section,
@@ -98,7 +101,14 @@ int main() {
   });
 
   comp |= Keymap()
-              .Bind("q", [] { if (App* a = App::Active()) a->Exit(); }, "Quit")
+              .Bind(
+                  "q",
+                  [] {
+                    if (App* a = App::Active()) {
+                      a->Exit();
+                    }
+                  },
+                  "Quit")
               .AsDecorator();
 
   App::TerminalOutput().Loop(comp);

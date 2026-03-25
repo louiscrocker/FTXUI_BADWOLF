@@ -138,8 +138,8 @@ TEST(DialogTest, WithAlertWithOnCloseCallback) {
   bool show = true;
   bool closed = false;
   auto parent = MakeParent();
-  auto comp = WithAlert(parent, "Warning", "Disk full.",
-                        &show, [&] { closed = true; });
+  auto comp =
+      WithAlert(parent, "Warning", "Disk full.", &show, [&] { closed = true; });
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);
 }
@@ -183,10 +183,7 @@ TEST(DialogTest, WithConfirmDecoratorShowTrue) {
   bool yes_called = false;
   bool no_called = false;
   auto decorator = WithConfirm(
-      "Proceed?",
-      [&] { yes_called = true; },
-      [&] { no_called = true; },
-      &show);
+      "Proceed?", [&] { yes_called = true; }, [&] { no_called = true; }, &show);
   auto comp = decorator(MakeParent());
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);
@@ -197,8 +194,8 @@ TEST(DialogTest, WithConfirmDecoratorShowTrue) {
 TEST(DialogTest, WithHelpShowFalseRendersParent) {
   bool show = false;
   auto parent = MakeParent();
-  std::vector<std::pair<std::string, std::string>> bindings = {
-      {"q", "Quit"}, {"?", "Help"}};
+  std::vector<std::pair<std::string, std::string>> bindings = {{"q", "Quit"},
+                                                               {"?", "Help"}};
   auto comp = WithHelp(parent, "Shortcuts", bindings, &show);
   ASSERT_NE(comp, nullptr);
   ASSERT_NE(comp->Render(), nullptr);

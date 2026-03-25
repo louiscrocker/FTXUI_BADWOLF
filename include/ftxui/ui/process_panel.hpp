@@ -14,7 +14,8 @@
 
 namespace ftxui::ui {
 
-/// @brief Runs a subprocess and streams its stdout/stderr into a scrollable panel.
+/// @brief Runs a subprocess and streams its stdout/stderr into a scrollable
+/// panel.
 ///
 /// @code
 /// auto proc = ProcessPanel::Create();

@@ -46,8 +46,8 @@ int main() {
 
   // Rebuild the galaxy map component
   auto build_map = [&]() -> Component {
-    auto field = use_starwars.load() ? StarFields::StarWars()
-                                     : StarFields::StarTrek();
+    auto field =
+        use_starwars.load() ? StarFields::StarWars() : StarFields::StarTrek();
     // Add background stars
     auto bg = StarFields::Procedural(300, 99);
     field.insert(field.end(), bg.begin(), bg.end());
@@ -57,7 +57,8 @@ int main() {
         .AddFleet({"Rebel Fleet", 185.f, -15.f, Color::GreenLight, "rebel"})
         .AddFleet({"Imperial Fleet", 75.f, 15.f, Color::RedLight, "imperial"})
         .AddFleet({"Neutral", 0.f, 0.f, Color::GrayLight, "neutral"})
-        .AddRoute({75.f, 15.f, 185.f, -15.f, Color::BlueLight, "Coruscant-Endor"})
+        .AddRoute(
+            {75.f, 15.f, 185.f, -15.f, Color::BlueLight, "Coruscant-Endor"})
         .AddRoute({220.f, -25.f, 185.f, -15.f, Color::Yellow, "Tatooine-Endor"})
         .AddRoute({0.f, 0.f, 55.f, 40.f, Color::Cyan, "Sol-Vulcan"})
         .Grid(show_grid.load())
@@ -77,7 +78,9 @@ int main() {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
       }
       ra += 5.f;
-      if (ra >= 360.f) ra -= 360.f;
+      if (ra >= 360.f) {
+        ra -= 360.f;
+      }
       stardate.fetch_add(1);
       if (App* a = App::Active()) {
         a->Post([] {});
@@ -87,13 +90,12 @@ int main() {
 
   // Build status bar text
   auto status_text = [&]() -> std::string {
-    std::string field_name =
-        use_starwars.load() ? "Star Wars" : "Star Trek";
-    return " Fleets: 3 | Contacts: " + std::to_string(
-        use_starwars.load() ? 10 : 10) +
-        " | Stardate: " + std::to_string(stardate.load()) + " BBY" +
-        "  [" + field_name + "]" +
-        "   q=quit  f=toggle  g=grid  +/-=zoom  arrows=pan";
+    std::string field_name = use_starwars.load() ? "Star Wars" : "Star Trek";
+    return " Fleets: 3 | Contacts: " +
+           std::to_string(use_starwars.load() ? 10 : 10) +
+           " | Stardate: " + std::to_string(stardate.load()) + " BBY" + "  [" +
+           field_name + "]" +
+           "   q=quit  f=toggle  g=grid  +/-=zoom  arrows=pan";
   };
 
   // Map component (rebuilds when f/g pressed)
@@ -119,21 +121,27 @@ int main() {
   auto app_comp = CatchEvent(root, [&](Event e) -> bool {
     if (e == Event::Character('q') || e == Event::Character('Q')) {
       bg_running.store(false);
-      if (App* a = App::Active()) a->Exit();
+      if (App* a = App::Active()) {
+        a->Exit();
+      }
       return true;
     }
     if (e == Event::Character('f') || e == Event::Character('F')) {
       use_starwars.store(!use_starwars.load());
       galaxy_comp = build_map();
       // Trigger re-render
-      if (App* a = App::Active()) a->Post([] {});
+      if (App* a = App::Active()) {
+        a->Post([] {});
+      }
       return true;
     }
     if (e == Event::Character('g') || e == Event::Character('G')) {
       grid_on = !grid_on;
       show_grid.store(grid_on);
       galaxy_comp = build_map();
-      if (App* a = App::Active()) a->Post([] {});
+      if (App* a = App::Active()) {
+        a->Post([] {});
+      }
       return true;
     }
     return false;
@@ -142,6 +150,8 @@ int main() {
   RunFullscreen(app_comp);
 
   bg_running.store(false);
-  if (bg_thread.joinable()) bg_thread.join();
+  if (bg_thread.joinable()) {
+    bg_thread.join();
+  }
   return 0;
 }

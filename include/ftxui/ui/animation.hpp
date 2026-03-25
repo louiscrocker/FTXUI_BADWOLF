@@ -21,12 +21,12 @@ namespace ftxui::ui {
 namespace Easing {
 
 float Linear(float t);
-float EaseIn(float t);    ///< Quadratic ease in
-float EaseOut(float t);   ///< Quadratic ease out
-float EaseInOut(float t); ///< Smooth step (cubic Hermite)
-float Bounce(float t);    ///< Bouncy overshoot
-float Elastic(float t);   ///< Elastic snap
-float Spring(float t);    ///< Spring physics approximation
+float EaseIn(float t);     ///< Quadratic ease in
+float EaseOut(float t);    ///< Quadratic ease out
+float EaseInOut(float t);  ///< Smooth step (cubic Hermite)
+float Bounce(float t);     ///< Bouncy overshoot
+float Elastic(float t);    ///< Elastic snap
+float Spring(float t);     ///< Spring physics approximation
 
 }  // namespace Easing
 
@@ -49,7 +49,9 @@ class Tween {
   using Clock = std::chrono::steady_clock;
   using TimePoint = std::chrono::time_point<Clock>;
 
-  Tween(float from, float to, float duration_seconds,
+  Tween(float from,
+        float to,
+        float duration_seconds,
         std::function<float(float)> easing = Easing::EaseInOut);
 
   /// @brief Begin interpolation from the current time.

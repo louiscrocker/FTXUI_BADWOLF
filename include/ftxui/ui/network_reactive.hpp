@@ -29,7 +29,8 @@ class NetworkReactiveServer {
  public:
   /// @brief Create a server bound to the given state and port.
   static std::shared_ptr<NetworkReactiveServer> Create(
-      std::shared_ptr<Reactive<std::string>> state, uint16_t port);
+      std::shared_ptr<Reactive<std::string>> state,
+      uint16_t port);
 
   /// @brief Start accepting connections and broadcasting state.
   void Start();
@@ -66,7 +67,7 @@ class NetworkReactiveClient {
  public:
   /// @brief Connect to a server at host:port.
   static std::shared_ptr<NetworkReactiveClient> Connect(std::string host,
-                                                         uint16_t port);
+                                                        uint16_t port);
 
   /// @brief The mirrored reactive state (read-only from client side).
   std::shared_ptr<Reactive<std::string>> State() const;

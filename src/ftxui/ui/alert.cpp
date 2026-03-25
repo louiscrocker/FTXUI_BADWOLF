@@ -15,7 +15,8 @@ using namespace ftxui;
 
 namespace ftxui::ui {
 
-// ── AlertSystem singleton ─────────────────────────────────────────────────────
+// ── AlertSystem singleton
+// ─────────────────────────────────────────────────────
 
 AlertSystem::AlertSystem() = default;
 
@@ -103,13 +104,14 @@ void AlertSystem::OnChange(std::function<void(AlertLevel, std::string)> fn) {
   listeners_.push_back(std::move(fn));
 }
 
-// ── WithAlertOverlay ──────────────────────────────────────────────────────────
+// ── WithAlertOverlay
+// ──────────────────────────────────────────────────────────
 
 Component AlertSystem::WithAlertOverlay(Component inner) {
   return Renderer(inner, [inner]() -> Element {
     const Theme& t = GetTheme();
     AlertLevel level = AlertSystem::Instance().Level();
-    std::string msg  = AlertSystem::Instance().Message();
+    std::string msg = AlertSystem::Instance().Message();
 
     Element rendered = inner->Render();
 
@@ -137,7 +139,8 @@ Component AlertSystem::WithAlertOverlay(Component inner) {
   });
 }
 
-// ── Free function ─────────────────────────────────────────────────────────────
+// ── Free function
+// ─────────────────────────────────────────────────────────────
 
 Component WithAlertOverlay(Component inner) {
   return AlertSystem::Instance().WithAlertOverlay(std::move(inner));

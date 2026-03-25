@@ -31,7 +31,8 @@ ScopedTheme::~ScopedTheme() {
   SetTheme(previous_);
 }
 
-// ── Preset factories ──────────────────────────────────────────────────────────
+// ── Preset factories
+// ──────────────────────────────────────────────────────────
 
 Theme Theme::Default() {
   return {};
@@ -79,19 +80,19 @@ Theme Theme::Light() {
 
 Theme Theme::Nord() {
   Theme t;
-  t.primary = Color::RGB(136, 192, 208);       // Nord8  – frost blue
-  t.secondary = Color::RGB(129, 161, 193);     // Nord9
-  t.accent = Color::RGB(163, 190, 140);        // Nord14 – aurora green
-  t.error_color = Color::RGB(191, 97, 106);    // Nord11 – red
-  t.warning_color = Color::RGB(235, 203, 139); // Nord13 – yellow
-  t.success_color = Color::RGB(163, 190, 140); // Nord14
-  t.text = Color::RGB(216, 222, 233);          // Nord4
-  t.text_muted = Color::RGB(76, 86, 106);      // Nord2
-  t.border_color = Color::RGB(59, 66, 82);     // Nord1
+  t.primary = Color::RGB(136, 192, 208);        // Nord8  – frost blue
+  t.secondary = Color::RGB(129, 161, 193);      // Nord9
+  t.accent = Color::RGB(163, 190, 140);         // Nord14 – aurora green
+  t.error_color = Color::RGB(191, 97, 106);     // Nord11 – red
+  t.warning_color = Color::RGB(235, 203, 139);  // Nord13 – yellow
+  t.success_color = Color::RGB(163, 190, 140);  // Nord14
+  t.text = Color::RGB(216, 222, 233);           // Nord4
+  t.text_muted = Color::RGB(76, 86, 106);       // Nord2
+  t.border_color = Color::RGB(59, 66, 82);      // Nord1
   t.button_bg_normal = Color::Default;
   t.button_fg_normal = Color::RGB(216, 222, 233);
   t.button_bg_active = Color::RGB(136, 192, 208);
-  t.button_fg_active = Color::RGB(46, 52, 64); // Nord0
+  t.button_fg_active = Color::RGB(46, 52, 64);  // Nord0
   t.border_style = ROUNDED;
   t.animations_enabled = true;
   return t;
@@ -99,19 +100,19 @@ Theme Theme::Nord() {
 
 Theme Theme::Dracula() {
   Theme t;
-  t.primary = Color::RGB(189, 147, 249);       // purple
-  t.secondary = Color::RGB(139, 233, 253);     // cyan
-  t.accent = Color::RGB(80, 250, 123);         // green
-  t.error_color = Color::RGB(255, 85, 85);     // red
-  t.warning_color = Color::RGB(241, 250, 140); // yellow
-  t.success_color = Color::RGB(80, 250, 123);  // green
-  t.text = Color::RGB(248, 248, 242);          // foreground
-  t.text_muted = Color::RGB(98, 114, 164);     // comment
-  t.border_color = Color::RGB(68, 71, 90);     // current-line
+  t.primary = Color::RGB(189, 147, 249);        // purple
+  t.secondary = Color::RGB(139, 233, 253);      // cyan
+  t.accent = Color::RGB(80, 250, 123);          // green
+  t.error_color = Color::RGB(255, 85, 85);      // red
+  t.warning_color = Color::RGB(241, 250, 140);  // yellow
+  t.success_color = Color::RGB(80, 250, 123);   // green
+  t.text = Color::RGB(248, 248, 242);           // foreground
+  t.text_muted = Color::RGB(98, 114, 164);      // comment
+  t.border_color = Color::RGB(68, 71, 90);      // current-line
   t.button_bg_normal = Color::Default;
   t.button_fg_normal = Color::RGB(248, 248, 242);
   t.button_bg_active = Color::RGB(189, 147, 249);
-  t.button_fg_active = Color::RGB(40, 42, 54); // background
+  t.button_fg_active = Color::RGB(40, 42, 54);  // background
   t.border_style = ROUNDED;
   t.animations_enabled = true;
   return t;
@@ -119,14 +120,14 @@ Theme Theme::Dracula() {
 
 Theme Theme::Monokai() {
   Theme t;
-  t.primary = Color::RGB(102, 217, 239);       // cyan
-  t.secondary = Color::RGB(166, 226, 46);      // green
-  t.accent = Color::RGB(249, 38, 114);         // pink
-  t.error_color = Color::RGB(249, 38, 114);    // pink
-  t.warning_color = Color::RGB(230, 219, 116); // yellow
-  t.success_color = Color::RGB(166, 226, 46);  // green
-  t.text = Color::RGB(248, 248, 242);          // foreground
-  t.text_muted = Color::RGB(117, 113, 94);     // comment
+  t.primary = Color::RGB(102, 217, 239);        // cyan
+  t.secondary = Color::RGB(166, 226, 46);       // green
+  t.accent = Color::RGB(249, 38, 114);          // pink
+  t.error_color = Color::RGB(249, 38, 114);     // pink
+  t.warning_color = Color::RGB(230, 219, 116);  // yellow
+  t.success_color = Color::RGB(166, 226, 46);   // green
+  t.text = Color::RGB(248, 248, 242);           // foreground
+  t.text_muted = Color::RGB(117, 113, 94);      // comment
   t.border_color = Color::RGB(117, 113, 94);
   t.button_bg_normal = Color::Default;
   t.button_fg_normal = Color::RGB(248, 248, 242);
@@ -237,7 +238,8 @@ Theme Theme::Matrix() {
   return t;
 }
 
-// ── Style factories ───────────────────────────────────────────────────────────
+// ── Style factories
+// ───────────────────────────────────────────────────────────
 
 ButtonOption Theme::MakeButtonStyle() const {
   if (animations_enabled) {
@@ -275,7 +277,8 @@ Decorator Theme::MutedTextDecorator() const {
   return color(text_muted);
 }
 
-// ── Theme persistence ─────────────────────────────────────────────────────────
+// ── Theme persistence
+// ─────────────────────────────────────────────────────────
 
 namespace {
 
@@ -288,7 +291,9 @@ std::string ColorToString(Color c) {
 }
 
 Color ColorFromString(const std::string& s) {
-  if (s.empty()) return Color::Default;
+  if (s.empty()) {
+    return Color::Default;
+  }
   try {
     uint32_t raw = static_cast<uint32_t>(std::stoul(s));
     Color c;
@@ -304,18 +309,20 @@ Color ColorFromString(const std::string& s) {
 bool SaveTheme(std::string_view path) {
   std::string path_str{path};
   std::ofstream f{path_str};
-  if (!f) return false;
+  if (!f) {
+    return false;
+  }
   const Theme& t = GetTheme();
 #define W(key, val) f << (key) << "=" << ColorToString(val) << "\n"
-  W("primary",          t.primary);
-  W("secondary",        t.secondary);
-  W("accent",           t.accent);
-  W("error_color",      t.error_color);
-  W("warning_color",    t.warning_color);
-  W("success_color",    t.success_color);
-  W("text",             t.text);
-  W("text_muted",       t.text_muted);
-  W("border_color",     t.border_color);
+  W("primary", t.primary);
+  W("secondary", t.secondary);
+  W("accent", t.accent);
+  W("error_color", t.error_color);
+  W("warning_color", t.warning_color);
+  W("success_color", t.success_color);
+  W("text", t.text);
+  W("text_muted", t.text_muted);
+  W("border_color", t.border_color);
   W("button_bg_normal", t.button_bg_normal);
   W("button_fg_normal", t.button_fg_normal);
   W("button_bg_active", t.button_bg_active);
@@ -329,40 +336,47 @@ bool SaveTheme(std::string_view path) {
 bool LoadTheme(std::string_view path) {
   std::string path_str{path};
   std::ifstream f{path_str};
-  if (!f) return false;
+  if (!f) {
+    return false;
+  }
 
   std::unordered_map<std::string, std::string> kv;
   std::string line;
   while (std::getline(f, line)) {
     auto eq = line.find('=');
-    if (eq == std::string::npos) continue;
+    if (eq == std::string::npos) {
+      continue;
+    }
     kv[line.substr(0, eq)] = line.substr(eq + 1);
   }
 
   Theme t = GetTheme();
-#define R(key, field) if (kv.count(key)) t.field = ColorFromString(kv.at(key))
-  R("primary",          primary);
-  R("secondary",        secondary);
-  R("accent",           accent);
-  R("error_color",      error_color);
-  R("warning_color",    warning_color);
-  R("success_color",    success_color);
-  R("text",             text);
-  R("text_muted",       text_muted);
-  R("border_color",     border_color);
+#define R(key, field) \
+  if (kv.count(key))  \
+  t.field = ColorFromString(kv.at(key))
+  R("primary", primary);
+  R("secondary", secondary);
+  R("accent", accent);
+  R("error_color", error_color);
+  R("warning_color", warning_color);
+  R("success_color", success_color);
+  R("text", text);
+  R("text_muted", text_muted);
+  R("border_color", border_color);
   R("button_bg_normal", button_bg_normal);
   R("button_fg_normal", button_fg_normal);
   R("button_bg_active", button_bg_active);
   R("button_fg_active", button_fg_active);
 #undef R
-  if (kv.count("border_style"))
+  if (kv.count("border_style")) {
     t.border_style = static_cast<BorderStyle>(std::stoi(kv.at("border_style")));
-  if (kv.count("animations"))
+  }
+  if (kv.count("animations")) {
     t.animations_enabled = (kv.at("animations") == "1");
+  }
 
   SetTheme(t);
   return true;
 }
 
 }  // namespace ftxui::ui
-

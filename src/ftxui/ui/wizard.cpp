@@ -17,7 +17,8 @@ using namespace ftxui;
 
 namespace ftxui::ui {
 
-// ── Impl ──────────────────────────────────────────────────────────────────────
+// ── Impl
+// ──────────────────────────────────────────────────────────────────────
 
 struct Wizard::Impl {
   struct Step {
@@ -30,10 +31,10 @@ struct Wizard::Impl {
   std::function<void()> on_cancel;
 };
 
-// ── Constructor / fluent setters ──────────────────────────────────────────────
+// ── Constructor / fluent setters
+// ──────────────────────────────────────────────
 
-Wizard::Wizard(std::string_view title)
-    : impl_(std::make_shared<Impl>()) {
+Wizard::Wizard(std::string_view title) : impl_(std::make_shared<Impl>()) {
   impl_->title = std::string(title);
 }
 
@@ -57,7 +58,8 @@ Wizard& Wizard::Title(std::string_view title) {
   return *this;
 }
 
-// ── Build ─────────────────────────────────────────────────────────────────────
+// ── Build
+// ─────────────────────────────────────────────────────────────────────
 
 Component Wizard::Build() const {
   if (impl_->steps.empty()) {
@@ -79,28 +81,37 @@ Component Wizard::Build() const {
   auto btn_style = GetTheme().MakeButtonStyle();
 
   // Cancel button
-  auto btn_cancel = Button(" Cancel ", [impl]() {
-    if (impl->on_cancel) {
-      impl->on_cancel();
-    }
-  }, btn_style);
+  auto btn_cancel = Button(
+      " Cancel ",
+      [impl]() {
+        if (impl->on_cancel) {
+          impl->on_cancel();
+        }
+      },
+      btn_style);
 
   // Back button — silently no-ops on step 0
-  auto btn_back = Button("  Back  ", [current_step]() {
-    if (*current_step > 0) {
-      --(*current_step);
-    }
-  }, btn_style);
+  auto btn_back = Button(
+      "  Back  ",
+      [current_step]() {
+        if (*current_step > 0) {
+          --(*current_step);
+        }
+      },
+      btn_style);
 
   // Next/Finish button — dynamic label via pointer
   auto action_label = std::make_shared<std::string>("  Next  ");
-  auto btn_action = Button(action_label.get(), [current_step, n, impl]() {
-    if (*current_step < n - 1) {
-      ++(*current_step);
-    } else if (impl->on_complete) {
-      impl->on_complete();
-    }
-  }, btn_style);
+  auto btn_action = Button(
+      action_label.get(),
+      [current_step, n, impl]() {
+        if (*current_step < n - 1) {
+          ++(*current_step);
+        } else if (impl->on_complete) {
+          impl->on_complete();
+        }
+      },
+      btn_style);
 
   auto buttons = Container::Horizontal({btn_cancel, btn_back, btn_action});
   auto all = Container::Vertical({tab, buttons});
@@ -142,7 +153,8 @@ Component Wizard::Build() const {
         if (step > 0) {
           nav.push_back(btn_back->Render());
         } else {
-          // Placeholder with the same width as Back button to avoid layout jump.
+          // Placeholder with the same width as Back button to avoid layout
+          // jump.
           nav.push_back(text("        ") | dim);
         }
         nav.push_back(btn_action->Render());
@@ -161,9 +173,10 @@ Component Wizard::Build() const {
             hbox(std::move(nav)),
         });
 
-        std::string header = impl->title.empty()
-                                 ? (" " + step_title + " ")
-                                 : (" " + impl->title + " – " + step_title + " ");
+        std::string header =
+            impl->title.empty()
+                ? (" " + step_title + " ")
+                : (" " + impl->title + " – " + step_title + " ");
 
         return window(text(header), std::move(content), t.border_style);
       });

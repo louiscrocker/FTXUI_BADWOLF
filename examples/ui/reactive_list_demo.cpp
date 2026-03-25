@@ -48,18 +48,15 @@ int main() {
 
   // Buttons – created OUTSIDE render lambda.
   static int counter = 6;
-  auto btn_add = Button("[ + Add ]", [&] {
-    items->Push("Item " + std::to_string(counter++));
-  });
+  auto btn_add = Button(
+      "[ + Add ]", [&] { items->Push("Item " + std::to_string(counter++)); });
 
   auto btn_remove = Button("[ - Remove ]", [&] {
     if (!items->Empty()) {
-      size_t idx = static_cast<size_t>(
-          std::max(0, std::min(selected_idx,
-                               static_cast<int>(items->Size()) - 1)));
+      size_t idx = static_cast<size_t>(std::max(
+          0, std::min(selected_idx, static_cast<int>(items->Size()) - 1)));
       items->Remove(idx);
-      if (selected_idx >= static_cast<int>(items->Size()) &&
-          selected_idx > 0) {
+      if (selected_idx >= static_cast<int>(items->Size()) && selected_idx > 0) {
         selected_idx--;
       }
     }
@@ -76,11 +73,13 @@ int main() {
   });
 
   auto buttons = Container::Horizontal({btn_add, btn_remove, btn_clear});
-  auto root    = Container::Vertical({list_comp, buttons});
+  auto root = Container::Vertical({list_comp, buttons});
 
   root |= CatchEvent([&](Event event) -> bool {
     if (event == Event::Character('q') || event == Event::Escape) {
-      if (App* app = App::Active()) app->Exit();
+      if (App* app = App::Active()) {
+        app->Exit();
+      }
       return true;
     }
     return false;
@@ -98,9 +97,11 @@ int main() {
                list_comp->Render() | flex,
                separatorLight(),
                hbox({btn_add->Render(), text(" "), btn_remove->Render(),
-                     text(" "), btn_clear->Render()}) | hcenter,
+                     text(" "), btn_clear->Render()}) |
+                   hcenter,
                separatorLight(),
-               text(" q/Esc quit | ↑↓ navigate ") | color(t.text_muted) | hcenter,
+               text(" q/Esc quit | ↑↓ navigate ") | color(t.text_muted) |
+                   hcenter,
            }) |
            border | size(WIDTH, EQUAL, 50);
   });

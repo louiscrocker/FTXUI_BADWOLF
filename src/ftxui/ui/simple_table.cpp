@@ -14,7 +14,7 @@ using namespace ftxui;
 namespace ftxui::ui {
 
 SimpleTable::SimpleTable(std::vector<std::string> headers,
-                          std::vector<std::vector<std::string>> rows)
+                         std::vector<std::vector<std::string>> rows)
     : headers_(std::move(headers)), rows_(std::move(rows)) {}
 
 SimpleTable& SimpleTable::AlternateRows(bool enable) {
@@ -83,8 +83,8 @@ Element SimpleTable::Build() const {
 
   // Alternate row shading.
   if (alternate_rows_ && num_rows > 1) {
-    table.SelectRows(1, num_rows).DecorateAlternateRow(
-        bgcolor(Color::RGB(30, 30, 30)), 2, 1);
+    table.SelectRows(1, num_rows)
+        .DecorateAlternateRow(bgcolor(Color::RGB(30, 30, 30)), 2, 1);
   }
 
   // Vertical column separators.

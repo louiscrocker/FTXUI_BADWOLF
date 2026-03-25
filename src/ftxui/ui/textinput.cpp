@@ -17,27 +17,26 @@
 namespace ftxui::ui {
 
 struct TextInput::Impl {
-  std::string  label;
-  std::string  placeholder;
-  std::string* bound       = nullptr;
-  std::string  owned_value;          // used when no external binding
-  size_t       max_length  = 0;      // 0 = unlimited
-  int          label_width = 14;
-  bool         password    = false;
-  bool         touched     = false;  // user has blurred after typing
+  std::string label;
+  std::string placeholder;
+  std::string* bound = nullptr;
+  std::string owned_value;  // used when no external binding
+  size_t max_length = 0;    // 0 = unlimited
+  int label_width = 14;
+  bool password = false;
+  bool touched = false;  // user has blurred after typing
 
   // Reactive two-way binding (optional).
   std::shared_ptr<ftxui::ui::Reactive<std::string>> reactive_binding;
   bool suppress_reactive_update = false;
 
   std::function<bool(std::string_view)> validator;
-  std::string  error_msg   = "Invalid input";
-  std::function<void()>     on_change;
-  std::function<void()>     on_submit;
+  std::string error_msg = "Invalid input";
+  std::function<void()> on_change;
+  std::function<void()> on_submit;
 };
 
-TextInput::TextInput(std::string_view label)
-    : impl_(std::make_shared<Impl>()) {
+TextInput::TextInput(std::string_view label) : impl_(std::make_shared<Impl>()) {
   impl_->label = std::string(label);
 }
 
@@ -48,8 +47,8 @@ TextInput& TextInput::Bind(std::string* value) {
 
 TextInput& TextInput::Bind(ftxui::ui::Bind<std::string>& binding) {
   impl_->reactive_binding = binding.AsReactive();
-  impl_->owned_value      = impl_->reactive_binding->Get();
-  impl_->bound            = &impl_->owned_value;
+  impl_->owned_value = impl_->reactive_binding->Get();
+  impl_->bound = &impl_->owned_value;
   return *this;
 }
 TextInput& TextInput::Placeholder(std::string_view text) {
@@ -62,8 +61,8 @@ TextInput& TextInput::MaxLength(size_t n) {
 }
 TextInput& TextInput::Validate(std::function<bool(std::string_view)> fn,
                                std::string_view error_msg) {
-  impl_->validator  = std::move(fn);
-  impl_->error_msg  = std::string(error_msg);
+  impl_->validator = std::move(fn);
+  impl_->error_msg = std::string(error_msg);
   return *this;
 }
 TextInput& TextInput::OnChange(std::function<void()> fn) {
@@ -91,7 +90,7 @@ ftxui::Component TextInput::Build() {
 
   InputOption opt;
   opt.placeholder = s->placeholder;
-  opt.password    = s->password;
+  opt.password = s->password;
 
   // Intercept on_change for MaxLength and user callback.
   opt.on_change = [s, target] {
@@ -106,12 +105,16 @@ ftxui::Component TextInput::Build() {
       s->reactive_binding->Set(*target);
       s->suppress_reactive_update = false;
     }
-    if (s->on_change) s->on_change();
+    if (s->on_change) {
+      s->on_change();
+    }
   };
 
   opt.on_enter = [s] {
     s->touched = true;
-    if (s->on_submit) s->on_submit();
+    if (s->on_submit) {
+      s->on_submit();
+    }
   };
 
   auto input = Input(target, opt);
@@ -129,14 +132,16 @@ ftxui::Component TextInput::Build() {
   }
 
   return Renderer(input, [s, input, target]() -> Element {
-    const Theme& t  = GetTheme();
-    bool   focused  = input->Focused();
-    bool   valid    = !s->validator || s->validator(*target);
-    bool   show_err = s->touched && !valid && !target->empty();
+    const Theme& t = GetTheme();
+    bool focused = input->Focused();
+    bool valid = !s->validator || s->validator(*target);
+    bool show_err = s->touched && !valid && !target->empty();
 
     // Label
     std::string padded = s->label;
-    while ((int)padded.size() < s->label_width) padded += ' ';
+    while ((int)padded.size() < s->label_width) {
+      padded += ' ';
+    }
 
     Element lbl = text(padded + ": ") | dim;
 

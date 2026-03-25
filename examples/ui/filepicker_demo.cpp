@@ -26,22 +26,24 @@ int main() {
   std::string info_text = "No file selected";
 
   auto picker = FilePicker()
-      .StartDir(".")
-      .ShowHidden(false)
-      .OnSelect([&](const fs::path& p) {
-          selected_path = p;
-          std::error_code ec;
-          if (fs::is_directory(p, ec)) {
-            info_text = "Directory: " + p.string();
-          } else {
-            auto size = fs::file_size(p, ec);
-            info_text = "File:      " + p.filename().string() + "\n"
-                      + "Path:      " + p.string() + "\n"
-                      + "Extension: " + p.extension().string() + "\n"
-                      + "Size:      " + (ec ? "?" : std::to_string(size)) + " bytes";
-          }
-      })
-      .Build();
+                    .StartDir(".")
+                    .ShowHidden(false)
+                    .OnSelect([&](const fs::path& p) {
+                      selected_path = p;
+                      std::error_code ec;
+                      if (fs::is_directory(p, ec)) {
+                        info_text = "Directory: " + p.string();
+                      } else {
+                        auto size = fs::file_size(p, ec);
+                        info_text =
+                            "File:      " + p.filename().string() + "\n" +
+                            "Path:      " + p.string() + "\n" +
+                            "Extension: " + p.extension().string() + "\n" +
+                            "Size:      " + (ec ? "?" : std::to_string(size)) +
+                            " bytes";
+                      }
+                    })
+                    .Build();
 
   auto info_panel = Renderer([&]() -> Element {
     const Theme& t = GetTheme();

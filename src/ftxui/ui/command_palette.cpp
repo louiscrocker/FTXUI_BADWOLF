@@ -21,7 +21,8 @@ using namespace ftxui;
 
 namespace ftxui::ui {
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// ── Helpers
+// ───────────────────────────────────────────────────────────────────
 
 namespace {
 
@@ -41,33 +42,60 @@ Event ParseBindKey(std::string_view key) {
 
   if (lower.size() == 6 && lower.substr(0, 5) == "ctrl+") {
     switch (lower[5]) {
-      case 'a': return Event::CtrlA;
-      case 'b': return Event::CtrlB;
-      case 'c': return Event::CtrlC;
-      case 'd': return Event::CtrlD;
-      case 'e': return Event::CtrlE;
-      case 'f': return Event::CtrlF;
-      case 'g': return Event::CtrlG;
-      case 'h': return Event::CtrlH;
-      case 'i': return Event::CtrlI;
-      case 'j': return Event::CtrlJ;
-      case 'k': return Event::CtrlK;
-      case 'l': return Event::CtrlL;
-      case 'm': return Event::CtrlM;
-      case 'n': return Event::CtrlN;
-      case 'o': return Event::CtrlO;
-      case 'p': return Event::CtrlP;
-      case 'q': return Event::CtrlQ;
-      case 'r': return Event::CtrlR;
-      case 's': return Event::CtrlS;
-      case 't': return Event::CtrlT;
-      case 'u': return Event::CtrlU;
-      case 'v': return Event::CtrlV;
-      case 'w': return Event::CtrlW;
-      case 'x': return Event::CtrlX;
-      case 'y': return Event::CtrlY;
-      case 'z': return Event::CtrlZ;
-      default: break;
+      case 'a':
+        return Event::CtrlA;
+      case 'b':
+        return Event::CtrlB;
+      case 'c':
+        return Event::CtrlC;
+      case 'd':
+        return Event::CtrlD;
+      case 'e':
+        return Event::CtrlE;
+      case 'f':
+        return Event::CtrlF;
+      case 'g':
+        return Event::CtrlG;
+      case 'h':
+        return Event::CtrlH;
+      case 'i':
+        return Event::CtrlI;
+      case 'j':
+        return Event::CtrlJ;
+      case 'k':
+        return Event::CtrlK;
+      case 'l':
+        return Event::CtrlL;
+      case 'm':
+        return Event::CtrlM;
+      case 'n':
+        return Event::CtrlN;
+      case 'o':
+        return Event::CtrlO;
+      case 'p':
+        return Event::CtrlP;
+      case 'q':
+        return Event::CtrlQ;
+      case 'r':
+        return Event::CtrlR;
+      case 's':
+        return Event::CtrlS;
+      case 't':
+        return Event::CtrlT;
+      case 'u':
+        return Event::CtrlU;
+      case 'v':
+        return Event::CtrlV;
+      case 'w':
+        return Event::CtrlW;
+      case 'x':
+        return Event::CtrlX;
+      case 'y':
+        return Event::CtrlY;
+      case 'z':
+        return Event::CtrlZ;
+      default:
+        break;
     }
   }
 
@@ -80,7 +108,8 @@ Event ParseBindKey(std::string_view key) {
 
 }  // namespace
 
-// ── CommandPalette ────────────────────────────────────────────────────────────
+// ── CommandPalette
+// ────────────────────────────────────────────────────────────
 
 CommandPalette& CommandPalette::Add(std::string_view name,
                                     std::function<void()> action,
@@ -111,8 +140,7 @@ ftxui::Component CommandPalette::Wrap(ftxui::Component parent) const {
   auto state = std::make_shared<PaletteState>();
 
   // Compute up to 8 filtered commands from the current search string.
-  auto compute_filtered =
-      [commands, state]() -> std::vector<const Command*> {
+  auto compute_filtered = [commands, state]() -> std::vector<const Command*> {
     std::string lower_search = ToLower(state->search);
     std::vector<const Command*> result;
     for (const auto& cmd : commands) {
@@ -153,7 +181,8 @@ ftxui::Component CommandPalette::Wrap(ftxui::Component parent) const {
         }
         if (e == Event::Return) {
           if (n > 0 && state->selected >= 0 && state->selected < n) {
-            auto action = filtered[static_cast<size_t>(state->selected)]->action;
+            auto action =
+                filtered[static_cast<size_t>(state->selected)]->action;
             state->show = false;
             state->search.clear();
             state->selected = 0;
@@ -173,8 +202,8 @@ ftxui::Component CommandPalette::Wrap(ftxui::Component parent) const {
       });
 
   // Renderer draws the full palette overlay.
-  auto palette_renderer =
-      Renderer(palette_content, [state, compute_filtered, palette_content]() -> Element {
+  auto palette_renderer = Renderer(
+      palette_content, [state, compute_filtered, palette_content]() -> Element {
         auto filtered = compute_filtered();
         int n = static_cast<int>(filtered.size());
 
@@ -188,9 +217,8 @@ ftxui::Component CommandPalette::Wrap(ftxui::Component parent) const {
         const Theme& t = GetTheme();
 
         // Search row: ❯ <input>.
-        Element search_row =
-            hbox({text(" ❯ ") | bold | color(t.primary),
-                  palette_content->Render() | xflex});
+        Element search_row = hbox({text(" ❯ ") | bold | color(t.primary),
+                                   palette_content->Render() | xflex});
 
         // Result rows.
         Elements result_rows;
@@ -204,8 +232,8 @@ ftxui::Component CommandPalette::Wrap(ftxui::Component parent) const {
             // Category header when category changes.
             if (!cmd->category.empty() && cmd->category != last_cat) {
               last_cat = cmd->category;
-              result_rows.push_back(
-                  text("  " + cmd->category) | bold | color(t.text_muted));
+              result_rows.push_back(text("  " + cmd->category) | bold |
+                                    color(t.text_muted));
             }
 
             bool sel = (i == state->selected);

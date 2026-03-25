@@ -23,8 +23,7 @@ enum class Direction { Left, Right, Up, Down };
 /// styling as the tween progresses.
 ///
 /// @ingroup ui
-inline ftxui::Component FadeIn(ftxui::Component inner,
-                                float duration = 0.3f) {
+inline ftxui::Component FadeIn(ftxui::Component inner, float duration = 0.3f) {
   auto tween = std::make_shared<Tween>(0.0f, 1.0f, duration, Easing::EaseOut);
   tween->Start();
   AnimationLoop::Instance().Add(tween);
@@ -48,8 +47,7 @@ inline ftxui::Component FadeIn(ftxui::Component inner,
 /// Call `tween->Start()` externally to trigger the fade-out.
 ///
 /// @ingroup ui
-inline ftxui::Component FadeOut(ftxui::Component inner,
-                                 float duration = 0.3f) {
+inline ftxui::Component FadeOut(ftxui::Component inner, float duration = 0.3f) {
   auto tween = std::make_shared<Tween>(1.0f, 0.0f, duration, Easing::EaseIn);
   AnimationLoop::Instance().Add(tween);
 
@@ -70,8 +68,8 @@ inline ftxui::Component FadeOut(ftxui::Component inner,
 ///
 /// @ingroup ui
 inline ftxui::Component SlideIn(ftxui::Component inner,
-                                 Direction dir = Direction::Left,
-                                 float duration = 0.3f) {
+                                Direction dir = Direction::Left,
+                                float duration = 0.3f) {
   auto tween = std::make_shared<Tween>(0.0f, 1.0f, duration, Easing::EaseOut);
   tween->Start();
   AnimationLoop::Instance().Add(tween);

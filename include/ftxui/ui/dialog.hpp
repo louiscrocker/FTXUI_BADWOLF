@@ -16,7 +16,8 @@ namespace ftxui::ui {
 
 /// @brief Overlay a Yes/No confirmation dialog on top of @p parent.
 ///
-/// Set *show to true to open the dialog.  Both callbacks close it automatically.
+/// Set *show to true to open the dialog.  Both callbacks close it
+/// automatically.
 ///
 /// @code
 /// bool show_confirm = false;
@@ -33,10 +34,10 @@ ftxui::ComponentDecorator WithConfirm(std::string_view message,
 
 /// @brief Full form: wrap @p parent with a confirm dialog.
 ftxui::Component WithConfirm(ftxui::Component parent,
-                              std::string_view message,
-                              std::function<void()> on_yes,
-                              std::function<void()> on_no,
-                              const bool* show);
+                             std::string_view message,
+                             std::function<void()> on_yes,
+                             std::function<void()> on_no,
+                             const bool* show);
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -53,10 +54,10 @@ ftxui::ComponentDecorator WithAlert(std::string_view title,
 
 /// @brief Full form: wrap @p parent with an alert dialog.
 ftxui::Component WithAlert(ftxui::Component parent,
-                            std::string_view title,
-                            std::string_view message,
-                            const bool* show,
-                            std::function<void()> on_close = {});
+                           std::string_view title,
+                           std::string_view message,
+                           const bool* show,
+                           std::function<void()> on_close = {});
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -105,11 +106,11 @@ enum class DrawerSide { Left, Right, Bottom };
 /// // Toggle with:  show_drawer = !show_drawer;
 /// @endcode
 ftxui::Component WithDrawer(ftxui::Component parent,
-                             DrawerSide side,
-                             std::string_view title,
-                             ftxui::Component content,
-                             const bool* show,
-                             int size = 40);
+                            DrawerSide side,
+                            std::string_view title,
+                            ftxui::Component content,
+                            const bool* show,
+                            int size = 40);
 
 ftxui::ComponentDecorator WithDrawer(DrawerSide side,
                                      std::string_view title,
@@ -121,9 +122,9 @@ ftxui::ComponentDecorator WithDrawer(DrawerSide side,
 
 /// @brief A button definition for WithModal.
 struct ModalButton {
-  std::string          label;
+  std::string label;
   std::function<void()> action;
-  bool                 is_primary = false;  ///< Render with primary color.
+  bool is_primary = false;  ///< Render with primary color.
 };
 
 /// @brief Overlay a general-purpose modal dialog on top of @p parent.
@@ -142,10 +143,10 @@ struct ModalButton {
 ///     &show_modal);
 /// @endcode
 ftxui::Component WithModal(ftxui::Component parent,
-                            std::string_view title,
-                            ftxui::Component content,
-                            std::vector<ModalButton> buttons,
-                            const bool* show);
+                           std::string_view title,
+                           ftxui::Component content,
+                           std::vector<ModalButton> buttons,
+                           const bool* show);
 
 ftxui::ComponentDecorator WithModal(std::string_view title,
                                     ftxui::Component content,
