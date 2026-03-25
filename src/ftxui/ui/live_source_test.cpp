@@ -62,6 +62,7 @@ TEST(FileTailSourceTest, DetectsNewLines) {
   {
     std::ofstream file(tmppath);
     file << "initial\n";
+    file.flush();
   }
 
   auto source = std::make_shared<FileTailSource>(tmppath);
@@ -72,9 +73,10 @@ TEST(FileTailSourceTest, DetectsNewLines) {
   {
     std::ofstream file(tmppath, std::ios::app);
     file << "new line\n";
+    file.flush();
   }
   
-  std::this_thread::sleep_for(std::chrono::milliseconds(600));
+  std::this_thread::sleep_for(std::chrono::milliseconds(700));
   
   std::string latest = source->Latest();
   EXPECT_TRUE(latest.find("new line") != std::string::npos);
@@ -169,7 +171,7 @@ TEST(LiveSourceTest, CallbackFiresOnData) {
 
 TEST(LiveSourceTest, BindLiveSourceCreatesReactive) {
   auto source = std::make_shared<ConcreteSource>();
-  auto reactive = BindLiveSource(source);
+  auto reactive = BindLiveSource<std::string>(source);
   
   EXPECT_NE(reactive, nullptr);
   EXPECT_TRUE(source->IsRunning());

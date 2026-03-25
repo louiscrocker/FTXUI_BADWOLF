@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Data Sources - FTXUI BadWolf</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .pulse {
+            width: 20px;
+            height: 20px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.2);
+            }
+        }
+
+        h2 {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            color: #e0e7ff;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        code {
+            color: #a5f3fc;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+        }
+
+        .diagram {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+        }
+
+        .pipeline {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .pipeline-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .arrow {
+            color: white;
+            font-size: 2rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5);
+        }
+
+        .feature-card h3 {
+            margin-top: 0;
+        }
+
+        .coming-soon {
+            opacity: 0.6;
+            position: relative;
+        }
+
+        .coming-soon::after {
+            content: "Coming Soon";
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #fbbf24;
+            color: #000;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin-top: 2rem;
+            transition: background 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        ul, ol {
+            color: rgba(255, 255, 255, 0.9);
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="glass">
+            <h1>
+                <span class="pulse"></span>
+                Live Data Sources
+            </h1>
+            <p>
+                FTXUI BadWolf provides powerful live data source adapters that automatically poll external data 
+                and update your UI in real-time. Build system monitors, log viewers, API dashboards, and more 
+                with minimal code.
+            </p>
+        </div>
+
+        <div class="glass">
+            <h2>Architecture</h2>
+            <div class="diagram">
+                <div class="pipeline">
+                    <div class="pipeline-item">Source</div>
+                    <div class="arrow">→</div>
+                    <div class="pipeline-item">Reactive&lt;T&gt;</div>
+                    <div class="arrow">→</div>
+                    <div class="pipeline-item">Widget</div>
+                </div>
+            </div>
+            <p>
+                Live sources run on background threads, polling data at configurable intervals. 
+                They integrate seamlessly with Reactive&lt;T&gt; for automatic UI updates.
+            </p>
+        </div>
+
+        <div class="glass">
+            <h2>Available Sources</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>FileTailSource</h3>
+                    <p>Watch files for new lines (like <code>tail -f</code>).</p>
+                    <pre><code>auto source = 
+  std::make_shared&lt;FileTailSource&gt;(
+    "app.log", 1000
+  );
+auto panel = LiveLogPanel(source);</code></pre>
+                </div>
+
+                <div class="feature-card">
+                    <h3>HttpJsonSource</h3>
+                    <p>Poll HTTP endpoints for JSON data.</p>
+                    <pre><code>auto source = 
+  std::make_shared&lt;HttpJsonSource&gt;(
+    "api.example.com", 
+    80, 
+    "/status"
+  );
+auto viewer = LiveJsonViewer(source);</code></pre>
+                </div>
+
+                <div class="feature-card">
+                    <h3>PrometheusSource</h3>
+                    <p>Scrape Prometheus metrics endpoints.</p>
+                    <pre><code>auto source = 
+  std::make_shared&lt;PrometheusSource&gt;(
+    "localhost", 
+    9090, 
+    "/metrics"
+  );
+auto table = LiveMetricsTable(source);</code></pre>
+                </div>
+
+                <div class="feature-card">
+                    <h3>StdinSource</h3>
+                    <p>Non-blocking stdin reader for pipe input.</p>
+                    <pre><code>auto source = 
+  std::make_shared&lt;StdinSource&gt;();
+source-&gt;OnData([](const std::string& line) {
+  // Process input
+});</code></pre>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Custom Sources</h3>
+                    <p>Create your own by extending <code>LiveSource&lt;T&gt;</code>.</p>
+                    <pre><code>class MySource : public LiveSource&lt;int&gt; {
+protected:
+  int Fetch() override {
+    return /* your logic */;
+  }
+};</code></pre>
+                </div>
+
+                <div class="feature-card coming-soon">
+                    <h3>WebSocketSource</h3>
+                    <p>Real-time WebSocket connections with automatic reconnection.</p>
+                    <pre><code>auto source = 
+  std::make_shared&lt;WebSocketSource&gt;(
+    "ws://server.com/feed"
+  );</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass">
+            <h2>Quick Start Examples</h2>
+
+            <h3>File Tail Monitoring</h3>
+            <pre><code>auto source = std::make_shared&lt;FileTailSource&gt;("app.log");
+auto panel = LiveLogPanel(source, 100);
+RunFullscreen(panel);</code></pre>
+
+            <h3>HTTP API Dashboard</h3>
+            <pre><code>auto source = std::make_shared&lt;HttpJsonSource&gt;(
+  "httpbin.org", 80, "/json", 
+  std::chrono::seconds(5)
+);
+auto viewer = LiveJsonViewer(source);
+RunFullscreen(viewer);</code></pre>
+
+            <h3>Prometheus Setup</h3>
+            <p>Run a Prometheus node_exporter with Docker:</p>
+            <pre><code>docker run -d -p 9100:9100 prom/node-exporter</code></pre>
+            <p>Then connect your UI:</p>
+            <pre><code>auto source = std::make_shared&lt;PrometheusSource&gt;(
+  "localhost", 9100, "/metrics"
+);
+auto table = LiveMetricsTable(source);
+RunFullscreen(table);</code></pre>
+
+            <h3>System Monitor</h3>
+            <p>Create custom sources for system metrics:</p>
+            <pre><code>class CpuSource : public LiveSource&lt;double&gt; {
+protected:
+  double Fetch() override {
+    // Parse /proc/stat or run system commands
+    return cpu_percentage;
+  }
+  
+  std::chrono::milliseconds Interval() const override {
+    return std::chrono::seconds(2);
+  }
+};
+
+auto cpu = std::make_shared&lt;CpuSource&gt;();
+auto chart = LiveLineChart(cpu, "CPU %", 60);</code></pre>
+        </div>
+
+        <div class="glass">
+            <h2>Widget Factories</h2>
+            <p>Pre-built widgets that connect to live sources:</p>
+            <ul>
+                <li><strong>LiveLogPanel</strong> - Auto-scrolling log viewer</li>
+                <li><strong>LiveMetricsTable</strong> - Formatted Prometheus metrics table</li>
+                <li><strong>LiveLineChart</strong> - Sparkline with rolling history</li>
+                <li><strong>LiveJsonViewer</strong> - Scrollable JSON response viewer</li>
+            </ul>
+        </div>
+
+        <div class="glass">
+            <h2>Thread Safety</h2>
+            <p>All live sources are thread-safe:</p>
+            <ul>
+                <li>Background polling runs on dedicated threads</li>
+                <li>Callbacks fire on the background thread</li>
+                <li>UI updates are triggered via <code>App::PostEvent()</code></li>
+                <li>Mutex-protected state access</li>
+                <li>Graceful shutdown with <code>Stop()</code></li>
+            </ul>
+        </div>
+
+        <div class="glass">
+            <a href="../index.html" class="back-link">← Back to Documentation</a>
+        </div>
+    </div>
+</body>
+</html>

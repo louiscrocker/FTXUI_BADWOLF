@@ -251,6 +251,10 @@ add_library(ui
   src/ftxui/ui/galaxy_map.cpp
   include/ftxui/ui/network_reactive.hpp
   src/ftxui/ui/network_reactive.cpp
+  include/ftxui/ui/collab.hpp
+  src/ftxui/ui/collab.cpp
+  include/ftxui/ui/llm_bridge.hpp
+  src/ftxui/ui/llm_bridge.cpp
   include/ftxui/ui/live_source.hpp
   src/ftxui/ui/live_source.cpp
   include/ftxui/ui/registry.hpp

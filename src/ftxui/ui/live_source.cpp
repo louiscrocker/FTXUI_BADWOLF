@@ -236,8 +236,12 @@ std::string FileTailSource::Fetch() {
     line_count++;
   }
 
-  last_pos_ = file.tellg();
-  
+  // tellg() returns -1 when eofbit is set with no new data; preserve position.
+  auto new_pos = file.tellg();
+  if (new_pos != std::streampos(-1)) {
+    last_pos_ = new_pos;
+  }
+
   return new_content;
 }
 
@@ -309,7 +313,7 @@ Component LiveMetricsTable(std::shared_ptr<PrometheusSource> source) {
     source->Start();
   }
 
-  return Renderer([metrics, mutex] {
+  return Renderer([metrics, mutex]() -> Element {
     std::lock_guard<std::mutex> lock(*mutex);
     
     std::vector<Element> rows;
@@ -357,12 +361,27 @@ Component LiveLineChart(std::shared_ptr<LiveSource<double>> source,
     source->Start();
   }
 
-  return Renderer([buffer, mutex, title, history] {
+  return Renderer([buffer, mutex, title, history]() -> Element {
     std::lock_guard<std::mutex> lock(*mutex);
     
-    Element chart = buffer->empty()
-                        ? text("Waiting for data...")
-                        : Sparkline(*buffer, history, Color::Green);
+    if (buffer->empty()) {
+      if (!title.empty()) {
+        return vbox({
+          text(title) | bold,
+          separator(),
+          text("Waiting for data..."),
+        }) | border;
+      }
+      return text("Waiting for data...") | border;
+    }
+
+    std::vector<float> float_buffer;
+    float_buffer.reserve(buffer->size());
+    for (double val : *buffer) {
+      float_buffer.push_back(static_cast<float>(val));
+    }
+
+    Element chart = Sparkline(float_buffer, history, Color::Green);
 
     if (!title.empty()) {
       return vbox({
@@ -389,7 +408,7 @@ Component LiveJsonViewer(std::shared_ptr<HttpJsonSource> source) {
     source->Start();
   }
 
-  return Renderer([content, mutex] {
+  return Renderer([content, mutex]() -> Element {
     std::lock_guard<std::mutex> lock(*mutex);
     
     if (content->empty()) {

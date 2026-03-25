@@ -409,8 +409,11 @@ UIIntent NLParser::Parse(const std::string& natural_language) {
   static const std::array<std::string, 12> trigger_words = {
       "show",    "display", "plot",  "of",   "for",   "list",
       "monitor", "create",  "edit",  "add",  "table", "log"};
-  static const std::array<std::string, 8> skip_words = {
-      "a", "an", "the", "me", "my", "all", "some", "new"};
+  static const std::array<std::string, 10> skip_words = {
+      "a", "an", "the", "me", "my", "all", "some", "new", "of", "for"};
+  // These are type keywords, not entities — skip them when extracting entity
+  static const std::array<std::string, 8> type_words = {
+      "list", "table", "chart", "graph", "form", "log", "map", "dashboard"};
 
   for (size_t i = 0; i < tokens.size(); ++i) {
     bool is_trigger = false;
@@ -431,6 +434,15 @@ UIIntent NLParser::Parse(const std::string& natural_language) {
         if (tokens[j] == sw) {
           skip = true;
           break;
+        }
+      }
+      // Also skip type keywords (list, table, chart) — they describe the widget, not the entity
+      if (!skip) {
+        for (const auto& tw : type_words) {
+          if (tokens[j] == tw) {
+            skip = true;
+            break;
+          }
         }
       }
       if (skip) {
@@ -1031,7 +1043,7 @@ Component LLMRepl() {
     auto sidebar =
         window(text(" History ") | bold | color(t.primary),
                vbox(std::move(hist_items)) | vscroll_indicator | yflex) |
-        size(WIDTH, EQUAL, 26) | ystretch;
+        size(WIDTH, EQUAL, 26) | yflex_grow;
 
     // ── Generated preview ──────────────────────────────────────────────────
     Element preview;

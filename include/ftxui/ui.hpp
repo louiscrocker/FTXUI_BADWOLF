@@ -58,6 +58,7 @@
 #include "ftxui/ui/bind.hpp"
 #include "ftxui/ui/canvas.hpp"
 #include "ftxui/ui/charts.hpp"
+#include "ftxui/ui/collab.hpp"
 #include "ftxui/ui/command_palette.hpp"
 #include "ftxui/ui/config_editor.hpp"
 #include "ftxui/ui/data_context.hpp"
@@ -76,6 +77,7 @@
 #include "ftxui/ui/layout.hpp"
 #include "ftxui/ui/lcars.hpp"
 #include "ftxui/ui/list.hpp"
+#include "ftxui/ui/live_source.hpp"
 #include "ftxui/ui/log_panel.hpp"
 #include "ftxui/ui/markdown.hpp"
 #include "ftxui/ui/model_binding.hpp"
@@ -99,5 +101,6 @@
 #include "ftxui/ui/widgets.hpp"
 #include "ftxui/ui/wizard.hpp"
 #include "ftxui/ui/world_map_data.hpp"
+#include "ftxui/ui/llm_bridge.hpp"
 
 #endif  // FTXUI_UI_HPP

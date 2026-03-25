@@ -87,7 +87,7 @@ int main() {
             separatorEmpty(),
             separatorEmpty(),
             text("Backend: " + backend) | bold | color(t.secondary),
-        }) | ystretch) | size(WIDTH, EQUAL, 34);
+        }) | yflex_grow) | size(WIDTH, EQUAL, 34);
 
     // Main REPL panel
     auto main_panel = repl->Render() | flex;
