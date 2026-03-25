@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI BadWolf — Terminal Game Engine</title>
+  <meta name="description" content="FTXUI BadWolf 2D physics engine and game framework — PhysicsWorld, GameLoop, Pong, Breakout, Gravity sandbox running in your terminal.">
+  <meta property="og:title" content="FTXUI BadWolf — Terminal Game Engine">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">🐺 FTXUI BadWolf</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Get Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Components <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="colors.html">🎨 Colors &amp; Styling</a>
+          <a href="typewriter.html">⌨️ Typewriter &amp; Console</a>
+          <a href="json.html">📄 JSON</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Platform <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="live-data.html">📡 Live Data</a>
+          <a href="collab.html">👥 Collab Sessions</a>
+          <a href="registry.html">📦 Component Registry</a>
+          <a href="llm-bridge.html">🤖 LLM Bridge</a>
+          <a href="nl-theming.html">🎨 AI Theming</a>
+          <a href="playground.html">🌐 Playground</a>
+          <a href="webgl.html">⚡ WebGL Renderer</a>
+          <a href="physics.html">🎮 Terminal Game Engine</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Docs <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="deep-dive.html">🔬 Technical Deep Dive</a>
+          <a href="executive.html">📊 Executive Brief</a>
+        </div>
+      </div>
+
+      <a href="https://github.com/ArthurSonzogni/FTXUI" class="nav-link" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header style="padding:4rem 2rem 2rem;max-width:900px;margin:0 auto;text-align:center;">
+  <div style="font-size:4rem;margin-bottom:1rem;">🎮</div>
+  <h1 style="font-size:2.8rem;font-weight:900;background:linear-gradient(135deg,#64ffda,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem;">
+    Terminal Game Engine
+  </h1>
+  <p style="font-size:1.2rem;color:var(--text-secondary);max-width:600px;margin:0 auto 2rem;">
+    A pure-C++ 2D physics engine that renders on the <strong style="color:var(--teal-light)">BrailleCanvas</strong>
+    at 8× resolution, plus a <strong style="color:var(--teal-light)">GameLoop</strong> component for building
+    real terminal games — all without external libraries.
+  </p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <span class="glass-card" style="padding:0.5rem 1.2rem;font-size:0.9rem;font-family:monospace;">#include "ftxui/ui/physics.hpp"</span>
+  </div>
+</header>
+
+<!-- Feature cards -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;">
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">⚙️</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">PhysicsWorld</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Gravity, friction, restitution, circle/rect/line shapes, AABB collision detection.</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🔁</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">GameLoop</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Fixed-timestep loop integrated with AnimationLoop. OnUpdate / OnRender / OnInput callbacks.</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🎨</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">PhysicsRenderer</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Maps world coordinates to braille canvas dots. Fills terminal at flex resolution.</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🕹️</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">Game Presets</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Pong, Breakout, Gravity sandbox, and Billiards — all one-liner Components.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Screenshot / ASCII art -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1rem;">Games::Pong()</h2>
+  <div class="glass-card" style="padding:2rem;font-family:monospace;font-size:0.85rem;line-height:1.4;overflow-x:auto;background:rgba(0,0,0,0.4);">
+<pre style="margin:0;color:#64ffda;">
+ Player 1: 2                          Player 2: 1
+┌──────────────────────────────────────────────────┐
+│⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+│⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+│⠠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠀│
+│⠸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣿⣿⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠀│
+│⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠿⠀│
+│⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠿⠀│
+└──────────────────────────────────────────────────┘
+ L:W/S  R:↑/↓  [Q]uit
+</pre>
+  </div>
+</section>
+
+<!-- Quick start -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1rem;">Quick Start</h2>
+  <div class="glass-card" style="padding:2rem;font-family:monospace;font-size:0.9rem;line-height:1.8;overflow-x:auto;">
+<pre style="margin:0;color:var(--text-primary);">#include "ftxui/ui/physics.hpp"
+#include "ftxui/component/screen_interactive.hpp"
+
+using namespace ftxui;
+using namespace ftxui::ui;
+
+int main() {
+  // One-liner built-in games
+  auto pong      = Games::Pong();      // two-player pong
+  auto breakout  = Games::Breakout();  // brick breaker
+  auto gravity   = Games::Gravity();   // sandbox with Space to add balls
+  auto billiards = Games::Billiards(); // pool/billiards demo
+
+  // Custom physics world
+  auto world = std::make_shared&lt;PhysicsWorld&gt;(Vec2{0, 9.8f});
+  world-&gt;SetBounds(40.0f, 20.0f);
+  world-&gt;AddCircle({20, 2}, 0.8f, 1.0f, Color::Cyan);
+  world-&gt;AddStaticRect({20, 19}, 10.0f, 1.0f);  // floor
+
+  PhysicsRenderer renderer(world, 40.0f, 20.0f);
+
+  // Register with AnimationLoop for continuous physics stepping
+  int cb = ui::OnFrame([&amp;world](float dt) { world-&gt;Step(dt); });
+
+  auto screen = ScreenInteractive::Fullscreen();
+  auto comp = Renderer([&amp;] { return renderer.Render(); });
+  screen.Loop(comp);
+
+  ui::RemoveFrameCallback(cb);
+  return 0;
+}</pre>
+  </div>
+</section>
+
+<!-- API Reference -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1.5rem;">API Reference</h2>
+
+  <!-- Vec2 -->
+  <div class="glass-card" style="padding:1.5rem;margin-bottom:1rem;">
+    <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:0.8rem;color:var(--teal-light);">Vec2</h3>
+    <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:0.8rem;">
+      Lightweight 2D float vector. All math is inline — zero overhead.
+    </p>
+    <div style="font-family:monospace;font-size:0.85rem;line-height:1.8;color:var(--text-primary);">
+      <code>Vec2 a{3, 4};</code><br>
+      <code>float len = a.length();       // 5.0</code><br>
+      <code>Vec2  n   = a.normalized();   // {0.6, 0.8}</code><br>
+      <code>float d   = a.dot(b);         // dot product</code><br>
+      <code>Vec2  s   = Vec2::Zero();     // {0, 0}</code>
+    </div>
+  </div>
+
+  <!-- PhysicsWorld -->
+  <div class="glass-card" style="padding:1.5rem;margin-bottom:1rem;">
+    <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:0.8rem;color:var(--teal-light);">PhysicsWorld</h3>
+    <div class="glass-card" style="padding:0;overflow:hidden;margin-top:0.5rem;">
+      <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+        <thead>
+          <tr style="background:rgba(255,255,255,0.05);">
+            <th style="padding:0.8rem;text-align:left;color:var(--teal-light);border-bottom:1px solid rgba(255,255,255,0.1);">Method</th>
+            <th style="padding:0.8rem;text-align:left;color:var(--teal-light);border-bottom:1px solid rgba(255,255,255,0.1);">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:0.6rem 0.8rem;font-family:monospace;">AddCircle(pos, r, mass, color)</td>
+            <td style="padding:0.6rem 0.8rem;color:var(--text-secondary);">Add a dynamic circle. Returns body ID.</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:0.6rem 0.8rem;font-family:monospace;">AddRect(pos, w, h, mass, color)</td>
+            <td style="padding:0.6rem 0.8rem;color:var(--text-secondary);">Add a dynamic rectangle. Returns body ID.</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:0.6rem 0.8rem;font-family:monospace;">AddStaticLine(p1, p2)</td>
+            <td style="padding:0.6rem 0.8rem;color:var(--text-secondary);">Immovable line segment (mass=0).</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:0.6rem 0.8rem;font-family:monospace;">AddStaticRect(pos, w, h)</td>
+            <td style="padding:0.6rem 0.8rem;color:var(--text-secondary);">Immovable rectangle (mass=0).</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:0.6rem 0.8rem;font-family:monospace;">Step(dt)</td>
+            <td style="padding:0.6rem 0.8rem;color:var(--text-secondary);">Advance simulation by dt seconds. Call each frame.</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:0.6rem 0.8rem;font-family:monospace;">SetBounds(w, h)</td>
+            <td style="padding:0.6rem 0.8rem;color:var(--text-secondary);">Bodies bounce off a [0,w]×[0,h] boundary.</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:0.6rem 0.8rem;font-family:monospace;">ApplyImpulse(id, impulse)</td>
+            <td style="padding:0.6rem 0.8rem;color:var(--text-secondary);">Instant velocity change scaled by 1/mass.</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:0.6rem 0.8rem;font-family:monospace;">OnCollision(fn)</td>
+            <td style="padding:0.6rem 0.8rem;color:var(--text-secondary);">Register callback fired on every collision pair.</td>
+          </tr>
+          <tr>
+            <td style="padding:0.6rem 0.8rem;font-family:monospace;">GetBody(id)</td>
+            <td style="padding:0.6rem 0.8rem;color:var(--text-secondary);">Returns RigidBody* or nullptr if not found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- GameLoop -->
+  <div class="glass-card" style="padding:1.5rem;margin-bottom:1rem;">
+    <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:0.8rem;color:var(--teal-light);">GameLoop</h3>
+    <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:0.8rem;">
+      Integrates with <code style="color:var(--teal-light)">AnimationLoop</code> for fixed-timestep physics updates.
+      Call <code style="color:var(--teal-light)">Build()</code> to get a renderable FTXUI Component.
+    </p>
+    <div style="font-family:monospace;font-size:0.85rem;line-height:1.8;color:var(--text-primary);">
+<pre style="margin:0;">GameLoop loop(60);  // 60 FPS target
+
+loop.OnUpdate([](const GameLoop::State&amp; s) {
+    // s.dt, s.frame, s.elapsed
+    world-&gt;Step(s.dt);
+});
+
+loop.OnRender([&amp;]() -&gt; Element {
+    return renderer.Render();
+});
+
+loop.OnInput([](Event e) -&gt; bool {
+    return false;  // not handled
+});
+
+auto comp = loop.Build();  // start + Component</pre>
+    </div>
+  </div>
+
+  <!-- Games namespace -->
+  <div class="glass-card" style="padding:1.5rem;margin-bottom:1rem;">
+    <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:0.8rem;color:var(--teal-light);">Games Presets</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.8rem;margin-top:0.5rem;">
+      <div style="font-family:monospace;font-size:0.85rem;padding:1rem;background:rgba(0,0,0,0.3);border-radius:8px;">
+        <div style="color:var(--teal-light);font-weight:700;margin-bottom:0.3rem;">🏓 Games::Pong()</div>
+        <div style="color:var(--text-secondary);font-size:0.8rem;">W/S + ↑/↓ · score counter</div>
+      </div>
+      <div style="font-family:monospace;font-size:0.85rem;padding:1rem;background:rgba(0,0,0,0.3);border-radius:8px;">
+        <div style="color:var(--teal-light);font-weight:700;margin-bottom:0.3rem;">🧱 Games::Breakout()</div>
+        <div style="color:var(--text-secondary);font-size:0.8rem;">←/→ · bricks · lives</div>
+      </div>
+      <div style="font-family:monospace;font-size:0.85rem;padding:1rem;background:rgba(0,0,0,0.3);border-radius:8px;">
+        <div style="color:var(--teal-light);font-weight:700;margin-bottom:0.3rem;">🌍 Games::Gravity()</div>
+        <div style="color:var(--text-secondary);font-size:0.8rem;">Space=add · C=clear</div>
+      </div>
+      <div style="font-family:monospace;font-size:0.85rem;padding:1rem;background:rgba(0,0,0,0.3);border-radius:8px;">
+        <div style="color:var(--teal-light);font-weight:700;margin-bottom:0.3rem;">🎱 Games::Billiards()</div>
+        <div style="color:var(--text-secondary);font-size:0.8rem;">←/→ aim · Space shoot</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Physics details -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1rem;">Physics Pipeline</h2>
+  <div class="glass-card" style="padding:1.5rem;">
+    <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:1rem;">
+      Each call to <code style="color:var(--teal-light)">PhysicsWorld::Step(dt)</code> runs these stages in order:
+    </p>
+    <ol style="color:var(--text-secondary);font-size:0.9rem;line-height:2;padding-left:1.5rem;">
+      <li><strong style="color:var(--text-primary);">Force integration</strong> — apply gravity + accumulated forces → velocity</li>
+      <li><strong style="color:var(--text-primary);">Position integration</strong> — velocity × dt → new position</li>
+      <li><strong style="color:var(--text-primary);">Damping</strong> — velocity × (1 − friction × dt)</li>
+      <li><strong style="color:var(--text-primary);">Boundary collision</strong> — reflect &amp; clamp against world bounds</li>
+      <li><strong style="color:var(--text-primary);">Pair collision</strong> — circle–circle, circle–rect, rect–rect AABB</li>
+      <li><strong style="color:var(--text-primary);">Collision callbacks</strong> — notify registered OnCollision handlers</li>
+    </ol>
+  </div>
+</section>
+
+<footer style="padding:3rem 2rem;text-align:center;color:var(--text-secondary);font-size:0.85rem;">
+  <p>FTXUI BadWolf — Terminal Game Engine &nbsp;·&nbsp;
+    <a href="https://github.com/ArthurSonzogni/FTXUI" style="color:var(--teal-light);">GitHub ↗</a>
+  </p>
+</footer>
+
+<script>
+// Dropdown toggle
+document.querySelectorAll('.nav-dropdown-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const dd = btn.closest('.nav-dropdown');
+    dd.classList.toggle('open');
+    document.querySelectorAll('.nav-dropdown').forEach(d => {
+      if (d !== dd) d.classList.remove('open');
+    });
+  });
+});
+document.addEventListener('click', e => {
+  if (!e.target.closest('.nav-dropdown')) {
+    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+  }
+});
+</script>
+</body>
+</html>

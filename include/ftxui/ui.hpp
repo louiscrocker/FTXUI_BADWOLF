@@ -118,4 +118,8 @@
 #include "ftxui/ui/wasm_bridge.hpp"
 #include "ftxui/ui/webgl_renderer.hpp"
 
+// ── Game Engine & Physics
+// ─────────────────────────────────────────────────────
+#include "ftxui/ui/physics.hpp"
+
 #endif  // FTXUI_UI_HPP

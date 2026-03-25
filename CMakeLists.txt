@@ -265,6 +265,8 @@ add_library(ui
   src/ftxui/ui/webgl_renderer.cpp
   include/ftxui/ui/wasm_bridge.hpp
   src/ftxui/ui/wasm_bridge.cpp
+  include/ftxui/ui/web_bridge.hpp
+  src/ftxui/ui/web_bridge.cpp
   include/ftxui/ui/typewriter.hpp
   src/ftxui/ui/typewriter.cpp
   include/ftxui/ui/json.hpp
@@ -273,6 +275,8 @@ add_library(ui
   src/ftxui/ui/constraint_layout.cpp
   include/ftxui/ui/sql.hpp
   src/ftxui/ui/sql.cpp
+  include/ftxui/ui/physics.hpp
+  src/ftxui/ui/physics.cpp
 )
 
 target_link_libraries(dom PUBLIC screen)
