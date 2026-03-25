@@ -117,9 +117,8 @@ class VirtualList {
   ftxui::Component Build() {
     auto s = state_;
 
-    auto renderer = ftxui::Renderer([s]() -> ftxui::Element {
-      return DoRender(s);
-    });
+    auto renderer =
+        ftxui::Renderer([s]() -> ftxui::Element { return DoRender(s); });
 
     return ftxui::CatchEvent(renderer, [s](ftxui::Event event) -> bool {
       return HandleEvent(s, event);
@@ -154,8 +153,9 @@ class VirtualList {
 
   static std::string ToLower(const std::string& s) {
     std::string out = s;
-    std::transform(out.begin(), out.end(), out.begin(),
-                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    std::transform(out.begin(), out.end(), out.begin(), [](unsigned char c) {
+      return static_cast<char>(std::tolower(c));
+    });
     return out;
   }
 
@@ -190,7 +190,8 @@ class VirtualList {
         if (s->filter_fn) {
           match = s->filter_fn((*s->items)[i], s->query);
         } else {
-          match = ToLower(ItemStr((*s->items)[i])).find(ql) != std::string::npos;
+          match =
+              ToLower(ItemStr((*s->items)[i])).find(ql) != std::string::npos;
         }
         if (match) {
           s->filtered.push_back(i);

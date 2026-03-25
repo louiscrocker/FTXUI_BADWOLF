@@ -39,12 +39,12 @@ namespace {
 constexpr int kLogLines = 50'000;
 constexpr int kServerRows = 200;
 
-const std::array<std::string, 5> kLogLevels = {
-    "INFO ", "WARN ", "ERROR", "DEBUG", "TRACE"};
+const std::array<std::string, 5> kLogLevels = {"INFO ", "WARN ", "ERROR",
+                                               "DEBUG", "TRACE"};
 
 const std::array<std::string, 8> kServices = {
-    "auth-svc", "api-gw", "db-proxy", "cache", "scheduler",
-    "mailer",   "worker", "metrics"};
+    "auth-svc",  "api-gw", "db-proxy", "cache",
+    "scheduler", "mailer", "worker",   "metrics"};
 
 const std::array<std::string, 10> kMessages = {
     "Request processed successfully",
@@ -62,9 +62,12 @@ std::vector<std::string> GenerateLogs() {
   std::vector<std::string> lines;
   lines.reserve(kLogLines);
   for (int i = 0; i < kLogLines; ++i) {
-    const std::string& lvl = kLogLevels[static_cast<size_t>(i) % kLogLevels.size()];
-    const std::string& svc = kServices[static_cast<size_t>(i) % kServices.size()];
-    const std::string& msg = kMessages[static_cast<size_t>(i) % kMessages.size()];
+    const std::string& lvl =
+        kLogLevels[static_cast<size_t>(i) % kLogLevels.size()];
+    const std::string& svc =
+        kServices[static_cast<size_t>(i) % kServices.size()];
+    const std::string& msg =
+        kMessages[static_cast<size_t>(i) % kMessages.size()];
     // Pseudo-timestamp based on index.
     const int hh = (i / 3600) % 24;
     const int mm = (i / 60) % 60;
@@ -88,7 +91,7 @@ struct Server {
 
 std::shared_ptr<std::vector<Server>> GenerateServers() {
   const std::array<std::string, 4> regions = {"us-east", "eu-west", "ap-south",
-                                               "us-west"};
+                                              "us-west"};
   const std::array<std::string, 3> statuses = {"healthy", "degraded", "down"};
 
   auto servers = std::make_shared<std::vector<Server>>();
@@ -147,11 +150,10 @@ int main() {
           })
           .Filter([](const std::string& line, const std::string& q) -> bool {
             // Case-insensitive substring search.
-            auto it = std::search(
-                line.begin(), line.end(), q.begin(), q.end(),
-                [](unsigned char a, unsigned char b) {
-                  return std::tolower(a) == std::tolower(b);
-                });
+            auto it = std::search(line.begin(), line.end(), q.begin(), q.end(),
+                                  [](unsigned char a, unsigned char b) {
+                                    return std::tolower(a) == std::tolower(b);
+                                  });
             return it != line.end();
           })
           .OnSelect([&](size_t idx, const std::string& item) {
@@ -185,7 +187,8 @@ int main() {
                     return a.cpu < b.cpu;
                   },
                   8, true},
-              Col{"Mem (MiB)", [](const Server& s) { return std::to_string(s.mem_mb); },
+              Col{"Mem (MiB)",
+                  [](const Server& s) { return std::to_string(s.mem_mb); },
                   [](const Server& a, const Server& b) {
                     return a.mem_mb < b.mem_mb;
                   },
@@ -223,9 +226,8 @@ int main() {
     } else {
       tab1 = tab1 | bgcolor(theme.secondary) | color(Color::White);
     }
-    return hbox({tab0, text("  "), tab1,
-                 filler(),
-                 text(" Tab=switch  q=quit ") | dim});
+    return hbox(
+        {tab0, text("  "), tab1, filler(), text(" Tab=switch  q=quit ") | dim});
   });
 
   auto tab_content = Container::Tab({log_list, server_table}, &active_tab);
@@ -234,7 +236,9 @@ int main() {
   auto status_bar = Renderer([&]() -> Element {
     const std::string& msg = (active_tab == 0) ? list_status : table_status;
     if (msg.empty()) {
-      return text(" ↑↓ navigate  Type to filter  Esc clear  (SortableTable: ←→ col, Enter sort, PgDn/PgUp page) ") |
+      return text(
+                 " ↑↓ navigate  Type to filter  Esc clear  (SortableTable: ←→ "
+                 "col, Enter sort, PgDn/PgUp page) ") |
              dim | hcenter;
     }
     return text(" " + msg + " ") | color(theme.primary);
@@ -273,11 +277,14 @@ int main() {
   });
 
   root |= Keymap()
-              .Bind("q", [] {
-                if (App* a = App::Active()) {
-                  a->Exit();
-                }
-              }, "Quit")
+              .Bind(
+                  "q",
+                  [] {
+                    if (App* a = App::Active()) {
+                      a->Exit();
+                    }
+                  },
+                  "Quit")
               .AsDecorator();
 
   App::Fullscreen().Loop(root);

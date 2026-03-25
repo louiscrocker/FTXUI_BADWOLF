@@ -51,6 +51,17 @@ that abstracts away boilerplate. Single include: `#include "ftxui/ui.hpp"`. New 
 **GeoJSON & terminal maps:**
 - `ParseGeoJSON` / `LoadGeoJSON` — zero-dependency GeoJSON parser (Point/LineString/Polygon/MultiPolygon/FeatureCollection).
 - `GeoMap` — braille terminal map renderer with Equirectangular/Mercator projection, graticule grid, zoom/pan, feature selection.
+- `GlobeMap` — animated 3D spinning globe rendered in braille; configurable rotation speed, tilt, graticule grid.
+
+**Markdown:**
+- `MarkdownComponent` / `MarkdownElement` — live Markdown renderer supporting bold, italic, code spans, fenced code blocks, ATX headings, ordered/unordered lists, blockquotes, horizontal rules, and links.
+
+**Process runner:**
+- `ProcessPanel` — subprocess runner that streams stdout/stderr into a scrollable log panel. Start/stop/restart, SIGTERM on `Stop()`, auto-scroll.
+- `LogPanel` — thread-safe scrolling log panel; `AppendLine()` safe from any thread.
+
+**Virtual table:**
+- `VirtualTable<T>` — virtualized table for large datasets; renders only visible rows; supports sorting, keyboard navigation, and row selection.
 
 **Config:**
 - `ConfigEditor` — persistent key-value settings editor (String/Int/Float/Bool fields, auto-load/save).
@@ -62,12 +73,23 @@ that abstracts away boilerplate. Single include: `#include "ftxui/ui.hpp"`. New 
 `form_demo`, `mvu_counter`, `mvu_todo`, `layout_demo`, `keymap_demo`, `state_demo`,
 `simple_table_demo`, `progress_demo`, `datatable_demo`, `list_demo`, `tree_demo`,
 `router_demo`, `command_palette_demo`, `notification_demo`, `wizard_demo`, `log_demo`,
-`filepicker_demo`, `config_demo`, `charts_demo`, `geomap_demo`, `showcase`, `new_features_demo`.
+`filepicker_demo`, `config_demo`, `charts_demo`, `geomap_demo`, `globe_demo`,
+`markdown_demo`, `process_demo`, `virtual_table_demo`, `showcase`, `new_features_demo`.
 
 ### Doc
 - Fix broken Doxygen output. See @markmandel in #1029.
 - Use Doxygen awesome. Add our own theme.
 - Break the documentation into several pages.
+- Complete README overhaul — comparison table, feature showcase, one-line examples.
+- New: `doc/getting-started.md` — step-by-step beginner tutorial.
+- New: `doc/cookbook.md` — 30+ copy-paste recipes.
+- New: `doc/ui-layer.md` — full `ftxui::ui` API reference.
+- New: `doc/migration-ncurses.md` — side-by-side ncurses → FTXUI migration guide.
+- New: `doc/migration-bubbletea.md` — Bubbletea/Go → FTXUI migration guide.
+- New: `doc/migration-textual.md` — Textual/Python → FTXUI migration guide.
+- New: `doc/migration-ratatui.md` — Ratatui/Rust → FTXUI migration guide.
+- New: `.github/ISSUE_TEMPLATE/bug_report.md` and `feature_request.md`.
+- New: `.github/PULL_REQUEST_TEMPLATE.md`.
 
 ### Build
 - Feature: Support C++20 modules. 

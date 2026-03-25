@@ -109,9 +109,8 @@ class SortableTable {
   ftxui::Component Build() {
     auto s = state_;
 
-    auto renderer = ftxui::Renderer([s]() -> ftxui::Element {
-      return DoRender(s);
-    });
+    auto renderer =
+        ftxui::Renderer([s]() -> ftxui::Element { return DoRender(s); });
 
     return ftxui::CatchEvent(renderer, [s](ftxui::Event event) -> bool {
       return HandleEvent(s, event);
@@ -134,9 +133,9 @@ class SortableTable {
     bool selection_color_set = false;
 
     // Runtime
-    int sort_col = -1;         // active sort column index (-1 = none)
+    int sort_col = -1;  // active sort column index (-1 = none)
     bool sort_asc = true;
-    int focused_col = 0;       // column highlighted for sort cycling
+    int focused_col = 0;  // column highlighted for sort cycling
     std::string filter_str;
     int page = 0;
     int selected = 0;
@@ -149,8 +148,9 @@ class SortableTable {
 
   static std::string ToLower(const std::string& s) {
     std::string out = s;
-    std::transform(out.begin(), out.end(), out.begin(),
-                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    std::transform(out.begin(), out.end(), out.begin(), [](unsigned char c) {
+      return static_cast<char>(std::tolower(c));
+    });
     return out;
   }
 
@@ -186,8 +186,7 @@ class SortableTable {
     if (s->sort_col >= 0 && s->sort_col < static_cast<int>(s->columns.size())) {
       const auto& col = s->columns[static_cast<size_t>(s->sort_col)];
       std::stable_sort(
-          s->filtered.begin(), s->filtered.end(),
-          [&](size_t a, size_t b) {
+          s->filtered.begin(), s->filtered.end(), [&](size_t a, size_t b) {
             const T& ra = (*s->data)[a];
             const T& rb = (*s->data)[b];
             if (col.less) {
@@ -321,8 +320,7 @@ class SortableTable {
     // Empty state.
     if (pv_size == 0) {
       std::string msg = !s->filter_str.empty() ? "No matching rows" : "No data";
-      rows.push_back(
-          {text(msg) | color(theme.text_muted) | hcenter | flex});
+      rows.push_back({text(msg) | color(theme.text_muted) | hcenter | flex});
     }
 
     // Build ftxui Table.

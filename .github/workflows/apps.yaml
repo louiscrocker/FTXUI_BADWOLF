@@ -1,0 +1,47 @@
+name: Apps Build
+
+on:
+  push:
+    branches: [main, feat/ui-high-level-api]
+    paths:
+      - 'apps/**'
+      - 'src/ftxui/**'
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-apps:
+    name: "Apps: ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y cmake ninja-build libsqlite3-dev
+
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: brew install cmake ninja sqlite3 || true
+
+      - name: Configure
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DFTXUI_BUILD_APPS=ON \
+            -DFTXUI_BUILD_EXAMPLES=OFF \
+            -DFTXUI_BUILD_TESTS=OFF
+
+      - name: Build apps
+        run: cmake --build build --parallel --target ftop ftgit || cmake --build build --parallel
+
+      - name: Smoke test ftop
+        run: timeout 2 build/apps/ftop || true
+
+      - name: Smoke test ftgit
+        run: timeout 2 build/apps/ftgit . || true

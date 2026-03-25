@@ -1,0 +1,83 @@
+name: Demo Recording
+
+on:
+  push:
+    branches: [main, feat/ui-high-level-api]
+    paths:
+      - 'examples/ui/**'
+      - 'src/ftxui/ui/**'
+      - 'include/ftxui/ui/**'
+  workflow_dispatch:
+
+jobs:
+  record-demos:
+    name: Record terminal demo GIFs
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build gcc g++ \
+            nodejs npm python3 python3-pip \
+            ttyrec imagemagick ffmpeg
+          # termtosvg for SVG recordings
+          pip3 install termtosvg
+          # asciinema for cast recordings
+          pip3 install asciinema
+
+      - name: Configure CMake
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DFTXUI_BUILD_EXAMPLES=ON
+
+      - name: Build demos
+        run: cmake --build build --parallel
+
+      - name: Record globe demo (SVG)
+        run: |
+          mkdir -p doc/demos
+          timeout 4s termtosvg doc/demos/globe.svg \
+            -c "build/examples/ui/ftxui_example_globe_demo" \
+            -t window_frame_powershell \
+            -D 100 || true
+
+      - name: Record world ops demo (SVG)
+        run: |
+          timeout 4s termtosvg doc/demos/world_ops.svg \
+            -c "build/examples/ui/ftxui_example_world_ops_demo" \
+            -t window_frame_powershell \
+            -D 100 || true
+
+      - name: Record markdown demo (SVG)
+        run: |
+          timeout 4s termtosvg doc/demos/markdown.svg \
+            -c "build/examples/ui/ftxui_example_markdown_demo" \
+            -t window_frame_powershell \
+            -D 100 || true
+
+      - name: Record charts demo (SVG)
+        run: |
+          timeout 4s termtosvg doc/demos/charts.svg \
+            -c "build/examples/ui/ftxui_example_charts_demo" \
+            -t window_frame_powershell \
+            -D 100 || true
+
+      - name: Upload demo assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-recordings
+          path: doc/demos/
+          retention-days: 30
+
+      - name: Commit demo assets (main branch only)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add doc/demos/ || true
+          git diff --staged --quiet || git commit -m "chore: update demo recordings [skip ci]"
+          git push || true

@@ -1,0 +1,62 @@
+name: Python Bindings
+
+on:
+  push:
+    branches: [main, feat/ui-high-level-api]
+    paths:
+      - 'python/**'
+      - 'src/ftxui/**'
+      - 'include/ftxui/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'python/**'
+
+jobs:
+  build-python:
+    name: "Python ${{ matrix.python }}, ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: "3.10"
+          - os: ubuntu-latest
+            python: "3.12"
+          - os: macos-latest
+            python: "3.12"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install pybind11
+        run: pip install pybind11 pytest
+
+      - name: Configure (with Python bindings)
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DFTXUI_BUILD_PYTHON_BINDINGS=ON \
+            -DFTXUI_BUILD_EXAMPLES=OFF \
+            -DFTXUI_BUILD_TESTS=OFF
+
+      - name: Build Python module
+        run: cmake --build build --parallel --target _ftxui
+
+      - name: Smoke test import
+        run: |
+          cd python
+          python -c "
+          import sys
+          sys.path.insert(0, '../build/python')
+          import _ftxui
+          print('pyftxui import: OK')
+          el = _ftxui.text('Hello')
+          print('element creation: OK')
+          "
