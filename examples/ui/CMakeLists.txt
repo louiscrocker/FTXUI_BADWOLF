@@ -47,6 +47,9 @@ example(sysmon_demo)
 example(json_demo)
 example(typewriter_demo)
 example(color_demo)
+example(web_bridge_demo)
+example(constraint_demo)
+example(physics_demo)
 
 # Copy world map GeoJSON data next to the binary at build time so examples
 # can locate it at runtime via their relative-path search.

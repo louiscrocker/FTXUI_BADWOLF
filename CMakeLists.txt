@@ -269,11 +269,17 @@ add_library(ui
   src/ftxui/ui/typewriter.cpp
   include/ftxui/ui/json.hpp
   src/ftxui/ui/json.cpp
+  include/ftxui/ui/constraint_layout.hpp
+  src/ftxui/ui/constraint_layout.cpp
+  include/ftxui/ui/sql.hpp
+  src/ftxui/ui/sql.cpp
 )
 
 target_link_libraries(dom PUBLIC screen)
 target_link_libraries(component PUBLIC dom)
 target_link_libraries(ui PUBLIC component)
+
+include(cmake/ftxui_sqlite.cmake)
 
 include(cmake/ftxui_set_options.cmake)
 ftxui_set_options(screen)

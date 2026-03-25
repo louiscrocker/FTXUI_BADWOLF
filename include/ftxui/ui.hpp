@@ -12,97 +12,109 @@
 
 // ── Core Infrastructure ──────────────────────────────────────────────────────
 #include "ftxui/ui/app.hpp"
-#include "ftxui/ui/theme.hpp"
-#include "ftxui/ui/state.hpp"
 #include "ftxui/ui/mvu.hpp"
+#include "ftxui/ui/state.hpp"
+#include "ftxui/ui/theme.hpp"
 
 // ── Reactive State & Data Binding ────────────────────────────────────────────
-#include "ftxui/ui/reactive.hpp"
-#include "ftxui/ui/reactive_list.hpp"
-#include "ftxui/ui/reactive_decorators.hpp"
 #include "ftxui/ui/bind.hpp"
-#include "ftxui/ui/model_binding.hpp"
 #include "ftxui/ui/data_context.hpp"
+#include "ftxui/ui/model_binding.hpp"
+#include "ftxui/ui/reactive.hpp"
+#include "ftxui/ui/reactive_decorators.hpp"
+#include "ftxui/ui/reactive_list.hpp"
 
 // ── Data Types ───────────────────────────────────────────────────────────────
 #include "ftxui/ui/json.hpp"
+#include "ftxui/ui/sql.hpp"
 
 // ── Layout & Structure ───────────────────────────────────────────────────────
-#include "ftxui/ui/layout.hpp"
+#include "ftxui/ui/constraint_layout.hpp"
 #include "ftxui/ui/grid.hpp"
+#include "ftxui/ui/layout.hpp"
 #include "ftxui/ui/router.hpp"
 #include "ftxui/ui/transitions.hpp"
 
-// ── Text & Richness ───────────────────────────────────────────────────────────
+// ── Text & Richness
+// ───────────────────────────────────────────────────────────
+#include "ftxui/ui/markdown.hpp"
 #include "ftxui/ui/rich_text.hpp"
 #include "ftxui/ui/typewriter.hpp"
-#include "ftxui/ui/markdown.hpp"
 
 // ── Input Widgets ────────────────────────────────────────────────────────────
-#include "ftxui/ui/textinput.hpp"
+#include "ftxui/ui/config_editor.hpp"
+#include "ftxui/ui/filepicker.hpp"
 #include "ftxui/ui/form.hpp"
 #include "ftxui/ui/keymap.hpp"
-#include "ftxui/ui/filepicker.hpp"
-#include "ftxui/ui/config_editor.hpp"
+#include "ftxui/ui/textinput.hpp"
 
 // ── Data Display ─────────────────────────────────────────────────────────────
 #include "ftxui/ui/datatable.hpp"
+#include "ftxui/ui/list.hpp"
 #include "ftxui/ui/simple_table.hpp"
 #include "ftxui/ui/sortable_table.hpp"
-#include "ftxui/ui/virtual_list.hpp"
-#include "ftxui/ui/list.hpp"
 #include "ftxui/ui/tree.hpp"
+#include "ftxui/ui/virtual_list.hpp"
 
-// ── Charts & Visualization ────────────────────────────────────────────────────
-#include "ftxui/ui/charts.hpp"
+// ── Charts & Visualization
+// ────────────────────────────────────────────────────
 #include "ftxui/ui/canvas.hpp"
+#include "ftxui/ui/charts.hpp"
 
-// ── Geospatial & Maps ─────────────────────────────────────────────────────────
+// ── Geospatial & Maps
+// ─────────────────────────────────────────────────────────
+#include "ftxui/ui/galaxy_map.hpp"
 #include "ftxui/ui/geojson.hpp"
 #include "ftxui/ui/geomap.hpp"
 #include "ftxui/ui/globe.hpp"
-#include "ftxui/ui/galaxy_map.hpp"
 #include "ftxui/ui/world_map_data.hpp"
 
-// ── Animation & Effects ───────────────────────────────────────────────────────
+// ── Animation & Effects
+// ───────────────────────────────────────────────────────
 #include "ftxui/ui/animation.hpp"
 #include "ftxui/ui/particles.hpp"
 
-// ── Overlays & Dialogs ────────────────────────────────────────────────────────
+// ── Overlays & Dialogs
+// ────────────────────────────────────────────────────────
+#include "ftxui/ui/alert.hpp"
 #include "ftxui/ui/dialog.hpp"
 #include "ftxui/ui/notification.hpp"
 #include "ftxui/ui/progress.hpp"
 #include "ftxui/ui/widgets.hpp"
 #include "ftxui/ui/wizard.hpp"
-#include "ftxui/ui/alert.hpp"
 
-// ── Navigation & Commands ─────────────────────────────────────────────────────
+// ── Navigation & Commands
+// ─────────────────────────────────────────────────────
 #include "ftxui/ui/command_palette.hpp"
 #include "ftxui/ui/log_panel.hpp"
 
-// ── Theming & Branding ────────────────────────────────────────────────────────
+// ── Theming & Branding
+// ────────────────────────────────────────────────────────
 #include "ftxui/ui/lcars.hpp"
 
-// ── Networking & Collaboration ────────────────────────────────────────────────
-#include "ftxui/ui/network_reactive.hpp"
+// ── Networking & Collaboration
+// ────────────────────────────────────────────────
 #include "ftxui/ui/collab.hpp"
 #include "ftxui/ui/live_source.hpp"
+#include "ftxui/ui/network_reactive.hpp"
 
 // ── AI & Intelligence ────────────────────────────────────────────────────────
 #include "ftxui/ui/llm_bridge.hpp"
 #include "ftxui/ui/registry.hpp"
 
 // ── System & Process ─────────────────────────────────────────────────────────
-#include "ftxui/ui/process_panel.hpp"
 #include "ftxui/ui/background_task.hpp"
+#include "ftxui/ui/process_panel.hpp"
 
-// ── Developer Tools ───────────────────────────────────────────────────────────
+// ── Developer Tools
+// ───────────────────────────────────────────────────────────
 #include "ftxui/ui/debug_overlay.hpp"
-#include "ftxui/ui/inspector.hpp"
 #include "ftxui/ui/event_recorder.hpp"
+#include "ftxui/ui/inspector.hpp"
 #include "ftxui/ui/ui_builder.hpp"
 
-// ── WebAssembly & Platform ────────────────────────────────────────────────────
+// ── WebAssembly & Platform
+// ────────────────────────────────────────────────────
 #include "ftxui/ui/wasm_bridge.hpp"
 #include "ftxui/ui/webgl_renderer.hpp"
 
