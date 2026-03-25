@@ -52,6 +52,17 @@ struct Form::Impl {
 
 Form::Form() : impl_(std::make_shared<Impl>()) {}
 
+// ── Reactive binding helper ───────────────────────────────────────────────────
+
+Form& Form::AddComponent(std::string_view label, ftxui::Component c) {
+  Impl::Entry e;
+  e.kind      = Impl::Kind::Field;  // renders the same as a text field row
+  e.label     = std::string(label);
+  e.component = std::move(c);
+  impl_->entries.push_back(std::move(e));
+  return *this;
+}
+
 // ── Field builders ────────────────────────────────────────────────────────────
 
 Form& Form::Field(std::string_view label,

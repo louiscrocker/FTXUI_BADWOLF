@@ -228,6 +228,12 @@ add_library(ui
   src/ftxui/ui/sortable_table.cpp
   include/ftxui/ui/debug_overlay.hpp
   src/ftxui/ui/debug_overlay.cpp
+  include/ftxui/ui/bind.hpp
+  include/ftxui/ui/reactive_list.hpp
+  include/ftxui/ui/model_binding.hpp
+  include/ftxui/ui/data_context.hpp
+  include/ftxui/ui/reactive_decorators.hpp
+  src/ftxui/ui/reactive_decorators.cpp
 )
 
 target_link_libraries(dom PUBLIC screen)

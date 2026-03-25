@@ -15,6 +15,7 @@
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/screen/box.hpp"
 #include "ftxui/screen/color.hpp"
+#include "ftxui/ui/reactive_list.hpp"
 #include "ftxui/ui/theme.hpp"
 
 namespace ftxui::ui {
@@ -61,6 +62,12 @@ class VirtualList {
     state_->owned_items = std::move(items);
     state_->items = state_->owned_items.get();
     state_->filtered_dirty = true;
+    return *this;
+  }
+
+  /// @brief Bind a ReactiveList<T>; re-renders automatically on changes.
+  VirtualList& BindList(std::shared_ptr<ReactiveList<T>> list) {
+    state_->reactive_list = list;
     return *this;
   }
 
@@ -117,6 +124,24 @@ class VirtualList {
   ftxui::Component Build() {
     auto s = state_;
 
+    // Wire up ReactiveList if provided.
+    if (s->reactive_list) {
+      auto items = std::make_shared<std::vector<T>>(s->reactive_list->Items());
+      s->owned_items    = items;
+      s->items          = items.get();
+      s->filtered_dirty = true;
+
+      auto weak_s = std::weak_ptr<State>(s);
+      s->reactive_list->OnChange([weak_s](const std::vector<T>& new_items) {
+        if (auto state = weak_s.lock()) {
+          state->owned_items    = std::make_shared<std::vector<T>>(new_items);
+          state->items          = state->owned_items.get();
+          state->filtered_dirty = true;
+        }
+        // PostEvent already called by ReactiveList::Notify().
+      });
+    }
+
     auto renderer =
         ftxui::Renderer([s]() -> ftxui::Element { return DoRender(s); });
 
@@ -137,6 +162,9 @@ class VirtualList {
     std::function<bool(const T&, const std::string&)> filter_fn;
     std::function<void(size_t, const T&)> on_select;
     bool show_search = false;
+
+    // ReactiveList binding (optional).
+    std::shared_ptr<ReactiveList<T>> reactive_list;
 
     // Runtime
     int selected = 0;

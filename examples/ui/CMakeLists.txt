@@ -28,6 +28,9 @@ example(world_ops_demo)
 example(process_demo)
 example(markdown_demo)
 example(virtual_table_demo)
+example(bind_demo)
+example(reactive_list_demo)
+example(model_binding_demo)
 
 # Copy world map GeoJSON data next to the binary at build time so examples
 # can locate it at runtime via their relative-path search.

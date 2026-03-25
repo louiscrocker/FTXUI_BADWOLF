@@ -11,6 +11,7 @@
 #include "ftxui/component/component_options.hpp"
 #include "ftxui/component/event.hpp"
 #include "ftxui/dom/elements.hpp"
+#include "ftxui/ui/bind.hpp"
 #include "ftxui/ui/theme.hpp"
 
 namespace ftxui::ui {
@@ -25,6 +26,10 @@ struct TextInput::Impl {
   bool         password    = false;
   bool         touched     = false;  // user has blurred after typing
 
+  // Reactive two-way binding (optional).
+  std::shared_ptr<ftxui::ui::Reactive<std::string>> reactive_binding;
+  bool suppress_reactive_update = false;
+
   std::function<bool(std::string_view)> validator;
   std::string  error_msg   = "Invalid input";
   std::function<void()>     on_change;
@@ -38,6 +43,13 @@ TextInput::TextInput(std::string_view label)
 
 TextInput& TextInput::Bind(std::string* value) {
   impl_->bound = value;
+  return *this;
+}
+
+TextInput& TextInput::Bind(ftxui::ui::Bind<std::string>& binding) {
+  impl_->reactive_binding = binding.AsReactive();
+  impl_->owned_value      = impl_->reactive_binding->Get();
+  impl_->bound            = &impl_->owned_value;
   return *this;
 }
 TextInput& TextInput::Placeholder(std::string_view text) {
@@ -88,6 +100,12 @@ ftxui::Component TextInput::Build() {
       target->resize(s->max_length);
     }
     s->touched = true;
+    // Propagate to reactive binding (without triggering the mirror listener).
+    if (s->reactive_binding && !s->suppress_reactive_update) {
+      s->suppress_reactive_update = true;
+      s->reactive_binding->Set(*target);
+      s->suppress_reactive_update = false;
+    }
     if (s->on_change) s->on_change();
   };
 
@@ -97,6 +115,18 @@ ftxui::Component TextInput::Build() {
   };
 
   auto input = Input(target, opt);
+
+  // Mirror reactive → owned_value whenever an external Set() occurs.
+  if (s->reactive_binding) {
+    auto weak_s = std::weak_ptr<Impl>(s);
+    s->reactive_binding->OnChange([weak_s, target](const std::string& val) {
+      if (auto sp = weak_s.lock()) {
+        if (!sp->suppress_reactive_update) {
+          *target = val;
+        }
+      }
+    });
+  }
 
   return Renderer(input, [s, input, target]() -> Element {
     const Theme& t  = GetTheme();

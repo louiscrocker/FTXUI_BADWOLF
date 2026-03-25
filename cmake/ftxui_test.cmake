@@ -89,6 +89,7 @@ add_executable(ftxui_ui_test
   src/ftxui/ui/textinput_test.cpp
   src/ftxui/ui/grid_test.cpp
   src/ftxui/ui/dialog_test.cpp
+  src/ftxui/ui/binding_test.cpp
 )
 
 target_link_libraries(ftxui_ui_test

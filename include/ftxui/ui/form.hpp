@@ -11,6 +11,8 @@
 #include <vector>
 
 #include "ftxui/component/component.hpp"
+#include "ftxui/ui/bind.hpp"
+#include "ftxui/ui/textinput.hpp"
 
 namespace ftxui::ui {
 
@@ -95,6 +97,79 @@ class Form {
   // Implicit conversion so a Form can be passed directly where a Component
   // is expected.
   operator ftxui::Component() const { return Build(); }  // NOLINT
+
+  // ── Reactive model binding (template helpers) ─────────────────────────────
+
+  /// @brief Internal helper used by BindField/BindCheckbox/BindPassword.
+  ///
+  /// Adds a pre-built component with the given label to the form's entry list.
+  Form& AddComponent(std::string_view label, ftxui::Component c);
+
+  /// @brief Bind a string field of a reactive model struct to a text input.
+  ///
+  /// @code
+  /// struct User { std::string name, email; };
+  /// auto model = MakeBind<User>();
+  /// Form().BindField("Name", model, &User::name)
+  ///       .BindField("Email", model, &User::email)
+  ///       .Build();
+  /// @endcode
+  template <typename ModelT>
+  Form& BindField(std::string_view label,
+                  Bind<ModelT>& model,
+                  std::string ModelT::*field) {
+    auto lens = MakeLens(model, field);
+    // TextInput::Bind(Bind<string>&) captures the underlying reactive by
+    // shared_ptr, so 'lens' may go out of scope safely after Build().
+    return AddComponent(
+        label, TextInput(label).Bind(lens).Build());
+  }
+
+  /// @brief Bind a string field as a password (masked) input.
+  template <typename ModelT>
+  Form& BindPassword(std::string_view label,
+                     Bind<ModelT>& model,
+                     std::string ModelT::*field) {
+    auto lens = MakeLens(model, field);
+    return AddComponent(
+        label, TextInput(label).Password(true).Bind(lens).Build());
+  }
+
+  /// @brief Bind a bool field of a reactive model struct to a checkbox.
+  template <typename ModelT>
+  Form& BindCheckbox(std::string_view label,
+                     Bind<ModelT>& model,
+                     bool ModelT::*field) {
+    // Build a reactive lens for the bool field.
+    auto lens          = MakeLens(model, field);
+    auto bool_reactive = lens.AsReactive();
+
+    // Allocate stable storage that FTXUI's Checkbox can write to.
+    auto storage = std::make_shared<bool>(bool_reactive->Get());
+
+    // reactive → storage
+    auto weak_storage = std::weak_ptr<bool>(storage);
+    bool_reactive->OnChange([weak_storage](const bool& v) {
+      if (auto s = weak_storage.lock()) {
+        *s = v;
+      }
+    });
+
+    // storage → reactive: wrap checkbox with an on-change observer.
+    auto opt = ftxui::CheckboxOption::Simple();
+    opt.on_change = [bool_reactive, storage] {
+      bool_reactive->Set(*storage);
+    };
+
+    auto comp = ftxui::Checkbox(label, storage.get(), opt);
+
+    // Keep storage alive for the lifetime of the component.
+    auto keeper = ftxui::Renderer(comp, [comp, storage]() {
+      return comp->Render();
+    });
+
+    return AddComponent(label, keeper);
+  }
 
  private:
   struct Impl;

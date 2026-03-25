@@ -10,6 +10,7 @@
 
 #include "ftxui/component/component.hpp"
 #include "ftxui/dom/elements.hpp"
+#include "ftxui/ui/bind.hpp"
 
 namespace ftxui::ui {
 
@@ -40,6 +41,12 @@ class TextInput {
 
   /// @brief Bind an external string to hold the input value.
   TextInput& Bind(std::string* value);
+
+  /// @brief Two-way reactive binding: syncs the input with a Bind<string>.
+  ///
+  /// Changes typed by the user update the reactive; external changes to the
+  /// reactive (via Set()) update the displayed text.
+  TextInput& Bind(ftxui::ui::Bind<std::string>& binding);
 
   /// @brief Grey placeholder shown when the field is empty.
   TextInput& Placeholder(std::string_view text);

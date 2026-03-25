@@ -15,6 +15,7 @@
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/dom/table.hpp"
 #include "ftxui/screen/color.hpp"
+#include "ftxui/ui/reactive_list.hpp"
 #include "ftxui/ui/theme.hpp"
 
 namespace ftxui::ui {
@@ -61,6 +62,12 @@ class DataTable {
   /// @brief Bind the data vector. The pointer must outlive the component.
   DataTable& Data(const std::vector<T>* data) {
     state_->data = data;
+    return *this;
+  }
+
+  /// @brief Bind a ReactiveList<T>; the table re-renders on every mutation.
+  DataTable& BindList(std::shared_ptr<ReactiveList<T>> list) {
+    state_->reactive_list = list;
     return *this;
   }
 
@@ -116,6 +123,20 @@ class DataTable {
   ftxui::Component Build() {
     auto state = state_;
 
+    // Wire up ReactiveList if provided.
+    if (state->reactive_list) {
+      state->reactive_list_copy =
+          std::make_shared<std::vector<T>>(state->reactive_list->Items());
+      state->data = state->reactive_list_copy.get();
+
+      state->reactive_list->OnChange([state](const std::vector<T>& new_items) {
+        state->reactive_list_copy =
+            std::make_shared<std::vector<T>>(new_items);
+        state->data = state->reactive_list_copy.get();
+        // PostEvent already called by ReactiveList::Notify().
+      });
+    }
+
     auto renderer = ftxui::Renderer([state]() -> ftxui::Element {
       return Render(state);
     });
@@ -144,6 +165,10 @@ class DataTable {
     std::function<void(const T&, size_t)> on_select;
     std::function<void(const T&, size_t)> on_activate;
     std::string* filter_text = nullptr;
+
+    // ReactiveList binding (optional).
+    std::shared_ptr<ReactiveList<T>> reactive_list;
+    std::shared_ptr<std::vector<T>> reactive_list_copy;
 
     // Runtime
     int sort_column = -1;
