@@ -45,6 +45,11 @@ struct Theme {
   static Theme Nord();
   static Theme Dracula();
   static Theme Monokai();
+  static Theme LCARS();
+  static Theme Imperial();
+  static Theme Rebel();
+  static Theme Enterprise();
+  static Theme Matrix();
 
   // ── Fluent setters ────────────────────────────────────────────────────────
   Theme& WithPrimary(Color c) {

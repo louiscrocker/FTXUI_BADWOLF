@@ -90,6 +90,11 @@ add_executable(ftxui_ui_test
   src/ftxui/ui/grid_test.cpp
   src/ftxui/ui/dialog_test.cpp
   src/ftxui/ui/binding_test.cpp
+  src/ftxui/ui/lcars_test.cpp
+  src/ftxui/ui/alert_test.cpp
+  src/ftxui/ui/animation_test.cpp
+  src/ftxui/ui/galaxy_test.cpp
+  src/ftxui/ui/devtools_test.cpp
 )
 
 target_link_libraries(ftxui_ui_test

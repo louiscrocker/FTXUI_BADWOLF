@@ -85,5 +85,15 @@
 #include "ftxui/ui/world_map_data.hpp"
 #include "ftxui/ui/markdown.hpp"
 #include "ftxui/ui/debug_overlay.hpp"
+#include "ftxui/ui/event_recorder.hpp"
+#include "ftxui/ui/ui_builder.hpp"
+#include "ftxui/ui/inspector.hpp"
+#include "ftxui/ui/galaxy_map.hpp"
+#include "ftxui/ui/network_reactive.hpp"
+#include "ftxui/ui/lcars.hpp"
+#include "ftxui/ui/alert.hpp"
+#include "ftxui/ui/animation.hpp"
+#include "ftxui/ui/particles.hpp"
+#include "ftxui/ui/transitions.hpp"
 
 #endif  // FTXUI_UI_HPP

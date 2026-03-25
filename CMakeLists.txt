@@ -228,12 +228,29 @@ add_library(ui
   src/ftxui/ui/sortable_table.cpp
   include/ftxui/ui/debug_overlay.hpp
   src/ftxui/ui/debug_overlay.cpp
+  include/ftxui/ui/event_recorder.hpp
+  src/ftxui/ui/event_recorder.cpp
+  include/ftxui/ui/ui_builder.hpp
+  src/ftxui/ui/ui_builder.cpp
+  include/ftxui/ui/inspector.hpp
+  src/ftxui/ui/inspector.cpp
+  src/ftxui/ui/lcars.cpp
+  src/ftxui/ui/alert.cpp
   include/ftxui/ui/bind.hpp
   include/ftxui/ui/reactive_list.hpp
   include/ftxui/ui/model_binding.hpp
   include/ftxui/ui/data_context.hpp
   include/ftxui/ui/reactive_decorators.hpp
   src/ftxui/ui/reactive_decorators.cpp
+  include/ftxui/ui/animation.hpp
+  src/ftxui/ui/animation.cpp
+  include/ftxui/ui/particles.hpp
+  src/ftxui/ui/particles.cpp
+  include/ftxui/ui/transitions.hpp
+  include/ftxui/ui/galaxy_map.hpp
+  src/ftxui/ui/galaxy_map.cpp
+  include/ftxui/ui/network_reactive.hpp
+  src/ftxui/ui/network_reactive.cpp
 )
 
 target_link_libraries(dom PUBLIC screen)

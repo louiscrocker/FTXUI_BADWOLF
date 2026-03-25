@@ -137,6 +137,106 @@ Theme Theme::Monokai() {
   return t;
 }
 
+Theme Theme::LCARS() {
+  Theme t;
+  t.primary = Color::RGB(255, 153, 0);
+  t.secondary = Color::RGB(153, 153, 255);
+  t.accent = Color::RGB(153, 153, 255);
+  t.error_color = Color::RGB(255, 51, 51);
+  t.warning_color = Color::RGB(255, 255, 102);
+  t.success_color = Color::RGB(153, 255, 153);
+  t.text = Color::RGB(255, 204, 153);
+  t.text_muted = Color::RGB(153, 102, 51);
+  t.border_color = Color::RGB(255, 153, 0);
+  t.button_bg_normal = Color::Default;
+  t.button_fg_normal = Color::RGB(255, 204, 153);
+  t.button_bg_active = Color::RGB(255, 153, 0);
+  t.button_fg_active = Color::RGB(0, 0, 0);
+  t.border_style = ROUNDED;
+  t.animations_enabled = true;
+  return t;
+}
+
+Theme Theme::Imperial() {
+  Theme t;
+  t.primary = Color::RGB(200, 0, 0);
+  t.secondary = Color::RGB(180, 180, 180);
+  t.accent = Color::RGB(180, 180, 180);
+  t.error_color = Color::RGB(255, 0, 0);
+  t.warning_color = Color::RGB(255, 140, 0);
+  t.success_color = Color::RGB(0, 180, 0);
+  t.text = Color::RGB(220, 220, 220);
+  t.text_muted = Color::RGB(100, 100, 100);
+  t.border_color = Color::RGB(100, 0, 0);
+  t.button_bg_normal = Color::Default;
+  t.button_fg_normal = Color::RGB(220, 220, 220);
+  t.button_bg_active = Color::RGB(200, 0, 0);
+  t.button_fg_active = Color::RGB(255, 255, 255);
+  t.border_style = HEAVY;
+  t.animations_enabled = true;
+  return t;
+}
+
+Theme Theme::Rebel() {
+  Theme t;
+  t.primary = Color::RGB(255, 140, 0);
+  t.secondary = Color::RGB(255, 200, 0);
+  t.accent = Color::RGB(255, 200, 0);
+  t.error_color = Color::RGB(255, 60, 60);
+  t.warning_color = Color::RGB(255, 200, 0);
+  t.success_color = Color::RGB(0, 255, 100);
+  t.text = Color::RGB(200, 255, 200);
+  t.text_muted = Color::RGB(0, 120, 0);
+  t.border_color = Color::RGB(0, 180, 0);
+  t.button_bg_normal = Color::Default;
+  t.button_fg_normal = Color::RGB(200, 255, 200);
+  t.button_bg_active = Color::RGB(255, 140, 0);
+  t.button_fg_active = Color::RGB(0, 0, 0);
+  t.border_style = ROUNDED;
+  t.animations_enabled = true;
+  return t;
+}
+
+Theme Theme::Enterprise() {
+  Theme t;
+  t.primary = Color::RGB(255, 200, 0);
+  t.secondary = Color::RGB(200, 50, 50);
+  t.accent = Color::RGB(100, 200, 255);
+  t.error_color = Color::RGB(255, 0, 0);
+  t.warning_color = Color::RGB(255, 165, 0);
+  t.success_color = Color::RGB(100, 200, 255);
+  t.text = Color::RGB(255, 255, 200);
+  t.text_muted = Color::RGB(150, 120, 0);
+  t.border_color = Color::RGB(150, 150, 0);
+  t.button_bg_normal = Color::Default;
+  t.button_fg_normal = Color::RGB(255, 255, 200);
+  t.button_bg_active = Color::RGB(255, 200, 0);
+  t.button_fg_active = Color::RGB(0, 0, 0);
+  t.border_style = ROUNDED;
+  t.animations_enabled = true;
+  return t;
+}
+
+Theme Theme::Matrix() {
+  Theme t;
+  t.primary = Color::RGB(0, 255, 65);
+  t.secondary = Color::RGB(0, 180, 45);
+  t.accent = Color::RGB(0, 180, 45);
+  t.error_color = Color::RGB(255, 50, 50);
+  t.warning_color = Color::RGB(200, 255, 0);
+  t.success_color = Color::RGB(0, 255, 65);
+  t.text = Color::RGB(0, 255, 65);
+  t.text_muted = Color::RGB(0, 80, 15);
+  t.border_color = Color::RGB(0, 100, 20);
+  t.button_bg_normal = Color::Default;
+  t.button_fg_normal = Color::RGB(0, 255, 65);
+  t.button_bg_active = Color::RGB(0, 180, 45);
+  t.button_fg_active = Color::RGB(0, 0, 0);
+  t.border_style = LIGHT;
+  t.animations_enabled = true;
+  return t;
+}
+
 // ── Style factories ───────────────────────────────────────────────────────────
 
 ButtonOption Theme::MakeButtonStyle() const {

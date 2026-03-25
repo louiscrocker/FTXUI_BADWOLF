@@ -31,6 +31,13 @@ example(virtual_table_demo)
 example(bind_demo)
 example(reactive_list_demo)
 example(model_binding_demo)
+example(recorder_demo)
+example(builder_demo)
+example(galaxy_demo)
+example(network_reactive_demo)
+example(animation_demo)
+example(starship_demo)
+example(imperial_demo)
 
 # Copy world map GeoJSON data next to the binary at build time so examples
 # can locate it at runtime via their relative-path search.
