@@ -1,0 +1,18 @@
+[package]
+name = "ftxui"
+version = "0.1.0"
+edition = "2021"
+description = "Safe Rust bindings for the FTXUI C API"
+license = "MIT"
+
+[lib]
+name = "ftxui"
+crate-type = ["rlib"]
+
+[[example]]
+name = "hello"
+
+[build-dependencies]
+# build.rs locates and links libftxui-c
+
+[dependencies]

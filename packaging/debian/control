@@ -1,0 +1,45 @@
+Source: ftxui
+Section: libs
+Priority: optional
+Maintainer: Arthur Sonzogni <sonzogniarthur@gmail.com>
+Build-Depends: debhelper-compat (= 13), cmake (>= 3.14), g++ (>= 10)
+Standards-Version: 4.6.0
+Homepage: https://github.com/ArthurSonzogni/FTXUI
+Vcs-Browser: https://github.com/ArthurSonzogni/FTXUI
+Vcs-Git: https://github.com/ArthurSonzogni/FTXUI.git
+
+Package: libftxui-dev
+Version: 6.2.0
+Section: libdevel
+Priority: optional
+Architecture: any
+Depends: libftxui6.2.0 (= ${binary:Version}), libc6-dev, libstdc++-dev
+Description: FTXUI — Functional Terminal User Interface library (development files)
+ A C++20 library for building rich terminal user interfaces with a
+ React-inspired component model, braille charts, GeoJSON maps, and more.
+ .
+ This package contains the headers and CMake config needed to build
+ applications against FTXUI.
+
+Package: libftxui6.2.0
+Version: 6.2.0
+Section: libs
+Priority: optional
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: FTXUI — Functional Terminal User Interface library (runtime)
+ A C++20 library for building rich terminal user interfaces with a
+ React-inspired component model, braille charts, GeoJSON maps, and more.
+ .
+ This package contains the shared libraries: ftxui-screen, ftxui-dom,
+ ftxui-component, and ftxui-ui.
+
+Package: ftxui-tools
+Version: 6.2.0
+Section: utils
+Priority: optional
+Architecture: any
+Depends: ${misc:Depends}
+Description: FTXUI CLI scaffolding tool
+ The `ftxui` command-line tool for creating new FTXUI projects,
+ listing demos, and scaffolding boilerplate C++ TUI applications.

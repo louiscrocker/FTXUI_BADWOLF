@@ -14,6 +14,7 @@
 #include "ftxui/component/event.hpp"
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/dom/table.hpp"
+#include "ftxui/screen/box.hpp"
 #include "ftxui/screen/color.hpp"
 #include "ftxui/ui/theme.hpp"
 
@@ -142,6 +143,10 @@ class SortableTable {
 
     std::vector<size_t> filtered;  // filtered+sorted row indices
     bool filtered_dirty = true;
+
+    // Mouse hit-testing boxes (updated each render).
+    std::vector<ftxui::Box> header_boxes;
+    std::vector<ftxui::Box> row_boxes;
   };
 
   // ── Helpers ────────────────────────────────────────────────────────────────
@@ -266,6 +271,7 @@ class SortableTable {
 
     // Header row.
     {
+      s->header_boxes.resize(s->columns.size());
       std::vector<Element> header;
       header.reserve(s->columns.size());
       for (int ci = 0; ci < static_cast<int>(s->columns.size()); ++ci) {
@@ -282,12 +288,14 @@ class SortableTable {
         if (col.width > 0) {
           cell = cell | size(WIDTH, EQUAL, col.width);
         }
+        cell = cell | reflect(s->header_boxes[static_cast<size_t>(ci)]);
         header.push_back(std::move(cell));
       }
       rows.push_back(std::move(header));
     }
 
     // Data rows.
+    s->row_boxes.resize(static_cast<size_t>(pv_size));
     for (int vi = 0; vi < pv_size; ++vi) {
       const size_t di = page_view[static_cast<size_t>(vi)];
       const bool is_sel = (vi == s->selected);

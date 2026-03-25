@@ -4,6 +4,7 @@
 #include "ftxui/ui/geomap.hpp"
 
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <functional>
 #include <limits>
@@ -16,6 +17,7 @@
 #include "ftxui/component/event.hpp"
 #include "ftxui/dom/canvas.hpp"
 #include "ftxui/dom/elements.hpp"
+#include "ftxui/screen/box.hpp"
 #include "ftxui/screen/color.hpp"
 #include "ftxui/ui/geojson.hpp"
 
@@ -63,6 +65,28 @@ struct GeoMap::Impl {
   double pan_lon_ = 0.0;
   double pan_lat_ = 0.0;
   double zoom_ = 1.0;
+
+  // Mouse drag state
+  bool dragging_ = false;
+  int drag_start_x_ = 0;
+  int drag_start_y_ = 0;
+  double drag_start_pan_lon_ = 0.0;
+  double drag_start_pan_lat_ = 0.0;
+
+  // Cached view bounds (updated each render for mouse coordinate conversion)
+  double cached_lon_min_ = -180.0;
+  double cached_lon_max_ = 180.0;
+  double cached_lat_min_ = -90.0;
+  double cached_lat_max_ = 90.0;
+  int cached_dot_w_ = 2;
+  int cached_dot_h_ = 4;
+  ftxui::Box canvas_box_;
+
+  // Double-click detection
+  using Clock = std::chrono::steady_clock;
+  Clock::time_point last_click_time_{};
+  int last_click_x_ = -1;
+  int last_click_y_ = -1;
 
   ftxui::Canvas RenderCanvas();
   bool HandleEvent(ftxui::Event event);
@@ -241,6 +265,14 @@ void GeoMap::Impl::DrawOnto(ftxui::Canvas& c) {
     return Project(lon, lat, lon_min, lon_max, lat_min, lat_max, dot_w, dot_h);
   };
 
+  // Cache view bounds for mouse coordinate mapping
+  cached_lon_min_ = lon_min;
+  cached_lon_max_ = lon_max;
+  cached_lat_min_ = lat_min;
+  cached_lat_max_ = lat_max;
+  cached_dot_w_ = dot_w;
+  cached_dot_h_ = dot_h;
+
   // Draw graticule
   if (show_graticule_) {
     const ftxui::Color gray(50, 50, 60);
@@ -404,6 +436,152 @@ bool GeoMap::Impl::HandleEvent(ftxui::Event event) {
     return true;
   }
 
+  // ── Mouse events ──────────────────────────────────────────────────────────
+  if (event.is_mouse()) {
+    auto& mouse = event.mouse();
+
+    // Only handle events within the canvas box.
+    if (!canvas_box_.Contain(mouse.x, mouse.y)) {
+      return false;
+    }
+
+    if (mouse.button == Mouse::WheelUp || mouse.button == Mouse::WheelDown) {
+      // Zoom centred on the cursor position.
+      const double dw = cached_dot_w_ > 1 ? cached_dot_w_ - 1 : 1;
+      const double dh = cached_dot_h_ > 1 ? cached_dot_h_ - 1 : 1;
+      const double lon_range = cached_lon_max_ - cached_lon_min_;
+      const double lat_range = cached_lat_max_ - cached_lat_min_;
+
+      // Canvas dot coordinates of the mouse cursor.
+      const double dot_x =
+          static_cast<double>(mouse.x - canvas_box_.x_min) * 2.0;
+      const double dot_y =
+          static_cast<double>(mouse.y - canvas_box_.y_min) * 4.0;
+
+      // Geographic position under the cursor in the current view.
+      const double mouse_lon =
+          cached_lon_min_ + (dot_x / dw) * lon_range;
+      const double mouse_lat =
+          cached_lat_max_ - (dot_y / dh) * lat_range;
+
+      const double factor = (mouse.button == Mouse::WheelUp) ? 1.25 : (1.0 / 1.25);
+      zoom_ *= factor;
+      if (zoom_ < 0.1) zoom_ = 0.1;
+
+      // Recompute the base range (without zoom) to find new range.
+      double base_lon_range =
+          (collection_.max_lon - collection_.min_lon) * 1.06;
+      double base_lat_range =
+          (collection_.max_lat - collection_.min_lat) * 1.06;
+      if (base_lon_range < 1.0) base_lon_range = 360.0;
+      if (base_lat_range < 1.0) base_lat_range = 180.0;
+
+      const double new_lon_range = base_lon_range / zoom_;
+      const double new_lat_range = base_lat_range / zoom_;
+
+      // Adjust pan so the point under the cursor stays fixed.
+      const double frac_x = dw > 0 ? dot_x / dw : 0.5;
+      const double frac_y = dh > 0 ? dot_y / dh : 0.5;
+
+      const double new_center_lon =
+          mouse_lon - (frac_x - 0.5) * new_lon_range;
+      const double new_center_lat =
+          mouse_lat + (frac_y - 0.5) * new_lat_range;
+
+      const double data_center_lon =
+          (collection_.min_lon + collection_.max_lon) / 2.0;
+      const double data_center_lat =
+          (collection_.min_lat + collection_.max_lat) / 2.0;
+
+      pan_lon_ = new_center_lon - data_center_lon;
+      pan_lat_ = new_center_lat - data_center_lat;
+      return true;
+    }
+
+    if (mouse.button == Mouse::Left && mouse.motion == Mouse::Pressed) {
+      // Detect double-click (within 400ms and ≤2 cell radius).
+      const auto now = Clock::now();
+      const auto dt =
+          std::chrono::duration_cast<std::chrono::milliseconds>(
+              now - last_click_time_)
+              .count();
+      const bool same_pos = std::abs(mouse.x - last_click_x_) <= 2 &&
+                             std::abs(mouse.y - last_click_y_) <= 2;
+      if (dt < 400 && same_pos && on_select_) {
+        // Double-click: select nearest feature at click position.
+        const double dw = cached_dot_w_ > 1 ? cached_dot_w_ - 1 : 1;
+        const double dh = cached_dot_h_ > 1 ? cached_dot_h_ - 1 : 1;
+        const double lon_range = cached_lon_max_ - cached_lon_min_;
+        const double lat_range = cached_lat_max_ - cached_lat_min_;
+        const double dot_x =
+            static_cast<double>(mouse.x - canvas_box_.x_min) * 2.0;
+        const double dot_y =
+            static_cast<double>(mouse.y - canvas_box_.y_min) * 4.0;
+        const double click_lon =
+            cached_lon_min_ + (dot_x / dw) * lon_range;
+        const double click_lat =
+            cached_lat_max_ - (dot_y / dh) * lat_range;
+
+        double best_dist = std::numeric_limits<double>::max();
+        const GeoFeature* best = nullptr;
+        for (const auto& f : collection_.features) {
+          double clon = 0.0, clat = 0.0;
+          int cnt = 0;
+          auto acc = [&](const GeoPoint& p) {
+            clon += p.lon; clat += p.lat; ++cnt;
+          };
+          for (const auto& pt : f.geometry.points) acc(pt);
+          for (const auto& ring : f.geometry.rings)
+            for (const auto& pt : ring) acc(pt);
+          for (const auto& poly : f.geometry.multipolygon)
+            for (const auto& ring : poly)
+              for (const auto& pt : ring) acc(pt);
+          if (cnt == 0) continue;
+          clon /= cnt; clat /= cnt;
+          double d = (clon - click_lon) * (clon - click_lon) +
+                     (clat - click_lat) * (clat - click_lat);
+          if (d < best_dist) { best_dist = d; best = &f; }
+        }
+        if (best) on_select_(*best);
+        last_click_time_ = Clock::time_point{};  // reset
+        return true;
+      }
+
+      // Begin drag.
+      last_click_time_ = now;
+      last_click_x_ = mouse.x;
+      last_click_y_ = mouse.y;
+      dragging_ = true;
+      drag_start_x_ = mouse.x;
+      drag_start_y_ = mouse.y;
+      drag_start_pan_lon_ = pan_lon_;
+      drag_start_pan_lat_ = pan_lat_;
+      return true;
+    }
+
+    if (mouse.button == Mouse::Left && mouse.motion == Mouse::Released) {
+      dragging_ = false;
+      return true;
+    }
+
+    if (mouse.motion == Mouse::Moved && dragging_) {
+      const double dw = cached_dot_w_ > 1 ? cached_dot_w_ - 1 : 1;
+      const double dh = cached_dot_h_ > 1 ? cached_dot_h_ - 1 : 1;
+      const double lon_range = cached_lon_max_ - cached_lon_min_;
+      const double lat_range = cached_lat_max_ - cached_lat_min_;
+
+      // Delta in braille dots.
+      const double ddx =
+          static_cast<double>(mouse.x - drag_start_x_) * 2.0;
+      const double ddy =
+          static_cast<double>(mouse.y - drag_start_y_) * 4.0;
+
+      pan_lon_ = drag_start_pan_lon_ - (ddx / dw) * lon_range;
+      pan_lat_ = drag_start_pan_lat_ + (ddy / dh) * lat_range;
+      return true;
+    }
+  }
+
   return false;
 }
 
@@ -480,7 +658,9 @@ ftxui::Component GeoMap::Build() {
   // allocated box size (box_w*2 dots × box_h*4 dots), so the map always
   // fills every available braille dot at maximum resolution.
   auto renderer = Renderer([impl]() -> Element {
-    return canvas(2, 4, [impl](Canvas& c) { impl->DrawOnto(c); }) | flex;
+    return canvas(2, 4, [impl](Canvas& c) { impl->DrawOnto(c); })
+           | flex
+           | reflect(impl->canvas_box_);
   });
 
   return CatchEvent(renderer, [impl](Event event) -> bool {

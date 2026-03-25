@@ -2,6 +2,7 @@ option(FTXUI_BUILD_DOCS "Set to ON to build docs" OFF)
 option(FTXUI_BUILD_EXAMPLES "Set to ON to build examples" OFF)
 option(FTXUI_BUILD_MODULES "Build the C++20 modules" OFF)
 option(FTXUI_BUILD_TESTS "Set to ON to build tests" OFF)
+option(FTXUI_BUILD_C_BINDINGS "Build C language bindings (libftxui-c)" OFF)
 option(FTXUI_BUILD_TESTS_FUZZER "Set to ON to enable fuzzing" OFF)
 option(FTXUI_CLANG_TIDY "Execute clang-tidy" OFF)
 option(FTXUI_DEV_WARNINGS "Enable more compiler warnings and warnings as errors" OFF)
@@ -253,6 +254,29 @@ include(cmake/ftxui_modules.cmake)
 
 add_subdirectory(examples)
 add_subdirectory(doc)
+add_subdirectory(apps)
+
+# ── C language bindings ──────────────────────────────────────────────────────
+if(FTXUI_BUILD_C_BINDINGS)
+  enable_language(C)
+
+  add_library(ftxui-c
+    src/ftxui_c/ftxui_c.cpp
+  )
+  target_include_directories(ftxui-c PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+  target_link_libraries(ftxui-c PRIVATE ui component dom screen)
+  set_target_properties(ftxui-c PROPERTIES
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED ON
+  )
+
+  add_executable(ftxui_c_test src/ftxui_c/test_c_api.c)
+  target_link_libraries(ftxui_c_test PRIVATE ftxui-c)
+  target_include_directories(ftxui_c_test PRIVATE include)
+endif()
 
 # You can generate ./examples_modules/ by running
 # ./tools/generate_examples_modules.sh

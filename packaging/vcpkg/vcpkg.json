@@ -1,0 +1,8 @@
+{
+  "name": "ftxui",
+  "version": "6.2.0",
+  "description": "Functional Terminal (X) User Interface — C++ TUI library with React-inspired API",
+  "homepage": "https://github.com/ArthurSonzogni/FTXUI",
+  "license": "MIT",
+  "dependencies": []
+}

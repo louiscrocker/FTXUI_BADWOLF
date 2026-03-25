@@ -1,0 +1,275 @@
+#!/usr/bin/env bash
+# ftxui — Project scaffolding and utility tool for FTXUI
+#
+# Usage:
+#   ftxui new <name>           Create a new FTXUI C++ project
+#   ftxui new <name> --python  Create a Python/pyftxui project stub
+#   ftxui demo                 List available built-in demos
+#   ftxui demo <name>          Run a named demo (if installed)
+#   ftxui version              Show version info
+#   ftxui help                 Show this help
+
+FTXUI_VERSION="6.2.0"
+
+# ── Helpers ────────────────────────────────────────────────────────────────────
+
+die() { echo "error: $*" >&2; exit 1; }
+
+usage() {
+  cat <<EOF
+ftxui ${FTXUI_VERSION} — FTXUI project scaffolding tool
+
+Commands:
+  new <name>            Create a new FTXUI C++ project in ./<name>/
+  new <name> --python   Create a Python/pyftxui project stub in ./<name>/
+  demo                  List available demos
+  demo <name>           Run a named demo
+  version               Print version and exit
+  help                  Show this help
+
+Examples:
+  ftxui new myapp
+  ftxui new myapp --python
+  ftxui demo globe
+  ftxui version
+EOF
+}
+
+# ── new ────────────────────────────────────────────────────────────────────────
+
+cmd_new_cpp() {
+  local name="$1"
+  local dir="./${name}"
+
+  [[ -e "$dir" ]] && die "directory '${dir}' already exists"
+
+  mkdir -p "${dir}/src"
+  echo "Creating FTXUI C++ project: ${name}"
+
+  # CMakeLists.txt
+  cat > "${dir}/CMakeLists.txt" <<CMAKEOF
+cmake_minimum_required(VERSION 3.14)
+project(${name})
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include(FetchContent)
+FetchContent_Declare(ftxui
+  GIT_REPOSITORY https://github.com/ArthurSonzogni/FTXUI
+  GIT_TAG        main
+)
+FetchContent_MakeAvailable(ftxui)
+
+add_executable(${name} src/main.cpp)
+target_link_libraries(${name} PRIVATE
+  ftxui::ui
+  ftxui::component
+  ftxui::dom
+  ftxui::screen
+)
+CMAKEOF
+
+  # src/main.cpp
+  cat > "${dir}/src/main.cpp" <<CPPEOF
+#include "ftxui/ui/app.hpp"
+#include "ftxui/ui/theme.hpp"
+#include "ftxui/component/component.hpp"
+#include "ftxui/dom/elements.hpp"
+
+using namespace ftxui;
+using namespace ftxui::ui;
+
+int main() {
+  SetTheme(Theme::Nord());
+
+  auto btn_quit = Button("Quit", [] {
+    if (auto* a = App::Active()) {
+      a->Exit();
+    }
+  });
+
+  auto ui = Renderer(btn_quit, [&] {
+    const auto& t = GetTheme();
+    return vbox({
+             text("Hello from FTXUI!") | bold | color(t.primary) | hcenter,
+             separator(),
+             btn_quit->Render() | hcenter,
+           }) |
+           border | center;
+  });
+
+  RunFullscreen(ui);
+  return 0;
+}
+CPPEOF
+
+  # .gitignore
+  cat > "${dir}/.gitignore" <<'GITEOF'
+build/
+cmake-build-*/
+.cache/
+*.o
+*.a
+*.so
+*.dylib
+GITEOF
+
+  # README.md
+  cat > "${dir}/README.md" <<MDEOF
+# ${name}
+
+A terminal UI application built with [FTXUI](https://github.com/ArthurSonzogni/FTXUI).
+
+## Build
+
+\`\`\`bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+./build/${name}
+\`\`\`
+
+## Requirements
+
+- C++20 compiler (GCC 10+, Clang 12+, MSVC 19.29+)
+- CMake 3.14+
+- Internet access (first build fetches FTXUI via FetchContent)
+MDEOF
+
+  echo "Done! Created:"
+  echo "  ${dir}/CMakeLists.txt"
+  echo "  ${dir}/src/main.cpp"
+  echo "  ${dir}/.gitignore"
+  echo "  ${dir}/README.md"
+  echo ""
+  echo "Build with:"
+  echo "  cd ${name} && cmake -S . -B build && cmake --build build"
+}
+
+cmd_new_python() {
+  local name="$1"
+  local dir="./${name}"
+
+  [[ -e "$dir" ]] && die "directory '${dir}' already exists"
+
+  mkdir -p "${dir}"
+  echo "Creating pyftxui project stub: ${name}"
+
+  cat > "${dir}/main.py" <<'PYEOF'
+"""
+Minimal pyftxui example.
+Install: pip install pyftxui
+"""
+try:
+    import pyftxui
+except ImportError:
+    print("pyftxui not installed. Run: pip install pyftxui")
+    raise SystemExit(1)
+
+# TODO: implement your TUI here
+print("Hello from pyftxui!")
+PYEOF
+
+  cat > "${dir}/requirements.txt" <<'REQEOF'
+pyftxui>=0.1.0
+REQEOF
+
+  cat > "${dir}/README.md" <<MDEOF
+# ${name}
+
+A terminal UI application using pyftxui (Python bindings for FTXUI).
+
+## Setup
+
+\`\`\`bash
+pip install -r requirements.txt
+python main.py
+\`\`\`
+MDEOF
+
+  echo "Done! Created:"
+  echo "  ${dir}/main.py"
+  echo "  ${dir}/requirements.txt"
+  echo "  ${dir}/README.md"
+}
+
+# ── demo ──────────────────────────────────────────────────────────────────────
+
+DEMOS=(
+  "button       - Interactive button component"
+  "menu         - Vertical menu navigation"
+  "input        - Text input field"
+  "slider       - Slider component"
+  "checkbox     - Checkbox list"
+  "radiobox     - Radio button group"
+  "color_gallery- Color palette demo"
+  "border       - Border styles showcase"
+  "canvas       - Braille canvas drawing"
+  "gauge        - Progress gauge"
+  "table        - Data table"
+  "globe        - Spinning ASCII globe"
+)
+
+cmd_demo_list() {
+  echo "Available demos:"
+  for d in "${DEMOS[@]}"; do
+    echo "  ftxui demo ${d}"
+  done
+  echo ""
+  echo "Demos require a built FTXUI installation."
+  echo "Look for executables named ftxui_example_<name> in your build directory."
+}
+
+cmd_demo_run() {
+  local name="$1"
+  # Search common build locations
+  local candidates=(
+    "./build/examples/component/ftxui_example_${name}"
+    "./build/examples/dom/ftxui_example_${name}"
+    "$(dirname "$0")/../build/examples/component/ftxui_example_${name}"
+    "$(dirname "$0")/../build/examples/dom/ftxui_example_${name}"
+  )
+  for candidate in "${candidates[@]}"; do
+    if [[ -x "$candidate" ]]; then
+      exec "$candidate"
+    fi
+  done
+  echo "Demo '${name}' not found. Build FTXUI examples first:"
+  echo "  cmake -S . -B build -DFTXUI_BUILD_EXAMPLES=ON && cmake --build build"
+  exit 1
+}
+
+# ── main dispatch ─────────────────────────────────────────────────────────────
+
+case "${1:-}" in
+  new)
+    name="${2:-}"
+    [[ -z "$name" ]] && { usage; exit 1; }
+    if [[ "${3:-}" == "--python" ]]; then
+      cmd_new_python "$name"
+    else
+      cmd_new_cpp "$name"
+    fi
+    ;;
+  demo)
+    if [[ -z "${2:-}" ]]; then
+      cmd_demo_list
+    else
+      cmd_demo_run "$2"
+    fi
+    ;;
+  version)
+    echo "ftxui ${FTXUI_VERSION}"
+    ;;
+  help|--help|-h)
+    usage
+    ;;
+  "")
+    usage
+    exit 1
+    ;;
+  *)
+    echo "Unknown command: $1" >&2
+    usage
+    exit 1
+    ;;
+esac

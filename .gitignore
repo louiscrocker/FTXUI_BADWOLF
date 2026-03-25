@@ -68,15 +68,53 @@ out/
 # include directory:
 !include/ftxui/**/*.hpp
 !include/ftxui/**/*.cpp
+!include/ftxui-c/**/*.h
 
 # src directory:
 !src/ftxui/*.cppm
 !src/ftxui/**/*.hpp
 !src/ftxui/**/*.cpp
 !src/ftxui/**/*.cppm
+!src/ftxui_c/**/*.cpp
+!src/ftxui_c/**/*.c
 
 # tools directory:
 !tools/**/*.sh
 !tools/**/*.py
 !tools/**/*.cpp
+!tools/ftxui
+
+# packaging directory:
+!packaging/**/*.cmake
+!packaging/**/*.json
+!packaging/**/*.rb
+!packaging/**/*.py
+!packaging/**/*.txt
+!packaging/**/*.md
+!packaging/debian/control
+
+# dist directory:
+!dist/**/*.hpp
+!dist/**/*.cpp
+!dist/**/*.md
+
+# apps directory:
+!apps/**/*.cpp
+!apps/**/*.hpp
+!apps/**/*.cmake
+!apps/**/*.md
+!apps/CMakeLists.txt
+
+# bindings directory:
+!bindings/**/*.py
+!bindings/**/*.pyi
+!bindings/**/*.cpp
+!bindings/**/*.hpp
+!bindings/**/*.toml
+!bindings/**/*.cfg
+!bindings/**/*.txt
+!bindings/**/*.md
+!bindings/**/*.rs
+!bindings/**/*.toml
+!bindings/rust/src/*.rs
 build/
