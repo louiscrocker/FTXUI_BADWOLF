@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI — Technical Deep Dive</title>
+  <meta name="description" content="FTXUI technical architecture: braille canvas engine, GeoJSON pipeline, orthographic globe, reactive state, virtual rendering, C API design.">
+  <meta property="og:title" content="FTXUI — Technical Deep Dive">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">FTXUI</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Getting Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+      <a href="deep-dive.html" class="nav-link">Deep Dive</a>
+      <a href="executive.html" class="nav-link">Executive Brief</a>
+    </div>
+    <div class="nav-actions">
+      <span class="star-badge">⭐ Star</span>
+      <a href="https://github.com/louiscrocker/FTXUI" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section style="padding:6rem 2rem 3rem;text-align:center;">
+  <span class="section-label">Technical Deep Dive</span>
+  <h1 style="font-size:clamp(2rem,4vw,3.5rem);font-weight:900;margin-bottom:1rem;">
+    Under the <span class="gradient-text">Hood</span>
+  </h1>
+  <p style="font-size:1.1rem;color:var(--text-secondary);max-width:620px;margin:0 auto;">
+    How FTXUI achieves sub-millisecond renders, 3D projections, adaptive resolution, and thread-safe reactivity — all in pure C++20.
+  </p>
+</section>
+
+<!-- Architecture Overview -->
+<section class="section" style="padding-top:2rem;">
+  <div class="section-inner" style="max-width:900px;">
+    <div class="section-header animate-on-scroll" style="text-align:left;">
+      <span class="section-label">Section 01</span>
+      <h2>Architecture Overview</h2>
+      <p>FTXUI is organized in four layers. Each layer builds on the one below. The <code>ftxui::ui</code> layer is additive — it never modifies the layers beneath it.</p>
+    </div>
+
+    <div class="animate-on-scroll" style="margin-bottom:2rem;">
+      <div class="arch-block">
+        <div class="arch-layer arch-layer-ui">
+          <div class="arch-layer-title">ftxui::ui &nbsp;&nbsp; (high-level API — our additions)</div>
+          <div class="arch-layer-items">Form │ Charts │ GeoMap │ Globe │ Reactive │ Router │ Wizard │ DataTable │ VirtualList</div>
+        </div>
+        <div style="text-align:center;font-size:1.2rem;color:var(--text-muted);margin:0.1rem 0;">▼</div>
+        <div class="arch-layer arch-layer-component">
+          <div class="arch-layer-title">ftxui::component &nbsp;&nbsp; (interactive event handling)</div>
+          <div class="arch-layer-items">Button │ Input │ Renderer │ Container │ CatchEvent │ Modal</div>
+        </div>
+        <div style="text-align:center;font-size:1.2rem;color:var(--text-muted);margin:0.1rem 0;">▼</div>
+        <div class="arch-layer arch-layer-dom">
+          <div class="arch-layer-title">ftxui::dom &nbsp;&nbsp; (layout and styling elements)</div>
+          <div class="arch-layer-items">hbox │ vbox │ text │ canvas │ border │ color │ size │ flex │ separator</div>
+        </div>
+        <div style="text-align:center;font-size:1.2rem;color:var(--text-muted);margin:0.1rem 0;">▼</div>
+        <div class="arch-layer arch-layer-screen">
+          <div class="arch-layer-title">ftxui::screen &nbsp;&nbsp; (terminal I/O, pixels, events)</div>
+          <div class="arch-layer-items">Terminal I/O │ Color │ Pixel │ Event │ Screen │ Canvas (braille)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box animate-on-scroll">
+      <strong>Design principle:</strong> Each layer is independently usable. You can use just <code>ftxui::dom</code> to render static layouts, or just <code>ftxui::screen</code> for raw terminal access. The <code>ftxui::ui</code> layer adds the high-level builder API on top.
+    </div>
+  </div>
+</section>
+
+<!-- Braille Canvas Engine -->
+<section class="section" style="padding-top:0;" id="braille">
+  <div class="section-inner" style="max-width:900px;">
+    <div class="section-header animate-on-scroll" style="text-align:left;">
+      <span class="section-label">Section 02</span>
+      <h2>Adaptive Braille Canvas Engine</h2>
+    </div>
+
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;">
+      <h3 style="color:var(--teal-light);margin-bottom:1rem;">The Braille Resolution Trick</h3>
+      <p style="color:var(--text-secondary);margin-bottom:1.5rem;">
+        Unicode braille characters encode 2×4 dots per character cell. This gives FTXUI <strong style="color:var(--text-primary);">8× the resolution</strong> of normal character rendering — without any special terminal support.
+      </p>
+      <div class="code-block"><pre><span class="cmt">// A standard 80×24 terminal in braille resolution:</span>
+<span class="cmt">// Characters: 80 × 24 = 1,920 cells</span>
+<span class="cmt">// Braille dots: (80×2) × (24×4) = 160 × 96 = 15,360 addressable dots</span>
+
+<span class="cmt">// Each braille character encodes an 8-bit pattern:</span>
+<span class="cmt">// ⡿ = 0b11111110 — 7 of 8 dots set</span>
+<span class="cmt">// ⢿ = 0b11111101 — 7 of 8 dots set, different column</span>
+<span class="cmt">// ⣿ = 0b11111111 — all 8 dots set (solid block)</span>
+
+<span class="cmt">// Mapping: unicode codepoint = U+2800 + bitmask</span>
+<span class="cmt">// Bit layout per cell:</span>
+<span class="cmt">//   col0 col1</span>
+<span class="cmt">//   bit0 bit3  (row 0)</span>
+<span class="cmt">//   bit1 bit4  (row 1)</span>
+<span class="cmt">//   bit2 bit5  (row 2)</span>
+<span class="cmt">//   bit6 bit7  (row 3)</span></pre></div>
+    </div>
+
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;">
+      <h3 style="color:var(--teal-light);margin-bottom:1rem;">Adaptive Sizing with <code>canvas(w, h, fn) | flex</code></h3>
+      <p style="color:var(--text-secondary);margin-bottom:1.5rem;">
+        The key insight: <code>canvas(w, h, fn)</code> specifies <em>minimum</em> dimensions. The <code>CanvasFunctionNode::Render()</code> creates a <code>Canvas</code> at the <em>actual</em> box size allocated by the layout engine. Your draw function reads <code>c.width()</code> and <code>c.height()</code> to draw at full resolution.
+      </p>
+      <div class="code-block"><pre><span class="cmt">// This chart fills ALL available terminal space at MAX braille resolution:</span>
+<span class="kw">auto</span> element = <span class="fn">canvas</span>(<span class="num">2</span>, <span class="num">4</span>, [&](<span class="type">Canvas</span>&amp; c) {
+    <span class="type">int</span> w = c.<span class="fn">width</span>();   <span class="cmt">// actual dot-width (always even)</span>
+    <span class="type">int</span> h = c.<span class="fn">height</span>();  <span class="cmt">// actual dot-height (always mult of 4)</span>
+
+    <span class="cmt">// Scale data to actual canvas size:</span>
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; (<span class="type">int</span>)data.<span class="fn">size</span>() - <span class="num">1</span>; i++) {
+        <span class="type">int</span> x1 = i * w / data.<span class="fn">size</span>();
+        <span class="type">int</span> y1 = h - (<span class="type">int</span>)(data[i] * h / max_val);
+        <span class="type">int</span> x2 = (i+<span class="num">1</span>) * w / data.<span class="fn">size</span>();
+        <span class="type">int</span> y2 = h - (<span class="type">int</span>)(data[i+<span class="num">1</span>] * h / max_val);
+        c.<span class="fn">DrawPointLine</span>(x1, y1, x2, y2, <span class="ns">Color</span>::<span class="fn">Red</span>());
+    }
+}) | <span class="fn">flex</span>;  <span class="cmt">// &lt;-- this makes it fill all space</span></pre></div>
+    </div>
+
+    <div class="glass-card animate-on-scroll">
+      <h3 style="color:var(--teal-light);margin-bottom:1rem;">Performance Math</h3>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;text-align:center;">
+        <div>
+          <div style="font-size:2rem;font-weight:900;color:var(--purple-light);">8×</div>
+          <div style="font-size:0.85rem;color:var(--text-muted);">resolution over character cells</div>
+        </div>
+        <div>
+          <div style="font-size:2rem;font-weight:900;color:var(--teal-light);">0.3ms</div>
+          <div style="font-size:0.85rem;color:var(--text-muted);">typical chart render time</div>
+        </div>
+        <div>
+          <div style="font-size:2rem;font-weight:900;color:var(--amber);">15,360</div>
+          <div style="font-size:0.85rem;color:var(--text-muted);">addressable dots at 80×24</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GeoJSON Pipeline -->
+<section class="section" style="padding-top:0;" id="geojson-pipeline">
+  <div class="section-inner" style="max-width:900px;">
+    <div class="section-header animate-on-scroll" style="text-align:left;">
+      <span class="section-label">Section 03</span>
+      <h2>GeoJSON Rendering Pipeline</h2>
+    </div>
+
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;">
+      <h3 style="color:var(--amber);margin-bottom:1rem;">Step-by-Step Pipeline</h3>
+      <div style="counter-reset:pipeline;">
+        <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--glass-border);">
+          <div style="width:2rem;height:2rem;background:var(--grad-accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;flex-shrink:0;">1</div>
+          <div>
+            <div style="font-weight:600;color:var(--text-primary);margin-bottom:0.25rem;">Parse JSON → Feature Vector</div>
+            <div style="color:var(--text-secondary);font-size:0.875rem;">Iterate the GeoJSON <code>features</code> array. For each feature, extract <code>geometry.type</code> (Point, LineString, Polygon, MultiPolygon) and <code>properties</code> (name, etc.). Store as <code>vector&lt;Feature&gt;</code>.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--glass-border);">
+          <div style="width:2rem;height:2rem;background:var(--grad-accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;flex-shrink:0;">2</div>
+          <div>
+            <div style="font-weight:600;color:var(--text-primary);margin-bottom:0.25rem;">Project lon/lat → Canvas Pixels</div>
+            <div style="color:var(--text-secondary);font-size:0.875rem;">Equirectangular projection scaled to canvas dots.</div>
+            <div class="code-block" style="margin-top:0.75rem;font-size:0.8rem;"><pre><span class="cmt">// lon ∈ [-180, 180] → px ∈ [0, dot_w]</span>
+<span class="type">int</span> px = (lon + <span class="num">180.0</span>) / <span class="num">360.0</span> * dot_w;
+<span class="cmt">// lat ∈ [-90, 90]   → py ∈ [0, dot_h]</span>
+<span class="type">int</span> py = (<span class="num">90.0</span> - lat) / <span class="num">180.0</span> * dot_h;</pre></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--glass-border);">
+          <div style="width:2rem;height:2rem;background:var(--grad-accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;flex-shrink:0;">3</div>
+          <div>
+            <div style="font-weight:600;color:var(--text-primary);margin-bottom:0.25rem;">Anti-Wrap Guard</div>
+            <div style="color:var(--text-secondary);font-size:0.875rem;">Countries that cross the ±180° meridian (Russia, USA Alaska) would draw a line across the entire map. The anti-wrap guard detects and skips these segments.</div>
+            <div class="code-block" style="margin-top:0.75rem;font-size:0.8rem;"><pre><span class="kw">if</span> (<span class="fn">std::abs</span>(px - prev_px) > dot_w / <span class="num">2</span>) {
+    prev_px = px; prev_py = py;
+    <span class="kw">continue</span>; <span class="cmt">// skip anti-meridian segment</span>
+}</pre></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--glass-border);">
+          <div style="width:2rem;height:2rem;background:var(--grad-accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;flex-shrink:0;">4</div>
+          <div>
+            <div style="font-weight:600;color:var(--text-primary);margin-bottom:0.25rem;">Overlay Rendering</div>
+            <div style="color:var(--text-secondary);font-size:0.875rem;">After the base map is drawn, overlays are rendered on top: marker pins at specific lon/lat, text labels, and animated arcs between cities.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:1rem;align-items:flex-start;">
+          <div style="width:2rem;height:2rem;background:var(--grad-accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;flex-shrink:0;">5</div>
+          <div>
+            <div style="font-weight:600;color:var(--text-primary);margin-bottom:0.25rem;">Great-Circle Arc Rendering</div>
+            <div style="color:var(--text-secondary);font-size:0.875rem;">Arcs between cities use spherical linear interpolation (slerp) on the unit sphere, then project each interpolated point to canvas coordinates. Creates the characteristic curved flight path appearance.</div>
+            <div class="code-block" style="margin-top:0.75rem;font-size:0.8rem;"><pre><span class="cmt">// Slerp 50 points along the great circle</span>
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; <span class="num">50</span>; i++) {
+    <span class="type">double</span> t = i / <span class="num">49.0</span>;
+    <span class="kw">auto</span> [lon, lat] = <span class="fn">slerp_geodesic</span>(p1, p2, t);
+    <span class="kw">int</span> px = (lon + <span class="num">180.0</span>) / <span class="num">360.0</span> * dot_w;
+    <span class="kw">int</span> py = (<span class="num">90.0</span> - lat) / <span class="num">180.0</span> * dot_h;
+    <span class="cmt">// draw point...</span>
+}</pre></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Globe Projection -->
+<section class="section" style="padding-top:0;" id="globe-math">
+  <div class="section-inner" style="max-width:900px;">
+    <div class="section-header animate-on-scroll" style="text-align:left;">
+      <span class="section-label">Section 04</span>
+      <h2>Globe Orthographic Projection</h2>
+      <p>The 3D spinning globe uses classical orthographic projection with a visibility test. All math is in ~50 lines of C++.</p>
+    </div>
+
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;">
+      <h3 style="color:var(--purple-light);margin-bottom:1rem;">The Math</h3>
+      <div class="code-block"><pre><span class="cmt">// Given: center (λ₀, φ₀) — current viewing longitude/latitude</span>
+<span class="cmt">// Given: point  (λ, φ)   — the point to project</span>
+
+<span class="cmt">// Step 1: Visibility test — is this point on the visible hemisphere?</span>
+<span class="type">double</span> cos_c = <span class="fn">sin</span>(φ₀) * <span class="fn">sin</span>(φ)
+              + <span class="fn">cos</span>(φ₀) * <span class="fn">cos</span>(φ) * <span class="fn">cos</span>(λ - λ₀);
+
+<span class="kw">if</span> (cos_c &lt;= <span class="num">0.0</span>) <span class="kw">continue</span>; <span class="cmt">// point is on the back hemisphere — skip</span>
+
+<span class="cmt">// Step 2: Project to 2D plane</span>
+<span class="type">double</span> x = <span class="fn">cos</span>(φ) * <span class="fn">sin</span>(λ - λ₀);
+<span class="type">double</span> y = <span class="fn">cos</span>(φ₀) * <span class="fn">sin</span>(φ)
+         - <span class="fn">sin</span>(φ₀) * <span class="fn">cos</span>(φ) * <span class="fn">cos</span>(λ - λ₀);
+
+<span class="cmt">// Step 3: Scale to canvas pixels</span>
+<span class="type">double</span> radius = <span class="fn">std::min</span>(dot_w, dot_h) / <span class="num">2.0</span> * <span class="num">0.9</span>;
+<span class="type">int</span> px = dot_w / <span class="num">2</span> + x * radius;
+<span class="type">int</span> py = dot_h / <span class="num">2</span> - y * radius;  <span class="cmt">// y-flip for screen coords</span>
+
+c.<span class="fn">DrawPoint</span>(px, py, theme_color);</pre></div>
+    </div>
+
+    <div class="glass-card animate-on-scroll">
+      <h3 style="color:var(--purple-light);margin-bottom:1rem;">Animation Architecture</h3>
+      <p style="color:var(--text-secondary);margin-bottom:1rem;">The globe spins via a dedicated background thread, not by blocking the event loop.</p>
+      <div class="code-block"><pre><span class="cmt">// Background thread updates rotation center and posts a refresh event</span>
+<span class="kw">void</span> <span class="fn">GlobeAnimationThread</span>(<span class="type">double</span> deg_per_sec,
+                           <span class="type">std::atomic</span>&lt;<span class="type">double</span>&gt;&amp; lambda0,
+                           <span class="type">std::atomic</span>&lt;<span class="type">bool</span>&gt;&amp; running) {
+    <span class="kw">auto</span> last = <span class="ns">std::chrono</span>::<span class="fn">steady_clock::now</span>();
+    <span class="kw">while</span> (running.<span class="fn">load</span>()) {
+        <span class="kw">auto</span> now = <span class="ns">std::chrono</span>::<span class="fn">steady_clock::now</span>();
+        <span class="type">double</span> dt = <span class="ns">std::chrono</span>::<span class="fn">duration</span>&lt;<span class="type">double</span>&gt;(now - last).<span class="fn">count</span>();
+        last = now;
+
+        <span class="type">double</span> new_lon = <span class="fn">std::fmod</span>(lambda0 + deg_per_sec * dt, <span class="num">360.0</span>);
+        lambda0.<span class="fn">store</span>(new_lon);
+
+        <span class="cmt">// Trigger UI redraw (zero-copy event)</span>
+        <span class="ns">App</span>::<span class="fn">Active</span>()-&gt;<span class="fn">Post</span>({});
+
+        <span class="cmt">// ~20fps</span>
+        <span class="ns">std::this_thread</span>::<span class="fn">sleep_for</span>(<span class="ns">std::chrono</span>::<span class="fn">milliseconds</span>(<span class="num">50</span>));
+    }
+}</pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- Reactive State -->
+<section class="section" style="padding-top:0;" id="reactive-internals">
+  <div class="section-inner" style="max-width:900px;">
+    <div class="section-header animate-on-scroll" style="text-align:left;">
+      <span class="section-label">Section 05</span>
+      <h2>Reactive State System</h2>
+      <p>Thread-safe, re-entrant, zero-allocation on the hot path.</p>
+    </div>
+
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;">
+      <h3 style="color:var(--red);margin-bottom:1rem;">Reactive&lt;T&gt; Implementation</h3>
+      <div class="code-block"><pre><span class="kw">template</span>&lt;<span class="kw">typename</span> <span class="type">T</span>&gt;
+<span class="kw">class</span> <span class="type">Reactive</span> {
+    <span class="type">T</span> value_;
+    <span class="type">std::mutex</span> mutex_;
+    <span class="type">std::map</span>&lt;<span class="type">int</span>, <span class="type">std::function</span>&lt;<span class="type">void</span>(<span class="type">T</span>)&gt;&gt; listeners_;
+    <span class="type">int</span> next_id_ = <span class="num">0</span>;
+
+<span class="kw">public</span>:
+    <span class="type">void</span> <span class="fn">Set</span>(<span class="type">T</span> new_value) {
+        <span class="cmt">// Copy value and listener map under lock</span>
+        <span class="type">decltype</span>(listeners_) snapshot;
+        {
+            <span class="type">std::lock_guard</span>&lt;<span class="type">std::mutex</span>&gt; lock(mutex_);
+            value_ = <span class="fn">std::move</span>(new_value);
+            snapshot = listeners_;  <span class="cmt">// copy before calling</span>
+        }
+
+        <span class="cmt">// Call listeners WITHOUT holding the lock</span>
+        <span class="cmt">// — this is what makes it re-entrant safe</span>
+        <span class="kw">for</span> (<span class="kw">auto</span>&amp; [id, fn] : snapshot) {
+            <span class="fn">fn</span>(value_);
+        }
+
+        <span class="cmt">// Post a zero-copy event to trigger UI re-render</span>
+        <span class="kw">if</span> (<span class="kw">auto</span> app = <span class="ns">App</span>::<span class="fn">TryActive</span>()) {
+            app-&gt;<span class="fn">Post</span>(<span class="ns">Event</span>::Custom);
+        }
+    }
+};</pre></div>
+    </div>
+
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;">
+      <h3 style="color:var(--red);margin-bottom:1rem;">ReactiveGroup — Batch Updates</h3>
+      <p style="color:var(--text-secondary);margin-bottom:1rem;">Uses a thread-local batch depth counter to suppress per-mutation refreshes and coalesce them into a single redraw.</p>
+      <div class="code-block"><pre><span class="kw">thread_local</span> <span class="type">int</span> batch_depth = <span class="num">0</span>;
+
+<span class="kw">void</span> <span class="type">ReactiveGroup</span>::<span class="fn">Batch</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>()&gt; fn) {
+    batch_depth++;
+    <span class="fn">fn</span>();         <span class="cmt">// all Set() calls inside suppress refresh</span>
+    batch_depth--;
+    <span class="kw">if</span> (batch_depth == <span class="num">0</span>) {
+        <span class="cmt">// Single refresh for all mutations</span>
+        <span class="ns">App</span>::<span class="fn">Active</span>()-&gt;<span class="fn">Post</span>(<span class="ns">Event</span>::Custom);
+    }
+}
+
+<span class="cmt">// Inside Reactive::Set():</span>
+<span class="kw">if</span> (batch_depth == <span class="num">0</span>) {
+    app-&gt;<span class="fn">Post</span>(<span class="ns">Event</span>::Custom); <span class="cmt">// only if not in batch</span>
+}</pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- Virtual Rendering -->
+<section class="section" style="padding-top:0;" id="virtual-rendering">
+  <div class="section-inner" style="max-width:900px;">
+    <div class="section-header animate-on-scroll" style="text-align:left;">
+      <span class="section-label">Section 06</span>
+      <h2>Virtual Rendering — O(visible)</h2>
+      <p>50,000 rows render as fast as 50. The trick: use <code>reflect(box)</code> to find out how many rows fit in the current terminal, then only render those.</p>
+    </div>
+
+    <div class="glass-card animate-on-scroll">
+      <div class="code-block"><pre><span class="type">Element</span> <span class="type">VirtualListNode</span>::<span class="fn">Render</span>() {
+    <span class="cmt">// On first render, box_ is empty. Render placeholder.</span>
+    <span class="kw">if</span> (!box_.y_max) <span class="kw">return</span> <span class="fn">placeholder_element</span>();
+
+    <span class="cmt">// From the previous frame: how many rows fit?</span>
+    <span class="type">int</span> visible_rows = box_.y_max - box_.y_min;
+    <span class="type">int</span> end = <span class="fn">std::min</span>(scroll_offset_ + visible_rows,
+                      (<span class="type">int</span>)items_.<span class="fn">size</span>());
+
+    <span class="cmt">// Only render items[scroll_offset_..end)</span>
+    <span class="type">Elements</span> rendered;
+    rendered.<span class="fn">reserve</span>(visible_rows);
+    <span class="kw">for</span> (<span class="type">int</span> i = scroll_offset_; i &lt; end; i++) {
+        <span class="type">bool</span> selected = (i == selected_index_);
+        rendered.<span class="fn">push_back</span>(<span class="fn">renderer_</span>(items_[i], selected));
+    }
+
+    <span class="kw">return</span> <span class="fn">vbox</span>(<span class="fn">std::move</span>(rendered)) | <span class="fn">reflect</span>(box_);
+    <span class="cmt">//                                    ^^^ captures box next frame</span>
+}
+
+<span class="cmt">// Result: render time is O(visible_rows), not O(total_rows)</span>
+<span class="cmt">// 50,000 rows → same as 50 visible rows.</span></pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- C API Design -->
+<section class="section" style="padding-top:0;" id="c-api">
+  <div class="section-inner" style="max-width:900px;">
+    <div class="section-header animate-on-scroll" style="text-align:left;">
+      <span class="section-label">Section 07</span>
+      <h2>C API Design &amp; FFI</h2>
+      <p>Language-agnostic ABI via opaque handles. Any language with C FFI (Rust, Python, Go, Zig, D, ...) can use FTXUI.</p>
+    </div>
+
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;">
+      <h3 style="color:var(--blue-light);margin-bottom:1rem;">Opaque Handle Types</h3>
+      <div class="code-block"><pre><span class="cmt">// ftxui-c.h — the C API surface</span>
+<span class="pp">#ifdef __cplusplus</span>
+<span class="kw">extern</span> <span class="str">"C"</span> {
+<span class="pp">#endif</span>
+
+<span class="cmt">// Opaque pointer types</span>
+<span class="kw">typedef</span> <span class="kw">struct</span> ftxui_element_s*   <span class="type">ftxui_element_t</span>;
+<span class="kw">typedef</span> <span class="kw">struct</span> ftxui_component_s* <span class="type">ftxui_component_t</span>;
+
+<span class="cmt">// Internally: malloc'd struct containing shared_ptr</span>
+<span class="kw">struct</span> <span class="type">ftxui_element_s</span> {
+    <span class="type">ftxui::Element</span> value;  <span class="cmt">// = shared_ptr&lt;Node&gt;</span>
+};
+
+<span class="cmt">// Factory functions</span>
+<span class="type">ftxui_element_t</span>   <span class="fn">ftxui_text</span>(<span class="kw">const</span> <span class="kw">char</span>* text);
+<span class="type">ftxui_element_t</span>   <span class="fn">ftxui_hbox</span>(<span class="type">ftxui_element_t</span>* elems, <span class="type">int</span> count);
+<span class="type">ftxui_component_t</span> <span class="fn">ftxui_button</span>(<span class="kw">const</span> <span class="kw">char</span>* label, <span class="type">void</span> (*cb)(<span class="type">void</span>*), <span class="type">void</span>* userdata);
+<span class="type">void</span>              <span class="fn">ftxui_run_fullscreen</span>(<span class="type">ftxui_component_t</span> root);
+
+<span class="cmt">// Caller MUST free returned handles</span>
+<span class="type">void</span> <span class="fn">ftxui_free_element</span>(<span class="type">ftxui_element_t</span>);
+<span class="type">void</span> <span class="fn">ftxui_free_component</span>(<span class="type">ftxui_component_t</span>);
+
+<span class="pp">#ifdef __cplusplus</span>
+}
+<span class="pp">#endif</span></pre></div>
+    </div>
+
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;">
+      <h3 style="color:var(--blue-light);margin-bottom:1rem;">Python Binding — GIL Safety</h3>
+      <p style="color:var(--text-secondary);margin-bottom:1rem;">The Python bindings release the GIL during <code>run_fullscreen</code> so other Python threads can run. The FTXUI event callbacks re-acquire it.</p>
+      <div class="code-block"><pre><span class="cmt">// In the pybind11 module</span>
+m.<span class="fn">def</span>(<span class="str">"run_fullscreen"</span>, [](<span class="type">py::object</span> component) {
+    <span class="cmt">// Convert Python component to C++ Component</span>
+    <span class="kw">auto</span> cpp_comp = <span class="fn">python_to_component</span>(component);
+
+    {
+        <span class="cmt">// Release GIL: FTXUI's event loop runs in C++</span>
+        <span class="ns">py::gil_scoped_release</span> release;
+        <span class="ns">ftxui::ui</span>::<span class="fn">RunFullscreen</span>(cpp_comp);
+    } <span class="cmt">// GIL re-acquired when RunFullscreen returns</span>
+}, <span class="ns">py::arg</span>(<span class="str">"component"</span>));
+
+<span class="cmt">// Callbacks acquire GIL before calling Python:</span>
+<span class="kw">auto</span> wrap_callback = [](<span class="type">py::object</span> fn) {
+    <span class="kw">return</span> [fn]() {
+        <span class="ns">py::gil_scoped_acquire</span> acquire;
+        <span class="fn">fn</span>();
+    };
+};</pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- Build System -->
+<section class="section" style="padding-top:0;" id="build">
+  <div class="section-inner" style="max-width:900px;">
+    <div class="section-header animate-on-scroll" style="text-align:left;">
+      <span class="section-label">Section 08</span>
+      <h2>Build System</h2>
+    </div>
+
+    <div class="glass-card-static animate-on-scroll" style="overflow:auto;">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>CMake Option</th>
+            <th>Description</th>
+            <th>Default</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>FTXUI_BUILD_EXAMPLES</code></td><td>Build example applications</td><td>OFF</td></tr>
+          <tr><td><code>FTXUI_BUILD_TESTS</code></td><td>Build and enable test suite</td><td>OFF</td></tr>
+          <tr><td><code>FTXUI_BUILD_DOCS</code></td><td>Build Doxygen documentation</td><td>OFF</td></tr>
+          <tr><td><code>FTXUI_BUILD_MODULES</code></td><td>Build C++20 module interface</td><td>OFF</td></tr>
+          <tr><td><code>FTXUI_ENABLE_INSTALL</code></td><td>Generate install targets</td><td>ON</td></tr>
+          <tr><td><code>FTXUI_MICROSOFT_TERMINAL_FALLBACK</code></td><td>Windows Terminal compatibility</td><td>ON/OFF</td></tr>
+          <tr><td><code>FTXUI_BUILD_UI_LAYER</code></td><td>Build the high-level UI layer</td><td>ON</td></tr>
+          <tr><td><code>FTXUI_BUILD_CAPI</code></td><td>Build the C API library</td><td>OFF</td></tr>
+          <tr><td><code>FTXUI_BUILD_PYTHON</code></td><td>Build Python bindings (requires pybind11)</td><td>OFF</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="code-block animate-on-scroll" style="margin-top:1.5rem;"><pre><span class="cmt"># Full build with everything:</span>
+cmake -S . -B build \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DFTXUI_BUILD_EXAMPLES=ON \
+    -DFTXUI_BUILD_TESTS=ON \
+    -DFTXUI_BUILD_CAPI=ON \
+    -DFTXUI_BUILD_PYTHON=ON
+
+cmake --build build --parallel $(nproc)
+cd build && ctest --output-on-failure</pre></div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="glass-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span style="font-size:1.75rem;font-weight:900;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">FTXUI</span>
+        <p>The C++ Terminal UI Framework.</p>
+        <p class="footer-tagline">Zero dependencies. Bare metal speed. Maximum beauty.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Docs</h4>
+        <a href="getting-started.html">Getting Started</a>
+        <a href="api.html">API Reference</a>
+        <a href="features.html">Features</a>
+        <a href="examples.html">Examples</a>
+      </div>
+      <div class="footer-col">
+        <h4>Learn</h4>
+        <a href="deep-dive.html">Technical Deep Dive</a>
+        <a href="executive.html">Executive Brief</a>
+        <a href="https://github.com/louiscrocker/FTXUI" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <a href="https://github.com/louiscrocker/FTXUI/discussions" target="_blank" rel="noopener">Discussions</a>
+        <a href="https://github.com/louiscrocker/FTXUI/releases" target="_blank" rel="noopener">Releases</a>
+        <a href="https://github.com/louiscrocker/FTXUI/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 FTXUI Contributors. MIT License.</span>
+      <span>Zero dependencies. Bare metal speed. Maximum beauty.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

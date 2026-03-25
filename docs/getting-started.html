@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI — Getting Started</title>
+  <meta name="description" content="Get started with FTXUI in under 5 minutes. Install, link, write your first terminal UI app in C++.">
+  <meta property="og:title" content="FTXUI — Getting Started">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">FTXUI</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Getting Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+      <a href="deep-dive.html" class="nav-link">Deep Dive</a>
+      <a href="executive.html" class="nav-link">Executive Brief</a>
+    </div>
+    <div class="nav-actions">
+      <span class="star-badge">⭐ Star</span>
+      <a href="https://github.com/louiscrocker/FTXUI" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section style="padding:6rem 2rem 3rem;text-align:center;">
+  <span class="section-label">Step-by-Step Guide</span>
+  <h1 style="font-size:clamp(2rem,4vw,3.5rem);font-weight:900;margin-bottom:1rem;">
+    From Zero to <span class="gradient-text">Beautiful Terminal App</span>
+  </h1>
+  <p style="font-size:1.1rem;color:var(--text-secondary);max-width:600px;margin:0 auto 2rem;">
+    Ten steps. Ten minutes. A fully-themed, interactive terminal application with charts, tables, and a live map.
+  </p>
+  <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+    <span class="tag tag-purple">C++20</span>
+    <span class="tag tag-teal">CMake 3.14+</span>
+    <span class="tag tag-blue">Linux / macOS / Windows</span>
+    <span class="tag tag-amber">No dependencies</span>
+  </div>
+</section>
+
+<!-- Quick Install Cards -->
+<section style="padding:0 2rem 3rem;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div class="section-header animate-on-scroll" style="text-align:left;margin-bottom:1.5rem;">
+      <span class="section-label">Quick Install</span>
+      <h2 style="font-size:1.75rem;">All the ways to get FTXUI</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:3rem;">
+      <div class="glass-card animate-on-scroll" style="padding:1.25rem;text-align:center;">
+        <div style="font-size:1.75rem;margin-bottom:0.5rem;">📦</div>
+        <div style="font-size:0.8rem;font-weight:700;color:var(--purple-light);margin-bottom:0.5rem;">CMake FetchContent</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);">Recommended</div>
+      </div>
+      <div class="glass-card animate-on-scroll animate-delay-1" style="padding:1.25rem;text-align:center;">
+        <div style="font-size:1.75rem;margin-bottom:0.5rem;">📋</div>
+        <div style="font-size:0.8rem;font-weight:700;color:var(--teal-light);margin-bottom:0.5rem;">vcpkg</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);">Package manager</div>
+      </div>
+      <div class="glass-card animate-on-scroll animate-delay-2" style="padding:1.25rem;text-align:center;">
+        <div style="font-size:1.75rem;margin-bottom:0.5rem;">🍺</div>
+        <div style="font-size:0.8rem;font-weight:700;color:var(--amber);margin-bottom:0.5rem;">Homebrew</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);">macOS / Linux</div>
+      </div>
+      <div class="glass-card animate-on-scroll animate-delay-3" style="padding:1.25rem;text-align:center;">
+        <div style="font-size:1.75rem;margin-bottom:0.5rem;">📄</div>
+        <div style="font-size:0.8rem;font-weight:700;color:var(--blue-light);margin-bottom:0.5rem;">Single Header</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);">Zero setup</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Step-by-step guide -->
+<section class="section" style="padding-top:0;">
+  <div style="max-width:900px;margin:0 auto;padding:0 2rem;">
+    <div class="step-list">
+
+      <!-- Step 1 -->
+      <div class="step-card animate-on-scroll">
+        <h3>Add FTXUI to your CMake project</h3>
+        <p>Use CMake's FetchContent to automatically download and configure FTXUI. No manual downloads or system installs required.</p>
+        <div class="code-block"><pre><span class="cmt"># CMakeLists.txt</span>
+<span class="fn">cmake_minimum_required</span>(<span class="type">VERSION</span> <span class="num">3.14</span>)
+<span class="fn">project</span>(my_tui_app <span class="type">CXX</span>)
+<span class="fn">set</span>(<span class="type">CMAKE_CXX_STANDARD</span> <span class="num">20</span>)
+
+<span class="fn">include</span>(<span class="type">FetchContent</span>)
+<span class="fn">FetchContent_Declare</span>(ftxui
+  <span class="type">GIT_REPOSITORY</span> <span class="str">https://github.com/louiscrocker/FTXUI</span>
+  <span class="type">GIT_TAG</span>        <span class="str">main</span>
+  <span class="type">GIT_SHALLOW</span>    <span class="kw">TRUE</span>
+)
+<span class="fn">FetchContent_MakeAvailable</span>(ftxui)</pre></div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card animate-on-scroll">
+        <h3>Link the library to your target</h3>
+        <p>Link <code style="color:var(--teal-light)">ftxui::ui</code> for the full high-level API. It transitively links <code>ftxui::component</code>, <code>ftxui::dom</code>, and <code>ftxui::screen</code>.</p>
+        <div class="code-block"><pre><span class="fn">add_executable</span>(my_tui_app main.cpp)
+
+<span class="fn">target_link_libraries</span>(my_tui_app <span class="type">PRIVATE</span>
+    ftxui::ui       <span class="cmt"># Full high-level API (recommended)</span>
+)
+
+<span class="cmt"># Or link individual modules if you need less:</span>
+<span class="cmt"># ftxui::component  — interactive components only</span>
+<span class="cmt"># ftxui::dom        — layout elements only</span>
+<span class="cmt"># ftxui::screen     — terminal I/O only</span></pre></div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card animate-on-scroll">
+        <h3>Hello World — 10 lines</h3>
+        <p>Your first FTXUI app. <code>RunFullscreen</code> takes over the terminal, renders your component, and handles the event loop.</p>
+        <div class="code-block"><pre><span class="pp">#include &lt;ftxui/ui/all.hpp&gt;</span>
+<span class="kw">using namespace</span> <span class="ns">ftxui::ui</span>;
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="kw">auto</span> app = <span class="fn">Layout::Vertical</span>({
+        <span class="fn">Text</span>(<span class="str">"Hello from FTXUI! Press Q to quit."</span>),
+    });
+
+    <span class="fn">RunFullscreen</span>(app);
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre></div>
+        <div class="info-box" style="margin-top:1rem;"><strong>Build it:</strong> <code>cmake -B build && cmake --build build && ./build/my_tui_app</code></div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-card animate-on-scroll">
+        <h3>Apply a theme</h3>
+        <p>One line sets the color palette for every component in your app. Call it before creating any components.</p>
+        <div class="code-block"><pre><span class="pp">#include &lt;ftxui/ui/all.hpp&gt;</span>
+<span class="kw">using namespace</span> <span class="ns">ftxui::ui</span>;
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="fn">SetTheme</span>(<span class="ns">Theme</span>::<span class="fn">Nord</span>());   <span class="cmt">// Arctic Nord palette</span>
+    <span class="cmt">// or: Dark(), Light(), Dracula(), Monokai()</span>
+
+    <span class="kw">auto</span> app = <span class="fn">Layout::Vertical</span>({
+        <span class="fn">Text</span>(<span class="str">"Themed app!"</span>),
+    });
+    <span class="fn">RunFullscreen</span>(app);
+}</pre></div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step-card animate-on-scroll">
+        <h3>Create a form</h3>
+        <p>Collect user input with automatic tab-navigation, validation, and submit/cancel callbacks.</p>
+        <div class="code-block"><pre><span class="type">std::string</span> name, email;
+
+<span class="kw">auto</span> form = <span class="ns">Form</span>()
+    .<span class="fn">Title</span>(<span class="str">"User Registration"</span>)
+    .<span class="fn">Field</span>(<span class="str">"Full Name"</span>, name)
+    .<span class="fn">Field</span>(<span class="str">"Email"</span>, email)
+    .<span class="fn">OnSubmit</span>([&]{
+        <span class="fn">Notify</span>(<span class="str">"Welcome, "</span> + name + <span class="str">"!"</span>, <span class="ns">Success</span>);
+    })
+    .<span class="fn">OnCancel</span>([&]{ <span class="fn">Navigate</span>(<span class="str">"/"</span>); })
+    .<span class="fn">Build</span>();
+
+<span class="fn">RunFullscreen</span>(form);</pre></div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="step-card animate-on-scroll">
+        <h3>Add a chart</h3>
+        <p>LineChart renders in high-resolution braille. Use <code>RenderFlex()</code> to fill all available space.</p>
+        <div class="code-block"><pre><span class="type">std::vector</span>&lt;<span class="type">double</span>&gt; cpu_data = {<span class="num">20</span>,<span class="num">45</span>,<span class="num">38</span>,<span class="num">67</span>,<span class="num">89</span>,<span class="num">55</span>,<span class="num">42</span>};
+
+<span class="kw">auto</span> chart_elem = <span class="ns">LineChart</span>()
+    .<span class="fn">Title</span>(<span class="str">"CPU Usage %"</span>)
+    .<span class="fn">Series</span>(<span class="str">"cpu"</span>, cpu_data, <span class="ns">Color</span>::<span class="fn">Red</span>())
+    .<span class="fn">XLabels</span>({<span class="str">"Mon"</span>,<span class="str">"Tue"</span>,<span class="str">"Wed"</span>,<span class="str">"Thu"</span>,<span class="str">"Fri"</span>,<span class="str">"Sat"</span>,<span class="str">"Sun"</span>})
+    .<span class="fn">RenderFlex</span>();   <span class="cmt">// fills all available space</span>
+
+<span class="cmt">// Wrap as a Component to put in Layout:</span>
+<span class="kw">auto</span> chart_comp = <span class="fn">Renderer</span>([=]{ <span class="kw">return</span> chart_elem; });</pre></div>
+      </div>
+
+      <!-- Step 7 -->
+      <div class="step-card animate-on-scroll">
+        <h3>Add a data table</h3>
+        <p>Generic over any struct. Define columns with lambdas — no code generation or reflection required.</p>
+        <div class="code-block"><pre><span class="kw">struct</span> <span class="type">Server</span> {
+    <span class="type">std::string</span> host, status;
+    <span class="type">int</span> port;
+    <span class="type">float</span> latency;
+};
+
+<span class="type">std::vector</span>&lt;<span class="type">Server</span>&gt; servers = {
+    {<span class="str">"web-01"</span>, <span class="str">"UP"</span>,   <span class="num">80</span>,   <span class="num">2.1f</span>},
+    {<span class="str">"web-02"</span>, <span class="str">"UP"</span>,   <span class="num">80</span>,   <span class="num">3.7f</span>},
+    {<span class="str">"db-01"</span>,  <span class="str">"DOWN"</span>, <span class="num">5432</span>, <span class="num">0.0f</span>},
+};
+
+<span class="kw">auto</span> table = <span class="ns">DataTable</span>&lt;<span class="type">Server</span>&gt;()
+    .<span class="fn">Columns</span>({
+        {<span class="str">"Host"</span>,    [](<span class="kw">auto</span>&amp; s){ <span class="kw">return</span> s.host; }},
+        {<span class="str">"Status"</span>,  [](<span class="kw">auto</span>&amp; s){ <span class="kw">return</span> s.status; }},
+        {<span class="str">"Port"</span>,    [](<span class="kw">auto</span>&amp; s){ <span class="kw">return</span> <span class="fn">std::to_string</span>(s.port); }},
+        {<span class="str">"Latency"</span>, [](<span class="kw">auto</span>&amp; s){ <span class="kw">return</span> <span class="fn">fmt</span>(<span class="str">"{:.1f}ms"</span>, s.latency); }},
+    })
+    .<span class="fn">Rows</span>(servers)
+    .<span class="fn">Build</span>();</pre></div>
+      </div>
+
+      <!-- Step 8 -->
+      <div class="step-card animate-on-scroll">
+        <h3>Use Reactive state</h3>
+        <p>Share state between components and threads. The UI refreshes automatically when values change.</p>
+        <div class="code-block"><pre><span class="kw">auto</span> count = <span class="fn">std::make_shared</span>&lt;<span class="ns">Reactive</span>&lt;<span class="type">int</span>&gt;&gt;(<span class="num">0</span>);
+
+<span class="kw">auto</span> display = <span class="fn">Renderer</span>([count]{
+    <span class="kw">return</span> <span class="fn">text</span>(<span class="str">"Count: "</span> + <span class="fn">std::to_string</span>(count-&gt;<span class="fn">Get</span>()));
+});
+
+<span class="kw">auto</span> button = <span class="fn">Button</span>(<span class="str">"Increment"</span>, [count]{
+    count-&gt;<span class="fn">Set</span>(count-&gt;<span class="fn">Get</span>() + <span class="num">1</span>);
+});
+
+<span class="cmt">// count->Set() from any thread also triggers re-render</span></pre></div>
+      </div>
+
+      <!-- Step 9 -->
+      <div class="step-card animate-on-scroll">
+        <h3>Add a world map</h3>
+        <p>The built-in GeoJSON contains the full NE110m Natural Earth dataset. No external files needed.</p>
+        <div class="code-block"><pre><span class="kw">auto</span> map = <span class="ns">GeoMap</span>()
+    .<span class="fn">Data</span>(<span class="fn">WorldMapGeoJSON</span>())  <span class="cmt">// built-in dataset</span>
+    .<span class="fn">Center</span>(<span class="num">0.0</span>, <span class="num">20.0</span>)
+    .<span class="fn">Zoom</span>(<span class="num">1.0</span>)
+    .<span class="fn">Overlay</span>({<span class="str">"HQ"</span>, <span class="num">-74.0</span>, <span class="num">40.7</span>, <span class="str">"★"</span>})
+    .<span class="fn">OnSelect</span>([&](<span class="type">std::string</span> country) {
+        <span class="fn">Notify</span>(country, <span class="ns">Info</span>);
+    })
+    .<span class="fn">Build</span>();</pre></div>
+      </div>
+
+      <!-- Step 10 -->
+      <div class="step-card animate-on-scroll">
+        <h3>Run your app</h3>
+        <p>Three run modes: fullscreen (takes over terminal), fit-content (shrinks to content size), or loop (manual event control).</p>
+        <div class="code-block"><pre><span class="cmt">// Option 1: Take over the full terminal</span>
+<span class="fn">RunFullscreen</span>(app);
+
+<span class="cmt">// Option 2: Fit terminal to content size</span>
+<span class="fn">RunFitContent</span>(app);
+
+<span class="cmt">// Option 3: Manual loop (advanced)</span>
+<span class="fn">RunLoop</span>(app);
+
+<span class="cmt">// Option 4: With debug overlay (Ctrl+D toggles)</span>
+<span class="fn">RunFullscreen</span>(<span class="fn">WithDebugOverlay</span>(app));</pre></div>
+      </div>
+
+    </div><!-- /.step-list -->
+  </div>
+</section>
+
+<!-- Complete Example -->
+<section class="section" style="padding-top:0;">
+  <div style="max-width:900px;margin:0 auto;padding:0 2rem;">
+    <div class="section-header animate-on-scroll" style="text-align:left;">
+      <span class="section-label">Complete Example</span>
+      <h2>Your First Full App (~50 lines)</h2>
+      <p>Combines a theme, form, data table, chart, and notification in one cohesive app.</p>
+    </div>
+    <div class="code-block animate-on-scroll"><pre><span class="pp">#include &lt;ftxui/ui/all.hpp&gt;</span>
+<span class="kw">using namespace</span> <span class="ns">ftxui::ui</span>;
+<span class="kw">using namespace</span> <span class="ns">ftxui</span>;
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="cmt">// 1. Theme</span>
+    <span class="fn">SetTheme</span>(<span class="ns">Theme</span>::<span class="fn">Nord</span>());
+
+    <span class="cmt">// 2. State</span>
+    <span class="type">std::string</span> search_query;
+    <span class="kw">struct</span> <span class="type">User</span> { <span class="type">std::string</span> name, role; <span class="type">bool</span> active; };
+    <span class="type">std::vector</span>&lt;<span class="type">User</span>&gt; users = {
+        {<span class="str">"alice"</span>, <span class="str">"admin"</span>, <span class="kw">true</span>},
+        {<span class="str">"bob"</span>,   <span class="str">"user"</span>,  <span class="kw">true</span>},
+        {<span class="str">"carol"</span>, <span class="str">"user"</span>,  <span class="kw">false</span>},
+    };
+
+    <span class="cmt">// 3. Chart data</span>
+    <span class="type">std::vector</span>&lt;<span class="type">double</span>&gt; logins = {<span class="num">12</span>,<span class="num">34</span>,<span class="num">28</span>,<span class="num">56</span>,<span class="num">67</span>,<span class="num">89</span>,<span class="num">45</span>};
+
+    <span class="cmt">// 4. Components</span>
+    <span class="kw">auto</span> header = <span class="fn">Renderer</span>([]{ <span class="kw">return</span> <span class="fn">text</span>(<span class="str">"  User Dashboard  "</span>) | <span class="fn">bold</span> | <span class="fn">center</span>; });
+
+    <span class="kw">auto</span> table = <span class="ns">DataTable</span>&lt;<span class="type">User</span>&gt;()
+        .<span class="fn">Columns</span>({
+            {<span class="str">"Name"</span>,   [](<span class="kw">auto</span>&amp; u){ <span class="kw">return</span> u.name; }},
+            {<span class="str">"Role"</span>,   [](<span class="kw">auto</span>&amp; u){ <span class="kw">return</span> u.role; }},
+            {<span class="str">"Active"</span>, [](<span class="kw">auto</span>&amp; u){ <span class="kw">return</span> u.active ? <span class="str">"✓"</span> : <span class="str">"✗"</span>; }},
+        })
+        .<span class="fn">Rows</span>(users)
+        .<span class="fn">OnSelect</span>([&](<span class="type">User</span> u){
+            <span class="fn">Notify</span>(<span class="str">"Selected: "</span> + u.name, <span class="ns">Info</span>);
+        })
+        .<span class="fn">Build</span>();
+
+    <span class="kw">auto</span> chart_comp = <span class="fn">Renderer</span>([&]{
+        <span class="kw">return</span> <span class="ns">LineChart</span>()
+            .<span class="fn">Title</span>(<span class="str">"Logins / Day"</span>)
+            .<span class="fn">Series</span>(<span class="str">"logins"</span>, logins, <span class="ns">Color</span>::<span class="fn">Green</span>())
+            .<span class="fn">RenderFlex</span>();
+    });
+
+    <span class="cmt">// 5. Layout</span>
+    <span class="kw">auto</span> app = <span class="ns">Layout</span>::<span class="fn">Vertical</span>({
+        header,
+        <span class="ns">Layout</span>::<span class="fn">Horizontal</span>({ table, chart_comp }),
+    });
+
+    <span class="cmt">// 6. Launch</span>
+    <span class="fn">RunFullscreen</span>(<span class="fn">WithDebugOverlay</span>(app));
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre></div>
+    <div style="display:flex;gap:1rem;margin-top:1.5rem;">
+      <a href="api.html" class="btn-primary">Full API Reference →</a>
+      <a href="examples.html" class="btn-secondary">See Examples →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="glass-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span style="font-size:1.75rem;font-weight:900;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">FTXUI</span>
+        <p>The C++ Terminal UI Framework.</p>
+        <p class="footer-tagline">Zero dependencies. Bare metal speed. Maximum beauty.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Docs</h4>
+        <a href="getting-started.html">Getting Started</a>
+        <a href="api.html">API Reference</a>
+        <a href="features.html">Features</a>
+        <a href="examples.html">Examples</a>
+      </div>
+      <div class="footer-col">
+        <h4>Learn</h4>
+        <a href="deep-dive.html">Technical Deep Dive</a>
+        <a href="executive.html">Executive Brief</a>
+        <a href="https://github.com/louiscrocker/FTXUI" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <a href="https://github.com/louiscrocker/FTXUI/discussions" target="_blank" rel="noopener">Discussions</a>
+        <a href="https://github.com/louiscrocker/FTXUI/releases" target="_blank" rel="noopener">Releases</a>
+        <a href="https://github.com/louiscrocker/FTXUI/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 FTXUI Contributors. MIT License.</span>
+      <span>Zero dependencies. Bare metal speed. Maximum beauty.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

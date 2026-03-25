@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI — Examples Gallery</title>
+  <meta name="description" content="FTXUI examples gallery: world ops demo, 3D globe, GeoJSON map, charts, tables, and more.">
+  <meta property="og:title" content="FTXUI — Examples Gallery">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">FTXUI</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Getting Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+      <a href="deep-dive.html" class="nav-link">Deep Dive</a>
+      <a href="executive.html" class="nav-link">Executive Brief</a>
+    </div>
+    <div class="nav-actions">
+      <span class="star-badge">⭐ Star</span>
+      <a href="https://github.com/louiscrocker/FTXUI" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section style="padding:6rem 2rem 3rem;text-align:center;">
+  <span class="section-label">Examples Gallery</span>
+  <h1 style="font-size:clamp(2rem,4vw,3.5rem);font-weight:900;margin-bottom:1rem;">
+    See What's <span class="gradient-text">Possible</span>
+  </h1>
+  <p style="font-size:1.1rem;color:var(--text-secondary);max-width:600px;margin:0 auto 2rem;">
+    28+ example applications demonstrating every feature. All source code is on GitHub. Build any example in under 60 seconds.
+  </p>
+  <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+    <span class="tag tag-purple">Killer Apps</span>
+    <span class="tag tag-teal">Charts</span>
+    <span class="tag tag-amber">Geography</span>
+    <span class="tag tag-blue">Data</span>
+    <span class="tag tag-red">Interactive</span>
+  </div>
+</section>
+
+<!-- Killer Apps -->
+<section class="section" style="padding-top:2rem;">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">Reference Applications</span>
+      <h2>Killer <span class="gradient-text">Apps</span></h2>
+      <p>Ship-ready, open-source reference applications that demonstrate the full power of FTXUI.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:3rem;">
+      <!-- ftop -->
+      <div class="example-card animate-on-scroll animate-delay-1">
+        <div class="example-preview"><span style="color:#34d399">ftop</span> — System Monitor v1.0
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CPU  [████████████░░░░░░░░]  62%
+MEM  [████████████████░░░░]  80%
+SWP  [████░░░░░░░░░░░░░░░░]  20%
+NET  ↑ 12.4MB/s  ↓ 3.2MB/s
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PID  NAME        CPU   MEM
+  1234 nginx         0.1   12MB
+  5678 myapp        42.3  128MB
+  9012 postgres      1.7   64MB
+ [q]uit [k]ill [r]enice [/]filter</div>
+        <div class="example-info">
+          <h3>ftop</h3>
+          <p>Real-time CPU, memory, disk and process monitor. Replaces htop with braille charts and map overlay.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/apps/ftop" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-purple">Killer App</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ftgit -->
+      <div class="example-card animate-on-scroll animate-delay-2">
+        <div class="example-preview"><span style="color:#a78bfa">ftgit</span> — Git TUI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Branch: main  ●3 ahead  ●1 behind
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Staged:                  Unstaged:
+ + src/main.cpp           ~ README.md
+ + include/ui.hpp         ~ CMakeLists.txt
+ + examples/demo.cpp
+
+Commit message:
+┌────────────────────────────┐
+│ Add reactive state system  │
+└────────────────────────────┘
+ [s]tage [u]nstage [c]ommit [p]ush</div>
+        <div class="example-info">
+          <h3>ftgit</h3>
+          <p>Interactive Git TUI with staging area, diff viewer, log browser, and branch management.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/apps/ftgit" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-purple">Killer App</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ftdb -->
+      <div class="example-card animate-on-scroll animate-delay-3">
+        <div class="example-preview"><span style="color:#fbbf24">ftdb</span> — SQLite Browser
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Tables: users │ posts │ comments
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SELECT * FROM users LIMIT 10;
+
+┌────┬──────────┬─────────────────┐
+│ id │ name     │ email           │
+├────┼──────────┼─────────────────┤
+│  1 │ alice    │ alice@ex.com    │
+│  2 │ bob      │ bob@ex.com      │
+│  3 │ carol    │ carol@ex.com    │
+└────┴──────────┴─────────────────┘
+3 rows · 0.4ms  [F5]Run [Ctrl+S]Save</div>
+        <div class="example-info">
+          <h3>ftdb</h3>
+          <p>SQLite and PostgreSQL browser with query runner, schema explorer, and result table pagination.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/apps/ftdb" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-purple">Killer App</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Geography Examples -->
+<section class="section" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">Geography</span>
+      <h2>Maps <span class="gradient-text">&amp; Globe</span></h2>
+    </div>
+    <div class="examples-grid">
+      <!-- world_ops_demo -->
+      <div class="example-card animate-on-scroll">
+        <div class="example-preview">GLOBAL OPS CENTER  [LIVE]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⠀⢀⣴⡾⢿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⣿⡏⠀⠀⢻⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠻⣧⠀NYC⠀LON⠀TOK⠀⠀
+   ╲═══════════╱
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+THREATS: 3  ASSETS: 12  STATUS: ⚡</div>
+        <div class="example-info">
+          <h3>world_ops_demo</h3>
+          <p>Global Operations Center. World map with missile arcs, threat markers, sparklines, live status.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/component/world_ops_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-amber">Geography</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- globe_demo -->
+      <div class="example-card animate-on-scroll animate-delay-2">
+        <div class="example-preview">   3D BRAILLE GLOBE  ↻ 20°/s
+    ⣀⣀⠤⠤⠒⠒⠒⠒⠒⠒⠤⠤⣀⣀
+  ⣀⠔⠁                  ⠑⢄
+ ⡠⠁  ⡠⠤⠒⠒⠤⡀  ⡠⠒⠒⠤⡀   ⠢
+ ⡇   ⡇  ⣤⡀⠸⡄  ⠸⡄  ⡇    ⢸
+ ⠱⡀  ⠱⣀⣀⣀⠜  ⠓⣀⣀⠜   ⡠
+  ⠑⠢⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⠔⠁
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+NYC● LON●  [q]uit  [+/-]speed</div>
+        <div class="example-info">
+          <h3>globe_demo</h3>
+          <p>Spinning 3D orthographic globe rendered in braille. Background thread animation at 20fps.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/component/globe_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-amber">Geography</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- geomap_demo -->
+      <div class="example-card animate-on-scroll animate-delay-3">
+        <div class="example-preview">GEOMAP DEMO  Zoom: 1.5×
+⠀⠀⣠⣾⣿⣶⣤⡀⠀⠀⠀⠀⠀⠀⠀
+⠀⣾⣿⣿⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀
+⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀NYC●
+⠀⠸⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠀LON●
+⠀⠀⠹⣿⣿⣿⣿⡿⢿⡿⠟⠁
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+↑↓←→ Pan  +/- Zoom  Enter:Select</div>
+        <div class="example-info">
+          <h3>geomap_demo</h3>
+          <p>Interactive GeoJSON world map with pan, zoom, mouse drag, overlays, and country selection.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/component/geomap_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-amber">Geography</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Charts Examples -->
+<section class="section" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">Charts</span>
+      <h2>Data <span class="gradient-text">Visualization</span></h2>
+    </div>
+    <div class="examples-grid">
+      <!-- line_chart_demo -->
+      <div class="example-card animate-on-scroll">
+        <div class="example-preview"> System Metrics    CPU ── MEM
+ 100│
+  80│        ⡠⠊⠑⡄
+  60│⠤⠤⠤⠤⠤⠤⠒⠒⠒⠒⠒⠢⠤⣀⣀⡠⠒
+  40│  ⡠⠊⠑⣄⣀⠔⠁
+  20│⡠⠁
+    └──────────────────────────
+     Mon Tue Wed Thu Fri Sat Sun</div>
+        <div class="example-info">
+          <h3>line_chart_demo</h3>
+          <p>Multi-series line chart with braille rendering, adaptive sizing, X labels, and legend.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/dom/line_chart_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-blue">Chart</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- bar_chart_demo -->
+      <div class="example-card animate-on-scroll animate-delay-2">
+        <div class="example-preview"> Sales by Quarter   $K
+  100│
+   80│    ⣿
+   60│⣿   ⣿        ⣿
+   40│⣿   ⣿   ⣿   ⣿
+   20│⣿   ⣿   ⣿   ⣿
+    └──────────────────
+     Q1  Q2  Q3  Q4</div>
+        <div class="example-info">
+          <h3>bar_chart_demo</h3>
+          <p>Vertical bar chart with braille resolution. Color per bar, auto-scaling, labeled axes.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/dom/bar_chart_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-blue">Chart</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- scatter_demo -->
+      <div class="example-card animate-on-scroll animate-delay-3">
+        <div class="example-preview"> Scatter Plot — Latency vs Load
+  100│          ⣀
+   75│    ⠔  ⡰⠁
+   50│  ⣀⣤⠒⠁
+   25│⡰⠁
+    0│⠁
+    └──────────────────────
+     0%  25%  50%  75% 100%</div>
+        <div class="example-info">
+          <h3>scatter_demo</h3>
+          <p>X/Y scatter plot. Useful for correlation analysis, latency vs load, cost vs performance.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/dom/scatter_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-blue">Chart</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- histogram_demo -->
+      <div class="example-card animate-on-scroll">
+        <div class="example-preview"> Histogram — Response Times
+  ┌─────────────────────────────┐
+  │ 0-10ms  ████████████  48%  │
+  │10-50ms  ███████       28%  │
+  │50-100   ████          16%  │
+  │100-500  ██             6%  │
+  │500+     ░              2%  │
+  └─────────────────────────────┘</div>
+        <div class="example-info">
+          <h3>histogram_demo</h3>
+          <p>Frequency distribution histogram. Useful for latency analysis, request size distributions.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/dom/histogram_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-blue">Chart</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- sparkline_demo -->
+      <div class="example-card animate-on-scroll animate-delay-2">
+        <div class="example-preview"> STATUS BOARD
+ ┌──────────────────────────────┐
+ │ CPU  ⣀⣠⣤⣶⣾⣿⣾⣤  62%  ↑  │
+ │ MEM  ⣿⣿⣿⣿⣿⣿⣿⣿  89%  ─  │
+ │ NET  ⣀⣀⣠⣤⣶⣾⣿⣀  45%  ↑  │
+ │ DSK  ⣿⣀⣀⣀⣀⣀⣀⣀  12%  ↓  │
+ │ GPU  ⣠⣶⣾⣿⣿⣿⣶⣠  73%  ─  │
+ └──────────────────────────────┘</div>
+        <div class="example-info">
+          <h3>sparkline_demo</h3>
+          <p>Inline one-line mini charts in a status board. Each sparkline shows the last N data points.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/dom/sparkline_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-blue">Chart</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- braille_canvas_demo -->
+      <div class="example-card animate-on-scroll animate-delay-3">
+        <div class="example-preview"> BrailleCanvas — Custom Drawing
+ ⡤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⢤
+ ⡇   ⡠⠔⠒⠒⠒⠢⢄             ⡇
+ ⡇  ⡰⠁          ⠱⡀        ⡇
+ ⡇ ⡔⠁             ⠱⡀      ⡇
+ ⡇⡠⠁               ⠈⠢⣄⣀⣀⡇
+ ⠓⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠚</div>
+        <div class="example-info">
+          <h3>braille_canvas_demo</h3>
+          <p>Raw BrailleCanvas API showing lines, circles, and custom path drawing at maximum resolution.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/dom/braille_canvas_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-blue">Chart</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Data Display Examples -->
+<section class="section" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">Data Display</span>
+      <h2>Tables <span class="gradient-text">&amp; Lists</span></h2>
+    </div>
+    <div class="examples-grid">
+      <!-- virtual_table_demo -->
+      <div class="example-card animate-on-scroll">
+        <div class="example-preview">VirtualList  50,000 rows  [0.3ms]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 14:23:01 INFO  Server started
+ 14:23:02 INFO  Listening :8080
+ 14:23:05 WARN  High memory 89%
+▶14:23:07 ERROR Connection refused◀
+ 14:23:08 INFO  Retry attempt 1
+ 14:23:09 INFO  Retry attempt 2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+↑↓ scroll  / filter  Enter select</div>
+        <div class="example-info">
+          <h3>virtual_table_demo</h3>
+          <p>50,000 row virtual list with O(visible) rendering. Constant frame time regardless of data size.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/component/virtual_table_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-teal">Data</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- datatable_demo -->
+      <div class="example-card animate-on-scroll animate-delay-2">
+        <div class="example-preview">DataTable — Employee Records
+┌──────┬──────────┬──────┬────────┐
+│  ID  │ Name     │ Dept │ Salary │
+├──────┼──────────┼──────┼────────┤
+│    1 │ Alice    │ Eng  │ $145K  │
+│    2 │ Bob      │ PM   │ $130K  │
+│    3 │ Carol    │ Eng  │ $152K  │
+│▶   4 │ Dave     │ Des  │ $128K ◀│
+│    5 │ Eve      │ Eng  │ $161K  │
+└──────┴──────────┴──────┴────────┘
+5 of 127  ↑↓ navigate  Enter select</div>
+        <div class="example-info">
+          <h3>datatable_demo</h3>
+          <p>Generic DataTable with custom columns, keyboard navigation, and row selection callback.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/component/datatable_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-teal">Data</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- log_demo -->
+      <div class="example-card animate-on-scroll animate-delay-3">
+        <div class="example-preview">LogPanel — Live Application Logs
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+14:23:01 INFO  Server started
+14:23:02 INFO  Listening on :8080
+14:23:05 WARN  High memory: 89%
+14:23:07 ERROR Connection refused
+14:23:08 INFO  Retry attempt 1/3
+14:23:09 DEBUG Frame: 0.3ms
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[F]ilter [C]lear  Auto-scroll: ON</div>
+        <div class="example-info">
+          <h3>log_demo</h3>
+          <p>Thread-safe LogPanel with per-level colors, timestamps, filter, and auto-scroll.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/component/log_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-teal">Data</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Interactive Examples -->
+<section class="section" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">Interactive</span>
+      <h2>Forms <span class="gradient-text">&amp; Navigation</span></h2>
+    </div>
+    <div class="examples-grid">
+      <!-- reactive_demo -->
+      <div class="example-card animate-on-scroll">
+        <div class="example-preview">Reactive State Counter
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  count   = 42
+  doubled = 84   (Computed)
+  label   = "count is 42"
+
+  [+ Increment]  [- Decrement]
+  [Reset to 0]   [+ Add 10]
+
+  Live update from background thread:
+  Thread count: 42 (auto-refresh ↺)</div>
+        <div class="example-info">
+          <h3>reactive_demo</h3>
+          <p>Reactive&lt;T&gt; and Computed&lt;T&gt; state with thread-safe updates and automatic UI refresh.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/component/reactive_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-red">State</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- wizard_demo -->
+      <div class="example-card animate-on-scroll animate-delay-2">
+        <div class="example-preview">Step 2 of 4: Configure
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ Welcome  ▶ Configure  ○ Confirm  ○ Done
+
+ Install directory:
+ [/usr/local/bin               ]
+
+ ☑ Add to PATH
+ ☑ Create desktop shortcut
+ ☐ Send anonymous usage stats
+
+        [◀ Back]  [Next ▶]</div>
+        <div class="example-info">
+          <h3>wizard_demo</h3>
+          <p>Multi-step wizard with progress bar, validation, back/next navigation, and completion callback.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/component/wizard_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-red">Interactive</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- markdown_demo -->
+      <div class="example-card animate-on-scroll animate-delay-3">
+        <div class="example-preview"># FTXUI Documentation
+
+**FTXUI** is a C++ library for TUI apps.
+
+## Features
+- Zero dependencies
+- Braille charts at 8× resolution
+- `GeoMap` with real GeoJSON data
+- Reactive state management
+
+> "The only C++ TUI worth using"
+> — Senior SRE, FAANG
+
+[Getting Started](#) | [API](#)</div>
+        <div class="example-info">
+          <h3>markdown_demo</h3>
+          <p>Full Markdown renderer with inline formatting, scrollable viewport, and link support.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/component/markdown_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-teal">Content</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- process_demo -->
+      <div class="example-card animate-on-scroll">
+        <div class="example-preview">ProcessPanel — Live Output
+Command: cmake --build build
+
+[  0%] Building CXX object screen...
+[ 33%] Building CXX object dom...
+[ 66%] Building CXX object component...
+[100%] Linking CXX executable myapp
+
+Build succeeded in 12.4s  Exit: 0
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Start] [Stop] [Clear]  PID: 12345</div>
+        <div class="example-info">
+          <h3>process_demo</h3>
+          <p>Fork/exec child process with live stdout/stderr streaming to a log panel. Stop sends SIGTERM.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/component/process_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-red">Interactive</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- showcase -->
+      <div class="example-card animate-on-scroll animate-delay-2">
+        <div class="example-preview">FTXUI SHOWCASE
+┌─────────────┬─────────────────┐
+│ ■ Form      │ CPU ⣀⣠⣤⣶⣾⣿  │
+│ ■ DataTable │ MEM ⣿⣿⣿⣿⣿⣿  │
+│ ■ LineChart │                 │
+│ ■ GeoMap    │ 🌍 World Map    │
+│ ■ Globe     │ ↻ Globe demo    │
+│ ■ Log       │ [Ctrl+D] Debug  │
+└─────────────┴─────────────────┘
+All 30+ components in one app</div>
+        <div class="example-info">
+          <h3>showcase</h3>
+          <p>Full kitchen-sink demo with every component. The best starting point to explore capabilities.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/component/showcase.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-purple">Full Demo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- notification_demo -->
+      <div class="example-card animate-on-scroll animate-delay-3">
+        <div class="example-preview">Notifications Demo
+
+ Main application content here...
+
+
+
+ [Show Info]  [Show Success]
+ [Show Warn]  [Show Error]
+
+                  ┌───────────────────┐
+                  │ ✓ File saved!     │
+                  └───────────────────┘</div>
+        <div class="example-info">
+          <h3>notification_demo</h3>
+          <p>Notify() toast system with all four levels. Auto-dismiss, queue management, custom duration.</p>
+          <div class="example-actions">
+            <a href="https://github.com/louiscrocker/FTXUI/tree/main/examples/component/notification_demo.cpp" target="_blank" rel="noopener" class="btn-secondary btn-sm">View Source</a>
+            <span class="tag tag-teal">Feedback</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Build instructions -->
+    <div class="glass-card animate-on-scroll" style="margin-top:3rem;">
+      <h3 style="color:var(--purple-light);margin-bottom:1rem;">Build Any Example in 60 Seconds</h3>
+      <div class="code-block"><pre><span class="cmt"># Clone and build all examples</span>
+git clone https://github.com/louiscrocker/FTXUI.git
+cd FTXUI
+
+cmake -S . -B build \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DFTXUI_BUILD_EXAMPLES=ON
+
+cmake --build build --parallel $(nproc)
+
+<span class="cmt"># Run any example</span>
+./build/examples/component/globe_demo
+./build/examples/component/world_ops_demo
+./build/examples/component/showcase
+
+<span class="cmt"># Or build a specific example only</span>
+cmake --build build --target ftxui_example_globe_demo</pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="glass-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span style="font-size:1.75rem;font-weight:900;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">FTXUI</span>
+        <p>The C++ Terminal UI Framework.</p>
+        <p class="footer-tagline">Zero dependencies. Bare metal speed. Maximum beauty.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Docs</h4>
+        <a href="getting-started.html">Getting Started</a>
+        <a href="api.html">API Reference</a>
+        <a href="features.html">Features</a>
+        <a href="examples.html">Examples</a>
+      </div>
+      <div class="footer-col">
+        <h4>Learn</h4>
+        <a href="deep-dive.html">Technical Deep Dive</a>
+        <a href="executive.html">Executive Brief</a>
+        <a href="https://github.com/louiscrocker/FTXUI" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <a href="https://github.com/louiscrocker/FTXUI/discussions" target="_blank" rel="noopener">Discussions</a>
+        <a href="https://github.com/louiscrocker/FTXUI/releases" target="_blank" rel="noopener">Releases</a>
+        <a href="https://github.com/louiscrocker/FTXUI/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 FTXUI Contributors. MIT License.</span>
+      <span>Zero dependencies. Bare metal speed. Maximum beauty.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

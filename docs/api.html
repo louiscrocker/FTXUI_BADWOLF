@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI — API Reference</title>
+  <meta name="description" content="Complete API reference for ftxui::ui — all classes, methods, and examples.">
+  <meta property="og:title" content="FTXUI — API Reference">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+  <style>
+    body { padding-top: 0; }
+    .api-layout { padding-top: 1.5rem; }
+  </style>
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">FTXUI</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Getting Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+      <a href="deep-dive.html" class="nav-link">Deep Dive</a>
+      <a href="executive.html" class="nav-link">Executive Brief</a>
+    </div>
+    <div class="nav-actions">
+      <span class="star-badge">⭐ Star</span>
+      <a href="https://github.com/louiscrocker/FTXUI" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div style="padding:3rem 0 1rem;text-align:center;">
+  <span class="section-label">Complete Reference</span>
+  <h1 style="font-size:clamp(2rem,4vw,3rem);font-weight:900;margin-bottom:0.75rem;">
+    <span class="gradient-text">API Reference</span>
+  </h1>
+  <p style="color:var(--text-secondary);font-size:1rem;">
+    <code style="background:rgba(255,255,255,0.07);padding:0.2rem 0.5rem;border-radius:4px;">namespace ftxui::ui</code>
+    — All classes, methods, and signatures
+  </p>
+</div>
+
+<div class="api-layout">
+  <!-- Sidebar -->
+  <nav class="api-sidebar" aria-label="API navigation">
+    <h4>App Runners</h4>
+    <a href="#runners">RunFullscreen</a>
+    <a href="#runners">RunFitContent</a>
+    <a href="#runners">RunLoop</a>
+    <a href="#debug">WithDebugOverlay</a>
+
+    <h4>Theme</h4>
+    <a href="#theme">SetTheme / GetTheme</a>
+    <a href="#theme">Theme struct</a>
+    <a href="#theme">Built-in Themes</a>
+
+    <h4>Layout</h4>
+    <a href="#layout">Layout::Vertical</a>
+    <a href="#layout">Layout::Horizontal</a>
+    <a href="#layout">Layout::Grid</a>
+
+    <h4>Forms & Input</h4>
+    <a href="#form">Form</a>
+    <a href="#textinput">TextInput</a>
+    <a href="#filepicker">FilePicker</a>
+    <a href="#commandpalette">CommandPalette</a>
+    <a href="#keymap">KeymapRegistry</a>
+
+    <h4>Data Display</h4>
+    <a href="#datatable">DataTable&lt;T&gt;</a>
+    <a href="#sortabletable">SortableTable&lt;T&gt;</a>
+    <a href="#virtuallist">VirtualList&lt;T&gt;</a>
+    <a href="#tree">Tree&lt;T&gt;</a>
+    <a href="#logpanel">LogPanel</a>
+
+    <h4>Charts</h4>
+    <a href="#linechart">LineChart</a>
+    <a href="#barchart">BarChart</a>
+    <a href="#scatterplot">ScatterPlot</a>
+    <a href="#sparkline">Sparkline</a>
+    <a href="#histogram">Histogram</a>
+    <a href="#braillecanvas">BrailleCanvas</a>
+
+    <h4>Geography</h4>
+    <a href="#geomap">GeoMap</a>
+    <a href="#geojson">GeoJSON helpers</a>
+    <a href="#globemap">GlobeMap</a>
+
+    <h4>State</h4>
+    <a href="#reactive">Reactive&lt;T&gt;</a>
+    <a href="#computed">MakeComputed</a>
+    <a href="#reactivegroup">ReactiveGroup</a>
+    <a href="#backgroundtask">BackgroundTask</a>
+
+    <h4>Notifications</h4>
+    <a href="#notify">Notify()</a>
+    <a href="#progressbar">ProgressBar</a>
+
+    <h4>Overlays</h4>
+    <a href="#dialog">Dialog / Modal</a>
+    <a href="#drawer">Drawer</a>
+
+    <h4>Process</h4>
+    <a href="#process">ProcessPanel</a>
+
+    <h4>Content</h4>
+    <a href="#markdown">Markdown</a>
+    <a href="#configeditor">ConfigEditor</a>
+
+    <h4>Navigation</h4>
+    <a href="#router">Router</a>
+    <a href="#navigate">Navigate()</a>
+    <a href="#wizard">Wizard</a>
+  </nav>
+
+  <!-- Main content -->
+  <main class="api-main">
+
+    <!-- App Runners -->
+    <div class="api-entry" id="runners">
+      <h2>App Runners</h2>
+      <p>Three modes to run your FTXUI application. All handle the event loop, terminal setup/teardown, and rendering.</p>
+
+      <h3>RunFullscreen</h3>
+      <div class="method-sig">void RunFullscreen(Component root);</div>
+      <p>Takes over the full terminal. Clears screen, hides cursor, enters raw mode. The recommended mode for most apps.</p>
+
+      <h3>RunFitContent</h3>
+      <div class="method-sig">void RunFitContent(Component root);</div>
+      <p>Resizes the terminal to fit the component's natural size. Useful for dialog-style apps that don't need full-screen.</p>
+
+      <h3>RunLoop</h3>
+      <div class="method-sig">void RunLoop(Component root);</div>
+      <p>Gives you manual control over the event loop. Use when you need to integrate with an existing event system.</p>
+
+      <div class="code-block"><pre><span class="pp">#include &lt;ftxui/ui/all.hpp&gt;</span>
+<span class="kw">using namespace</span> <span class="ns">ftxui::ui</span>;
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="kw">auto</span> app = <span class="fn">Layout::Vertical</span>({ <span class="fn">Text</span>(<span class="str">"Hello!"</span>) });
+
+    <span class="fn">RunFullscreen</span>(app);      <span class="cmt">// Full terminal takeover</span>
+    <span class="cmt">// or: RunFitContent(app);  // Fit to content</span>
+    <span class="cmt">// or: RunLoop(app);         // Manual loop</span>
+}</pre></div>
+    </div>
+
+    <!-- Debug Overlay -->
+    <div class="api-entry" id="debug">
+      <h2>WithDebugOverlay</h2>
+      <div class="method-sig">Component WithDebugOverlay(Component inner);</div>
+      <p>Wraps any component with a debug overlay. Press <kbd>Ctrl+D</kbd> to toggle a panel showing:</p>
+      <ul style="color:var(--text-secondary);margin:0.75rem 0 0.75rem 1.5rem;line-height:2;">
+        <li>Render time (last frame, average, worst)</li>
+        <li>Event rate (events/second)</li>
+        <li>Memory usage</li>
+        <li>Component tree depth</li>
+      </ul>
+      <div class="code-block"><pre><span class="fn">RunFullscreen</span>(<span class="fn">WithDebugOverlay</span>(myApp));</pre></div>
+    </div>
+
+    <!-- Theme -->
+    <div class="api-entry" id="theme">
+      <h2>Theme System</h2>
+      <p>Global color palette applied to all components. Set once before creating components for consistent styling.</p>
+
+      <h3>SetTheme / GetTheme</h3>
+      <div class="method-sig">void SetTheme(Theme t);
+Theme GetTheme();</div>
+
+      <h3>Theme struct</h3>
+      <div class="method-sig"><span class="kw">struct</span> <span class="type">Theme</span> {
+    <span class="type">Color</span> primary;       <span class="cmt">// Main UI color</span>
+    <span class="type">Color</span> accent;        <span class="cmt">// Highlight / selection color</span>
+    <span class="type">Color</span> error_color;   <span class="cmt">// Error state</span>
+    <span class="type">Color</span> warning_color; <span class="cmt">// Warning state</span>
+    <span class="type">Color</span> success_color; <span class="cmt">// Success state</span>
+    <span class="type">Color</span> text_muted;    <span class="cmt">// Secondary / muted text</span>
+    <span class="type">Color</span> border_color;  <span class="cmt">// Box/border color</span>
+    <span class="type">Color</span> text;          <span class="cmt">// Primary text color</span>
+    <span class="type">Color</span> background;    <span class="cmt">// Background color</span>
+};</div>
+
+      <h3>Built-in Themes</h3>
+      <div class="method-sig"><span class="kw">namespace</span> <span class="ns">Theme</span> {
+    <span class="type">Theme</span> <span class="fn">Default</span>();
+    <span class="type">Theme</span> <span class="fn">Dark</span>();
+    <span class="type">Theme</span> <span class="fn">Light</span>();
+    <span class="type">Theme</span> <span class="fn">Nord</span>();
+    <span class="type">Theme</span> <span class="fn">Dracula</span>();
+    <span class="type">Theme</span> <span class="fn">Monokai</span>();
+}</div>
+
+      <div class="code-block"><pre><span class="fn">SetTheme</span>(<span class="ns">Theme</span>::<span class="fn">Nord</span>());
+
+<span class="cmt">// Or custom:</span>
+<span class="ns">Theme</span> t = <span class="ns">Theme</span>::<span class="fn">Dark</span>();
+t.primary = <span class="ns">Color</span>::<span class="fn">RGB</span>(<span class="num">124</span>, <span class="num">58</span>, <span class="num">237</span>);
+<span class="fn">SetTheme</span>(t);</pre></div>
+    </div>
+
+    <!-- Layout -->
+    <div class="api-entry" id="layout">
+      <h2>Layout</h2>
+      <p>Compose components into vertical stacks, horizontal rows, or responsive grids. All layouts use the FTXUI flexbox-inspired size negotiation.</p>
+
+      <h3>Methods</h3>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">Layout</span> {
+    <span class="kw">static</span> <span class="type">Component</span> <span class="fn">Vertical</span>(<span class="type">std::vector</span>&lt;<span class="type">Component</span>&gt; children);
+    <span class="kw">static</span> <span class="type">Component</span> <span class="fn">Horizontal</span>(<span class="type">std::vector</span>&lt;<span class="type">Component</span>&gt; children);
+    <span class="kw">static</span> <span class="type">Component</span> <span class="fn">Grid</span>(<span class="type">int</span> cols, <span class="type">std::vector</span>&lt;<span class="type">Component</span>&gt; children);
+};</div>
+
+      <div class="code-block"><pre><span class="kw">auto</span> ui = <span class="ns">Layout</span>::<span class="fn">Vertical</span>({
+    <span class="fn">header_component</span>(),
+    <span class="ns">Layout</span>::<span class="fn">Horizontal</span>({
+        <span class="fn">sidebar</span>() | <span class="fn">size</span>(<span class="type">WIDTH</span>, <span class="type">EQUAL</span>, <span class="num">30</span>),
+        <span class="fn">main_content</span>() | <span class="fn">flex</span>,
+    }),
+    <span class="fn">status_bar</span>(),
+});</pre></div>
+    </div>
+
+    <!-- Form -->
+    <div class="api-entry" id="form">
+      <h2>Form</h2>
+      <p>Declarative form builder. Automatically handles tab navigation between fields, enter-to-submit, and escape-to-cancel.</p>
+
+      <h3>Methods</h3>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">Form</span> {
+    <span class="type">Form</span>&amp; <span class="fn">Title</span>(<span class="type">std::string</span> title);
+    <span class="type">Form</span>&amp; <span class="fn">Field</span>(<span class="type">std::string</span> label, <span class="type">std::string</span>&amp; binding);
+    <span class="type">Form</span>&amp; <span class="fn">Password</span>(<span class="type">std::string</span> label, <span class="type">std::string</span>&amp; binding);
+    <span class="type">Form</span>&amp; <span class="fn">OnSubmit</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>()&gt; callback);
+    <span class="type">Form</span>&amp; <span class="fn">OnCancel</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>()&gt; callback);
+    <span class="type">Component</span> <span class="fn">Build</span>();
+};</div>
+
+      <div class="code-block"><pre><span class="type">std::string</span> user, pass;
+<span class="kw">auto</span> login = <span class="ns">Form</span>()
+    .<span class="fn">Title</span>(<span class="str">"Login"</span>)
+    .<span class="fn">Field</span>(<span class="str">"Username"</span>, user)
+    .<span class="fn">Password</span>(<span class="str">"Password"</span>, pass)
+    .<span class="fn">OnSubmit</span>([&]{ <span class="fn">authenticate</span>(user, pass); })
+    .<span class="fn">Build</span>();</pre></div>
+    </div>
+
+    <!-- DataTable -->
+    <div class="api-entry" id="datatable">
+      <h2>DataTable&lt;T&gt;</h2>
+      <p>Generic read-only data table. Template parameter T is your data type. Column definitions use lambdas — no reflection needed.</p>
+
+      <h3>Methods</h3>
+      <div class="method-sig"><span class="kw">template</span>&lt;<span class="kw">typename</span> <span class="type">T</span>&gt;
+<span class="kw">class</span> <span class="type">DataTable</span> {
+    <span class="type">DataTable</span>&amp; <span class="fn">Columns</span>(<span class="type">std::vector</span>&lt;<span class="type">ColumnDef</span>&lt;<span class="type">T</span>&gt;&gt; cols);
+    <span class="type">DataTable</span>&amp; <span class="fn">Rows</span>(<span class="type">std::vector</span>&lt;<span class="type">T</span>&gt; rows);
+    <span class="type">DataTable</span>&amp; <span class="fn">OnSelect</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>(<span class="type">T</span>)&gt; callback);
+    <span class="type">Component</span> <span class="fn">Build</span>();
+};</div>
+
+      <div class="code-block"><pre><span class="kw">struct</span> <span class="type">Employee</span> {
+    <span class="type">int</span> id;
+    <span class="type">std::string</span> name, dept;
+    <span class="type">double</span> salary;
+};
+
+<span class="kw">auto</span> t = <span class="ns">DataTable</span>&lt;<span class="type">Employee</span>&gt;()
+    .<span class="fn">Columns</span>({
+        {<span class="str">"ID"</span>,     [](<span class="kw">auto</span>&amp; e){ <span class="kw">return</span> <span class="fn">std::to_string</span>(e.id); }},
+        {<span class="str">"Name"</span>,   [](<span class="kw">auto</span>&amp; e){ <span class="kw">return</span> e.name; }},
+        {<span class="str">"Dept"</span>,   [](<span class="kw">auto</span>&amp; e){ <span class="kw">return</span> e.dept; }},
+        {<span class="str">"Salary"</span>, [](<span class="kw">auto</span>&amp; e){ <span class="kw">return</span> <span class="str">"$"</span> + <span class="fn">fmt</span>(<span class="str">"{:.0f}"</span>, e.salary); }},
+    })
+    .<span class="fn">Rows</span>(employees)
+    .<span class="fn">OnSelect</span>([&](<span class="type">Employee</span> e){
+        <span class="fn">showEmployeeDetail</span>(e);
+    })
+    .<span class="fn">Build</span>();</pre></div>
+    </div>
+
+    <!-- SortableTable -->
+    <div class="api-entry" id="sortabletable">
+      <h2>SortableTable&lt;T&gt;</h2>
+      <p>Interactive table with column sort (click header), live filter (type anywhere), pagination, and mouse support.</p>
+      <div class="method-sig"><span class="kw">template</span>&lt;<span class="kw">typename</span> <span class="type">T</span>&gt;
+<span class="kw">class</span> <span class="type">SortableTable</span> {
+    <span class="type">SortableTable</span>&amp; <span class="fn">Columns</span>(<span class="type">std::vector</span>&lt;<span class="type">ColumnDef</span>&lt;<span class="type">T</span>&gt;&gt; cols);
+    <span class="type">SortableTable</span>&amp; <span class="fn">Rows</span>(<span class="type">std::vector</span>&lt;<span class="type">T</span>&gt; rows);
+    <span class="type">SortableTable</span>&amp; <span class="fn">PageSize</span>(<span class="type">int</span> n);
+    <span class="type">SortableTable</span>&amp; <span class="fn">OnSelect</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>(<span class="type">T</span>)&gt; callback);
+    <span class="type">Component</span> <span class="fn">Build</span>();
+};</div>
+    </div>
+
+    <!-- VirtualList -->
+    <div class="api-entry" id="virtuallist">
+      <h2>VirtualList&lt;T&gt;</h2>
+      <p>O(visible) rendering — only renders what fits on screen. Handles millions of rows with constant render time.</p>
+      <div class="method-sig"><span class="kw">template</span>&lt;<span class="kw">typename</span> <span class="type">T</span>&gt;
+<span class="kw">class</span> <span class="type">VirtualList</span> {
+    <span class="type">VirtualList</span>&amp; <span class="fn">Items</span>(<span class="type">std::vector</span>&lt;<span class="type">T</span>&gt; items);
+    <span class="type">VirtualList</span>&amp; <span class="fn">Renderer</span>(<span class="type">std::function</span>&lt;<span class="type">Element</span>(<span class="type">T</span>, <span class="type">bool</span> selected)&gt; fn);
+    <span class="type">VirtualList</span>&amp; <span class="fn">OnSelect</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>(<span class="type">T</span>)&gt; callback);
+    <span class="type">Component</span> <span class="fn">Build</span>();
+};</div>
+    </div>
+
+    <!-- Tree -->
+    <div class="api-entry" id="tree">
+      <h2>Tree&lt;T&gt;</h2>
+      <p>Expandable tree view for hierarchical data. Nodes can be collapsed/expanded with Enter or Space.</p>
+      <div class="method-sig"><span class="kw">template</span>&lt;<span class="kw">typename</span> <span class="type">T</span>&gt;
+<span class="kw">struct</span> <span class="type">TreeNode</span> {
+    <span class="type">T</span> value;
+    <span class="type">std::vector</span>&lt;<span class="type">TreeNode</span>&lt;<span class="type">T</span>&gt;&gt; children;
+};
+
+<span class="kw">template</span>&lt;<span class="kw">typename</span> <span class="type">T</span>&gt;
+<span class="kw">class</span> <span class="type">Tree</span> {
+    <span class="type">Tree</span>&amp; <span class="fn">Root</span>(<span class="type">TreeNode</span>&lt;<span class="type">T</span>&gt; root);
+    <span class="type">Tree</span>&amp; <span class="fn">OnSelect</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>(<span class="type">T</span>)&gt; callback);
+    <span class="type">Component</span> <span class="fn">Build</span>();
+};</div>
+    </div>
+
+    <!-- LogPanel -->
+    <div class="api-entry" id="logpanel">
+      <h2>LogPanel</h2>
+      <p>Thread-safe log panel with per-level colors. Uses a ring buffer with configurable max lines.</p>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">LogPanel</span> {
+    <span class="kw">static</span> <span class="type">std::shared_ptr</span>&lt;<span class="type">LogPanel</span>&gt; <span class="fn">Create</span>(<span class="type">int</span> max_lines = <span class="num">1000</span>);
+    <span class="type">void</span> <span class="fn">Info</span>(<span class="type">std::string</span> msg);
+    <span class="type">void</span> <span class="fn">Warn</span>(<span class="type">std::string</span> msg);
+    <span class="type">void</span> <span class="fn">Error</span>(<span class="type">std::string</span> msg);
+    <span class="type">void</span> <span class="fn">Debug</span>(<span class="type">std::string</span> msg);
+    <span class="type">Component</span> <span class="fn">AsComponent</span>();
+};</div>
+    </div>
+
+    <!-- LineChart -->
+    <div class="api-entry" id="linechart">
+      <h2>LineChart</h2>
+      <p>Multi-series line chart rendered with braille at 8× terminal resolution. Use <code>RenderFlex()</code> for adaptive sizing.</p>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">LineChart</span> {
+    <span class="type">LineChart</span>&amp; <span class="fn">Series</span>(<span class="type">std::string</span> name, <span class="type">std::vector</span>&lt;<span class="type">double</span>&gt; data, <span class="type">Color</span> c);
+    <span class="type">LineChart</span>&amp; <span class="fn">XLabels</span>(<span class="type">std::vector</span>&lt;<span class="type">std::string</span>&gt; labels);
+    <span class="type">LineChart</span>&amp; <span class="fn">Title</span>(<span class="type">std::string</span> title);
+    <span class="type">Element</span> <span class="fn">Build</span>();         <span class="cmt">// fixed minimum size</span>
+    <span class="type">Element</span> <span class="fn">RenderFlex</span>();   <span class="cmt">// fills all available space</span>
+};</div>
+    </div>
+
+    <!-- BarChart -->
+    <div class="api-entry" id="barchart">
+      <h2>BarChart</h2>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">BarChart</span> {
+    <span class="type">BarChart</span>&amp; <span class="fn">Data</span>(<span class="type">std::vector</span>&lt;<span class="type">std::pair</span>&lt;<span class="type">std::string</span>, <span class="type">double</span>&gt;&gt; data);
+    <span class="type">BarChart</span>&amp; <span class="fn">Title</span>(<span class="type">std::string</span> title);
+    <span class="type">Element</span> <span class="fn">Build</span>();
+};</div>
+    </div>
+
+    <!-- ScatterPlot -->
+    <div class="api-entry" id="scatterplot">
+      <h2>ScatterPlot</h2>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">ScatterPlot</span> {
+    <span class="type">ScatterPlot</span>&amp; <span class="fn">Data</span>(<span class="type">std::vector</span>&lt;<span class="type">std::pair</span>&lt;<span class="type">double</span>, <span class="type">double</span>&gt;&gt; pts);
+    <span class="type">ScatterPlot</span>&amp; <span class="fn">XLabel</span>(<span class="type">std::string</span> label);
+    <span class="type">ScatterPlot</span>&amp; <span class="fn">YLabel</span>(<span class="type">std::string</span> label);
+    <span class="type">Element</span> <span class="fn">Build</span>();
+};</div>
+    </div>
+
+    <!-- Sparkline -->
+    <div class="api-entry" id="sparkline">
+      <h2>Sparkline</h2>
+      <p>Inline one-line chart. Perfect for status bars, table cells, and compact dashboards.</p>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">Sparkline</span> {
+    <span class="type">Sparkline</span>&amp; <span class="fn">Data</span>(<span class="type">std::vector</span>&lt;<span class="type">double</span>&gt; data);
+    <span class="type">Sparkline</span>&amp; <span class="fn">Color</span>(<span class="type">Color</span> c);
+    <span class="type">Element</span> <span class="fn">Build</span>();
+};</div>
+    </div>
+
+    <!-- Histogram -->
+    <div class="api-entry" id="histogram">
+      <h2>Histogram</h2>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">Histogram</span> {
+    <span class="type">Histogram</span>&amp; <span class="fn">Data</span>(<span class="type">std::vector</span>&lt;<span class="type">double</span>&gt; data);
+    <span class="type">Histogram</span>&amp; <span class="fn">Bins</span>(<span class="type">int</span> num_bins);
+    <span class="type">Histogram</span>&amp; <span class="fn">Title</span>(<span class="type">std::string</span> title);
+    <span class="type">Element</span> <span class="fn">Build</span>();
+};</div>
+    </div>
+
+    <!-- BrailleCanvas -->
+    <div class="api-entry" id="braillecanvas">
+      <h2>BrailleCanvas</h2>
+      <p>Raw braille dot drawing. Each cell is 2×4 dots — 8× the resolution of character cells. Build custom visualizations.</p>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">BrailleCanvas</span> {
+    <span class="fn">BrailleCanvas</span>(<span class="type">int</span> width_chars, <span class="type">int</span> height_chars);
+    <span class="type">void</span> <span class="fn">Set</span>(<span class="type">int</span> x, <span class="type">int</span> y);
+    <span class="type">void</span> <span class="fn">Clear</span>(<span class="type">int</span> x, <span class="type">int</span> y);
+    <span class="type">void</span> <span class="fn">Line</span>(<span class="type">int</span> x1, <span class="type">int</span> y1, <span class="type">int</span> x2, <span class="type">int</span> y2);
+    <span class="type">void</span> <span class="fn">Circle</span>(<span class="type">int</span> cx, <span class="type">int</span> cy, <span class="type">int</span> r);
+    <span class="type">Element</span> <span class="fn">Render</span>();
+    <span class="type">Element</span> <span class="fn">RenderFlex</span>();  <span class="cmt">// adaptive</span>
+};</div>
+    </div>
+
+    <!-- GeoMap -->
+    <div class="api-entry" id="geomap">
+      <h2>GeoMap</h2>
+      <p>Interactive world map from GeoJSON data. Supports pan, zoom, overlays (markers), and great-circle arc drawing.</p>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">GeoMap</span> {
+    <span class="type">GeoMap</span>&amp; <span class="fn">Data</span>(<span class="type">std::string</span> geojson);
+    <span class="type">GeoMap</span>&amp; <span class="fn">Center</span>(<span class="type">double</span> lon, <span class="type">double</span> lat);
+    <span class="type">GeoMap</span>&amp; <span class="fn">Zoom</span>(<span class="type">double</span> level);
+    <span class="type">GeoMap</span>&amp; <span class="fn">Overlay</span>(<span class="type">MapOverlay</span> overlay);
+    <span class="type">GeoMap</span>&amp; <span class="fn">AddArc</span>(<span class="type">double</span> lon1, <span class="type">double</span> lat1,
+                  <span class="type">double</span> lon2, <span class="type">double</span> lat2, <span class="type">Color</span> c);
+    <span class="type">GeoMap</span>&amp; <span class="fn">OnSelect</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>(<span class="type">std::string</span>)&gt; cb);
+    <span class="type">Component</span> <span class="fn">Build</span>();
+};</div>
+    </div>
+
+    <!-- GeoJSON helpers -->
+    <div class="api-entry" id="geojson">
+      <h2>GeoJSON Helpers</h2>
+      <div class="method-sig"><span class="cmt">// Load GeoJSON from file path</span>
+<span class="type">std::string</span> <span class="fn">LoadGeoJSON</span>(<span class="type">std::string</span> path);
+
+<span class="cmt">// Parse GeoJSON string into features</span>
+<span class="type">GeoJsonResult</span> <span class="fn">ParseGeoJSON</span>(<span class="type">std::string</span> json);
+
+<span class="cmt">// Built-in NE110m Natural Earth world map</span>
+<span class="type">std::string</span> <span class="fn">WorldMapGeoJSON</span>();</div>
+    </div>
+
+    <!-- GlobeMap -->
+    <div class="api-entry" id="globemap">
+      <h2>GlobeMap</h2>
+      <p>Spinning 3D orthographic globe in braille. A background thread drives the animation at 20fps.</p>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">GlobeMap</span> {
+    <span class="type">GlobeMap</span>&amp; <span class="fn">RotationSpeed</span>(<span class="type">double</span> deg_per_sec);
+    <span class="type">GlobeMap</span>&amp; <span class="fn">Center</span>(<span class="type">double</span> lon, <span class="type">double</span> lat);
+    <span class="type">GlobeMap</span>&amp; <span class="fn">CityMarker</span>(<span class="type">std::string</span> name, <span class="type">double</span> lon, <span class="type">double</span> lat);
+    <span class="type">Component</span> <span class="fn">Build</span>();
+};</div>
+    </div>
+
+    <!-- Reactive -->
+    <div class="api-entry" id="reactive">
+      <h2>Reactive&lt;T&gt;</h2>
+      <p>Mutex-protected observable value. Subscribe to changes. Setting from any thread triggers a UI refresh event.</p>
+      <div class="method-sig"><span class="kw">template</span>&lt;<span class="kw">typename</span> <span class="type">T</span>&gt;
+<span class="kw">class</span> <span class="type">Reactive</span> {
+    <span class="kw">explicit</span> <span class="fn">Reactive</span>(<span class="type">T</span> initial_value);
+    <span class="type">T</span>    <span class="fn">Get</span>() <span class="kw">const</span>;
+    <span class="type">void</span> <span class="fn">Set</span>(<span class="type">T</span> value);
+    <span class="type">void</span> <span class="fn">Subscribe</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>(<span class="type">T</span>)&gt; listener);
+};</div>
+    </div>
+
+    <!-- MakeComputed -->
+    <div class="api-entry" id="computed">
+      <h2>MakeComputed</h2>
+      <p>Creates a derived <code>Reactive</code> that updates automatically when its source changes.</p>
+      <div class="method-sig"><span class="kw">template</span>&lt;<span class="kw">typename</span> <span class="type">T</span>, <span class="kw">typename</span> <span class="type">F</span>&gt;
+<span class="kw">auto</span> <span class="fn">MakeComputed</span>(
+    <span class="type">std::shared_ptr</span>&lt;<span class="type">Reactive</span>&lt;<span class="type">T</span>&gt;&gt; source,
+    <span class="type">F</span> transform_fn
+) -&gt; <span class="type">std::shared_ptr</span>&lt;<span class="type">Reactive</span>&lt;<span class="kw">decltype</span>(transform_fn(source-&gt;<span class="fn">Get</span>()))&gt;&gt;;</div>
+
+      <div class="code-block"><pre><span class="kw">auto</span> count  = <span class="fn">std::make_shared</span>&lt;<span class="ns">Reactive</span>&lt;<span class="type">int</span>&gt;&gt;(<span class="num">0</span>);
+<span class="kw">auto</span> doubled = <span class="fn">MakeComputed</span>(count, [](<span class="type">int</span> v){ <span class="kw">return</span> v*<span class="num">2</span>; });
+<span class="kw">auto</span> label   = <span class="fn">MakeComputed</span>(count, [](<span class="type">int</span> v){
+    <span class="kw">return</span> <span class="str">"Count: "</span> + <span class="fn">std::to_string</span>(v);
+});</pre></div>
+    </div>
+
+    <!-- ReactiveGroup -->
+    <div class="api-entry" id="reactivegroup">
+      <h2>ReactiveGroup</h2>
+      <p>Batch multiple reactive updates into a single UI refresh.</p>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">ReactiveGroup</span> {
+    <span class="type">void</span> <span class="fn">Add</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>()&gt; update);
+    <span class="type">void</span> <span class="fn">Batch</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>()&gt; updates);
+};</div>
+    </div>
+
+    <!-- BackgroundTask -->
+    <div class="api-entry" id="backgroundtask">
+      <h2>BackgroundTask</h2>
+      <p>Run long-running work on a background thread with a progress overlay and completion callback.</p>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">BackgroundTask</span> {
+    <span class="type">BackgroundTask</span>&amp; <span class="fn">Work</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>(<span class="type">float</span>)&gt;)&gt; fn);
+    <span class="type">BackgroundTask</span>&amp; <span class="fn">OnComplete</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>()&gt; callback);
+    <span class="type">BackgroundTask</span>&amp; <span class="fn">OnError</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>(<span class="type">std::string</span>)&gt; callback);
+    <span class="type">Component</span> <span class="fn">AsOverlay</span>(<span class="type">Component</span> inner);
+    <span class="type">void</span> <span class="fn">Start</span>();
+};</div>
+    </div>
+
+    <!-- Notify -->
+    <div class="api-entry" id="notify">
+      <h2>Notify()</h2>
+      <p>Non-blocking toast notification. Displays in the top-right corner and auto-dismisses.</p>
+      <div class="method-sig"><span class="kw">enum class</span> <span class="type">NotificationLevel</span> { Info, Success, Warning, Error };
+
+<span class="type">void</span> <span class="fn">Notify</span>(<span class="type">std::string</span> msg,
+            <span class="type">NotificationLevel</span> level = <span class="type">NotificationLevel</span>::Info,
+            <span class="type">int</span> duration_ms = <span class="num">3000</span>);</div>
+    </div>
+
+    <!-- Dialog / Modal -->
+    <div class="api-entry" id="dialog">
+      <h2>Dialog / Modal / Drawer</h2>
+      <div class="method-sig"><span class="type">Component</span> <span class="fn">Dialog</span>(
+    <span class="type">std::string</span> title,
+    <span class="type">Component</span> content,
+    <span class="type">std::function</span>&lt;<span class="type">void</span>()&gt; on_close
+);
+
+<span class="type">Component</span> <span class="fn">Modal</span>(
+    <span class="type">Component</span> inner,
+    <span class="type">std::shared_ptr</span>&lt;<span class="type">bool</span>&gt; show
+);
+
+<span class="kw">enum class</span> <span class="type">DrawerSide</span> { Left, Right, Top, Bottom };</div>
+    </div>
+
+    <!-- ProcessPanel -->
+    <div class="api-entry" id="process">
+      <h2>ProcessPanel</h2>
+      <p>Fork and exec a child process. Stream stdout/stderr in real-time to a built-in log view.</p>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">ProcessPanel</span> {
+    <span class="type">ProcessPanel</span>&amp; <span class="fn">Command</span>(<span class="type">std::string</span> cmd);
+    <span class="type">ProcessPanel</span>&amp; <span class="fn">Args</span>(<span class="type">std::vector</span>&lt;<span class="type">std::string</span>&gt; args);
+    <span class="type">ProcessPanel</span>&amp; <span class="fn">WorkDir</span>(<span class="type">std::string</span> dir);
+    <span class="type">ProcessPanel</span>&amp; <span class="fn">OnExit</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>(<span class="type">int</span> exit_code)&gt; cb);
+    <span class="type">Component</span> <span class="fn">Build</span>();
+    <span class="type">void</span> <span class="fn">Start</span>();
+    <span class="type">void</span> <span class="fn">Stop</span>();   <span class="cmt">// sends SIGTERM</span>
+    <span class="type">bool</span> <span class="fn">IsRunning</span>() <span class="kw">const</span>;
+};</div>
+    </div>
+
+    <!-- Markdown -->
+    <div class="api-entry" id="markdown">
+      <h2>Markdown</h2>
+      <p>Renders Markdown text with inline formatting: **bold**, *italic*, `code`, # headings, - lists.</p>
+      <div class="method-sig"><span class="cmt">// Returns an Element (non-interactive)</span>
+<span class="type">Element</span> <span class="fn">Markdown</span>(<span class="type">std::string</span> md_text);
+<span class="type">Element</span> <span class="fn">MarkdownWithWidth</span>(<span class="type">std::string</span> md_text, <span class="type">int</span> width);
+
+<span class="cmt">// Returns a scrollable Component</span>
+<span class="type">Component</span> <span class="fn">MarkdownComponent</span>(<span class="type">std::string</span> md_text);</div>
+    </div>
+
+    <!-- Router -->
+    <div class="api-entry" id="router">
+      <h2>Router</h2>
+      <p>Client-side routing for multi-view terminal apps. Each route has a factory function called lazily.</p>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">Router</span> {
+    <span class="type">Router</span>&amp; <span class="fn">Route</span>(<span class="type">std::string</span> path, <span class="type">std::function</span>&lt;<span class="type">Component</span>()&gt; factory);
+    <span class="type">Router</span>&amp; <span class="fn">Default</span>(<span class="type">std::string</span> path);
+    <span class="type">Component</span> <span class="fn">Build</span>();
+};
+
+<span class="type">void</span> <span class="fn">Navigate</span>(<span class="type">std::string</span> path);</div>
+    </div>
+
+    <!-- Wizard -->
+    <div class="api-entry" id="wizard">
+      <h2>Wizard</h2>
+      <p>Multi-step workflow with progress indicator, back/next/finish navigation.</p>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">Wizard</span> {
+    <span class="type">Wizard</span>&amp; <span class="fn">Step</span>(<span class="type">std::string</span> title, <span class="type">Component</span> content);
+    <span class="type">Wizard</span>&amp; <span class="fn">OnComplete</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>()&gt; callback);
+    <span class="type">Wizard</span>&amp; <span class="fn">OnCancel</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>()&gt; callback);
+    <span class="type">Component</span> <span class="fn">Build</span>();
+};</div>
+    </div>
+
+    <!-- CommandPalette -->
+    <div class="api-entry" id="commandpalette">
+      <h2>CommandPalette</h2>
+      <p>Fuzzy-search command palette (like VS Code's Ctrl+P). Register commands with names, descriptions, and callbacks.</p>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">CommandPalette</span> {
+    <span class="type">CommandPalette</span>&amp; <span class="fn">Command</span>(<span class="type">std::string</span> name, <span class="type">std::string</span> desc, <span class="type">std::function</span>&lt;<span class="type">void</span>()&gt; cb);
+    <span class="type">CommandPalette</span>&amp; <span class="fn">Hotkey</span>(<span class="type">std::string</span> key); <span class="cmt">// e.g. "ctrl+p"</span>
+    <span class="type">Component</span> <span class="fn">Build</span>();
+};</div>
+    </div>
+
+    <!-- KeymapRegistry -->
+    <div class="api-entry" id="keymap">
+      <h2>KeymapRegistry</h2>
+      <p>Register global keyboard shortcuts. Display a help overlay with all registered bindings.</p>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">KeymapRegistry</span> {
+    <span class="type">void</span> <span class="fn">Register</span>(<span class="type">std::string</span> key, <span class="type">std::string</span> desc, <span class="type">std::function</span>&lt;<span class="type">void</span>()&gt; action);
+    <span class="type">Component</span> <span class="fn">AsHelpOverlay</span>();
+};</div>
+    </div>
+
+    <!-- ConfigEditor -->
+    <div class="api-entry" id="configeditor">
+      <h2>ConfigEditor</h2>
+      <p>Live INI/JSON configuration editor. Changes are reflected in bound string variables immediately.</p>
+      <div class="method-sig"><span class="kw">class</span> <span class="type">ConfigEditor</span> {
+    <span class="type">ConfigEditor</span>&amp; <span class="fn">File</span>(<span class="type">std::string</span> path);
+    <span class="type">ConfigEditor</span>&amp; <span class="fn">Key</span>(<span class="type">std::string</span> key, <span class="type">std::string</span>&amp; binding);
+    <span class="type">ConfigEditor</span>&amp; <span class="fn">OnSave</span>(<span class="type">std::function</span>&lt;<span class="type">void</span>()&gt; callback);
+    <span class="type">Component</span> <span class="fn">Build</span>();
+};</div>
+    </div>
+
+  </main>
+</div><!-- /.api-layout -->
+
+<!-- Footer -->
+<footer class="glass-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span style="font-size:1.75rem;font-weight:900;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">FTXUI</span>
+        <p>The C++ Terminal UI Framework.</p>
+        <p class="footer-tagline">Zero dependencies. Bare metal speed. Maximum beauty.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Docs</h4>
+        <a href="getting-started.html">Getting Started</a>
+        <a href="api.html">API Reference</a>
+        <a href="features.html">Features</a>
+        <a href="examples.html">Examples</a>
+      </div>
+      <div class="footer-col">
+        <h4>Learn</h4>
+        <a href="deep-dive.html">Technical Deep Dive</a>
+        <a href="executive.html">Executive Brief</a>
+        <a href="https://github.com/louiscrocker/FTXUI" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <a href="https://github.com/louiscrocker/FTXUI/discussions" target="_blank" rel="noopener">Discussions</a>
+        <a href="https://github.com/louiscrocker/FTXUI/releases" target="_blank" rel="noopener">Releases</a>
+        <a href="https://github.com/louiscrocker/FTXUI/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 FTXUI Contributors. MIT License.</span>
+      <span>Zero dependencies. Bare metal speed. Maximum beauty.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

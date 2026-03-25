@@ -48,6 +48,13 @@ out/
 !doc/**/*.txt
 !doc/**/*.css
 !doc/**/*.html
+
+# docs/ — GitHub Pages site:
+!docs/**/*.html
+!docs/**/*.css
+!docs/**/*.js
+!docs/**/*.yml
+!docs/.nojekyll
 !doc/**/*.xml
 !doc/**/*.md
 !doc/*.md

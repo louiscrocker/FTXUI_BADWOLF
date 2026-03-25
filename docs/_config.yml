@@ -1,0 +1,10 @@
+title: FTXUI
+description: The C++ Terminal UI Framework — React-inspired, zero dependencies, &lt;1ms startup
+url: https://louiscrocker.github.io
+baseurl: /FTXUI
+theme: null
+plugins: []
+exclude:
+  - css/
+  - js/
+  - "*.html"

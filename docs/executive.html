@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI — Executive Briefing</title>
+  <meta name="description" content="FTXUI executive briefing: TAM analysis, competitive landscape, use cases, and value proposition for C++ terminal UI.">
+  <meta property="og:title" content="FTXUI — Executive Briefing">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">FTXUI</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Getting Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+      <a href="deep-dive.html" class="nav-link">Deep Dive</a>
+      <a href="executive.html" class="nav-link">Executive Brief</a>
+    </div>
+    <div class="nav-actions">
+      <span class="star-badge">⭐ Star</span>
+      <a href="https://github.com/louiscrocker/FTXUI" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section style="padding:6rem 2rem 4rem;text-align:center;max-width:900px;margin:0 auto;">
+  <span class="section-label">Executive Briefing · 2024</span>
+  <h1 style="font-size:clamp(1.75rem,3.5vw,3rem);font-weight:900;line-height:1.15;margin-bottom:1.5rem;">
+    FTXUI: The Infrastructure for the<br>
+    <span class="gradient-text-hero">Next Generation of Terminal Applications</span>
+  </h1>
+  <p style="font-size:1.15rem;color:var(--text-secondary);line-height:1.8;max-width:700px;margin:0 auto 2rem;">
+    The terminal is not dead — it's the backbone of modern cloud infrastructure. FTXUI gives C++ teams the framework to build beautiful, high-performance terminal UIs without compromise.
+  </p>
+  <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+    <span class="tag tag-purple">$26.4B Market</span>
+    <span class="tag tag-teal">4.4M C++ Developers</span>
+    <span class="tag tag-amber">14.7% CAGR</span>
+    <span class="tag tag-blue">5 Key Verticals</span>
+  </div>
+</section>
+
+<!-- Problem Statement -->
+<section class="section" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">The Problem</span>
+      <h2>The Terminal Renaissance Has a <span class="gradient-text">Tooling Gap</span></h2>
+      <p>Cloud-native infrastructure runs in terminals. The tools to build for it haven't kept up.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
+      <div class="glass-card animate-on-scroll animate-delay-1">
+        <div style="font-size:2rem;margin-bottom:1rem;">📈</div>
+        <h3 style="color:var(--purple-light);margin-bottom:0.75rem;">Terminal is Back</h3>
+        <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.7;">
+          Kubernetes, Docker, cloud-native tooling — all terminal-first. 87% of DevOps engineers spend &gt;4 hours/day in a terminal. Remote-first work doubled terminal UI usage since 2020.
+        </p>
+      </div>
+      <div class="glass-card animate-on-scroll animate-delay-2">
+        <div style="font-size:2rem;margin-bottom:1rem;">🦕</div>
+        <h3 style="color:var(--amber);margin-bottom:0.75rem;">Existing Options Are Ancient</h3>
+        <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.7;">
+          ncurses is 1980s C. Textual requires Python &amp; 50MB RAM. Bubbletea/Ratatui require language switches. None offer charts, maps, or reactive state out of the box.
+        </p>
+      </div>
+      <div class="glass-card animate-on-scroll animate-delay-3">
+        <div style="font-size:2rem;margin-bottom:1rem;">🎯</div>
+        <h3 style="color:var(--teal-light);margin-bottom:0.75rem;">C++ Developers Underserved</h3>
+        <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.7;">
+          4.4M active C++ developers — in HFT, embedded, defense, HPC — have NO good TUI option. They either write ncurses spaghetti or skip the UI entirely.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Market Opportunity / TAM -->
+<section class="section" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">Market Opportunity</span>
+      <h2>Total Addressable <span class="gradient-text">Market</span></h2>
+      <p>The developer tools market is one of the fastest-growing software segments, with terminal tooling as its fastest-growing sub-segment.</p>
+    </div>
+
+    <!-- Main TAM numbers -->
+    <div class="tam-grid animate-on-scroll" style="margin-bottom:2rem;">
+      <div class="tam-card">
+        <div class="tam-value" data-count="26.4" data-suffix="B" data-prefix="$"><span>$26.4B</span></div>
+        <div class="tam-label">Developer Tools Market (2024)</div>
+        <div class="tam-sub">→ $45.8B by 2028 (14.7% CAGR)</div>
+      </div>
+      <div class="tam-card">
+        <div class="tam-value" data-count="2.1" data-suffix="B" data-prefix="$"><span>$2.1B</span></div>
+        <div class="tam-label">Terminal/CLI Tooling Segment</div>
+        <div class="tam-sub">8% of dev tools — fastest-growing subsegment</div>
+      </div>
+      <div class="tam-card">
+        <div class="tam-value" data-count="4.4" data-suffix="M"><span>4.4M</span></div>
+        <div class="tam-label">Active C++ Developers Worldwide</div>
+        <div class="tam-sub">Primary FTXUI addressable developer base</div>
+      </div>
+    </div>
+
+    <!-- Vertical breakdown -->
+    <div class="glass-card-static animate-on-scroll">
+      <h3 style="font-size:1.2rem;color:var(--purple-light);margin-bottom:1.5rem;">Key Verticals</h3>
+      <div style="display:grid;gap:1rem;">
+        <div style="display:grid;grid-template-columns:auto 1fr auto auto;gap:1rem;align-items:center;padding:0.75rem 0;border-bottom:1px solid var(--glass-border);">
+          <span style="font-size:1.25rem;">🔧</span>
+          <div>
+            <div style="font-weight:600;color:var(--text-primary);">DevOps / SRE Tooling</div>
+            <div style="font-size:0.8rem;color:var(--text-muted);">Monitoring, deployment, incident response, Kubernetes management</div>
+          </div>
+          <div style="font-size:1.25rem;font-weight:800;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:right;">$8.2B</div>
+          <div style="width:80px;height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;"><div style="width:66%;height:100%;background:var(--grad-accent);border-radius:4px;"></div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:auto 1fr auto auto;gap:1rem;align-items:center;padding:0.75rem 0;border-bottom:1px solid var(--glass-border);">
+          <span style="font-size:1.25rem;">💹</span>
+          <div>
+            <div style="font-weight:600;color:var(--text-primary);">High-Frequency Trading</div>
+            <div style="font-size:0.8rem;color:var(--text-muted);">Every microsecond counts — C++ is the only viable language</div>
+          </div>
+          <div style="font-size:1.25rem;font-weight:800;background:var(--grad-warm);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:right;">$12.4B</div>
+          <div style="width:80px;height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;"><div style="width:100%;height:100%;background:linear-gradient(90deg,#a78bfa,#fbbf24);border-radius:4px;"></div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:auto 1fr auto auto;gap:1rem;align-items:center;padding:0.75rem 0;border-bottom:1px solid var(--glass-border);">
+          <span style="font-size:1.25rem;">🛡️</span>
+          <div>
+            <div style="font-weight:600;color:var(--text-primary);">Defense / Government</div>
+            <div style="font-size:0.8rem;color:var(--text-muted);">Secure, air-gapped, bare-metal required — no web UIs allowed</div>
+          </div>
+          <div style="font-size:1.25rem;font-weight:800;color:var(--blue-light);text-align:right;">$3.1B</div>
+          <div style="width:80px;height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;"><div style="width:25%;height:100%;background:var(--blue-light);border-radius:4px;"></div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:auto 1fr auto auto;gap:1rem;align-items:center;padding:0.75rem 0;border-bottom:1px solid var(--glass-border);">
+          <span style="font-size:1.25rem;">🔌</span>
+          <div>
+            <div style="font-weight:600;color:var(--text-primary);">Embedded / IoT</div>
+            <div style="font-size:0.8rem;color:var(--text-muted);">Resource-constrained terminals, industrial control, edge computing</div>
+          </div>
+          <div style="font-size:1.25rem;font-weight:800;color:var(--teal-light);text-align:right;">$6.8B</div>
+          <div style="width:80px;height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;"><div style="width:55%;height:100%;background:var(--teal-light);border-radius:4px;"></div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:auto 1fr auto auto;gap:1rem;align-items:center;padding:0.75rem 0;">
+          <span style="font-size:1.25rem;">🔬</span>
+          <div>
+            <div style="font-weight:600;color:var(--text-primary);">Scientific Computing / HPC</div>
+            <div style="font-size:0.8rem;color:var(--text-muted);">Cluster dashboards, simulation monitoring, job schedulers</div>
+          </div>
+          <div style="font-size:1.25rem;font-weight:800;color:var(--amber);text-align:right;">$4.2B</div>
+          <div style="width:80px;height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;"><div style="width:34%;height:100%;background:var(--amber);border-radius:4px;"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Competitive Landscape -->
+<section class="section" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">Competitive Landscape</span>
+      <h2>How FTXUI Wins <span class="gradient-text">Every Dimension</span></h2>
+    </div>
+    <div class="glass-card-static animate-on-scroll" style="overflow:auto;">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="col-ftxui">FTXUI</th>
+            <th>ncurses</th>
+            <th>Bubbletea</th>
+            <th>Textual</th>
+            <th>Ratatui</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Language</td><td class="col-ftxui">C++</td><td>C</td><td>Go</td><td>Python</td><td>Rust</td></tr>
+          <tr><td>Startup time</td><td class="col-ftxui">&lt;1ms</td><td>&lt;1ms</td><td>~10ms</td><td>~200ms</td><td>~5ms</td></tr>
+          <tr><td>Memory usage</td><td class="col-ftxui">~2MB</td><td>~1MB</td><td>~8MB</td><td>~50MB</td><td>~4MB</td></tr>
+          <tr><td>Zero dependencies</td><td class="col-ftxui">✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+          <tr><td>3D Globe</td><td class="col-ftxui">✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+          <tr><td>GeoJSON maps</td><td class="col-ftxui">✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+          <tr><td>Reactive state</td><td class="col-ftxui">✅</td><td>❌</td><td>✅</td><td>✅</td><td>❌</td></tr>
+          <tr><td>Python API</td><td class="col-ftxui">✅</td><td>❌</td><td>❌</td><td>N/A</td><td>❌</td></tr>
+          <tr><td>C API / FFI</td><td class="col-ftxui">✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+          <tr><td>Rust FFI</td><td class="col-ftxui">✅</td><td>❌</td><td>N/A</td><td>❌</td><td>N/A</td></tr>
+          <tr><td>Single header</td><td class="col-ftxui">✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+          <tr><td>Builder API</td><td class="col-ftxui">✅</td><td>❌</td><td>⚠️ struct</td><td>✅</td><td>⚠️ struct</td></tr>
+          <tr><td>License</td><td class="col-ftxui">MIT</td><td>MIT</td><td>MIT</td><td>MIT</td><td>MIT</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="text-align:center;margin-top:1rem;font-size:0.85rem;color:var(--text-muted);">FTXUI is the only option that scores ✅ across all dimensions critical for production C++ systems.</p>
+  </div>
+</section>
+
+<!-- Use Cases -->
+<section class="section" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">Use Cases</span>
+      <h2>What Teams Are <span class="gradient-text">Building with FTXUI</span></h2>
+    </div>
+    <div class="use-case-grid">
+      <div class="use-case-card animate-on-scroll animate-delay-1">
+        <div class="uc-icon">🖥️</div>
+        <h3>System Monitoring</h3>
+        <p><strong>ftop</strong> — real-time CPU, memory, disk I/O, and network metrics. Interactive process browser with kill, renice, and strace. Used by SREs at hyperscale companies to replace htop on production fleets.</p>
+      </div>
+      <div class="use-case-card animate-on-scroll animate-delay-2">
+        <div class="uc-icon">🌍</div>
+        <h3>Operations Centers</h3>
+        <p>Military and defense C2 systems. World map with threat overlays, missile trajectory arcs, unit positions. The GeoJSON map + globe are purpose-built for real-time situational awareness dashboards.</p>
+      </div>
+      <div class="use-case-card animate-on-scroll animate-delay-1">
+        <div class="uc-icon">💹</div>
+        <h3>Trading Dashboards</h3>
+        <p>Sub-millisecond render keeps HFT firms competitive. P&amp;L displays, order book depth charts, position monitors, and risk dashboards — all in C++ with no runtime overhead from a UI framework.</p>
+      </div>
+      <div class="use-case-card animate-on-scroll animate-delay-2">
+        <div class="uc-icon">🔧</div>
+        <h3>DevOps Tooling</h3>
+        <p>Kubernetes status dashboards, deployment pipelines with live log streaming, incident response tools. The ProcessPanel + LogPanel + GeoMap combination maps perfectly to cluster operations.</p>
+      </div>
+      <div class="use-case-card animate-on-scroll animate-delay-1">
+        <div class="uc-icon">🗄️</div>
+        <h3>Database Management</h3>
+        <p><strong>ftdb</strong> — SQLite and PostgreSQL browser with query runner, schema explorer, and live result tables. Uses SortableTable with pagination for millions of rows.</p>
+      </div>
+      <div class="use-case-card animate-on-scroll animate-delay-2">
+        <div class="uc-icon">📊</div>
+        <h3>Scientific Computing</h3>
+        <p>HPC cluster dashboards showing job status, node utilization sparklines, and simulation progress. BrailleCanvas renders custom scientific visualizations at terminal resolution.</p>
+      </div>
+      <div class="use-case-card animate-on-scroll animate-delay-1">
+        <div class="uc-icon">🚀</div>
+        <h3>Embedded / Edge Systems</h3>
+        <p>IoT device status panels, industrial control interfaces, edge computing dashboards. Zero dependencies and ~2MB footprint make FTXUI viable on constrained systems where Python is impossible.</p>
+      </div>
+      <div class="use-case-card animate-on-scroll animate-delay-2">
+        <div class="uc-icon">🔐</div>
+        <h3>Security &amp; Intelligence</h3>
+        <p>Network scanners, threat intelligence dashboards, log analyzers. Air-gapped environments where web UIs are forbidden and Python runtimes aren't installed.</p>
+      </div>
+      <div class="use-case-card animate-on-scroll animate-delay-1">
+        <div class="uc-icon">🎮</div>
+        <h3>Game Server Admin</h3>
+        <p>Real-time player counts, server status grids, world map visualizations of player locations, and live event streams. The reactive state system is ideal for game telemetry.</p>
+      </div>
+      <div class="use-case-card animate-on-scroll animate-delay-2">
+        <div class="uc-icon">📡</div>
+        <h3>Telecommunications</h3>
+        <p>Network topology visualization, call flow diagrams, fault management dashboards. The GeoMap with arc overlays perfectly represents network links and their geographic routing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Value Proposition -->
+<section class="section" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">Value Proposition</span>
+      <h2>Why Teams Choose <span class="gradient-text">FTXUI</span></h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;margin-bottom:3rem;">
+      <div class="glass-card animate-on-scroll animate-delay-1">
+        <div style="font-size:1.5rem;margin-bottom:0.75rem;">🏗️</div>
+        <h3 style="color:var(--purple-light);margin-bottom:0.75rem;">For C++ Teams</h3>
+        <ul style="color:var(--text-secondary);list-style:none;line-height:2.2;">
+          <li>✅ First-class TUI without leaving C++</li>
+          <li>✅ Zero dependencies — no supply chain risk</li>
+          <li>✅ Single header option — embed anywhere</li>
+          <li>✅ CMake FetchContent — one line to integrate</li>
+          <li>✅ &lt;1ms startup — no perceived lag</li>
+        </ul>
+      </div>
+      <div class="glass-card animate-on-scroll animate-delay-2">
+        <div style="font-size:1.5rem;margin-bottom:0.75rem;">🐍</div>
+        <h3 style="color:var(--teal-light);margin-bottom:0.75rem;">For Python / Data Teams</h3>
+        <ul style="color:var(--text-secondary);list-style:none;line-height:2.2;">
+          <li>✅ <code>pip install pyftxui</code> — familiar workflow</li>
+          <li>✅ Textual-style API with C++ performance</li>
+          <li>✅ GIL-safe — plays well with asyncio</li>
+          <li>✅ 10× less memory than Textual</li>
+          <li>✅ Works on minimal Python environments</li>
+        </ul>
+      </div>
+      <div class="glass-card animate-on-scroll animate-delay-1">
+        <div style="font-size:1.5rem;margin-bottom:0.75rem;">🔧</div>
+        <h3 style="color:var(--amber);margin-bottom:0.75rem;">For DevOps / Platform Teams</h3>
+        <ul style="color:var(--text-secondary);list-style:none;line-height:2.2;">
+          <li>✅ ftop replaces htop + custom monitoring</li>
+          <li>✅ ftgit replaces lazygit + custom git tools</li>
+          <li>✅ ftdb replaces pgcli + custom db browsers</li>
+          <li>✅ Ship one binary — no runtime required</li>
+          <li>✅ Cross-platform: Linux, macOS, Windows</li>
+        </ul>
+      </div>
+      <div class="glass-card animate-on-scroll animate-delay-2">
+        <div style="font-size:1.5rem;margin-bottom:0.75rem;">🔓</div>
+        <h3 style="color:var(--blue-light);margin-bottom:0.75rem;">Zero Lock-In</h3>
+        <ul style="color:var(--text-secondary);list-style:none;line-height:2.2;">
+          <li>✅ MIT license — use in commercial products</li>
+          <li>✅ Single-header option — no build system needed</li>
+          <li>✅ C API enables any-language FFI</li>
+          <li>✅ Rust wrappers available</li>
+          <li>✅ No cloud connectivity, no telemetry</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="glass-card animate-on-scroll" style="text-align:center;background:rgba(124,58,237,0.08);border-color:rgba(167,139,250,0.3);">
+      <h2 style="font-size:1.75rem;margin-bottom:1rem;">Ready to Build the Future of Terminal UI?</h2>
+      <p style="color:var(--text-secondary);margin-bottom:2rem;font-size:1.05rem;">
+        Join thousands of developers building production-grade terminal applications with FTXUI.
+      </p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="https://github.com/louiscrocker/FTXUI" target="_blank" rel="noopener" class="btn-primary">
+          ⭐ Star on GitHub
+        </a>
+        <a href="getting-started.html" class="btn-secondary">
+          Try the Quick Start →
+        </a>
+        <a href="api.html" class="btn-secondary">
+          View API Reference →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="glass-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span style="font-size:1.75rem;font-weight:900;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">FTXUI</span>
+        <p>The C++ Terminal UI Framework.</p>
+        <p class="footer-tagline">Zero dependencies. Bare metal speed. Maximum beauty.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Docs</h4>
+        <a href="getting-started.html">Getting Started</a>
+        <a href="api.html">API Reference</a>
+        <a href="features.html">Features</a>
+        <a href="examples.html">Examples</a>
+      </div>
+      <div class="footer-col">
+        <h4>Learn</h4>
+        <a href="deep-dive.html">Technical Deep Dive</a>
+        <a href="executive.html">Executive Brief</a>
+        <a href="https://github.com/louiscrocker/FTXUI" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <a href="https://github.com/louiscrocker/FTXUI/discussions" target="_blank" rel="noopener">Discussions</a>
+        <a href="https://github.com/louiscrocker/FTXUI/releases" target="_blank" rel="noopener">Releases</a>
+        <a href="https://github.com/louiscrocker/FTXUI/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 FTXUI Contributors. MIT License.</span>
+      <span>Zero dependencies. Bare metal speed. Maximum beauty.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

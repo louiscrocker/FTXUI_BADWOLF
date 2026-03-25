@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI — Features</title>
+  <meta name="description" content="Complete feature showcase for FTXUI: 30+ components, charts, maps, reactive state, and more.">
+  <meta property="og:title" content="FTXUI — Features">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">FTXUI</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Getting Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+      <a href="deep-dive.html" class="nav-link">Deep Dive</a>
+      <a href="executive.html" class="nav-link">Executive Brief</a>
+    </div>
+    <div class="nav-actions">
+      <span class="star-badge">⭐ Star</span>
+      <a href="https://github.com/louiscrocker/FTXUI" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section style="padding:6rem 2rem 3rem;text-align:center;">
+  <span class="section-label">Complete Feature Reference</span>
+  <h1 style="font-size:clamp(2rem,4vw,3.5rem);font-weight:900;margin-bottom:1rem;">
+    30+ Components. <span class="gradient-text">Production-Ready.</span>
+  </h1>
+  <p style="font-size:1.1rem;color:var(--text-secondary);max-width:600px;margin:0 auto 2rem;">
+    Every component is built on the same braille canvas engine, uses the same theme system, and composes freely with any other component.
+  </p>
+  <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+    <span class="tag tag-purple">Layout & Structure</span>
+    <span class="tag tag-teal">Data Display</span>
+    <span class="tag tag-blue">Charts</span>
+    <span class="tag tag-amber">Geography</span>
+    <span class="tag tag-red">Input & Controls</span>
+    <span class="tag tag-purple">State</span>
+    <span class="tag tag-teal">Notifications</span>
+    <span class="tag tag-blue">Themes</span>
+  </div>
+</section>
+
+<!-- LAYOUT & STRUCTURE -->
+<section class="section" id="layout">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">Category 01</span>
+      <h2>Layout <span class="gradient-text">&amp; Structure</span></h2>
+    </div>
+
+    <!-- Layout::Vertical / Horizontal / Grid -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;" id="layout-vertical">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;">
+        <div>
+          <span class="tag tag-purple" style="margin-bottom:0.75rem;display:inline-flex;">Layout</span>
+          <h3 style="font-size:1.4rem;color:var(--purple-light);margin-bottom:0.75rem;">Layout::Vertical / Horizontal / Grid</h3>
+          <p style="color:var(--text-secondary);margin-bottom:1rem;">Stack components vertically, horizontally, or in a responsive grid. All layouts participate in the flexbox-inspired size negotiation system.</p>
+          <div class="code-block"><pre><span class="kw">auto</span> app = <span class="ns">Layout</span>::<span class="fn">Vertical</span>({
+    <span class="fn">Text</span>(<span class="str">"Top panel"</span>),
+    <span class="ns">Layout</span>::<span class="fn">Horizontal</span>({
+        <span class="fn">SideBar</span>(),
+        <span class="fn">MainContent</span>(),
+    }),
+    <span class="fn">StatusBar</span>(),
+});
+
+<span class="cmt">// Grid: 3 columns</span>
+<span class="kw">auto</span> grid = <span class="ns">Layout</span>::<span class="fn">Grid</span>(<span class="num">3</span>, {
+    <span class="fn">Card</span>(<span class="str">"A"</span>), <span class="fn">Card</span>(<span class="str">"B"</span>), <span class="fn">Card</span>(<span class="str">"C"</span>),
+    <span class="fn">Card</span>(<span class="str">"D"</span>), <span class="fn">Card</span>(<span class="str">"E"</span>), <span class="fn">Card</span>(<span class="str">"F"</span>),
+});</pre></div>
+        </div>
+        <div>
+          <div class="terminal-window">
+            <div class="terminal-titlebar">
+              <span class="terminal-dot terminal-dot-red"></span>
+              <span class="terminal-dot terminal-dot-yellow"></span>
+              <span class="terminal-dot terminal-dot-green"></span>
+              <span class="terminal-title">Layout Preview</span>
+            </div>
+            <div class="terminal-body" style="min-height:auto;">
+              <pre class="terminal-output" style="font-size:0.78rem;">┌─────────────────────────────┐
+│        Top panel            │
+├──────────┬──────────────────┤
+│ Sidebar  │   Main Content   │
+│  • Item1 │                  │
+│  • Item2 │   Hello World!   │
+│  • Item3 │                  │
+│          │                  │
+├──────────┴──────────────────┤
+│  Status: Ready   [q] Quit   │
+└─────────────────────────────┘</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;" id="form">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;">
+        <div>
+          <span class="tag tag-purple" style="margin-bottom:0.75rem;display:inline-flex;">Layout</span>
+          <h3 style="font-size:1.4rem;color:var(--purple-light);margin-bottom:0.75rem;">Form</h3>
+          <p style="color:var(--text-secondary);margin-bottom:1rem;">Declarative form builder with automatic layout, validation, tab navigation between fields, and submit/cancel callbacks.</p>
+          <div class="code-block"><pre><span class="type">std::string</span> name, email, pass;
+<span class="kw">auto</span> form = <span class="ns">Form</span>()
+    .<span class="fn">Title</span>(<span class="str">"Create Account"</span>)
+    .<span class="fn">Field</span>(<span class="str">"Name"</span>, name)
+    .<span class="fn">Field</span>(<span class="str">"Email"</span>, email)
+    .<span class="fn">Password</span>(<span class="str">"Password"</span>, pass)
+    .<span class="fn">OnSubmit</span>([&]{ <span class="fn">createUser</span>(name, email); })
+    .<span class="fn">OnCancel</span>([&]{ <span class="fn">Navigate</span>(<span class="str">"/login"</span>); })
+    .<span class="fn">Build</span>();</pre></div>
+        </div>
+        <div>
+          <div class="terminal-window">
+            <div class="terminal-titlebar">
+              <span class="terminal-dot terminal-dot-red"></span>
+              <span class="terminal-dot terminal-dot-yellow"></span>
+              <span class="terminal-dot terminal-dot-green"></span>
+              <span class="terminal-title">Form Preview</span>
+            </div>
+            <div class="terminal-body" style="min-height:auto;">
+              <pre class="terminal-output" style="font-size:0.78rem;">╔══════════════════════════╗
+║     Create Account       ║
+╠══════════════════════════╣
+║ Name:     [John Doe    ] ║
+║ Email:    [john@ex.com ] ║
+║ Password: [••••••••••• ] ║
+╠══════════════════════════╣
+║  [Submit]    [Cancel]    ║
+╚══════════════════════════╝</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dialog / Modal / Drawer -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;" id="dialog">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;">
+        <div>
+          <span class="tag tag-purple" style="margin-bottom:0.75rem;display:inline-flex;">Layout</span>
+          <h3 style="font-size:1.4rem;color:var(--purple-light);margin-bottom:0.75rem;">Dialog / Modal / Drawer</h3>
+          <p style="color:var(--text-secondary);margin-bottom:1rem;">Overlay components that dim the background. Dialog for confirmations, Modal for complex workflows, Drawer for slide-in panels from any edge.</p>
+          <div class="code-block"><pre><span class="kw">auto</span> show = <span class="fn">std::make_shared</span>&lt;<span class="type">bool</span>&gt;(<span class="kw">false</span>);
+
+<span class="cmt">// Modal with custom content</span>
+<span class="kw">auto</span> modal = <span class="fn">Modal</span>(inner_component, show);
+
+<span class="cmt">// Drawer from the right</span>
+<span class="kw">auto</span> drawer = <span class="fn">Drawer</span>(
+    settings_panel,
+    show,
+    <span class="ns">DrawerSide</span>::<span class="fn">Right</span>
+);</pre></div>
+        </div>
+        <div>
+          <div class="terminal-window">
+            <div class="terminal-titlebar">
+              <span class="terminal-dot terminal-dot-red"></span>
+              <span class="terminal-dot terminal-dot-yellow"></span>
+              <span class="terminal-dot terminal-dot-green"></span>
+              <span class="terminal-title">Modal Preview</span>
+            </div>
+            <div class="terminal-body" style="min-height:auto;">
+              <pre class="terminal-output" style="font-size:0.78rem;"><span style="color:#475569">░░░░░░░░░░░░░░░░░░░░░░░░░░░░</span>
+<span style="color:#475569">░░░</span>┌──────────────────┐<span style="color:#475569">░░░</span>
+<span style="color:#475569">░░░</span>│  ⚠  Confirm      │<span style="color:#475569">░░░</span>
+<span style="color:#475569">░░░</span>│                  │<span style="color:#475569">░░░</span>
+<span style="color:#475569">░░░</span>│ Delete 42 files? │<span style="color:#475569">░░░</span>
+<span style="color:#475569">░░░</span>│                  │<span style="color:#475569">░░░</span>
+<span style="color:#475569">░░░</span>│ [Yes]     [No]   │<span style="color:#475569">░░░</span>
+<span style="color:#475569">░░░</span>└──────────────────┘<span style="color:#475569">░░░</span>
+<span style="color:#475569">░░░░░░░░░░░░░░░░░░░░░░░░░░░░</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Router -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;" id="router">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;">
+        <div>
+          <span class="tag tag-purple" style="margin-bottom:0.75rem;display:inline-flex;">Layout</span>
+          <h3 style="font-size:1.4rem;color:var(--purple-light);margin-bottom:0.75rem;">Router</h3>
+          <p style="color:var(--text-secondary);margin-bottom:1rem;">Client-side routing for multi-page terminal apps. Navigate between views without re-initializing the app loop. Lazy component factory functions.</p>
+          <div class="code-block"><pre><span class="kw">auto</span> app = <span class="ns">Router</span>()
+    .<span class="fn">Route</span>(<span class="str">"/"</span>,        []{ <span class="kw">return</span> <span class="fn">DashboardView</span>(); })
+    .<span class="fn">Route</span>(<span class="str">"/users"</span>,   []{ <span class="kw">return</span> <span class="fn">UsersView</span>(); })
+    .<span class="fn">Route</span>(<span class="str">"/settings"</span>,[]{ <span class="kw">return</span> <span class="fn">SettingsView</span>(); })
+    .<span class="fn">Default</span>(<span class="str">"/"</span>)
+    .<span class="fn">Build</span>();
+
+<span class="cmt">// Navigate from anywhere:</span>
+<span class="fn">Navigate</span>(<span class="str">"/users"</span>);</pre></div>
+        </div>
+        <div>
+          <div class="terminal-window">
+            <div class="terminal-titlebar">
+              <span class="terminal-dot terminal-dot-red"></span>
+              <span class="terminal-dot terminal-dot-yellow"></span>
+              <span class="terminal-dot terminal-dot-green"></span>
+              <span class="terminal-title">Router Preview</span>
+            </div>
+            <div class="terminal-body" style="min-height:auto;">
+              <pre class="terminal-output" style="font-size:0.78rem;">┌─────────────────────────────┐
+│ [Dashboard] Users  Settings │
+├─────────────────────────────┤
+│                             │
+│  Users (127 total)          │
+│  ┌────────────────────┐     │
+│  │ alice   admin  ✓   │     │
+│  │ bob     user   ✓   │     │
+│  │ carol   user   ✗   │     │
+│  └────────────────────┘     │
+└─────────────────────────────┘</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wizard -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;" id="wizard">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;">
+        <div>
+          <span class="tag tag-purple" style="margin-bottom:0.75rem;display:inline-flex;">Layout</span>
+          <h3 style="font-size:1.4rem;color:var(--purple-light);margin-bottom:0.75rem;">Wizard</h3>
+          <p style="color:var(--text-secondary);margin-bottom:1rem;">Multi-step workflow component with animated progress bar, step titles, back/next/finish navigation, and a completion callback.</p>
+          <div class="code-block"><pre><span class="kw">auto</span> wiz = <span class="ns">Wizard</span>()
+    .<span class="fn">Step</span>(<span class="str">"Welcome"</span>,   <span class="fn">WelcomeStep</span>())
+    .<span class="fn">Step</span>(<span class="str">"Configure"</span>, <span class="fn">ConfigStep</span>())
+    .<span class="fn">Step</span>(<span class="str">"Confirm"</span>,   <span class="fn">ConfirmStep</span>())
+    .<span class="fn">Step</span>(<span class="str">"Install"</span>,   <span class="fn">InstallStep</span>())
+    .<span class="fn">OnComplete</span>([&]{ <span class="fn">Notify</span>(<span class="str">"Done!"</span>, <span class="ns">Success</span>); })
+    .<span class="fn">Build</span>();</pre></div>
+        </div>
+        <div>
+          <div class="terminal-window">
+            <div class="terminal-titlebar">
+              <span class="terminal-dot terminal-dot-red"></span>
+              <span class="terminal-dot terminal-dot-yellow"></span>
+              <span class="terminal-dot terminal-dot-green"></span>
+              <span class="terminal-title">Wizard Preview</span>
+            </div>
+            <div class="terminal-body" style="min-height:auto;">
+              <pre class="terminal-output" style="font-size:0.78rem;">Step 2 of 4: Configure
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ Welcome  ▶ Configure  ○ Confirm  ○ Install
+
+┌────────────────────────────┐
+│ Install directory:         │
+│ [/usr/local/bin          ] │
+│                            │
+│ ☑ Add to PATH              │
+│ ☑ Create desktop shortcut  │
+└────────────────────────────┘
+          [◀ Back] [Next ▶]</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DATA DISPLAY -->
+<section class="section" id="data-display" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">Category 02</span>
+      <h2>Data <span class="gradient-text">Display</span></h2>
+    </div>
+
+    <!-- DataTable -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;" id="datatable">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;">
+        <div>
+          <span class="tag tag-teal" style="margin-bottom:0.75rem;display:inline-flex;">Data</span>
+          <h3 style="font-size:1.4rem;color:var(--teal-light);margin-bottom:0.75rem;">DataTable&lt;T&gt;</h3>
+          <p style="color:var(--text-secondary);margin-bottom:1rem;">Generic data table with custom column renderers, row selection, keyboard navigation, and mouse click callbacks. No boilerplate.</p>
+          <div class="code-block"><pre><span class="kw">struct</span> <span class="type">Process</span> { <span class="type">int</span> pid; <span class="type">std::string</span> name; <span class="type">float</span> cpu; };
+
+<span class="kw">auto</span> table = <span class="ns">DataTable</span>&lt;<span class="type">Process</span>&gt;()
+    .<span class="fn">Columns</span>({
+        {<span class="str">"PID"</span>,  [](<span class="kw">auto</span>&amp; p){ <span class="kw">return</span> <span class="fn">std::to_string</span>(p.pid); }},
+        {<span class="str">"Name"</span>, [](<span class="kw">auto</span>&amp; p){ <span class="kw">return</span> p.name; }},
+        {<span class="str">"CPU%"</span>, [](<span class="kw">auto</span>&amp; p){ <span class="kw">return</span> <span class="fn">fmt</span>(<span class="str">"{:.1f}"</span>, p.cpu); }},
+    })
+    .<span class="fn">Rows</span>(processes)
+    .<span class="fn">OnSelect</span>([&](<span class="type">Process</span> p){ <span class="fn">showDetail</span>(p); })
+    .<span class="fn">Build</span>();</pre></div>
+        </div>
+        <div>
+          <div class="terminal-window">
+            <div class="terminal-titlebar">
+              <span class="terminal-dot terminal-dot-red"></span>
+              <span class="terminal-dot terminal-dot-yellow"></span>
+              <span class="terminal-dot terminal-dot-green"></span>
+              <span class="terminal-title">DataTable Preview</span>
+            </div>
+            <div class="terminal-body" style="min-height:auto;">
+              <pre class="terminal-output" style="font-size:0.78rem;">┌──────┬──────────────┬───────┐
+│  PID │ Name         │  CPU% │
+├──────┼──────────────┼───────┤
+│ 1234 │ nginx        │   0.1 │
+│<span style="background:rgba(124,58,237,0.3)"> 5678 │ myapp        │  42.3 </span>│ ◀ selected
+│ 9012 │ postgres     │   1.7 │
+│ 3456 │ redis-server │   0.4 │
+│ 7890 │ node         │  18.2 │
+└──────┴──────────────┴───────┘
+↑↓ Navigate  Enter Select  /Filter</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VirtualList -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;" id="virtuallist">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;">
+        <div>
+          <span class="tag tag-teal" style="margin-bottom:0.75rem;display:inline-flex;">Data</span>
+          <h3 style="font-size:1.4rem;color:var(--teal-light);margin-bottom:0.75rem;">VirtualList&lt;T&gt;</h3>
+          <p style="color:var(--text-secondary);margin-bottom:1rem;">O(visible) rendering — renders only what fits on screen. 50,000 rows scroll as fast as 50. Custom row renderer with selected state.</p>
+          <div class="code-block"><pre><span class="kw">auto</span> list = <span class="ns">VirtualList</span>&lt;<span class="type">LogEntry</span>&gt;()
+    .<span class="fn">Items</span>(all_50k_logs)
+    .<span class="fn">Renderer</span>([](<span class="kw">const</span> <span class="type">LogEntry</span>&amp; e, <span class="type">bool</span> sel) {
+        <span class="kw">auto</span> color = e.level == <span class="str">"ERROR"</span>
+            ? <span class="ns">Color</span>::<span class="fn">Red</span>() : <span class="ns">Color</span>::<span class="fn">Default</span>();
+        <span class="kw">return</span> <span class="fn">hbox</span>({
+            <span class="fn">text</span>(e.timestamp) | <span class="fn">dim</span>,
+            <span class="fn">text</span>(e.message) | <span class="fn">color</span>(color),
+        });
+    })
+    .<span class="fn">OnSelect</span>([&](<span class="type">LogEntry</span> e){ <span class="fn">showDetail</span>(e); })
+    .<span class="fn">Build</span>();</pre></div>
+        </div>
+        <div>
+          <div class="terminal-window">
+            <div class="terminal-titlebar">
+              <span class="terminal-dot terminal-dot-red"></span>
+              <span class="terminal-dot terminal-dot-yellow"></span>
+              <span class="terminal-dot terminal-dot-green"></span>
+              <span class="terminal-title">VirtualList — 50,000 rows</span>
+            </div>
+            <div class="terminal-body" style="min-height:auto;">
+              <pre class="terminal-output" style="font-size:0.78rem;">Logs [49,998 / 50,000]          ↑
+ 14:23:01 INFO  Server started
+ 14:23:02 INFO  Listening :8080
+ 14:23:05 WARN  High memory usage
+<span style="background:rgba(124,58,237,0.3)"> 14:23:07 ERROR Connection refused  </span>
+ 14:23:08 INFO  Retry attempt 1
+ 14:23:09 INFO  Retry attempt 2    ↓
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Render: 0.3ms  (only 6 rows)</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LogPanel -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;" id="logpanel">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;">
+        <div>
+          <span class="tag tag-teal" style="margin-bottom:0.75rem;display:inline-flex;">Data</span>
+          <h3 style="font-size:1.4rem;color:var(--teal-light);margin-bottom:0.75rem;">LogPanel</h3>
+          <p style="color:var(--text-secondary);margin-bottom:1rem;">Thread-safe log display with per-level colors, timestamps, max-line ring buffer, auto-scroll-to-bottom, and scroll-to-read mode.</p>
+          <div class="code-block"><pre><span class="kw">auto</span> log = <span class="ns">LogPanel</span>::<span class="fn">Create</span>(<span class="num">1000</span>);
+
+<span class="cmt">// From any thread:</span>
+log-&gt;<span class="fn">Info</span>(<span class="str">"Server started on :8080"</span>);
+log-&gt;<span class="fn">Warn</span>(<span class="str">"High memory usage: 89%"</span>);
+log-&gt;<span class="fn">Error</span>(<span class="str">"Connection refused"</span>);
+log-&gt;<span class="fn">Debug</span>(<span class="str">"Frame rendered in 0.3ms"</span>);
+
+<span class="cmt">// Use in layout:</span>
+<span class="kw">auto</span> panel = log-&gt;<span class="fn">AsComponent</span>();</pre></div>
+        </div>
+        <div>
+          <div class="terminal-window">
+            <div class="terminal-titlebar">
+              <span class="terminal-dot terminal-dot-red"></span>
+              <span class="terminal-dot terminal-dot-yellow"></span>
+              <span class="terminal-dot terminal-dot-green"></span>
+              <span class="terminal-title">LogPanel Preview</span>
+            </div>
+            <div class="terminal-body" style="min-height:auto;">
+              <pre class="terminal-output" style="font-size:0.78rem;"><span style="color:#60a5fa">14:23:01 INFO </span> Server started on :8080
+<span style="color:#60a5fa">14:23:02 INFO </span> Listening on port 8080
+<span style="color:#fbbf24">14:23:05 WARN </span> High memory: 89%
+<span style="color:#f87171">14:23:07 ERROR</span> Connection refused
+<span style="color:#60a5fa">14:23:08 INFO </span> Retry attempt 1/3
+<span style="color:#6272a4">14:23:09 DEBUG</span> Frame: 0.3ms
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[F] Filter  [C] Clear  Auto-scroll ✓</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHARTS -->
+<section class="section" id="charts" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">Category 03</span>
+      <h2>Charts <span class="gradient-text">&amp; Visualization</span></h2>
+    </div>
+
+    <!-- LineChart -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;" id="linechart">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;">
+        <div>
+          <span class="tag tag-blue" style="margin-bottom:0.75rem;display:inline-flex;">Chart</span>
+          <h3 style="font-size:1.4rem;color:var(--blue-light);margin-bottom:0.75rem;">LineChart</h3>
+          <p style="color:var(--text-secondary);margin-bottom:1rem;">Multi-series line chart with braille rendering at 8× terminal resolution. Auto-scales Y axis, supports X labels, legend, title, and <code>RenderFlex()</code> to fill any space.</p>
+          <div class="code-block"><pre><span class="type">std::vector</span>&lt;<span class="type">double</span>&gt; cpu = {<span class="num">20</span>,<span class="num">45</span>,<span class="num">30</span>,<span class="num">67</span>,<span class="num">89</span>,<span class="num">55</span>,<span class="num">42</span>};
+<span class="type">std::vector</span>&lt;<span class="type">double</span>&gt; mem = {<span class="num">60</span>,<span class="num">62</span>,<span class="num">61</span>,<span class="num">64</span>,<span class="num">70</span>,<span class="num">68</span>,<span class="num">69</span>};
+
+<span class="kw">auto</span> chart = <span class="ns">LineChart</span>()
+    .<span class="fn">Title</span>(<span class="str">"System Metrics"</span>)
+    .<span class="fn">Series</span>(<span class="str">"CPU"</span>, cpu, <span class="ns">Color</span>::<span class="fn">Red</span>())
+    .<span class="fn">Series</span>(<span class="str">"Memory"</span>, mem, <span class="ns">Color</span>::<span class="fn">Blue</span>())
+    .<span class="fn">XLabels</span>({<span class="str">"Mon"</span>,<span class="str">"Tue"</span>,<span class="str">"Wed"</span>,<span class="str">"Thu"</span>,<span class="str">"Fri"</span>,<span class="str">"Sat"</span>,<span class="str">"Sun"</span>})
+    .<span class="fn">RenderFlex</span>();  <span class="cmt">// fills all available space</span></pre></div>
+        </div>
+        <div>
+          <div class="terminal-window">
+            <div class="terminal-titlebar">
+              <span class="terminal-dot terminal-dot-red"></span>
+              <span class="terminal-dot terminal-dot-yellow"></span>
+              <span class="terminal-dot terminal-dot-green"></span>
+              <span class="terminal-title">LineChart Preview</span>
+            </div>
+            <div class="terminal-body" style="min-height:auto;">
+              <pre class="terminal-output" style="font-size:0.78rem;"> System Metrics   ── CPU  ── Mem
+100│
+ 80│        ⡠⠊⠑⡄
+ 60│⠤⠤⠤⠤⠤⠤⠒⠒⠒⠒⠒⠢⠤⣀⣀⡠⠊⠁⠒⠢
+ 40│  ⡠⠊⠑⣄⣀⠔⠁
+ 20│⡠⠁
+   └──────────────────────────
+    Mon Tue Wed Thu Fri Sat Sun</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BarChart + Sparkline -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+      <div class="glass-card animate-on-scroll" id="barchart">
+        <span class="tag tag-blue" style="margin-bottom:0.75rem;display:inline-flex;">Chart</span>
+        <h3 style="font-size:1.2rem;color:var(--blue-light);margin-bottom:0.5rem;">BarChart</h3>
+        <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:1rem;">Vertical bar chart with braille resolution. Color per bar, labels, auto-scale.</p>
+        <div class="code-block" style="font-size:0.8rem;"><pre><span class="ns">BarChart</span>()
+  .<span class="fn">Data</span>({
+    {<span class="str">"Jan"</span>, <span class="num">42</span>},
+    {<span class="str">"Feb"</span>, <span class="num">67</span>},
+    {<span class="str">"Mar"</span>, <span class="num">89</span>},
+    {<span class="str">"Apr"</span>, <span class="num">55</span>},
+  })
+  .<span class="fn">Build</span>()</pre></div>
+        <div class="terminal-window" style="margin-top:1rem;">
+          <div class="terminal-titlebar">
+            <span class="terminal-dot terminal-dot-red"></span>
+            <span class="terminal-dot terminal-dot-yellow"></span>
+            <span class="terminal-dot terminal-dot-green"></span>
+          </div>
+          <div class="terminal-body" style="min-height:auto;">
+            <pre class="terminal-output" style="font-size:0.78rem;">100│
+ 80│    ⣿
+ 60│⣿   ⣿   ⣿
+ 40│⣿   ⣿   ⣿   ⣿
+ 20│⣿   ⣿   ⣿   ⣿
+   └────────────────
+    Jan Feb Mar Apr</pre>
+          </div>
+        </div>
+      </div>
+      <div class="glass-card animate-on-scroll animate-delay-2" id="sparkline">
+        <span class="tag tag-blue" style="margin-bottom:0.75rem;display:inline-flex;">Chart</span>
+        <h3 style="font-size:1.2rem;color:var(--blue-light);margin-bottom:0.5rem;">Sparkline</h3>
+        <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:1rem;">Inline mini chart. One line tall. Perfect for status bars and table cells.</p>
+        <div class="code-block" style="font-size:0.8rem;"><pre><span class="ns">Sparkline</span>()
+  .<span class="fn">Data</span>({<span class="num">20</span>,<span class="num">45</span>,<span class="num">30</span>,<span class="num">67</span>,<span class="num">89</span>,<span class="num">42</span>})
+  .<span class="fn">Color</span>(<span class="ns">Color</span>::<span class="fn">Green</span>())
+  .<span class="fn">Build</span>()</pre></div>
+        <div class="terminal-window" style="margin-top:1rem;">
+          <div class="terminal-titlebar">
+            <span class="terminal-dot terminal-dot-red"></span>
+            <span class="terminal-dot terminal-dot-yellow"></span>
+            <span class="terminal-dot terminal-dot-green"></span>
+          </div>
+          <div class="terminal-body" style="min-height:auto;">
+            <pre class="terminal-output" style="font-size:0.78rem;"> CPU: ⣀⣠⣤⣶⣾⣿⣾⣤  42%  ↑
+ MEM: ⣿⣿⣿⣿⣿⣿⣿⣿  89%  ─
+ NET: ⣀⣀⣠⣤⣶⣾⣿⣀  67%  ↑
+ DSK: ⣿⣀⣀⣀⣀⣀⣀⣀  12%  ↓</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GeoMap / Globe -->
+  </div>
+</section>
+
+<!-- GEOGRAPHY -->
+<section class="section" id="geography" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">Category 04</span>
+      <h2>Geography <span class="gradient-text">&amp; Maps</span></h2>
+    </div>
+
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;" id="geomap">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;">
+        <div>
+          <span class="tag tag-amber" style="margin-bottom:0.75rem;display:inline-flex;">Geography</span>
+          <h3 style="font-size:1.4rem;color:var(--amber);margin-bottom:0.75rem;">GeoMap</h3>
+          <p style="color:var(--text-secondary);margin-bottom:1rem;">Real-world GeoJSON rendering with the NE110m Natural Earth dataset. Pan with arrow keys or mouse drag, zoom with +/-, place markers, draw great-circle arcs.</p>
+          <div class="code-block"><pre><span class="kw">auto</span> map = <span class="ns">GeoMap</span>()
+    .<span class="fn">Data</span>(<span class="fn">WorldMapGeoJSON</span>())
+    .<span class="fn">Center</span>(<span class="num">0.0</span>, <span class="num">20.0</span>)  <span class="cmt">// lon, lat</span>
+    .<span class="fn">Zoom</span>(<span class="num">1.5</span>)
+    .<span class="fn">Overlay</span>({<span class="str">"New York"</span>, <span class="num">-74.0</span>, <span class="num">40.7</span>, <span class="str">"●"</span>})
+    .<span class="fn">Overlay</span>({<span class="str">"London"</span>,   <span class="num">-0.12</span>, <span class="num">51.5</span>, <span class="str">"●"</span>})
+    .<span class="fn">AddArc</span>(<span class="num">-74.0</span>, <span class="num">40.7</span>, <span class="num">-0.12</span>, <span class="num">51.5</span>,
+             <span class="ns">Color</span>::<span class="fn">Yellow</span>())
+    .<span class="fn">OnSelect</span>([&](<span class="type">std::string</span> country){
+        <span class="fn">showCountryInfo</span>(country);
+    })
+    .<span class="fn">Build</span>();</pre></div>
+        </div>
+        <div>
+          <div class="terminal-window">
+            <div class="terminal-titlebar">
+              <span class="terminal-dot terminal-dot-red"></span>
+              <span class="terminal-dot terminal-dot-yellow"></span>
+              <span class="terminal-dot terminal-dot-green"></span>
+              <span class="terminal-title">GeoMap Preview</span>
+            </div>
+            <div class="terminal-body" style="min-height:auto;">
+              <pre class="terminal-output" style="font-size:0.78rem;">⠀⠀⣠⣾⣿⣶⣤⡀⠀⣾⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⣾⣿⣿⣿⣿⣿⣿⣷⣿⣿⣿⣿⣿⣿⣶⡀⠀⠀⠀⠀⠀
+⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀NYC●
+⠀⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠀LON●
+⠀⠀⠹⣿⣿⣿⣿⡿⢿⣿⣿⣿⣿⡿⠟⠁⠀⠀⠀⠀⠀
+↑↓←→ Pan  +/- Zoom  Enter Select</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;" id="globemap">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;">
+        <div>
+          <span class="tag tag-amber" style="margin-bottom:0.75rem;display:inline-flex;">Geography</span>
+          <h3 style="font-size:1.4rem;color:var(--amber);margin-bottom:0.75rem;">GlobeMap</h3>
+          <p style="color:var(--text-secondary);margin-bottom:1rem;">Spinning 3D orthographic projection of the entire world in braille art. Background thread animation at 20fps. City overlays, adjustable rotation speed, mouse pan.</p>
+          <div class="code-block"><pre><span class="kw">auto</span> globe = <span class="ns">GlobeMap</span>()
+    .<span class="fn">RotationSpeed</span>(<span class="num">20.0</span>)   <span class="cmt">// degrees/sec</span>
+    .<span class="fn">Center</span>(<span class="num">0.0</span>, <span class="num">20.0</span>)     <span class="cmt">// initial lon, lat</span>
+    .<span class="fn">Build</span>();
+
+<span class="cmt">// That's it — self-animating!</span></pre></div>
+        </div>
+        <div>
+          <div class="terminal-window">
+            <div class="terminal-titlebar">
+              <span class="terminal-dot terminal-dot-red"></span>
+              <span class="terminal-dot terminal-dot-yellow"></span>
+              <span class="terminal-dot terminal-dot-green"></span>
+              <span class="terminal-title">GlobeMap — 3D Braille</span>
+            </div>
+            <div class="terminal-body" style="min-height:auto;">
+              <pre class="terminal-output" style="font-size:0.78rem;">    ⣀⣀⠤⠤⠒⠒⠒⠂⠂⠂⠒⠒⠒⠤⠤⣀⣀
+  ⣀⠔⠁                  ⠑⢄⣀
+ ⡠⠁  ⡠⠤⠒⠒⠤⡀  ⡠⠒⠒⠤⡀   ⠁⠢⡀
+ ⡇   ⡇  ⣤⡀⠸⡄  ⠸⡄  ⡇    ⢸
+ ⠱⡀  ⠱⣀⣀⣀⠜  ⠓⣀⣀⠜   ⡠⠃
+  ⠑⠢⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⠔⠁
+        ↻ 20°/sec  NYC● LON●</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATE MANAGEMENT -->
+<section class="section" id="state" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">Category 05</span>
+      <h2>Reactive <span class="gradient-text">State Management</span></h2>
+    </div>
+
+    <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;" id="reactive">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;">
+        <div>
+          <span class="tag tag-red" style="margin-bottom:0.75rem;display:inline-flex;">State</span>
+          <h3 style="font-size:1.4rem;color:var(--red);margin-bottom:0.75rem;">Reactive&lt;T&gt; / Computed&lt;T&gt;</h3>
+          <p style="color:var(--text-secondary);margin-bottom:1rem;">Thread-safe observable values. Set from any thread — the UI refreshes automatically. <code>Computed&lt;T&gt;</code> derives new values reactively. <code>ReactiveGroup</code> batches updates.</p>
+          <div class="code-block"><pre><span class="kw">auto</span> count = <span class="fn">std::make_shared</span>&lt;<span class="ns">Reactive</span>&lt;<span class="type">int</span>&gt;&gt;(<span class="num">0</span>);
+
+<span class="cmt">// Derived value — auto-updates when count changes</span>
+<span class="kw">auto</span> doubled = <span class="fn">MakeComputed</span>(count,
+    [](<span class="type">int</span> v){ <span class="kw">return</span> v * <span class="num">2</span>; });
+
+<span class="cmt">// From background thread:</span>
+count-&gt;<span class="fn">Set</span>(count-&gt;<span class="fn">Get</span>() + <span class="num">1</span>); <span class="cmt">// triggers UI refresh</span>
+
+<span class="cmt">// Batch multiple updates (one refresh):</span>
+<span class="ns">ReactiveGroup</span> g;
+g.<span class="fn">Batch</span>([&]{
+    x-&gt;<span class="fn">Set</span>(<span class="num">10</span>); y-&gt;<span class="fn">Set</span>(<span class="num">20</span>); z-&gt;<span class="fn">Set</span>(<span class="num">30</span>);
+});</pre></div>
+        </div>
+        <div>
+          <div class="terminal-window">
+            <div class="terminal-titlebar">
+              <span class="terminal-dot terminal-dot-red"></span>
+              <span class="terminal-dot terminal-dot-yellow"></span>
+              <span class="terminal-dot terminal-dot-green"></span>
+              <span class="terminal-title">Reactive Demo</span>
+            </div>
+            <div class="terminal-body" style="min-height:auto;">
+              <pre class="terminal-output" style="font-size:0.78rem;">┌─────────────────────────────┐
+│  Reactive Counter Demo      │
+├─────────────────────────────┤
+│                             │
+│    count   = 42             │
+│    doubled = 84  (computed) │
+│    sum     = 126 (computed) │
+│                             │
+│  [Increment] [Decrement]    │
+│  [Reset]     [+10]          │
+│                             │
+│  Updates: live from thread  │
+└─────────────────────────────┘</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOTIFICATIONS -->
+<section class="section" id="notifications" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">Category 06</span>
+      <h2>Notifications <span class="gradient-text">&amp; Feedback</span></h2>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+      <div class="glass-card animate-on-scroll" id="notify">
+        <span class="tag tag-teal" style="margin-bottom:0.75rem;display:inline-flex;">Feedback</span>
+        <h3 style="font-size:1.2rem;color:var(--teal-light);margin-bottom:0.5rem;">Notify() Toasts</h3>
+        <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:1rem;">Non-blocking toast notifications from anywhere in your app.</p>
+        <div class="code-block" style="font-size:0.8rem;"><pre><span class="fn">Notify</span>(<span class="str">"File saved"</span>, <span class="ns">Success</span>);
+<span class="fn">Notify</span>(<span class="str">"High CPU"</span>, <span class="ns">Warning</span>);
+<span class="fn">Notify</span>(<span class="str">"Connection lost"</span>, <span class="ns">Error</span>);
+<span class="fn">Notify</span>(<span class="str">"New version available"</span>, <span class="ns">Info</span>);</pre></div>
+        <div class="terminal-window" style="margin-top:1rem;">
+          <div class="terminal-titlebar"><span class="terminal-dot terminal-dot-red"></span><span class="terminal-dot terminal-dot-yellow"></span><span class="terminal-dot terminal-dot-green"></span></div>
+          <div class="terminal-body" style="min-height:auto;">
+            <pre class="terminal-output" style="font-size:0.78rem;"><span style="color:#34d399">✓ File saved successfully       </span>
+<span style="color:#fbbf24">⚠ High CPU usage: 89%           </span>
+<span style="color:#f87171">✗ Connection lost               </span>
+<span style="color:#60a5fa">ℹ New version v2.1 available    </span></pre>
+          </div>
+        </div>
+      </div>
+      <div class="glass-card animate-on-scroll animate-delay-2" id="progress">
+        <span class="tag tag-teal" style="margin-bottom:0.75rem;display:inline-flex;">Feedback</span>
+        <h3 style="font-size:1.2rem;color:var(--teal-light);margin-bottom:0.5rem;">ProgressBar / Spinner</h3>
+        <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:1rem;">Animated progress bar and spinner overlay for long operations.</p>
+        <div class="code-block" style="font-size:0.8rem;"><pre><span class="kw">auto</span> task = <span class="ns">BackgroundTask</span>()
+    .<span class="fn">Work</span>([](auto prog) {
+        <span class="kw">for</span> (<span class="type">int</span> i=<span class="num">0</span>; i&lt;<span class="num">100</span>; i++) {
+            <span class="fn">doWork</span>(i);
+            <span class="fn">prog</span>(i / <span class="num">100.0f</span>);
+        }
+    })
+    .<span class="fn">AsOverlay</span>(myApp);</pre></div>
+        <div class="terminal-window" style="margin-top:1rem;">
+          <div class="terminal-titlebar"><span class="terminal-dot terminal-dot-red"></span><span class="terminal-dot terminal-dot-yellow"></span><span class="terminal-dot terminal-dot-green"></span></div>
+          <div class="terminal-body" style="min-height:auto;">
+            <pre class="terminal-output" style="font-size:0.78rem;"> Processing files...
+ ████████████████░░░░  78%
+ Remaining: 00:00:12
+ ⠋ Indexing src/component/...
+
+ [Cancel]</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THEMES -->
+<section class="section" id="themes" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-header animate-on-scroll">
+      <span class="section-label">Category 07</span>
+      <h2>Themes <span class="gradient-text">&amp; Styling</span></h2>
+    </div>
+    <div class="glass-card animate-on-scroll">
+      <h3 style="font-size:1.2rem;color:var(--purple-light);margin-bottom:1rem;">6 Built-in Themes</h3>
+      <div class="code-block"><pre><span class="fn">SetTheme</span>(<span class="ns">Theme</span>::<span class="fn">Default</span>());   <span class="cmt">// FTXUI default</span>
+<span class="fn">SetTheme</span>(<span class="ns">Theme</span>::<span class="fn">Dark</span>());      <span class="cmt">// High contrast dark</span>
+<span class="fn">SetTheme</span>(<span class="ns">Theme</span>::<span class="fn">Light</span>());     <span class="cmt">// Light terminal</span>
+<span class="fn">SetTheme</span>(<span class="ns">Theme</span>::<span class="fn">Nord</span>());      <span class="cmt">// Arctic Nord palette</span>
+<span class="fn">SetTheme</span>(<span class="ns">Theme</span>::<span class="fn">Dracula</span>());   <span class="cmt">// Dracula dark theme</span>
+<span class="fn">SetTheme</span>(<span class="ns">Theme</span>::<span class="fn">Monokai</span>());   <span class="cmt">// Monokai Pro</span>
+
+<span class="cmt">// Custom theme:</span>
+<span class="ns">Theme</span> t;
+t.primary = <span class="ns">Color</span>::<span class="fn">RGB</span>(<span class="num">124</span>, <span class="num">58</span>, <span class="num">237</span>);
+t.accent  = <span class="ns">Color</span>::<span class="fn">RGB</span>(<span class="num">52</span>, <span class="num">211</span>, <span class="num">153</span>);
+<span class="fn">SetTheme</span>(t);</pre></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;">
+        <div style="background:#2e3440;border:1px solid #434c5e;border-radius:8px;padding:0.75rem;font-family:monospace;font-size:0.8rem;">
+          <div style="color:#81a1c1;font-weight:700;margin-bottom:0.5rem;">Nord</div>
+          <div style="color:#88c0d0">primary: #88c0d0</div>
+          <div style="color:#a3be8c">accent: #a3be8c</div>
+          <div style="color:#bf616a">error: #bf616a</div>
+        </div>
+        <div style="background:#282a36;border:1px solid #44475a;border-radius:8px;padding:0.75rem;font-family:monospace;font-size:0.8rem;">
+          <div style="color:#bd93f9;font-weight:700;margin-bottom:0.5rem;">Dracula</div>
+          <div style="color:#bd93f9">primary: #bd93f9</div>
+          <div style="color:#50fa7b">accent: #50fa7b</div>
+          <div style="color:#ff5555">error: #ff5555</div>
+        </div>
+        <div style="background:#272822;border:1px solid #3e3d32;border-radius:8px;padding:0.75rem;font-family:monospace;font-size:0.8rem;">
+          <div style="color:#f92672;font-weight:700;margin-bottom:0.5rem;">Monokai</div>
+          <div style="color:#66d9e8">primary: #66d9e8</div>
+          <div style="color:#a6e22e">accent: #a6e22e</div>
+          <div style="color:#f92672">error: #f92672</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="glass-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span style="font-size:1.75rem;font-weight:900;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">FTXUI</span>
+        <p>The C++ Terminal UI Framework. React-inspired, zero-dependency, production-ready.</p>
+        <p class="footer-tagline">Zero dependencies. Bare metal speed. Maximum beauty.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Docs</h4>
+        <a href="getting-started.html">Getting Started</a>
+        <a href="api.html">API Reference</a>
+        <a href="features.html">Features</a>
+        <a href="examples.html">Examples</a>
+      </div>
+      <div class="footer-col">
+        <h4>Learn</h4>
+        <a href="deep-dive.html">Technical Deep Dive</a>
+        <a href="executive.html">Executive Brief</a>
+        <a href="https://github.com/louiscrocker/FTXUI" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <a href="https://github.com/louiscrocker/FTXUI/discussions" target="_blank" rel="noopener">Discussions</a>
+        <a href="https://github.com/louiscrocker/FTXUI/releases" target="_blank" rel="noopener">Releases</a>
+        <a href="https://github.com/louiscrocker/FTXUI/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 FTXUI Contributors. MIT License.</span>
+      <span>Zero dependencies. Bare metal speed. Maximum beauty.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
