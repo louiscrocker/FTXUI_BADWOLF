@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FTXUI — Executive Briefing</title>
-  <meta name="description" content="FTXUI executive briefing: TAM analysis, competitive landscape, use cases, and value proposition for C++ terminal UI.">
-  <meta property="og:title" content="FTXUI — Executive Briefing">
+  <title>FTXUI BadWolf — Executive Briefing</title>
+  <meta name="description" content="FTXUI BadWolf executive briefing: TAM analysis, competitive landscape, use cases, and value proposition for C++ terminal UI.">
+  <meta property="og:title" content="FTXUI BadWolf — Executive Briefing">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="css/glass.css">
 </head>
@@ -17,41 +17,56 @@
   <div class="bg-orb bg-orb-4"></div>
 </div>
 
-<nav class="glass-nav">
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">
-      <span class="nav-logo-text">FTXUI</span>
+      <span class="nav-logo-text">🐺 FTXUI BadWolf</span>
       <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
     </a>
     <div class="nav-links">
       <a href="index.html" class="nav-link">Home</a>
       <a href="features.html" class="nav-link">Features</a>
-      <a href="getting-started.html" class="nav-link">Getting Started</a>
+      <a href="getting-started.html" class="nav-link">Get Started</a>
       <a href="api.html" class="nav-link">API</a>
       <a href="examples.html" class="nav-link">Examples</a>
-      <a href="colors.html" class="nav-link">Colors</a>
-      <a href="typewriter.html" class="nav-link">Typewriter</a>
-      <a href="json.html" class="nav-link">JSON</a>
-      <a href="live-data.html" class="nav-link">Live Data</a>
-      <a href="collab.html" class="nav-link">Collab</a>
-      <a href="registry.html" class="nav-link">Registry</a>
-      <a href="llm-bridge.html" class="nav-link">LLM</a>
-      <a href="playground.html" class="nav-link">Playground</a>
-      <a href="webgl.html" class="nav-link">WebGL</a>
-      <a href="deep-dive.html" class="nav-link">Deep Dive</a>
-      <a href="executive.html" class="nav-link">Executive Brief</a>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Components <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="colors.html">🎨 Colors &amp; Styling</a>
+          <a href="typewriter.html">⌨️ Typewriter &amp; Console</a>
+          <a href="json.html">📄 JSON</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Platform <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="live-data.html">📡 Live Data</a>
+          <a href="collab.html">👥 Collab Sessions</a>
+          <a href="registry.html">📦 Component Registry</a>
+          <a href="llm-bridge.html">🤖 LLM Bridge</a>
+          <a href="playground.html">🌐 Playground</a>
+          <a href="webgl.html">⚡ WebGL Renderer</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Docs <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="deep-dive.html">🔬 Technical Deep Dive</a>
+          <a href="executive.html">📊 Executive Brief</a>
+        </div>
+      </div>
+
       <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
-        ⭐ GitHub
-      </a>
-    </div>
-    <div class="nav-actions">
-      <span class="star-badge">⭐ Star</span>
-      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
         GitHub
       </a>
     </div>
-    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
@@ -59,11 +74,11 @@
 <section style="padding:6rem 2rem 4rem;text-align:center;max-width:900px;margin:0 auto;">
   <span class="section-label">Executive Briefing · 2024</span>
   <h1 style="font-size:clamp(1.75rem,3.5vw,3rem);font-weight:900;line-height:1.15;margin-bottom:1.5rem;">
-    FTXUI: The Infrastructure for the<br>
+    FTXUI BadWolf: The Infrastructure for the<br>
     <span class="gradient-text-hero">Next Generation of Terminal Applications</span>
   </h1>
   <p style="font-size:1.15rem;color:var(--text-secondary);line-height:1.8;max-width:700px;margin:0 auto 2rem;">
-    The terminal is not dead — it's the backbone of modern cloud infrastructure. FTXUI gives C++ teams the framework to build beautiful, high-performance terminal UIs without compromise.
+    The terminal is not dead — it's the backbone of modern cloud infrastructure. FTXUI BadWolf gives C++ teams the framework to build beautiful, high-performance terminal UIs without compromise.
   </p>
   <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
     <span class="tag tag-purple">$26.4B Market</span>
@@ -132,7 +147,7 @@
       <div class="tam-card">
         <div class="tam-value" data-count="4.4" data-suffix="M"><span>4.4M</span></div>
         <div class="tam-label">Active C++ Developers Worldwide</div>
-        <div class="tam-sub">Primary FTXUI addressable developer base</div>
+        <div class="tam-sub">Primary FTXUI BadWolf addressable developer base</div>
       </div>
     </div>
 
@@ -195,14 +210,14 @@
   <div class="section-inner">
     <div class="section-header animate-on-scroll">
       <span class="section-label">Competitive Landscape</span>
-      <h2>How FTXUI Wins <span class="gradient-text">Every Dimension</span></h2>
+      <h2>How FTXUI BadWolf Wins <span class="gradient-text">Every Dimension</span></h2>
     </div>
     <div class="glass-card-static animate-on-scroll" style="overflow:auto;">
       <table class="comparison-table">
         <thead>
           <tr>
             <th></th>
-            <th class="col-ftxui">FTXUI</th>
+            <th class="col-ftxui">FTXUI BadWolf</th>
             <th>ncurses</th>
             <th>Bubbletea</th>
             <th>Textual</th>
@@ -226,7 +241,7 @@
         </tbody>
       </table>
     </div>
-    <p style="text-align:center;margin-top:1rem;font-size:0.85rem;color:var(--text-muted);">FTXUI is the only option that scores ✅ across all dimensions critical for production C++ systems.</p>
+    <p style="text-align:center;margin-top:1rem;font-size:0.85rem;color:var(--text-muted);">FTXUI BadWolf is the only option that scores ✅ across all dimensions critical for production C++ systems.</p>
   </div>
 </section>
 
@@ -235,7 +250,7 @@
   <div class="section-inner">
     <div class="section-header animate-on-scroll">
       <span class="section-label">Use Cases</span>
-      <h2>What Teams Are <span class="gradient-text">Building with FTXUI</span></h2>
+      <h2>What Teams Are <span class="gradient-text">Building with FTXUI BadWolf</span></h2>
     </div>
     <div class="use-case-grid">
       <div class="use-case-card animate-on-scroll animate-delay-1">
@@ -271,7 +286,7 @@
       <div class="use-case-card animate-on-scroll animate-delay-1">
         <div class="uc-icon">🚀</div>
         <h3>Embedded / Edge Systems</h3>
-        <p>IoT device status panels, industrial control interfaces, edge computing dashboards. Zero dependencies and ~2MB footprint make FTXUI viable on constrained systems where Python is impossible.</p>
+        <p>IoT device status panels, industrial control interfaces, edge computing dashboards. Zero dependencies and ~2MB footprint make FTXUI BadWolf viable on constrained systems where Python is impossible.</p>
       </div>
       <div class="use-case-card animate-on-scroll animate-delay-2">
         <div class="uc-icon">🔐</div>
@@ -297,7 +312,7 @@
   <div class="section-inner">
     <div class="section-header animate-on-scroll">
       <span class="section-label">Value Proposition</span>
-      <h2>Why Teams Choose <span class="gradient-text">FTXUI</span></h2>
+      <h2>Why Teams Choose <span class="gradient-text">FTXUI BadWolf</span></h2>
     </div>
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;margin-bottom:3rem;">
       <div class="glass-card animate-on-scroll animate-delay-1">
@@ -350,7 +365,7 @@
     <div class="glass-card animate-on-scroll" style="text-align:center;background:rgba(124,58,237,0.08);border-color:rgba(167,139,250,0.3);">
       <h2 style="font-size:1.75rem;margin-bottom:1rem;">Ready to Build the Future of Terminal UI?</h2>
       <p style="color:var(--text-secondary);margin-bottom:2rem;font-size:1.05rem;">
-        Join thousands of developers building production-grade terminal applications with FTXUI.
+        Join thousands of developers building production-grade terminal applications with FTXUI BadWolf.
       </p>
       <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
         <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="btn-primary">
@@ -372,7 +387,7 @@
   <div class="footer-inner">
     <div class="footer-grid">
       <div class="footer-brand">
-        <span style="font-size:1.75rem;font-weight:900;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">FTXUI</span>
+        <span style="font-size:1.75rem;font-weight:900;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">FTXUI BadWolf</span>
         <p>The C++ Terminal UI Framework.</p>
         <p class="footer-tagline">Zero dependencies. Bare metal speed. Maximum beauty.</p>
       </div>
@@ -397,7 +412,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2024 FTXUI Contributors. MIT License.</span>
+      <span>© 2024 FTXUI BadWolf Contributors. MIT License.</span>
       <span>Zero dependencies. Bare metal speed. Maximum beauty.</span>
     </div>
   </div>

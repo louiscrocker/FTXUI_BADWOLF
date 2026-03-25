@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Colors &amp; Rich Text – FTXUI</title>
+  <title>Colors &amp; Rich Text – FTXUI BadWolf</title>
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/glass.css" />
   <style>
     /* ── Glassmorphism extras ───────────────────────────────────────── */
     .glass {
@@ -67,24 +68,57 @@
 </head>
 <body>
 
-<nav class="top">
-  <a href="index.html">Home</a>
-  <a href="features.html">Features</a>
-  <a href="getting-started.html">Getting Started</a>
-  <a href="api.html">API</a>
-  <a href="examples.html">Examples</a>
-  <a href="colors.html" style="color:#c4b5fd;font-weight:700">Colors &amp; Rich Text</a>
-  <a href="typewriter.html">Typewriter</a>
-  <a href="json.html">JSON</a>
-  <a href="live-data.html">Live Data</a>
-  <a href="collab.html">Collab</a>
-  <a href="registry.html">Registry</a>
-  <a href="llm-bridge.html">LLM</a>
-  <a href="playground.html">Playground</a>
-  <a href="webgl.html">WebGL</a>
-  <a href="deep-dive.html">Deep Dive</a>
-  <a href="executive.html">Executive Brief</a>
-  <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener">⭐ GitHub</a>
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">🐺 FTXUI BadWolf</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Get Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Components <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="colors.html">🎨 Colors &amp; Styling</a>
+          <a href="typewriter.html">⌨️ Typewriter &amp; Console</a>
+          <a href="json.html">📄 JSON</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Platform <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="live-data.html">📡 Live Data</a>
+          <a href="collab.html">👥 Collab Sessions</a>
+          <a href="registry.html">📦 Component Registry</a>
+          <a href="llm-bridge.html">🤖 LLM Bridge</a>
+          <a href="playground.html">🌐 Playground</a>
+          <a href="webgl.html">⚡ WebGL Renderer</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Docs <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="deep-dive.html">🔬 Technical Deep Dive</a>
+          <a href="executive.html">📊 Executive Brief</a>
+        </div>
+      </div>
+
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
 
 <div class="hero">
@@ -232,7 +266,7 @@ ftxui::Component c = RichText::Component(markup);</code></pre>
     <h2>AnsiParser — ANSI Escape Sequences</h2>
     <p>
       Converts raw ANSI SGR escape sequences from any source
-      (shell command output, log files, etc.) into styled FTXUI elements.
+      (shell command output, log files, etc.) into styled FTXUI BadWolf elements.
     </p>
 
     <h3>Supported SGR Codes</h3>
@@ -366,5 +400,6 @@ ftxui::Element palette = ColorPalette256();</code></pre>
   </div>
 
 </div><!-- /container -->
+  <script src="js/main.js"></script>
 </body>
 </html>

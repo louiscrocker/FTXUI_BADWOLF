@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FTXUI — Technical Deep Dive</title>
-  <meta name="description" content="FTXUI technical architecture: braille canvas engine, GeoJSON pipeline, orthographic globe, reactive state, virtual rendering, C API design.">
-  <meta property="og:title" content="FTXUI — Technical Deep Dive">
+  <title>FTXUI BadWolf — Technical Deep Dive</title>
+  <meta name="description" content="FTXUI BadWolf technical architecture: braille canvas engine, GeoJSON pipeline, orthographic globe, reactive state, virtual rendering, C API design.">
+  <meta property="og:title" content="FTXUI BadWolf — Technical Deep Dive">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="css/glass.css">
 </head>
@@ -17,41 +17,56 @@
   <div class="bg-orb bg-orb-4"></div>
 </div>
 
-<nav class="glass-nav">
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">
-      <span class="nav-logo-text">FTXUI</span>
+      <span class="nav-logo-text">🐺 FTXUI BadWolf</span>
       <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
     </a>
     <div class="nav-links">
       <a href="index.html" class="nav-link">Home</a>
       <a href="features.html" class="nav-link">Features</a>
-      <a href="getting-started.html" class="nav-link">Getting Started</a>
+      <a href="getting-started.html" class="nav-link">Get Started</a>
       <a href="api.html" class="nav-link">API</a>
       <a href="examples.html" class="nav-link">Examples</a>
-      <a href="colors.html" class="nav-link">Colors</a>
-      <a href="typewriter.html" class="nav-link">Typewriter</a>
-      <a href="json.html" class="nav-link">JSON</a>
-      <a href="live-data.html" class="nav-link">Live Data</a>
-      <a href="collab.html" class="nav-link">Collab</a>
-      <a href="registry.html" class="nav-link">Registry</a>
-      <a href="llm-bridge.html" class="nav-link">LLM</a>
-      <a href="playground.html" class="nav-link">Playground</a>
-      <a href="webgl.html" class="nav-link">WebGL</a>
-      <a href="deep-dive.html" class="nav-link">Deep Dive</a>
-      <a href="executive.html" class="nav-link">Executive Brief</a>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Components <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="colors.html">🎨 Colors &amp; Styling</a>
+          <a href="typewriter.html">⌨️ Typewriter &amp; Console</a>
+          <a href="json.html">📄 JSON</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Platform <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="live-data.html">📡 Live Data</a>
+          <a href="collab.html">👥 Collab Sessions</a>
+          <a href="registry.html">📦 Component Registry</a>
+          <a href="llm-bridge.html">🤖 LLM Bridge</a>
+          <a href="playground.html">🌐 Playground</a>
+          <a href="webgl.html">⚡ WebGL Renderer</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Docs <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="deep-dive.html">🔬 Technical Deep Dive</a>
+          <a href="executive.html">📊 Executive Brief</a>
+        </div>
+      </div>
+
       <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
-        ⭐ GitHub
-      </a>
-    </div>
-    <div class="nav-actions">
-      <span class="star-badge">⭐ Star</span>
-      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
         GitHub
       </a>
     </div>
-    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
@@ -62,7 +77,7 @@
     Under the <span class="gradient-text">Hood</span>
   </h1>
   <p style="font-size:1.1rem;color:var(--text-secondary);max-width:620px;margin:0 auto;">
-    How FTXUI achieves sub-millisecond renders, 3D projections, adaptive resolution, and thread-safe reactivity — all in pure C++20.
+    How FTXUI BadWolf achieves sub-millisecond renders, 3D projections, adaptive resolution, and thread-safe reactivity — all in pure C++20.
   </p>
 </section>
 
@@ -72,7 +87,7 @@
     <div class="section-header animate-on-scroll" style="text-align:left;">
       <span class="section-label">Section 01</span>
       <h2>Architecture Overview</h2>
-      <p>FTXUI is organized in four layers. Each layer builds on the one below. The <code>ftxui::ui</code> layer is additive — it never modifies the layers beneath it.</p>
+      <p>FTXUI BadWolf is organized in four layers. Each layer builds on the one below. The <code>ftxui::ui</code> layer is additive — it never modifies the layers beneath it.</p>
     </div>
 
     <div class="animate-on-scroll" style="margin-bottom:2rem;">
@@ -192,7 +207,7 @@
     <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;">
       <h3 style="color:var(--teal-light);margin-bottom:1rem;">The Braille Resolution Trick</h3>
       <p style="color:var(--text-secondary);margin-bottom:1.5rem;">
-        Unicode braille characters encode 2×4 dots per character cell. This gives FTXUI <strong style="color:var(--text-primary);">8× the resolution</strong> of normal character rendering — without any special terminal support.
+        Unicode braille characters encode 2×4 dots per character cell. This gives FTXUI BadWolf <strong style="color:var(--text-primary);">8× the resolution</strong> of normal character rendering — without any special terminal support.
       </p>
       <div class="code-block"><pre><span class="cmt">// A standard 80×24 terminal in braille resolution:</span>
 <span class="cmt">// Characters: 80 × 24 = 1,920 cells</span>
@@ -488,7 +503,7 @@ c.<span class="fn">DrawPoint</span>(px, py, theme_color);</pre></div>
     <div class="section-header animate-on-scroll" style="text-align:left;">
       <span class="section-label">Section 07</span>
       <h2>C API Design &amp; FFI</h2>
-      <p>Language-agnostic ABI via opaque handles. Any language with C FFI (Rust, Python, Go, Zig, D, ...) can use FTXUI.</p>
+      <p>Language-agnostic ABI via opaque handles. Any language with C FFI (Rust, Python, Go, Zig, D, ...) can use FTXUI BadWolf.</p>
     </div>
 
     <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;">
@@ -524,7 +539,7 @@ c.<span class="fn">DrawPoint</span>(px, py, theme_color);</pre></div>
 
     <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;">
       <h3 style="color:var(--blue-light);margin-bottom:1rem;">Python Binding — GIL Safety</h3>
-      <p style="color:var(--text-secondary);margin-bottom:1rem;">The Python bindings release the GIL during <code>run_fullscreen</code> so other Python threads can run. The FTXUI event callbacks re-acquire it.</p>
+      <p style="color:var(--text-secondary);margin-bottom:1rem;">The Python bindings release the GIL during <code>run_fullscreen</code> so other Python threads can run. The FTXUI BadWolf event callbacks re-acquire it.</p>
       <div class="code-block"><pre><span class="cmt">// In the pybind11 module</span>
 m.<span class="fn">def</span>(<span class="str">"run_fullscreen"</span>, [](<span class="type">py::object</span> component) {
     <span class="cmt">// Convert Python component to C++ Component</span>
@@ -597,7 +612,7 @@ cd build && ctest --output-on-failure</pre></div>
   <div class="footer-inner">
     <div class="footer-grid">
       <div class="footer-brand">
-        <span style="font-size:1.75rem;font-weight:900;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">FTXUI</span>
+        <span style="font-size:1.75rem;font-weight:900;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">FTXUI BadWolf</span>
         <p>The C++ Terminal UI Framework.</p>
         <p class="footer-tagline">Zero dependencies. Bare metal speed. Maximum beauty.</p>
       </div>
@@ -622,7 +637,7 @@ cd build && ctest --output-on-failure</pre></div>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2024 FTXUI Contributors. MIT License.</span>
+      <span>© 2024 FTXUI BadWolf Contributors. MIT License.</span>
       <span>Zero dependencies. Bare metal speed. Maximum beauty.</span>
     </div>
   </div>
