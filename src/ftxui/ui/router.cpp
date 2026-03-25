@@ -3,10 +3,13 @@
 // the LICENSE file.
 #include "ftxui/ui/router.hpp"
 
+#include <atomic>
+#include <chrono>
 #include <functional>
 #include <map>
 #include <memory>
 #include <string>
+#include <thread>
 #include <utility>
 #include <variant>
 #include <vector>
@@ -32,6 +35,9 @@ struct Router::Impl {
   std::vector<std::string> history;
   std::string default_route;
   std::function<void(std::string_view, std::string_view)> on_navigate;
+
+  // Transition progress: 0.0 = just started, 1.0 = complete.
+  std::atomic<double> transition_progress_{1.0};
 
   Component GetComponent(const std::string& name) {
     auto it = routes.find(name);
@@ -66,8 +72,22 @@ struct Router::Impl {
     if (on_navigate) {
       on_navigate(from, to);
     }
+
     if (auto* app = App::Active()) {
+      // Kick off a short fade-in transition: dim for ~75 ms then clear.
+      transition_progress_.store(0.0);
       app->PostEvent(Event::Custom);
+
+      std::thread([app_ptr = app, &prog = transition_progress_]() {
+        constexpr int kSteps = 10;
+        constexpr int kStepMs = 15;
+        for (int i = 1; i <= kSteps; ++i) {
+          std::this_thread::sleep_for(std::chrono::milliseconds(kStepMs));
+          prog.store(static_cast<double>(i) / kSteps);
+          app_ptr->PostEvent(Event::Custom);
+        }
+        prog.store(1.0);
+      }).detach();
     }
   }
 };
@@ -86,7 +106,12 @@ class RouterComponent : public ComponentBase {
     if (!child) {
       return text("(no route)");
     }
-    return child->Render();
+    Element render = child->Render();
+    // Apply a brief dim effect during the first half of the transition.
+    if (impl_->transition_progress_.load() < 0.5) {
+      render = render | dim;
+    }
+    return render;
   }
 
   bool OnEvent(Event event) override {
