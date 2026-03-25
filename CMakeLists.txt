@@ -251,6 +251,8 @@ add_library(ui
   src/ftxui/ui/galaxy_map.cpp
   include/ftxui/ui/network_reactive.hpp
   src/ftxui/ui/network_reactive.cpp
+  include/ftxui/ui/registry.hpp
+  src/ftxui/ui/registry.cpp
 )
 
 target_link_libraries(dom PUBLIC screen)
@@ -321,4 +323,9 @@ if(FTXUI_BUILD_PYTHON_BINDINGS)
   )
   FetchContent_MakeAvailable(pybind11)
   add_subdirectory(python)
+endif()
+
+include(cmake/ftxui_wasm.cmake)
+if(FTXUI_BUILD_WASM)
+  add_subdirectory(examples/wasm)
 endif()

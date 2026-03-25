@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BadWolf WASM Playground</title>
+  <style>
+    /* ── Terminal aesthetic ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0d0d0d;
+      color: #00ff41;
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', 'Courier New', monospace;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── Top status bar ─────────────────────────────────────────── */
+    #status-bar {
+      background: #0a0a0a;
+      border-bottom: 1px solid #1a3a1a;
+      padding: 4px 12px;
+      font-size: 12px;
+      color: #556655;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    #status-bar .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #333;
+      display: inline-block;
+      transition: background 0.4s;
+    }
+
+    #status-bar .dot.ready {
+      background: #00ff41;
+      box-shadow: 0 0 6px #00ff41;
+    }
+
+    #status-text {
+      transition: color 0.4s;
+    }
+
+    #status-text.ready {
+      color: #00ff41;
+    }
+
+    /* ── Main terminal area ─────────────────────────────────────── */
+    #terminal-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    #terminal {
+      position: relative;
+      background: #000;
+      border: 1px solid #1a3a1a;
+      border-radius: 4px;
+      box-shadow: 0 0 32px rgba(0, 255, 65, 0.08), 0 0 2px #00ff41 inset;
+      width: 100%;
+      max-width: 900px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Terminal title bar (window chrome) */
+    #terminal-titlebar {
+      background: #0a0a0a;
+      border-bottom: 1px solid #1a3a1a;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: #3a6a3a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .win-btn {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #1a2a1a;
+      display: inline-block;
+    }
+
+    #terminal-canvas {
+      flex: 1;
+      display: block;
+      width: 100%;
+      /* The FTXUI ScreenInteractive renders into this canvas via the JS shim */
+      background: #000;
+      color: #00ff41;
+      /* When no WASM is loaded, show a placeholder cursor */
+    }
+
+    /* Blinking cursor overlay shown before WASM loads */
+    #cursor-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 14px;
+      color: #00aa2a;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    #cursor-overlay .blink {
+      display: inline-block;
+      width: 10px;
+      height: 16px;
+      background: #00ff41;
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    #cursor-overlay.hidden { display: none; }
+
+    /* ── Output area (xterm-like div render target) ─────────────── */
+    #output {
+      flex: 1;
+      padding: 8px;
+      overflow: auto;
+      font-size: 13px;
+      line-height: 1.4;
+      white-space: pre;
+      word-break: break-all;
+    }
+
+    /* ── Footer ─────────────────────────────────────────────────── */
+    footer {
+      background: #0a0a0a;
+      border-top: 1px solid #1a3a1a;
+      padding: 4px 12px;
+      font-size: 11px;
+      color: #2a4a2a;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    footer a { color: #3a8a3a; text-decoration: none; }
+    footer a:hover { color: #00ff41; }
+  </style>
+</head>
+<body>
+
+<!-- ── Status bar ────────────────────────────────────────────────────────── -->
+<div id="status-bar">
+  <span class="dot" id="status-dot"></span>
+  <span id="status-text">Loading WASM module…</span>
+  <span style="margin-left:auto; opacity:0.4;">BadWolf v0.1 · Emscripten</span>
+</div>
+
+<!-- ── Terminal window ───────────────────────────────────────────────────── -->
+<div id="terminal-wrap">
+  <div id="terminal">
+    <div id="terminal-titlebar">
+      <span class="win-btn"></span>
+      <span class="win-btn"></span>
+      <span class="win-btn"></span>
+      <span style="margin-left:8px;">badwolf_playground — 80×24</span>
+    </div>
+
+    <div id="output">
+      <!-- FTXUI renders text here via the JS bridge -->
+    </div>
+
+    <!-- Blinking cursor shown while module loads -->
+    <div id="cursor-overlay">
+      <span>Initializing</span>
+      <span class="blink"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────── -->
+<footer>
+  Powered by <a href="../playground.html">FTXUI BadWolf</a> ·
+  <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener">Source on GitHub</a>
+</footer>
+
+<!-- ── WASM loader ───────────────────────────────────────────────────────── -->
+<script>
+(function () {
+  'use strict';
+
+  var statusDot  = document.getElementById('status-dot');
+  var statusText = document.getElementById('status-text');
+  var cursor     = document.getElementById('cursor-overlay');
+  var output     = document.getElementById('output');
+
+  function setReady(msg) {
+    statusDot.classList.add('ready');
+    statusText.textContent = msg || 'WASM Module Loaded';
+    statusText.classList.add('ready');
+    cursor.classList.add('hidden');
+  }
+
+  function setError(msg) {
+    statusText.textContent = 'Error: ' + msg;
+    statusText.style.color = '#ff4141';
+    cursor.classList.add('hidden');
+  }
+
+  // Append text to the terminal output div (simple ANSI-stripped renderer).
+  function termPrint(text) {
+    // Strip basic ANSI escape sequences for display.
+    var stripped = text.replace(/\x1b\[[0-9;]*[mGKHF]/g, '');
+    output.textContent += stripped;
+    output.scrollTop = output.scrollHeight;
+  }
+
+  // The Emscripten Module object — configure before the script loads.
+  window.BadWolf = {
+    // Redirect stdout/stderr to our terminal div.
+    print: function (text) { termPrint(text + '\n'); },
+    printErr: function (text) { termPrint('[err] ' + text + '\n'); },
+
+    onRuntimeInitialized: function () {
+      setReady('WASM Module Loaded');
+      termPrint('BadWolf WASM Playground ready.\r\n');
+    },
+
+    locateFile: function (path, prefix) {
+      // Serve .wasm from same directory as this HTML file.
+      return prefix + path;
+    },
+  };
+
+  // Dynamically load the generated BadWolf.js (Emscripten output).
+  var script = document.createElement('script');
+  script.src = 'badwolf_playground.js';
+  script.onerror = function () {
+    setError('Could not load badwolf_playground.js — build with Emscripten first.');
+    termPrint(
+      '\r\nBuild instructions:\r\n' +
+      '  emcmake cmake -S . -B build-wasm -DFTXUI_BUILD_WASM=ON\r\n' +
+      '  cmake --build build-wasm\r\n'
+    );
+  };
+  document.body.appendChild(script);
+})();
+</script>
+
+</body>
+</html>

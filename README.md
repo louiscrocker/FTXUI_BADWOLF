@@ -426,6 +426,24 @@ int main() {
 
 ---
 
+## WebAssembly
+
+Any BadWolf app can be compiled to WebAssembly and run directly in a browser.
+
+```bash
+# Configure with Emscripten
+emcmake cmake -S . -B build-wasm -DFTXUI_BUILD_WASM=ON
+cmake --build build-wasm
+```
+
+Then serve the output with the required COOP/COEP headers (e.g. using
+`examples/run_webassembly.py`) and open `badwolf_playground.html` in a browser.
+
+See the [live playground](docs/playground.html) and
+[cmake/ftxui_wasm.cmake](cmake/ftxui_wasm.cmake) for full details.
+
+---
+
 ## Contributing
 
 Contributions are welcome! Please read the [contributing guide](.github/CONTRIBUTING.md) and open a PR.
