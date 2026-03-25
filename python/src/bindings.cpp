@@ -66,7 +66,13 @@ PYBIND11_MODULE(_ftxui, m) {
   // Element = std::shared_ptr<Node>, Component = std::shared_ptr<ComponentBase>
   py::class_<ftxui::Node, std::shared_ptr<ftxui::Node>>(m, "Element");
   py::class_<ftxui::ComponentBase, std::shared_ptr<ftxui::ComponentBase>>(
-      m, "Component");
+      m, "Component")
+      .def("Render", [](ftxui::ComponentBase& self) -> ftxui::Element {
+        return self.Render();
+      }, "Render this component to an Element for use in a DOM tree.")
+      .def("render", [](ftxui::ComponentBase& self) -> ftxui::Element {
+        return self.Render();
+      }, "Alias for Render().");
 
   // ── DOM — layout ──────────────────────────────────────────────────────────
   m.def("hbox",
