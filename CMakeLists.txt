@@ -277,6 +277,8 @@ add_library(ui
   src/ftxui/ui/sql.cpp
   include/ftxui/ui/physics.hpp
   src/ftxui/ui/physics.cpp
+  include/ftxui/ui/nl_theme.hpp
+  src/ftxui/ui/nl_theme.cpp
 )
 
 target_link_libraries(dom PUBLIC screen)

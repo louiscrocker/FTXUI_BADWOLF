@@ -100,6 +100,7 @@
 
 // ── AI & Intelligence ────────────────────────────────────────────────────────
 #include "ftxui/ui/llm_bridge.hpp"
+#include "ftxui/ui/nl_theme.hpp"
 #include "ftxui/ui/registry.hpp"
 
 // ── System & Process ─────────────────────────────────────────────────────────

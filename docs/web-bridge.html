@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI BadWolf — Terminal-to-Web Bridge</title>
+  <meta name="description" content="Serve any BadWolf TUI app in a browser over HTTP + WebSocket. Zero client code — just add --web.">
+  <meta property="og:title" content="FTXUI BadWolf — Terminal-to-Web Bridge">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">🐺 FTXUI BadWolf</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Get Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Components <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="colors.html">🎨 Colors &amp; Styling</a>
+          <a href="typewriter.html">⌨️ Typewriter &amp; Console</a>
+          <a href="json.html">📄 JSON</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Platform <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="live-data.html">📡 Live Data</a>
+          <a href="collab.html">👥 Collab Sessions</a>
+          <a href="registry.html">📦 Component Registry</a>
+          <a href="llm-bridge.html">🤖 LLM Bridge</a>
+          <a href="nl-theming.html">🎨 AI Theming</a>
+          <a href="playground.html">🌐 Playground</a>
+          <a href="webgl.html">⚡ WebGL Renderer</a>
+          <a href="web-bridge.html">🌐 Web Bridge</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Docs <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="deep-dive.html">🔬 Technical Deep Dive</a>
+          <a href="executive.html">📊 Executive Brief</a>
+        </div>
+      </div>
+
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section style="padding:6rem 2rem 3rem;text-align:center;">
+  <span class="section-label">HTTP · WebSocket · xterm.js · Zero Client Code</span>
+  <h1 style="font-size:clamp(2rem,4vw,3.5rem);font-weight:900;margin-bottom:1rem;">
+    Run in the <span class="gradient-text">Browser</span>
+  </h1>
+  <p style="font-size:1.1rem;color:var(--text-secondary);max-width:680px;margin:0 auto 2rem;">
+    Serve any BadWolf TUI app in a browser over HTTP + WebSocket — zero client
+    code needed. The server renders the FTXUI component to ANSI escape sequences
+    and streams live updates to xterm.js. Keyboard input flows back to the app.
+  </p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="#quickstart" class="btn-primary">Quick Start</a>
+    <a href="#api" class="btn-secondary">API Reference</a>
+  </div>
+</section>
+
+<!-- Architecture diagram -->
+<section style="max-width:900px;margin:0 auto;padding:2rem;">
+  <div class="glass-card" style="padding:2rem;">
+    <h2 style="text-align:center;margin-bottom:1.5rem;">Architecture</h2>
+    <pre style="background:rgba(0,0,0,0.4);border-radius:12px;padding:1.5rem;overflow-x:auto;font-family:monospace;color:#e2e8f0;line-height:1.6;">
+BadWolf App ──renders──▶ ftxui::Screen ──ANSI──▶ WebSocketServer ──▶ Browser (xterm.js)
+Browser keyboard events ──▶ WebSocket ──▶ ftxui::Event ──▶ App
+
+  ┌─────────────────────────────────────────────────────────────────┐
+  │  WebBridge                                                      │
+  │   ├─ HTTP server  →  GET /   serves embedded xterm.js page      │
+  │   │                  GET /ws upgrades to WebSocket (RFC 6455)   │
+  │   ├─ Render loop  →  component→Render() @ N fps                 │
+  │   │                  Screen::ToString() → ANSI string           │
+  │   │                  broadcast to all WS clients                │
+  │   └─ Event loop   →  WS frames → ftxui::Event → component       │
+  └─────────────────────────────────────────────────────────────────┘</pre>
+  </div>
+</section>
+
+<!-- Quick start -->
+<section id="quickstart" style="max-width:900px;margin:0 auto;padding:2rem;">
+  <h2 style="margin-bottom:1.5rem;">Quick Start</h2>
+
+  <div class="glass-card" style="padding:2rem;margin-bottom:2rem;">
+    <h3 style="color:var(--accent);margin-bottom:1rem;">One-liner integration</h3>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">
+      Replace your <code>int main()</code> with <code>RunWebOrTerminal</code>
+      — no other changes required. The app runs normally in the terminal;
+      pass <code>--web</code> to serve it in a browser instead.
+    </p>
+    <pre style="background:rgba(0,0,0,0.4);border-radius:12px;padding:1.5rem;overflow-x:auto;font-family:monospace;color:#e2e8f0;line-height:1.6;"><span style="color:#8b5cf6;">#include</span> <span style="color:#10b981;">"ftxui/ui/web_bridge.hpp"</span>
+
+<span style="color:#f59e0b;">int</span> main(<span style="color:#f59e0b;">int</span> argc, <span style="color:#f59e0b;">char</span>** argv) {
+  ftxui::ui::RunWebOrTerminal(argc, argv, [] {
+    <span style="color:#6b7280;">// Return your existing root component unchanged.</span>
+    <span style="color:#f59e0b;">return</span> MyComponent();
+  });
+}</pre>
+    <p style="color:var(--text-secondary);margin-top:1rem;">
+      Run without <code>--web</code>: normal terminal app.<br>
+      Run with <code>--web</code>: serves at <code>http://localhost:7681</code>.
+    </p>
+  </div>
+
+  <div class="glass-card" style="padding:2rem;margin-bottom:2rem;">
+    <h3 style="color:var(--accent);margin-bottom:1rem;">CLI — <code>badwolf serve</code></h3>
+    <pre style="background:rgba(0,0,0,0.4);border-radius:12px;padding:1.5rem;overflow-x:auto;font-family:monospace;color:#e2e8f0;">badwolf serve myapp.cpp</pre>
+    <p style="color:var(--text-secondary);margin-top:1rem;">
+      Compiles the file with web bridge support and starts the HTTP server.
+      Open the displayed URL in your browser.
+    </p>
+  </div>
+
+  <div class="glass-card" style="padding:2rem;">
+    <h3 style="color:var(--accent);margin-bottom:1rem;">Browser screenshot (xterm.js)</h3>
+    <pre style="background:#0d0d1a;border-radius:12px;padding:1.5rem;overflow-x:auto;font-family:monospace;color:#e2e8f0;line-height:1.6;">┌────────────────────────────────── BadWolf Web Bridge Demo ──────────────────────────────────┐
+│ 🐺 BadWolf Web Bridge Demo                                Web: http://localhost:7681         │
+├─────────────────────────────────────────────────────────────────────────────────────────────┤
+│ ┌ Counter ┐  ┌ Log ─────┐  ┌ Charts ──┐                                                     │
+│  ◉ Counter    ○ Log        ○ Charts                                                          │
+├─────────────────────────────────────────────────────────────────────────────────────────────┤
+│ ┌──────────────────────────────────────────────────────────────────────────────────────────┐ │
+│ │                           Reactive Counter                                               │ │
+│ │ ─────────────────────────────────────────────────────────────────────────────────────── │ │
+│ │                              Value: 42                                                   │ │
+│ │ ─────────────────────────────────────────────────────────────────────────────────────── │ │
+│ │    [  +  ]                  [  -  ]                 [ Reset ]                            │ │
+│ └──────────────────────────────────────────────────────────────────────────────────────────┘ │
+│                                    [  Quit  ]                                                │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘</pre>
+    <p style="color:var(--text-secondary);margin-top:1rem;font-size:0.9rem;">
+      The terminal is rendered inside xterm.js with full ANSI color support,
+      box-drawing characters, and interactive keyboard input.
+    </p>
+    <div style="margin-top:1rem;padding:0.75rem 1rem;background:rgba(139,92,246,0.15);border-radius:8px;border:1px solid rgba(139,92,246,0.3);">
+      <span style="color:#8b5cf6;font-size:0.85rem;font-family:monospace;">🐺 BadWolf Web</span>
+      badge is shown in the top-right corner of the browser window.
+    </div>
+  </div>
+</section>
+
+<!-- API Reference -->
+<section id="api" style="max-width:900px;margin:0 auto;padding:2rem;">
+  <h2 style="margin-bottom:1.5rem;">API Reference</h2>
+
+  <div class="glass-card" style="padding:2rem;margin-bottom:2rem;">
+    <h3 style="color:var(--accent);margin-bottom:1rem;">WebBridgeConfig</h3>
+    <table style="width:100%;border-collapse:collapse;font-family:monospace;font-size:0.9rem;">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+          <th style="text-align:left;padding:0.5rem 1rem;color:var(--text-secondary);">Field</th>
+          <th style="text-align:left;padding:0.5rem 1rem;color:var(--text-secondary);">Default</th>
+          <th style="text-align:left;padding:0.5rem 1rem;color:var(--text-secondary);">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.5rem 1rem;color:#8b5cf6;">port</td>
+          <td style="padding:0.5rem 1rem;color:#10b981;">7681</td>
+          <td style="padding:0.5rem 1rem;color:var(--text-secondary);">HTTP + WebSocket port. Auto-increments up to +10 on conflict.</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.5rem 1rem;color:#8b5cf6;">host</td>
+          <td style="padding:0.5rem 1rem;color:#10b981;">"0.0.0.0"</td>
+          <td style="padding:0.5rem 1rem;color:var(--text-secondary);">Bind address.</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.5rem 1rem;color:#8b5cf6;">cols</td>
+          <td style="padding:0.5rem 1rem;color:#10b981;">220</td>
+          <td style="padding:0.5rem 1rem;color:var(--text-secondary);">Terminal width served to the browser.</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.5rem 1rem;color:#8b5cf6;">rows</td>
+          <td style="padding:0.5rem 1rem;color:#10b981;">50</td>
+          <td style="padding:0.5rem 1rem;color:var(--text-secondary);">Terminal height served to the browser.</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.5rem 1rem;color:#8b5cf6;">fps</td>
+          <td style="padding:0.5rem 1rem;color:#10b981;">30</td>
+          <td style="padding:0.5rem 1rem;color:var(--text-secondary);">Maximum render rate (frames per second).</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.5rem 1rem;color:#8b5cf6;">open_browser</td>
+          <td style="padding:0.5rem 1rem;color:#10b981;">false</td>
+          <td style="padding:0.5rem 1rem;color:var(--text-secondary);">Automatically open the browser on start.</td>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem 1rem;color:#8b5cf6;">title</td>
+          <td style="padding:0.5rem 1rem;color:#10b981;">"BadWolf"</td>
+          <td style="padding:0.5rem 1rem;color:var(--text-secondary);">HTML page <code>&lt;title&gt;</code>.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="glass-card" style="padding:2rem;margin-bottom:2rem;">
+    <h3 style="color:var(--accent);margin-bottom:1rem;">WebBridge class</h3>
+    <pre style="background:rgba(0,0,0,0.4);border-radius:12px;padding:1.5rem;overflow-x:auto;font-family:monospace;color:#e2e8f0;line-height:1.6;"><span style="color:#f59e0b;">class</span> <span style="color:#8b5cf6;">WebBridge</span> {
+  <span style="color:#6b7280;">// Blocks — serves until Ctrl+C or Stop().</span>
+  <span style="color:#f59e0b;">void</span> Run(ftxui::Component root);
+
+  <span style="color:#6b7280;">// Non-blocking: start server threads, return immediately.</span>
+  <span style="color:#f59e0b;">void</span> Start(ftxui::Component root);
+  <span style="color:#f59e0b;">void</span> Stop();
+  <span style="color:#f59e0b;">bool</span> IsRunning() <span style="color:#f59e0b;">const</span>;
+
+  <span style="color:#f59e0b;">int</span>         port() <span style="color:#f59e0b;">const</span>;   <span style="color:#6b7280;">// actual bound port</span>
+  std::string url()  <span style="color:#f59e0b;">const</span>;   <span style="color:#6b7280;">// "http://localhost:7681"</span>
+
+  <span style="color:#6b7280;">// Inject an ftxui::Event (useful for testing).</span>
+  <span style="color:#f59e0b;">void</span> InjectEvent(ftxui::Event e);
+};</pre>
+  </div>
+
+  <div class="glass-card" style="padding:2rem;">
+    <h3 style="color:var(--accent);margin-bottom:1rem;">RunWebOrTerminal helper</h3>
+    <pre style="background:rgba(0,0,0,0.4);border-radius:12px;padding:1.5rem;overflow-x:auto;font-family:monospace;color:#e2e8f0;line-height:1.6;"><span style="color:#f59e0b;">void</span> RunWebOrTerminal(
+    <span style="color:#f59e0b;">int</span> argc, <span style="color:#f59e0b;">char</span>** argv,
+    std::function&lt;ftxui::Component()&gt; factory,
+    WebBridgeConfig cfg = {});</pre>
+    <p style="color:var(--text-secondary);margin-top:1rem;">
+      If <code>--web</code> is present in <code>argv</code>, starts the WebBridge
+      and blocks. Otherwise calls <code>RunFullscreen(factory())</code> for normal
+      terminal mode.
+    </p>
+  </div>
+</section>
+
+<!-- Technical notes -->
+<section style="max-width:900px;margin:0 auto;padding:2rem 2rem 4rem;">
+  <h2 style="margin-bottom:1.5rem;">Technical Notes</h2>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;">
+    <div class="glass-card" style="padding:1.5rem;">
+      <h4 style="color:#8b5cf6;margin-bottom:0.75rem;">🔒 POSIX sockets only</h4>
+      <p style="color:var(--text-secondary);font-size:0.9rem;">
+        No external HTTP or WebSocket libraries. Uses raw POSIX <code>socket()</code>,
+        <code>bind()</code>, <code>accept()</code>. The WebSocket handshake
+        implements SHA-1 (RFC 3174) and Base64 from scratch.
+      </p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;">
+      <h4 style="color:#8b5cf6;margin-bottom:0.75rem;">🔄 Port conflict recovery</h4>
+      <p style="color:var(--text-secondary);font-size:0.9rem;">
+        If the configured port is in use, the server automatically tries
+        <code>port+1</code> through <code>port+10</code> before giving up.
+      </p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;">
+      <h4 style="color:#8b5cf6;margin-bottom:0.75rem;">📺 xterm.js from CDN</h4>
+      <p style="color:var(--text-secondary);font-size:0.9rem;">
+        The embedded HTML page loads xterm.js and xterm-addon-fit from
+        jsDelivr CDN — client-side only. The server itself has no JS
+        dependency.
+      </p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;">
+      <h4 style="color:#8b5cf6;margin-bottom:0.75rem;">⌨️ Key translation</h4>
+      <p style="color:var(--text-secondary);font-size:0.9rem;">
+        xterm.js key sequences are translated to <code>ftxui::Event</code>:
+        arrow keys, Home/End, Page Up/Down, Insert/Delete, Tab, Backspace,
+        Escape, Return, and arbitrary UTF-8 characters.
+      </p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;">
+      <h4 style="color:#8b5cf6;margin-bottom:0.75rem;">🧵 Thread model</h4>
+      <p style="color:var(--text-secondary);font-size:0.9rem;">
+        One render thread drives the component at the configured FPS.
+        One server/accept thread. Each WebSocket client gets its own
+        detached thread for I/O.
+      </p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;">
+      <h4 style="color:#8b5cf6;margin-bottom:0.75rem;">🎯 Zero app changes</h4>
+      <p style="color:var(--text-secondary);font-size:0.9rem;">
+        The component is rendered using <code>ftxui::Render()</code> directly —
+        no terminal hooks, no alt-screen. Events are injected via
+        <code>component-&gt;OnEvent()</code>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer style="text-align:center;padding:3rem 2rem;color:var(--text-secondary);font-size:0.85rem;border-top:1px solid rgba(255,255,255,0.06);">
+  <p>FTXUI BadWolf — MIT License — <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" style="color:#8b5cf6;">GitHub</a></p>
+</footer>
+
+<script>
+  // Dropdown toggle
+  document.querySelectorAll('.nav-dropdown-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const dd = btn.closest('.nav-dropdown');
+      document.querySelectorAll('.nav-dropdown').forEach(d => {
+        if (d !== dd) d.classList.remove('open');
+      });
+      dd.classList.toggle('open');
+    });
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.nav-dropdown')) {
+      document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+    }
+  });
+  // Hamburger
+  const ham = document.querySelector('.hamburger');
+  const navLinks = document.querySelector('.nav-links');
+  if (ham && navLinks) {
+    ham.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      ham.setAttribute('aria-expanded', String(open));
+    });
+  }
+</script>
+</body>
+</html>

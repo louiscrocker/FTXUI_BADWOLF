@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI BadWolf — AI-Powered Theming</title>
+  <meta name="description" content="Natural language theming for FTXUI BadWolf: describe a theme in plain English, get a Theme struct back. Rule-based or LLM-powered.">
+  <meta property="og:title" content="FTXUI BadWolf — AI-Powered Theming">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">🐺 FTXUI BadWolf</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Get Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Components <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="components.html">🧩 All Components</a>
+          <a href="charts.html">📊 Charts</a>
+          <a href="datatable.html">📋 DataTable</a>
+          <a href="form.html">📝 Form</a>
+          <a href="geomap.html">🗺️ GeoMap</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Platform <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="live-data.html">📡 Live Data</a>
+          <a href="collab.html">👥 Collab Sessions</a>
+          <a href="registry.html">📦 Component Registry</a>
+          <a href="llm-bridge.html">🤖 LLM Bridge</a>
+          <a href="nl-theming.html">🎨 AI Theming</a>
+          <a href="playground.html">🌐 Playground</a>
+          <a href="webgl.html">⚡ WebGL Renderer</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Docs <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="deep-dive.html">🔬 Technical Deep Dive</a>
+          <a href="executive.html">📊 Executive Brief</a>
+        </div>
+      </div>
+
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section style="padding:5rem 2rem 3rem;text-align:center;">
+  <span class="section-label">Rule-based · LLM-optional · Zero dependencies</span>
+  <h1 style="font-size:clamp(2rem,4vw,3.5rem);font-weight:900;margin-bottom:1rem;">
+    AI-Powered <span class="gradient-text">Theming</span>
+  </h1>
+  <p style="font-size:1.1rem;color:var(--text-secondary);max-width:680px;margin:0 auto 2rem;">
+    Describe a theme in plain English, get a <code>Theme</code> struct back.
+    Works instantly with the rule-based engine — no LLM required.
+    Upgrades automatically to Ollama or OpenAI when available for precise RGB generation.
+  </p>
+  <div style="font-family:monospace;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.5rem;max-width:600px;margin:0 auto;text-align:left;">
+    <span style="color:#8b5cf6;">auto</span> t = ftxui::ui::<span style="color:#06d6a0;">ThemeFromDescription</span>(<span style="color:#fbbf24;">"dark blue cyberpunk with orange accents"</span>);<br>
+    ftxui::ui::<span style="color:#06d6a0;">SetTheme</span>(t);
+  </div>
+</section>
+
+<!-- Example descriptions & palettes -->
+<section style="padding:2rem;max-width:960px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1.5rem;">Example Descriptions</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;">
+
+    <!-- Cyberpunk -->
+    <div class="glass-card" style="padding:1.5rem;">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;color:#8b5cf6;">Dark blue cyberpunk</h3>
+      <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:1rem;">"dark blue cyberpunk with orange accents"</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#8b5cf6;" title="primary"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#00d4d4;" title="accent"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#00ffaa;" title="success"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#ff3264;" title="error"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#ffd700;" title="warning"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#1a0040;" title="bg"></span>
+      </div>
+      <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.5rem;">primary · accent · success · error · warning · bg</div>
+    </div>
+
+    <!-- Hacker -->
+    <div class="glass-card" style="padding:1.5rem;">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;color:#00c83c;">Matrix hacker green</h3>
+      <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:1rem;">"matrix hacker green"</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#00c83c;" title="primary"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#32ff64;" title="accent"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#00ff50;" title="success"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#ff3c3c;" title="error"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#dcdc00;" title="warning"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#000800;" title="bg"></span>
+      </div>
+      <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.5rem;">primary · accent · success · error · warning · bg</div>
+    </div>
+
+    <!-- Retro -->
+    <div class="glass-card" style="padding:1.5rem;">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;color:#d4a03c;">Retro amber 80s</h3>
+      <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:1rem;">"retro amber 80s"</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#d4a03c;" title="primary"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#ff8c00;" title="accent"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#64c850;" title="success"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#c83232;" title="error"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#ffbe00;" title="warning"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#1e1408;" title="bg"></span>
+      </div>
+      <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.5rem;">primary · accent · success · error · warning · bg</div>
+    </div>
+
+    <!-- Space -->
+    <div class="glass-card" style="padding:1.5rem;">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;color:#3264dc;">Deep space navy gold</h3>
+      <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:1rem;">"deep space navy gold"</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#3264dc;" title="primary"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#d4af37;" title="accent"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#32c882;" title="success"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#dc3250;" title="error"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#d4af37;" title="warning"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#020818;" title="bg"></span>
+      </div>
+      <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.5rem;">primary · accent · success · error · warning · bg</div>
+    </div>
+
+    <!-- Warm -->
+    <div class="glass-card" style="padding:1.5rem;">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;color:#dc5028;">Warm sunset orange</h3>
+      <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:1rem;">"warm sunset orange"</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#dc5028;" title="primary"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#ffa032;" title="accent"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#50c850;" title="success"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#c82828;" title="error"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#ffb400;" title="warning"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#1e0c08;" title="bg"></span>
+      </div>
+      <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.5rem;">primary · accent · success · error · warning · bg</div>
+    </div>
+
+    <!-- Corporate -->
+    <div class="glass-card" style="padding:1.5rem;">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;color:#005ab4;">Minimal white corporate</h3>
+      <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:1rem;">"minimal white corporate"</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#005ab4;" title="primary"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#008cdc;" title="accent"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#00b450;" title="success"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#c82828;" title="error"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#dca000;" title="warning"></span>
+        <span style="display:inline-block;width:32px;height:32px;border-radius:6px;background:#f0f4fa;" title="bg" style="border:1px solid #ccc;"></span>
+      </div>
+      <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.5rem;">primary · accent · success · error · warning · bg</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- API Reference -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1.5rem;">API Reference</h2>
+
+  <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:1rem;">One-liner</h3>
+  <div class="glass-card" style="padding:1.5rem;">
+    <pre style="margin:0;font-family:monospace;font-size:0.85rem;color:var(--text-primary);overflow-x:auto;"><code>#include "ftxui/ui/nl_theme.hpp"
+using namespace ftxui::ui;
+
+// Synchronous — rule-based (always works, zero deps)
+Theme t = ThemeFromDescription("dark blue cyberpunk with orange accents");
+SetTheme(t);
+
+// Async — upgrades to LLM if Ollama / OpenAI is available
+ThemeFromDescriptionAsync("neon pink synthwave", [](Theme t) {
+    SetTheme(t);
+});</code></pre>
+  </div>
+
+  <h3 style="font-size:1.2rem;font-weight:700;margin:1.5rem 0 1rem;">ThemePicker component</h3>
+  <div class="glass-card" style="padding:1.5rem;">
+    <pre style="margin:0;font-family:monospace;font-size:0.85rem;color:var(--text-primary);overflow-x:auto;"><code>// Interactive picker: type a description, see live swatch preview
+auto picker = ftxui::ui::ThemePicker([](Theme t) {
+    SetTheme(t);
+    // … rebuild your UI
+});
+App().Add(picker).Run();</code></pre>
+  </div>
+
+  <h3 style="font-size:1.2rem;font-weight:700;margin:1.5rem 0 1rem;">Animated theme transitions</h3>
+  <div class="glass-card" style="padding:1.5rem;">
+    <pre style="margin:0;font-family:monospace;font-size:0.85rem;color:var(--text-primary);overflow-x:auto;"><code>Theme from = GetTheme();
+Theme to   = ThemeFromDescription("matrix hacker green");
+
+ThemeTransition tr(from, to, std::chrono::milliseconds(600));
+tr.Start();  // AnimationLoop drives SetTheme() each frame
+
+// Manual interpolation
+Theme mid = LerpTheme(from, to, 0.5f);</code></pre>
+  </div>
+
+  <h3 style="font-size:1.2rem;font-weight:700;margin:1.5rem 0 1rem;">LLM upgrade</h3>
+  <div class="glass-card" style="padding:1.5rem;">
+    <pre style="margin:0;font-family:monospace;font-size:0.85rem;color:var(--text-primary);overflow-x:auto;"><code>// Check if LLM is reachable
+if (LLMThemeGenerator::IsAvailable()) {
+    // Precise RGB from Ollama (falls back to rule-based if unavailable)
+    Theme t = LLMThemeGenerator::Generate("deep space navy gold", "llama3");
+}
+
+// Generate variants
+auto variants = LLMThemeGenerator::GenerateVariants("cyberpunk", 3);</code></pre>
+  </div>
+</section>
+
+<!-- How it works -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1.5rem;">How It Works</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;">
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">📝</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">1. Parse</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">NLThemeParser scans the description for mood, style, color, and modifier keywords.</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🗺️</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">2. Map</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">ThemeDescription is mapped to a full Theme palette: primary, accent, text, borders, buttons, status colors.</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🤖</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">3. Upgrade</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">If Ollama or OpenAI is reachable, a structured JSON prompt replaces rule-based RGB values with LLM-generated ones.</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">✨</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">4. Apply</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">SetTheme() activates the theme globally. ThemeTransition animates the switch using AnimationLoop.</p>
+    </div>
+  </div>
+
+  <div style="margin-top:2rem;" class="glass-card">
+    <div style="padding:1.5rem;font-family:monospace;font-size:0.9rem;">
+      <pre style="margin:0;color:var(--text-primary);overflow-x:auto;">
+"dark blue cyberpunk with orange accents"
+         │
+         ▼  NLThemeParser::Parse()
+┌─ ThemeDescription ────────────────────────────────┐
+│  mood  = Dark                                     │
+│  style = Cyberpunk                                │
+│  primary_color = blue  (50, 100, 220)             │
+│  accent_color  = orange (255, 140, 0)             │
+│  neon  = false                                    │
+└───────────────────────────────────────────────────┘
+         │
+         ▼  NLThemeParser::ToTheme()
+┌─ Theme ────────────────────────────────────────────┐
+│  primary      = RGB(50,  100, 220)  // from desc   │
+│  accent       = RGB(255, 140,   0)  // from desc   │
+│  secondary    = RGB(0,   210, 210)  // cyberpunk   │
+│  success      = RGB(0,   255, 160)  // cyberpunk   │
+│  error        = RGB(255,  50, 100)  // cyberpunk   │
+│  text         = RGB(220, 200, 255)  // dark mood   │
+│  border_style = ROUNDED                            │
+└────────────────────────────────────────────────────┘
+         │
+         ▼  (optional) LLMThemeGenerator::Generate()
+         │  Ollama → precise JSON RGB overrides
+         ▼
+   SetTheme(theme)</pre>
+    </div>
+  </div>
+</section>
+
+<!-- Keyword reference -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1.5rem;">Keyword Reference</h2>
+  <div class="glass-card" style="padding:1.5rem;overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+          <th style="text-align:left;padding:0.5rem 1rem;color:var(--text-primary);">Category</th>
+          <th style="text-align:left;padding:0.5rem 1rem;color:var(--text-primary);">Keywords</th>
+          <th style="text-align:left;padding:0.5rem 1rem;color:var(--text-primary);">Effect</th>
+        </tr>
+      </thead>
+      <tbody style="color:var(--text-secondary);">
+        <tr><td style="padding:0.5rem 1rem;font-family:monospace;">Mood: Dark</td><td style="padding:0.5rem 1rem;">dark, night, midnight, black</td><td style="padding:0.5rem 1rem;">Dark background, light text</td></tr>
+        <tr><td style="padding:0.5rem 1rem;font-family:monospace;">Mood: Light</td><td style="padding:0.5rem 1rem;">light, bright, white, day</td><td style="padding:0.5rem 1rem;">Light background, dark text, LIGHT border</td></tr>
+        <tr><td style="padding:0.5rem 1rem;font-family:monospace;">Style: Cyberpunk</td><td style="padding:0.5rem 1rem;">cyberpunk, cyber, synthwave, neon punk</td><td style="padding:0.5rem 1rem;">Purple primary, cyan accent</td></tr>
+        <tr><td style="padding:0.5rem 1rem;font-family:monospace;">Style: Hacker</td><td style="padding:0.5rem 1rem;">hacker, matrix, terminal</td><td style="padding:0.5rem 1rem;">Green palette, black bg</td></tr>
+        <tr><td style="padding:0.5rem 1rem;font-family:monospace;">Style: Retro</td><td style="padding:0.5rem 1rem;">retro, vintage, 80s, vaporwave</td><td style="padding:0.5rem 1rem;">Amber/orange warm palette</td></tr>
+        <tr><td style="padding:0.5rem 1rem;font-family:monospace;">Style: Space</td><td style="padding:0.5rem 1rem;">space, galaxy, cosmic, star</td><td style="padding:0.5rem 1rem;">Deep blue + gold accent</td></tr>
+        <tr><td style="padding:0.5rem 1rem;font-family:monospace;">Style: Nature</td><td style="padding:0.5rem 1rem;">nature, forest, earth</td><td style="padding:0.5rem 1rem;">Green earthy tones</td></tr>
+        <tr><td style="padding:0.5rem 1rem;font-family:monospace;">Style: Warm</td><td style="padding:0.5rem 1rem;">warm, sunset, fire</td><td style="padding:0.5rem 1rem;">Orange-red fiery palette</td></tr>
+        <tr><td style="padding:0.5rem 1rem;font-family:monospace;">Style: Corporate</td><td style="padding:0.5rem 1rem;">corporate, professional, business</td><td style="padding:0.5rem 1rem;">Conservative blue, clean lines</td></tr>
+        <tr><td style="padding:0.5rem 1rem;font-family:monospace;">Modifier: Neon</td><td style="padding:0.5rem 1rem;">neon, vibrant, vivid, bright</td><td style="padding:0.5rem 1rem;">Saturation ×1.4</td></tr>
+        <tr><td style="padding:0.5rem 1rem;font-family:monospace;">Modifier: Muted</td><td style="padding:0.5rem 1rem;">muted, pastel, soft, subtle</td><td style="padding:0.5rem 1rem;">Saturation ×0.7</td></tr>
+        <tr><td style="padding:0.5rem 1rem;font-family:monospace;">Modifier: Contrast</td><td style="padding:0.5rem 1rem;">high contrast, high-contrast</td><td style="padding:0.5rem 1rem;">Max fg/bg contrast</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer style="text-align:center;padding:2rem;color:var(--text-secondary);font-size:0.85rem;">
+  <p>FTXUI BadWolf · MIT License · <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" style="color:var(--text-primary);">GitHub</a></p>
+</footer>
+
+<script src="js/glass.js"></script>
+</body>
+</html>

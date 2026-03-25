@@ -107,6 +107,8 @@ add_executable(ftxui_ui_test
   src/ftxui/ui/constraint_layout_test.cpp
   src/ftxui/ui/sql_test.cpp
   src/ftxui/ui/physics_test.cpp
+  src/ftxui/ui/web_bridge_test.cpp
+  src/ftxui/ui/nl_theme_test.cpp
 )
 
 target_link_libraries(ftxui_ui_test
