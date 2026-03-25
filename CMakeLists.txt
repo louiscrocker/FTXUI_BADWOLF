@@ -259,10 +259,14 @@ add_library(ui
   src/ftxui/ui/live_source.cpp
   include/ftxui/ui/registry.hpp
   src/ftxui/ui/registry.cpp
+  include/ftxui/ui/rich_text.hpp
+  src/ftxui/ui/rich_text.cpp
   include/ftxui/ui/webgl_renderer.hpp
   src/ftxui/ui/webgl_renderer.cpp
   include/ftxui/ui/wasm_bridge.hpp
   src/ftxui/ui/wasm_bridge.cpp
+  include/ftxui/ui/typewriter.hpp
+  src/ftxui/ui/typewriter.cpp
 )
 
 target_link_libraries(dom PUBLIC screen)

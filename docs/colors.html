@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Colors &amp; Rich Text – FTXUI</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── Glassmorphism extras ───────────────────────────────────────── */
+    .glass {
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(16px) saturate(160%);
+      -webkit-backdrop-filter: blur(16px) saturate(160%);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 1.8rem 2rem;
+      margin-bottom: 2rem;
+    }
+    body {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      min-height: 100vh;
+      color: #e2e8f0;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+    h1, h2, h3 { color: #a78bfa; }
+    h1 { font-size: 2.4rem; margin-bottom: .4rem; }
+    h2 { font-size: 1.5rem; margin: 0 0 1rem; }
+    code, pre {
+      background: rgba(0,0,0,0.4);
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+    pre { padding: 1rem 1.2rem; overflow-x: auto; font-size: .85rem; line-height: 1.6; }
+    code { padding: .15em .4em; font-size: .9em; }
+    .hero { text-align: center; padding: 3rem 1rem 2rem; }
+    .hero p { color: #94a3b8; font-size: 1.1rem; max-width: 680px; margin: .6rem auto 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.4rem; }
+    .swatch-row { display: flex; flex-wrap: wrap; gap: .5rem; margin: .8rem 0; }
+    .swatch {
+      width: 36px; height: 36px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .6rem; font-weight: 700; cursor: default;
+    }
+    .swatch:hover { transform: scale(1.25); transition: transform .15s; }
+    /* gradient bar */
+    .gradient-bar {
+      height: 28px; border-radius: 8px; margin: .6rem 0;
+    }
+    /* palette 256 */
+    .p256-grid {
+      display: grid;
+      grid-template-columns: repeat(16, 1fr);
+      gap: 1px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .p256-cell { height: 18px; }
+    /* method table */
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    th, td { padding: .55rem .8rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,.08); }
+    th { background: rgba(167,139,250,.15); color: #c4b5fd; }
+    tr:hover td { background: rgba(255,255,255,.04); }
+    nav.top { display: flex; gap: 1.2rem; justify-content: center; padding: 1rem; flex-wrap: wrap; }
+    nav.top a { color: #a78bfa; text-decoration: none; font-size: .95rem; }
+    nav.top a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<nav class="top">
+  <a href="index.html">Home</a>
+  <a href="getting-started.html">Getting Started</a>
+  <a href="api.html">API</a>
+  <a href="examples.html">Examples</a>
+  <a href="colors.html" style="color:#c4b5fd;font-weight:700">Colors &amp; Rich Text</a>
+</nav>
+
+<div class="hero">
+  <h1>🎨 Colors &amp; Rich Text</h1>
+  <p>Full terminal colorization system: TextStyle fluent builder, RichText markup,
+     AnsiParser, 256-color palettes, TrueColor gradients, and convenience helpers.</p>
+</div>
+
+<div style="max-width:1100px;margin:0 auto;padding:0 1.2rem 3rem;">
+
+  <!-- ── Quick Start ──────────────────────────────────────────────── -->
+  <div class="glass">
+    <h2>Quick Start</h2>
+    <pre><code>#include "ftxui/ui/rich_text.hpp"
+using namespace ftxui;
+using namespace ftxui::ui;
+
+// Fluent style builder
+auto el1 = TextStyle{}.Bold().Red()("Hello, world!");
+
+// Rich markup string
+auto el2 = RichText::Element("[bold][cyan]FTXUI[/] Rich Text[/bold] is [green]great[/green]!");
+
+// ANSI passthrough
+auto el3 = AnsiParser::Element("\033[1;32mGreen Bold\033[0m via ANSI");
+
+// Convenience helpers
+auto el4 = RgbText("Orange", 255, 128, 0);
+auto el5 = ColorGradient(Color::RGB(255,0,0), Color::RGB(0,0,255), 40);</code></pre>
+  </div>
+
+  <!-- ── TextStyle ─────────────────────────────────────────────────── -->
+  <div class="glass">
+    <h2>TextStyle — Fluent Builder</h2>
+    <p>
+      <code>TextStyle</code> is a zero-overhead fluent builder that accumulates
+      all terminal attributes and applies them to any <code>ftxui::Element</code>.
+    </p>
+
+    <div class="grid">
+      <div>
+        <h3>Colors</h3>
+        <table>
+          <tr><th>Method</th><th>Description</th></tr>
+          <tr><td><code>.Fg(Color)</code></td><td>Foreground color</td></tr>
+          <tr><td><code>.Bg(Color)</code></td><td>Background color</td></tr>
+          <tr><td><code>.Fg(r,g,b)</code></td><td>TrueColor foreground</td></tr>
+          <tr><td><code>.Bg(r,g,b)</code></td><td>TrueColor background</td></tr>
+          <tr><td><code>.Fg256(n)</code></td><td>256-palette foreground</td></tr>
+          <tr><td><code>.Bg256(n)</code></td><td>256-palette background</td></tr>
+          <tr><td><code>.Red() .Green() .Blue()</code></td><td>Named shortcuts</td></tr>
+          <tr><td><code>.BrightRed() .BrightBlue()…</code></td><td>Bright variants</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>Attributes</h3>
+        <table>
+          <tr><th>Method</th><th>Effect</th></tr>
+          <tr><td><code>.Bold()</code></td><td>Bold text</td></tr>
+          <tr><td><code>.Dim()</code></td><td>Dimmed / faint</td></tr>
+          <tr><td><code>.Italic()</code></td><td>Italic</td></tr>
+          <tr><td><code>.Underline()</code></td><td>Underlined</td></tr>
+          <tr><td><code>.Blink()</code></td><td>Blinking</td></tr>
+          <tr><td><code>.RapidBlink()</code></td><td>Rapid blink (→ blink)</td></tr>
+          <tr><td><code>.Reverse()</code></td><td>Swap fg/bg (inverted)</td></tr>
+          <tr><td><code>.Hidden()</code></td><td>Hidden / invisible</td></tr>
+          <tr><td><code>.Strikethrough()</code></td><td>Strike-through</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <h3>Applying Styles</h3>
+    <pre><code>TextStyle s;
+s.Bold().Fg(255, 165, 0).Underline();   // chain methods
+
+// Option A – call operator
+auto el = s("Orange bold underlined text");
+
+// Option B – apply to existing element
+auto el2 = s.Apply(ftxui::text("Same result"));
+
+// Option C – pipe operator (via decorator)
+auto el3 = ftxui::text("text") | ftxui::bold | ftxui::color(Color::Red);</code></pre>
+  </div>
+
+  <!-- ── RichText ──────────────────────────────────────────────────── -->
+  <div class="glass">
+    <h2>RichText — Inline Markup</h2>
+    <p>
+      Parse and render <em>bracket-based</em> inline markup tags.
+      Tags stack and can be closed individually (<code>[/tag]</code>)
+      or all at once (<code>[/]</code>).
+    </p>
+
+    <h3>Supported Tags</h3>
+    <div class="grid">
+      <div>
+        <table>
+          <tr><th>Tag</th><th>Effect</th></tr>
+          <tr><td><code>[bold]</code></td><td>Bold text</td></tr>
+          <tr><td><code>[dim]</code></td><td>Dim text</td></tr>
+          <tr><td><code>[italic]</code></td><td>Italic</td></tr>
+          <tr><td><code>[underline]</code></td><td>Underlined</td></tr>
+          <tr><td><code>[blink]</code></td><td>Blinking</td></tr>
+          <tr><td><code>[reverse]</code></td><td>Inverted colors</td></tr>
+          <tr><td><code>[strikethrough]</code></td><td>Strike-through</td></tr>
+        </table>
+      </div>
+      <div>
+        <table>
+          <tr><th>Tag</th><th>Effect</th></tr>
+          <tr><td><code>[red]</code> … <code>[white]</code></td><td>Named fg colors</td></tr>
+          <tr><td><code>[bright_red]</code> etc.</td><td>Bright variants</td></tr>
+          <tr><td><code>[bg_red]</code> etc.</td><td>Background colors</td></tr>
+          <tr><td><code>[rgb(r,g,b)]</code></td><td>TrueColor fg</td></tr>
+          <tr><td><code>[bg_rgb(r,g,b)]</code></td><td>TrueColor bg</td></tr>
+          <tr><td><code>[/]</code> or <code>[/tag]</code></td><td>Close tag(s)</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <h3>Example</h3>
+    <pre><code>auto el = RichText::Element(
+    "[bold][yellow]Warning:[/] "
+    "[red]File not found[/red] — "
+    "[dim]check your path[/dim]"
+);</code></pre>
+
+    <h3>API</h3>
+    <pre><code>// Parse to spans (for custom rendering)
+std::vector&lt;Span&gt; spans = RichText::Parse(markup);
+
+// Render directly to Element
+ftxui::Element el = RichText::Element(markup);
+
+// Render pre-parsed spans
+ftxui::Element el2 = RichText::Render(spans);
+
+// Wrap as a Component
+ftxui::Component c = RichText::Component(markup);</code></pre>
+  </div>
+
+  <!-- ── AnsiParser ────────────────────────────────────────────────── -->
+  <div class="glass">
+    <h2>AnsiParser — ANSI Escape Sequences</h2>
+    <p>
+      Converts raw ANSI SGR escape sequences from any source
+      (shell command output, log files, etc.) into styled FTXUI elements.
+    </p>
+
+    <h3>Supported SGR Codes</h3>
+    <table>
+      <tr><th>Code(s)</th><th>Effect</th></tr>
+      <tr><td><code>0</code></td><td>Reset all attributes</td></tr>
+      <tr><td><code>1–9</code></td><td>Bold, Dim, Italic, Underline, Blink, Rapid Blink, Reverse, Hidden, Strikethrough</td></tr>
+      <tr><td><code>30–37</code></td><td>Standard foreground colors (black–white)</td></tr>
+      <tr><td><code>38;2;r;g;b</code></td><td>TrueColor foreground</td></tr>
+      <tr><td><code>38;5;n</code></td><td>256-palette foreground</td></tr>
+      <tr><td><code>40–47</code></td><td>Standard background colors</td></tr>
+      <tr><td><code>48;2;r;g;b</code></td><td>TrueColor background</td></tr>
+      <tr><td><code>48;5;n</code></td><td>256-palette background</td></tr>
+      <tr><td><code>90–97</code></td><td>Bright foreground colors</td></tr>
+      <tr><td><code>100–107</code></td><td>Bright background colors</td></tr>
+    </table>
+
+    <h3>Example</h3>
+    <pre><code>// From a shell command that emits ANSI output
+std::string output = RunCommand("ls --color=always");
+ftxui::Element el = AnsiParser::Element(output);
+
+// Strip ANSI for plain text
+std::string plain = AnsiParser::Strip(output);
+
+// Parse to spans for custom processing
+auto spans = AnsiParser::Parse(output);</code></pre>
+  </div>
+
+  <!-- ── Color Palettes ────────────────────────────────────────────── -->
+  <div class="glass">
+    <h2>Color Palettes &amp; Utilities</h2>
+
+    <div class="grid">
+      <div>
+        <h3>16-Color Palette</h3>
+        <div class="swatch-row">
+          <div class="swatch" style="background:#000000;color:#fff" title="Black">Bk</div>
+          <div class="swatch" style="background:#800000;color:#fff" title="Red">Re</div>
+          <div class="swatch" style="background:#008000;color:#fff" title="Green">Gr</div>
+          <div class="swatch" style="background:#808000;color:#fff" title="Yellow">Ye</div>
+          <div class="swatch" style="background:#000080;color:#fff" title="Blue">Bl</div>
+          <div class="swatch" style="background:#800080;color:#fff" title="Magenta">Mg</div>
+          <div class="swatch" style="background:#008080;color:#fff" title="Cyan">Cy</div>
+          <div class="swatch" style="background:#c0c0c0;color:#000" title="GrayLight">GL</div>
+          <div class="swatch" style="background:#808080;color:#fff" title="GrayDark">GD</div>
+          <div class="swatch" style="background:#ff0000;color:#fff" title="RedLight">RL</div>
+          <div class="swatch" style="background:#00ff00;color:#000" title="GreenLight">GL</div>
+          <div class="swatch" style="background:#ffff00;color:#000" title="YellowLight">YL</div>
+          <div class="swatch" style="background:#0000ff;color:#fff" title="BlueLight">BL</div>
+          <div class="swatch" style="background:#ff00ff;color:#fff" title="MagentaLight">ML</div>
+          <div class="swatch" style="background:#00ffff;color:#000" title="CyanLight">CL</div>
+          <div class="swatch" style="background:#ffffff;color:#000" title="White">Wh</div>
+        </div>
+        <pre><code>// In code
+ftxui::Element row = ColorPalette16();</code></pre>
+      </div>
+
+      <div>
+        <h3>TrueColor Gradient</h3>
+        <div class="gradient-bar" style="background:linear-gradient(to right,#ff0000,#0000ff)"></div>
+        <div class="gradient-bar" style="background:linear-gradient(to right,#00ff00,#ff0000)"></div>
+        <div class="gradient-bar" style="background:linear-gradient(to right,#ff00ff,#00ffff,#ffff00)"></div>
+        <pre><code>// Red → Blue gradient, 40 chars wide
+ftxui::Element g = ColorGradient(
+    Color::RGB(255,0,0),
+    Color::RGB(0,0,255),
+    40
+);</code></pre>
+      </div>
+    </div>
+
+    <h3>256-Color Grid Preview</h3>
+    <div class="p256-grid" id="p256"></div>
+    <script>
+      // Generate 256-color CSS approximation
+      const grid = document.getElementById('p256');
+      for (let i = 0; i < 256; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'p256-cell';
+        // Approximate xterm-256 colors
+        let r, g, b;
+        if (i < 16) {
+          const ansi = [[0,0,0],[128,0,0],[0,128,0],[128,128,0],[0,0,128],[128,0,128],[0,128,128],[192,192,192],
+                        [128,128,128],[255,0,0],[0,255,0],[255,255,0],[0,0,255],[255,0,255],[0,255,255],[255,255,255]];
+          [r,g,b] = ansi[i];
+        } else if (i < 232) {
+          const n = i - 16;
+          r = Math.floor(n/36)*51; g = Math.floor((n%36)/6)*51; b = (n%6)*51;
+        } else {
+          const v = 8 + (i-232)*10; r=g=b=v;
+        }
+        cell.style.background = `rgb(${r},${g},${b})`;
+        cell.title = `Color #${i}`;
+        grid.appendChild(cell);
+      }
+    </script>
+    <pre><code>// Full 16×16 palette in your terminal
+ftxui::Element palette = ColorPalette256();</code></pre>
+  </div>
+
+  <!-- ── Convenience Functions ─────────────────────────────────────── -->
+  <div class="glass">
+    <h2>Convenience Free Functions</h2>
+    <table>
+      <tr><th>Function</th><th>Description</th></tr>
+      <tr><td><code>StyledText(text, style)</code></td><td>Apply a <code>TextStyle</code> to a string</td></tr>
+      <tr><td><code>BoldText(text, fg)</code></td><td>Bold text, optional fg color</td></tr>
+      <tr><td><code>DimText(text, fg)</code></td><td>Dimmed text</td></tr>
+      <tr><td><code>BlinkText(text, fg)</code></td><td>Blinking text</td></tr>
+      <tr><td><code>ColorText(text, fg, bg)</code></td><td>Colored text with optional bg</td></tr>
+      <tr><td><code>RgbText(text, r, g, b)</code></td><td>TrueColor foreground shorthand</td></tr>
+      <tr><td><code>ColorSwatch(color)</code></td><td>2-char wide colored block element</td></tr>
+      <tr><td><code>ColorPalette16()</code></td><td>Row of all 16 named colors</td></tr>
+      <tr><td><code>ColorPalette256()</code></td><td>16×16 grid of all 256 palette colors</td></tr>
+      <tr><td><code>ColorGradient(from, to, width)</code></td><td>Horizontal TrueColor gradient</td></tr>
+    </table>
+  </div>
+
+  <!-- ── Include ───────────────────────────────────────────────────── -->
+  <div class="glass">
+    <h2>Integration</h2>
+    <pre><code>// Include everything at once
+#include "ftxui/ui.hpp"
+
+// Or just the rich text module
+#include "ftxui/ui/rich_text.hpp"</code></pre>
+    <p>Link against <code>ftxui::ui</code> (which transitively includes <code>ftxui::component</code>,
+       <code>ftxui::dom</code>, and <code>ftxui::screen</code>).</p>
+    <pre><code>target_link_libraries(my_app PRIVATE ui)</code></pre>
+  </div>
+
+</div><!-- /container -->
+</body>
+</html>

@@ -44,6 +44,8 @@ example(llm_demo)
 example(registry_demo)
 example(live_demo)
 example(sysmon_demo)
+example(typewriter_demo)
+example(color_demo)
 
 # Copy world map GeoJSON data next to the binary at build time so examples
 # can locate it at runtime via their relative-path search.
