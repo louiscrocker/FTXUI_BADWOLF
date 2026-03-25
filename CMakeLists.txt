@@ -226,6 +226,8 @@ add_library(ui
   src/ftxui/ui/virtual_list.cpp
   include/ftxui/ui/sortable_table.hpp
   src/ftxui/ui/sortable_table.cpp
+  include/ftxui/ui/debug_overlay.hpp
+  src/ftxui/ui/debug_overlay.cpp
 )
 
 target_link_libraries(dom PUBLIC screen)

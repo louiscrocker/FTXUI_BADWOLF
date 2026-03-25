@@ -133,7 +133,7 @@ class DebugOverlayComponent : public ComponentBase {
   Clock::time_point window_start_ = Clock::now();
   int event_count_in_window_ = 0;
 
-  static std::string DescribeEvent(const Event& e) {
+  static std::string DescribeEvent(Event e) {
     if (e.is_mouse()) {
       static const char* const kBtn[] = {
           "Left", "Mid", "Right", "None", "WheelUp", "WheelDn",
