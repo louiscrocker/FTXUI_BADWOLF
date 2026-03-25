@@ -675,3 +675,68 @@ This version includes:
 - 52 examples.
 - Support for WebAssembly.
 - Support for Window and fallback for broken terminal.
+
+## [BadWolf 1.0.0] - 2026-03-25
+
+### Added — FTXUI BadWolf high-level API layer
+
+#### Core
+- `ftxui::ui` namespace with Theme (11 presets), App runners, MVU pattern
+
+#### Reactive & Binding
+- `Reactive<T>`, `Computed<T>`, `ReactiveGroup`
+- `Bind<T>` two-way binding, `BindModel`, `DataContext`
+- `ReactiveList<T>` observable collections
+- `ReactiveJson` JSON reactive state
+
+#### Data Types
+- `JsonValue` — full JSON type (null/bool/number/string/array/object)
+- `Json::Parse` / `Json::Stringify` — RFC 8259 compliant
+- `JsonPath` — JSONPath subset (`$.users[*].name`)
+- `JsonTreeView`, `JsonTableView`, `JsonForm`, `JsonDiff`
+
+#### Text & Richness
+- `TextStyle` fluent builder — all 9 ANSI attributes + TrueColor
+- `RichText` inline markup `[bold red]text[/]`
+- `AnsiParser` ANSI escape sequence decoder
+- `TypewriterText`, `TypewriterSequence`, `Console`, `ConsolePrompt`
+- `Markdown` component
+
+#### Visualization
+- `LineChart`, `BarChart`, `ScatterPlot`, `Histogram`, `Sparkline`
+- `BrailleCanvas` with adaptive scaling
+- `GeoMap` with NE110m world map, mouse pan/zoom
+- `GlobeMap` spinning 3D orthographic
+- `GalaxyMap` 3D star fields (StarWars + StarTrek catalogs)
+
+#### Animation
+- `AnimationLoop` 60fps singleton
+- `Tween` with 7 easing functions
+- `ParticleSystem` (Explosion, WarpStreaks, Rain, Sparkle)
+- `FadeIn`, `FadeOut`, `SlideIn` transitions
+
+#### Networking & Collaboration
+- `NetworkReactive` TCP shared state
+- `CollabServer`/`CollabClient` multi-cursor TUI sessions
+- `LiveSource<T>` — HTTP/Prometheus/FileTail/Stdin adapters
+
+#### AI & Intelligence
+- `NLParser` rule-based NL→UI intent engine
+- `UIGenerator` generates Components from intents
+- `LLMAdapter` Ollama/OpenAI bridge
+- `Registry` C++ component marketplace + `badwolf install` CLI
+
+#### Theming & Branding
+- LCARS, Imperial, Rebel, Enterprise, Matrix themes
+- `AlertSystem` Red/Yellow/Blue/AllClear with reactive borders
+- LCARS layout engine (`LCARSPanel`, `LCARSBar`, `LCARSScreen`)
+
+#### Developer Tools
+- `WithDebugOverlay` (Ctrl+D), `WithInspector` (Ctrl+I)
+- `EventRecorder` record/replay
+- `UIBuilder` visual TUI composer
+
+#### WebAssembly
+- `cmake/ftxui_wasm.cmake` Emscripten support
+- `WebGLRenderer` GPU-accelerated braille canvas
+- `WasmBridge` unified native/WASM app runner

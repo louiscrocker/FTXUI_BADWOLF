@@ -24,8 +24,11 @@
 
 namespace ftxui::ui {
 
-// Base live data source — polls T on a background thread.
-// Template implementations are fully in this header.
+/// @brief Base class for live data sources — polls T on a background thread.
+///
+/// Subclass and implement `Fetch()` to provide data. Call `Start()` to begin
+/// polling; subscribers receive updates via `OnData()` callbacks.
+/// Template implementations are fully in this header.
 template <typename T>
 class LiveSource {
  public:
@@ -119,8 +122,8 @@ class LiveSource {
 
 // ── HTTP JSON polling source ───────────────────────────────────────────────
 
-// Polls an HTTP endpoint via raw POSIX TCP socket and returns the response
-// body.
+/// @brief Polls an HTTP endpoint via a raw POSIX TCP socket and returns the
+/// response body as a string.
 class HttpJsonSource : public LiveSource<std::string> {
  public:
   HttpJsonSource(std::string host,
@@ -141,6 +144,7 @@ class HttpJsonSource : public LiveSource<std::string> {
 
 // ── Prometheus metrics source ──────────────────────────────────────────────
 
+/// @brief A single Prometheus metric with all its labeled samples.
 struct PrometheusMetric {
   std::string name;
   std::string help;
@@ -148,7 +152,7 @@ struct PrometheusMetric {
   std::vector<std::pair<std::string, double>> samples;  // {label, value}
 };
 
-// Scrapes a Prometheus /metrics endpoint and parses the text format.
+/// @brief Scrapes a Prometheus /metrics endpoint and parses the text format.
 class PrometheusSource : public LiveSource<std::vector<PrometheusMetric>> {
  public:
   explicit PrometheusSource(std::string host = "localhost",
@@ -171,7 +175,7 @@ class PrometheusSource : public LiveSource<std::vector<PrometheusMetric>> {
 
 // ── File tail source ───────────────────────────────────────────────────────
 
-// Watches a file for new lines (like `tail -f`).
+/// @brief Watches a file for new lines (like `tail -f`).
 class FileTailSource : public LiveSource<std::string> {
  public:
   explicit FileTailSource(std::string filepath, int max_lines = 1000);
@@ -190,7 +194,7 @@ class FileTailSource : public LiveSource<std::string> {
 
 // ── Stdin/pipe source ──────────────────────────────────────────────────────
 
-// Non-blocking stdin reader using select().
+/// @brief Non-blocking stdin reader using select().
 class StdinSource : public LiveSource<std::string> {
  public:
   StdinSource();
@@ -204,7 +208,8 @@ class StdinSource : public LiveSource<std::string> {
 
 // ── Reactive binding ───────────────────────────────────────────────────────
 
-// Connect LiveSource<T> → Reactive<T>. Starts source automatically.
+/// @brief Connect a LiveSource<T> to a Reactive<T>. Starts the source
+/// automatically if not already running.
 template <typename T>
 std::shared_ptr<Reactive<T>> BindLiveSource(
     std::shared_ptr<LiveSource<T>> source) {
@@ -218,19 +223,19 @@ std::shared_ptr<Reactive<T>> BindLiveSource(
 
 // ── Widget factories ───────────────────────────────────────────────────────
 
-// LogPanel auto-connected to a FileTailSource.
+/// @brief LogPanel auto-connected to a FileTailSource.
 Component LiveLogPanel(std::shared_ptr<FileTailSource> source,
                        int max_lines = 100);
 
-// Metrics table auto-connected to a PrometheusSource.
+/// @brief Metrics table auto-connected to a PrometheusSource.
 Component LiveMetricsTable(std::shared_ptr<PrometheusSource> source);
 
-// Line chart (sparkline ring buffer) auto-connected to LiveSource<double>.
+/// @brief Line chart (sparkline ring buffer) auto-connected to LiveSource<double>.
 Component LiveLineChart(std::shared_ptr<LiveSource<double>> source,
                         const std::string& title = "",
                         int history = 60);
 
-// JSON text viewer auto-connected to HttpJsonSource.
+/// @brief JSON text viewer auto-connected to HttpJsonSource.
 Component LiveJsonViewer(std::shared_ptr<HttpJsonSource> source);
 
 }  // namespace ftxui::ui

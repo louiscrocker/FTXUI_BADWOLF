@@ -15,8 +15,11 @@
 namespace ftxui::ui {
 
 // ── TextStyle ─────────────────────────────────────────────────────────────────
-// Fluent builder for all terminal text attributes.
 
+/// @brief Fluent builder for all nine ANSI terminal text attributes plus
+/// TrueColor/256-color foreground and background colors.
+///
+/// Chain calls to compose a style, then apply it via `Apply()` or `operator()`.
 class TextStyle {
  public:
   TextStyle() = default;
@@ -90,21 +93,20 @@ class TextStyle {
 };
 
 // ── Span ──────────────────────────────────────────────────────────────────────
-// A styled text span: text + style.
+
+/// @brief A styled text run: a UTF-8 string paired with a TextStyle.
 struct Span {
   std::string text;
   TextStyle style;
 };
 
 // ── RichText ──────────────────────────────────────────────────────────────────
-// Parse and render inline markup: [bold]text[/bold], [red]text[/red], etc.
-// Supported tags: bold, dim, italic, underline, blink, reverse, strikethrough
-//                 black, red, green, yellow, blue, magenta, cyan, white
-//                 bright_black, bright_red, bright_green, etc.
-//                 bg_red, bg_green, etc.
-//                 rgb(r,g,b), bg_rgb(r,g,b)
-//                 [/] closes all open tags
 
+/// @brief Parses and renders inline markup into styled FTXUI Elements.
+///
+/// Supported tags: `bold`, `dim`, `italic`, `underline`, `blink`, `reverse`,
+/// `strikethrough`, named colors (`red`, `bg_green`, …), `rgb(r,g,b)`,
+/// `bg_rgb(r,g,b)`, and `[/]` to close all open tags.
 class RichText {
  public:
   // Parse markup string → vector of Spans
@@ -121,8 +123,8 @@ class RichText {
 };
 
 // ── AnsiParser ────────────────────────────────────────────────────────────────
-// Convert ANSI escape sequences to styled Elements.
 
+/// @brief Converts ANSI escape sequences to styled FTXUI Elements or Spans.
 class AnsiParser {
  public:
   // Parse ANSI-escaped string → vector of Spans
@@ -136,31 +138,36 @@ class AnsiParser {
 };
 
 // ── ColorSwatch ───────────────────────────────────────────────────────────────
-// Display utilities for colors.
 
-// A visual 2-char wide color swatch element
+/// @brief A visual 2-char wide color swatch element.
 ftxui::Element ColorSwatch(ftxui::Color c);
 
-// Full 256-color palette grid element (16×16)
+/// @brief Full 256-color palette grid element (16×16).
 ftxui::Element ColorPalette256();
 
-// All 16 named colors as a row
+/// @brief All 16 named colors as a horizontal row.
 ftxui::Element ColorPalette16();
 
-// TrueColor gradient (horizontal, start→end color)
+/// @brief TrueColor gradient element (horizontal, start→end color).
 ftxui::Element ColorGradient(ftxui::Color from, ftxui::Color to,
                               int width = 40);
 
 // ── Convenience free functions ────────────────────────────────────────────────
+/// @brief Apply a TextStyle to a plain text string.
 ftxui::Element StyledText(const std::string& text, TextStyle style);
+/// @brief Bold text, optionally colored.
 ftxui::Element BoldText(const std::string& text,
                         ftxui::Color fg = ftxui::Color::Default);
+/// @brief Dim (faint) text, optionally colored.
 ftxui::Element DimText(const std::string& text,
                        ftxui::Color fg = ftxui::Color::Default);
+/// @brief Blinking text, optionally colored.
 ftxui::Element BlinkText(const std::string& text,
                          ftxui::Color fg = ftxui::Color::Default);
+/// @brief Colored text with foreground and optional background.
 ftxui::Element ColorText(const std::string& text, ftxui::Color fg,
                          ftxui::Color bg = ftxui::Color::Default);
+/// @brief TrueColor text with 24-bit RGB foreground.
 ftxui::Element RgbText(const std::string& text, uint8_t r, uint8_t g,
                        uint8_t b);
 

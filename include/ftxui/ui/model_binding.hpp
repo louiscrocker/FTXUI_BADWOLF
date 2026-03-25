@@ -8,25 +8,27 @@
 // model_binding.hpp  — struct-to-form binding helpers
 // ---------------------------------------------------------------------------
 //
-// This header re-exports MakeLens (defined in bind.hpp) and documents the
-// BindField / BindPassword / BindCheckbox methods added to Form in form.hpp.
-//
-// Include order:
-//   #include "ftxui/ui/model_binding.hpp"   // pulls in bind.hpp + form.hpp
-//
-// Example:
-//   struct LoginForm { std::string username, password; bool remember = false;
-//   };
-//
-//   auto model = MakeBind<LoginForm>();
-//   auto form  = Form()
-//       .Title("Login")
-//       .BindField("Username", model, &LoginForm::username)
-//       .BindField("Password", model, &LoginForm::password)
-//       .BindCheckbox("Remember me", model, &LoginForm::remember)
-//       .OnSubmit([&]{ auto d = model.Get(); /* use d.username ... */ })
-//       .Build();
-// ---------------------------------------------------------------------------
+/// @brief Convenience header that combines bind.hpp and form.hpp for
+/// struct-to-form data binding.
+///
+/// Re-exports `MakeLens` (defined in bind.hpp) and enables the
+/// `BindField` / `BindPassword` / `BindCheckbox` methods added to Form in
+/// form.hpp.
+///
+/// Example:
+/// @code
+///   struct LoginForm { std::string username, password; bool remember = false;
+///   };
+///
+///   auto model = MakeBind<LoginForm>();
+///   auto form  = Form()
+///       .Title("Login")
+///       .BindField("Username", model, &LoginForm::username)
+///       .BindField("Password", model, &LoginForm::password)
+///       .BindCheckbox("Remember me", model, &LoginForm::remember)
+///       .OnSubmit([&]{ auto d = model.Get(); /* use d.username ... */ })
+///       .Build();
+/// @endcode
 
 #include "ftxui/ui/bind.hpp"
 

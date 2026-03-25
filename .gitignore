@@ -54,6 +54,7 @@ out/
 !docs/**/*.css
 !docs/**/*.js
 !docs/**/*.yml
+!docs/**/*.md
 !docs/.nojekyll
 !doc/**/*.xml
 !doc/**/*.md

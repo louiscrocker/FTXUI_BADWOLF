@@ -11,21 +11,27 @@
 
 namespace ftxui::ui {
 
+/// @brief Notification severity level for toast messages.
+/// @ingroup ui
 enum class Severity { Info, Success, Warning, Error, Debug };
 
-// Post a notification. Thread-safe. The notification auto-dismisses after
-// `duration`. Pass duration = 0 for a persistent notification.
+/// @brief Post a toast notification. Thread-safe.
+///
+/// The notification auto-dismisses after @p duration.
+/// Pass `duration = 0` for a persistent notification.
 void Notify(
     std::string_view message,
     Severity severity = Severity::Info,
     std::chrono::milliseconds duration = std::chrono::milliseconds(3000));
 
-// Clear all active notifications.
+/// @brief Clear all active notifications immediately.
 void ClearNotifications();
 
-// Add a notification overlay to a component. The overlay renders notifications
-// as a stack in the top-right corner of the terminal.
+/// @brief Wrap a component with a toast notification overlay.
+///
+/// The overlay renders notifications as a stack in the top-right corner.
 ftxui::ComponentDecorator WithNotifications();
+/// @brief Wrap @p parent with a toast notification overlay.
 ftxui::Component WithNotifications(ftxui::Component parent);
 
 }  // namespace ftxui::ui
