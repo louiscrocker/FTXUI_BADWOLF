@@ -1,0 +1,61 @@
+{
+  "version": "1.0.0",
+  "components": [
+    {
+      "name": "sparkline-widget",
+      "version": "1.0.0",
+      "description": "Compact sparkline charts",
+      "author": "badwolf-team",
+      "tags": ["chart", "visualization"]
+    },
+    {
+      "name": "file-tree",
+      "version": "1.0.0",
+      "description": "Interactive filesystem tree browser",
+      "author": "badwolf-team",
+      "tags": ["filesystem", "navigation"]
+    },
+    {
+      "name": "hex-viewer",
+      "version": "1.0.0",
+      "description": "Hex dump viewer with ASCII panel",
+      "author": "badwolf-team",
+      "tags": ["debug", "binary"]
+    },
+    {
+      "name": "diff-viewer",
+      "version": "1.0.0",
+      "description": "Side-by-side diff with syntax highlighting",
+      "author": "badwolf-team",
+      "tags": ["diff", "git"]
+    },
+    {
+      "name": "json-tree",
+      "version": "1.0.0",
+      "description": "Interactive JSON tree explorer",
+      "author": "badwolf-team",
+      "tags": ["json", "debug"]
+    },
+    {
+      "name": "calendar-widget",
+      "version": "1.0.0",
+      "description": "Calendar date picker widget",
+      "author": "badwolf-team",
+      "tags": ["date", "input"]
+    },
+    {
+      "name": "color-picker",
+      "version": "1.0.0",
+      "description": "HSV color picker with preview",
+      "author": "badwolf-team",
+      "tags": ["color", "input"]
+    },
+    {
+      "name": "terminal-emulator",
+      "version": "0.9.0",
+      "description": "Embedded terminal emulator component",
+      "author": "badwolf-team",
+      "tags": ["terminal", "advanced"]
+    }
+  ]
+}

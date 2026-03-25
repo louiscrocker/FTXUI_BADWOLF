@@ -1,0 +1,440 @@
+#!/usr/bin/env bash
+# BadWolf Component Registry CLI
+# https://github.com/louiscrocker/FTXUI_BADWOLF
+#
+# Usage: badwolf <command> [args]
+#   new <name>       Create a new BadWolf project
+#   install <pkg>    Install a community component
+#   list             List available components
+#   search <query>   Search the registry
+#   publish          Publish your component
+#   update           Update installed components
+#   info <pkg>       Show component details
+
+BADWOLF_VERSION="1.0.0"
+REGISTRY_BASE="https://raw.githubusercontent.com/louiscrocker/FTXUI_BADWOLF/main/registry"
+REGISTRY_INDEX_URL="${REGISTRY_BASE}/index.json"
+COMPONENTS_DIR="components"
+
+# ── Colours ───────────────────────────────────────────────────────────────────
+if [ -t 1 ]; then
+  C_RESET='\033[0m'
+  C_BOLD='\033[1m'
+  C_CYAN='\033[36m'
+  C_GREEN='\033[32m'
+  C_YELLOW='\033[33m'
+  C_RED='\033[31m'
+  C_DIM='\033[2m'
+else
+  C_RESET='' C_BOLD='' C_CYAN='' C_GREEN='' C_YELLOW='' C_RED='' C_DIM=''
+fi
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+die()  { echo -e "${C_RED}error:${C_RESET} $*" >&2; exit 1; }
+info() { echo -e "${C_CYAN}::${C_RESET} $*"; }
+ok()   { echo -e "${C_GREEN}✓${C_RESET} $*"; }
+warn() { echo -e "${C_YELLOW}warn:${C_RESET} $*"; }
+
+# Embedded fallback registry index (used when network is unavailable).
+# Keep in sync with registry/index.json.
+EMBEDDED_INDEX='{
+  "version": "1.0.0",
+  "components": [
+    {"name":"sparkline-widget","version":"1.0.0","description":"Compact sparkline charts","author":"badwolf-team","tags":["chart","visualization"]},
+    {"name":"file-tree","version":"1.0.0","description":"Interactive filesystem tree browser","author":"badwolf-team","tags":["filesystem","navigation"]},
+    {"name":"hex-viewer","version":"1.0.0","description":"Hex dump viewer with ASCII panel","author":"badwolf-team","tags":["debug","binary"]},
+    {"name":"diff-viewer","version":"1.0.0","description":"Side-by-side diff with syntax highlighting","author":"badwolf-team","tags":["diff","git"]},
+    {"name":"json-tree","version":"1.0.0","description":"Interactive JSON tree explorer","author":"badwolf-team","tags":["json","debug"]},
+    {"name":"calendar-widget","version":"1.0.0","description":"Calendar date picker widget","author":"badwolf-team","tags":["date","input"]},
+    {"name":"color-picker","version":"1.0.0","description":"HSV color picker with preview","author":"badwolf-team","tags":["color","input"]},
+    {"name":"terminal-emulator","version":"0.9.0","description":"Embedded terminal emulator component","author":"badwolf-team","tags":["terminal","advanced"]}
+  ]
+}'
+
+# Fetch the registry index; fall back to embedded copy on failure.
+fetch_index() {
+  local raw
+  raw=$(curl -sf --max-time 5 "$REGISTRY_INDEX_URL" 2>/dev/null)
+  if [ $? -eq 0 ] && [ -n "$raw" ]; then
+    echo "$raw"
+  else
+    warn "Could not reach registry — using embedded index."
+    echo "$EMBEDDED_INDEX"
+  fi
+}
+
+# Extract field value from a simple JSON object line.
+# Usage: json_field <json_line> <field>
+json_field() {
+  local line="$1" field="$2"
+  # Extract "field":"value" or "field":value
+  echo "$line" | grep -o "\"${field}\":[[:space:]]*\"[^\"]*\"" \
+    | sed 's/.*":[[:space:]]*"\(.*\)"/\1/' \
+    | head -1
+}
+
+# Print a pretty table row.
+print_row() {
+  printf "  ${C_BOLD}%-28s${C_RESET} ${C_CYAN}%-8s${C_RESET} ${C_DIM}%-14s${C_RESET} %s\n" \
+    "$1" "$2" "$3" "$4"
+}
+
+# ── new ───────────────────────────────────────────────────────────────────────
+
+cmd_new() {
+  local name="$1"
+  [ -z "$name" ] && die "usage: badwolf new <project-name>"
+  local dir="./${name}"
+  [ -e "$dir" ] && die "directory '${dir}' already exists"
+
+  mkdir -p "${dir}/src" "${dir}/components"
+  info "Creating BadWolf project: ${C_BOLD}${name}${C_RESET}"
+
+  # ── CMakeLists.txt ───────────────────────────────────────────────────────
+  cat > "${dir}/CMakeLists.txt" <<CMAKEOF
+cmake_minimum_required(VERSION 3.14)
+project(${name} LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include(FetchContent)
+FetchContent_Declare(ftxui
+  GIT_REPOSITORY https://github.com/louiscrocker/FTXUI_BADWOLF.git
+  GIT_TAG        main
+)
+FetchContent_MakeAvailable(ftxui)
+
+add_executable(${name} src/main.cpp)
+target_link_libraries(${name} PRIVATE ftxui::ui ftxui::component ftxui::dom ftxui::screen)
+target_include_directories(${name} PRIVATE components)
+CMAKEOF
+
+  # ── src/main.cpp ─────────────────────────────────────────────────────────
+  cat > "${dir}/src/main.cpp" <<CPPEOF
+// ${name} — generated by badwolf new
+#include "ftxui/ui.hpp"
+#include "ftxui/component/component.hpp"
+#include "ftxui/dom/elements.hpp"
+
+using namespace ftxui;
+using namespace ftxui::ui;
+
+int main() {
+  SetTheme(Theme::Monokai());
+
+  auto body = Renderer([] {
+    return vbox({
+        separatorEmpty(),
+        text("  Welcome to ${name}  ") | bold | hcenter |
+            color(Color::Cyan),
+        separatorEmpty(),
+        text("  Edit src/main.cpp to get started.") | dim | hcenter,
+        separatorEmpty(),
+        text("  Press Ctrl+C or q to exit.") | dim | hcenter,
+        separatorEmpty(),
+    }) | border;
+  });
+
+  auto app = CatchEvent(body, [](Event e) {
+    if (e == Event::Character('q')) {
+      App::Active()->Exit();
+      return true;
+    }
+    return false;
+  });
+
+  RunFullscreen(app);
+}
+CPPEOF
+
+  # ── README.md ─────────────────────────────────────────────────────────────
+  cat > "${dir}/README.md" <<MDEOF
+# ${name}
+
+A BadWolf / FTXUI terminal UI project.
+
+## Build
+
+\`\`\`bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+./build/${name}
+\`\`\`
+
+## Install components
+
+\`\`\`bash
+badwolf list
+badwolf install sparkline-widget
+badwolf install json-tree
+\`\`\`
+
+Then include them in your source:
+
+\`\`\`cpp
+#include "sparkline-widget/component.hpp"
+\`\`\`
+MDEOF
+
+  ok "Project created at ${dir}"
+  echo ""
+  echo -e "  Next steps:"
+  echo -e "    ${C_CYAN}cd ${name}${C_RESET}"
+  echo -e "    ${C_CYAN}badwolf install sparkline-widget${C_RESET}"
+  echo -e "    ${C_CYAN}cmake -S . -B build && cmake --build build${C_RESET}"
+}
+
+# ── install ───────────────────────────────────────────────────────────────────
+
+cmd_install() {
+  local pkg="$1"
+  [ -z "$pkg" ] && die "usage: badwolf install <component-name>"
+
+  local dest="${COMPONENTS_DIR}/${pkg}"
+  local url="${REGISTRY_BASE}/${pkg}/component.hpp"
+
+  info "Installing ${C_BOLD}${pkg}${C_RESET} …"
+  mkdir -p "$dest"
+
+  if curl -f -s --max-time 15 -o "${dest}/component.hpp" "$url" 2>/dev/null; then
+    ok "Installed ${pkg} → ${dest}/component.hpp"
+    echo -e "  Include with: ${C_DIM}#include \"${pkg}/component.hpp\"${C_RESET}"
+  else
+    # Remove empty dir on failure
+    rmdir "$dest" 2>/dev/null
+    echo -e "${C_RED}✗${C_RESET} Could not download '${pkg}' from the registry."
+    echo -e "  URL tried: ${C_DIM}${url}${C_RESET}"
+    echo -e "  Hint: run ${C_CYAN}badwolf list${C_RESET} to see available components."
+    exit 1
+  fi
+}
+
+# ── list ──────────────────────────────────────────────────────────────────────
+
+cmd_list() {
+  local index
+  index=$(fetch_index)
+
+  echo ""
+  echo -e "  ${C_BOLD}BadWolf Component Registry${C_RESET} v$(echo "$index" | grep -o '"version":"[^"]*"' | head -1 | sed 's/.*:"\(.*\)"/\1/')"
+  echo ""
+  printf "  ${C_BOLD}%-28s %-8s %-14s %s${C_RESET}\n" "NAME" "VERSION" "AUTHOR" "DESCRIPTION"
+  printf "  %s\n" "$(printf '%.0s─' {1..80})"
+
+  # Parse each component line.  The index is newline-separated JSON objects.
+  echo "$index" | grep '"name"' | while IFS= read -r line; do
+    local name version author desc
+    name=$(json_field "$line" "name")
+    version=$(json_field "$line" "version")
+    author=$(json_field "$line" "author")
+    desc=$(json_field "$line" "description")
+    [ -n "$name" ] && print_row "$name" "$version" "$author" "$desc"
+  done
+
+  echo ""
+  echo -e "  Install a component: ${C_CYAN}badwolf install <name>${C_RESET}"
+  echo ""
+}
+
+# ── search ────────────────────────────────────────────────────────────────────
+
+cmd_search() {
+  local query="$1"
+  [ -z "$query" ] && die "usage: badwolf search <query>"
+
+  local index
+  index=$(fetch_index)
+  local query_lower
+  query_lower=$(echo "$query" | tr '[:upper:]' '[:lower:]')
+
+  echo ""
+  echo -e "  ${C_BOLD}Search results for:${C_RESET} ${query}"
+  echo ""
+  printf "  ${C_BOLD}%-28s %-8s %s${C_RESET}\n" "NAME" "VERSION" "DESCRIPTION"
+  printf "  %s\n" "$(printf '%.0s─' {1..70})"
+
+  local found=0
+  echo "$index" | grep '"name"' | while IFS= read -r line; do
+    local line_lower
+    line_lower=$(echo "$line" | tr '[:upper:]' '[:lower:]')
+    if echo "$line_lower" | grep -q "$query_lower"; then
+      local name version desc
+      name=$(json_field "$line" "name")
+      version=$(json_field "$line" "version")
+      desc=$(json_field "$line" "description")
+      printf "  ${C_BOLD}%-28s${C_RESET} ${C_CYAN}%-8s${C_RESET} %s\n" "$name" "$version" "$desc"
+      found=1
+    fi
+  done
+
+  echo ""
+}
+
+# ── info ──────────────────────────────────────────────────────────────────────
+
+cmd_info() {
+  local pkg="$1"
+  [ -z "$pkg" ] && die "usage: badwolf info <component-name>"
+
+  local index
+  index=$(fetch_index)
+
+  local found_line
+  found_line=$(echo "$index" | grep '"name"' | grep "\"${pkg}\"" | head -1)
+
+  if [ -z "$found_line" ]; then
+    die "Component '${pkg}' not found in registry."
+  fi
+
+  local name version author desc tags
+  name=$(json_field "$found_line" "name")
+  version=$(json_field "$found_line" "version")
+  author=$(json_field "$found_line" "author")
+  desc=$(json_field "$found_line" "description")
+  tags=$(echo "$found_line" | grep -o '"tags":\[[^]]*\]' | sed 's/"tags":\[//;s/\]//;s/"//g;s/,/, /g')
+
+  echo ""
+  echo -e "  ${C_BOLD}${name}${C_RESET} v${version}"
+  echo -e "  ${C_DIM}────────────────────────────────────${C_RESET}"
+  echo -e "  Description : ${desc}"
+  echo -e "  Author      : ${author}"
+  echo -e "  Tags        : ${tags}"
+  echo -e "  Install     : ${C_CYAN}badwolf install ${name}${C_RESET}"
+  echo -e "  Source      : ${C_DIM}${REGISTRY_BASE}/${name}/component.hpp${C_RESET}"
+
+  local installed_path="${COMPONENTS_DIR}/${name}/component.hpp"
+  if [ -f "$installed_path" ]; then
+    echo -e "  Status      : ${C_GREEN}installed${C_RESET} (${installed_path})"
+  else
+    echo -e "  Status      : not installed"
+  fi
+  echo ""
+}
+
+# ── update ────────────────────────────────────────────────────────────────────
+
+cmd_update() {
+  if [ ! -d "$COMPONENTS_DIR" ]; then
+    warn "No components/ directory found — nothing to update."
+    exit 0
+  fi
+
+  local updated=0 failed=0
+  for pkg_dir in "${COMPONENTS_DIR}"/*/; do
+    local pkg
+    pkg=$(basename "$pkg_dir")
+    [ -z "$pkg" ] && continue
+
+    info "Updating ${pkg} …"
+    local url="${REGISTRY_BASE}/${pkg}/component.hpp"
+    if curl -f -s --max-time 15 -o "${pkg_dir}/component.hpp" "$url" 2>/dev/null; then
+      ok "${pkg} updated"
+      updated=$((updated + 1))
+    else
+      warn "Could not update ${pkg} (skipping)"
+      failed=$((failed + 1))
+    fi
+  done
+
+  echo ""
+  echo -e "  Updated: ${C_GREEN}${updated}${C_RESET}  Failed: ${C_YELLOW}${failed}${C_RESET}"
+  echo ""
+}
+
+# ── publish ───────────────────────────────────────────────────────────────────
+
+cmd_publish() {
+  echo ""
+  echo -e "  ${C_BOLD}Publishing a BadWolf Component${C_RESET}"
+  echo -e "  ${C_DIM}────────────────────────────────────────────────────${C_RESET}"
+  echo ""
+
+  # Validate component structure in the current directory.
+  local errors=0
+
+  if [ ! -f "component.hpp" ]; then
+    echo -e "  ${C_RED}✗${C_RESET} Missing ${C_BOLD}component.hpp${C_RESET} in current directory"
+    errors=$((errors + 1))
+  else
+    ok "component.hpp found"
+  fi
+
+  if ! grep -q "namespace badwolf" "component.hpp" 2>/dev/null; then
+    echo -e "  ${C_YELLOW}!${C_RESET} component.hpp should use ${C_DIM}namespace badwolf { ... }${C_RESET}"
+  else
+    ok "namespace badwolf found"
+  fi
+
+  if ! grep -q "BadWolf Component:" "component.hpp" 2>/dev/null; then
+    echo -e "  ${C_YELLOW}!${C_RESET} Add a header comment: ${C_DIM}// BadWolf Component: <name> v<version>${C_RESET}"
+  else
+    ok "Component header comment found"
+  fi
+
+  echo ""
+  if [ "$errors" -gt 0 ]; then
+    echo -e "  ${C_RED}Fix the errors above before publishing.${C_RESET}"
+    echo ""
+    exit 1
+  fi
+
+  echo -e "  ${C_GREEN}Your component looks good!${C_RESET} To publish:"
+  echo ""
+  echo -e "  1. Fork ${C_CYAN}https://github.com/louiscrocker/FTXUI_BADWOLF${C_RESET}"
+  echo -e "  2. Add your component under ${C_DIM}registry/<your-component-name>/${C_RESET}"
+  echo -e "  3. Add an entry to ${C_DIM}registry/index.json${C_RESET}"
+  echo -e "  4. Open a Pull Request — we review within 48 h."
+  echo ""
+  echo -e "  Template structure:"
+  echo -e "    ${C_DIM}registry/"
+  echo -e "    └── my-widget/"
+  echo -e "        └── component.hpp   ← self-contained header${C_RESET}"
+  echo ""
+}
+
+# ── version / help ────────────────────────────────────────────────────────────
+
+usage() {
+  cat <<EOF
+
+${C_BOLD}badwolf${C_RESET} ${BADWOLF_VERSION} — BadWolf Component Registry CLI
+
+${C_BOLD}Commands:${C_RESET}
+  new <name>       Create a new BadWolf/FTXUI project
+  install <pkg>    Download and install a community component
+  list             List all available registry components
+  search <query>   Search the registry by name, description, or tag
+  info <pkg>       Show detailed metadata for a component
+  update           Re-download all installed components
+  publish          Validate component and show submission instructions
+  version          Print version and exit
+  help             Show this help
+
+${C_BOLD}Examples:${C_RESET}
+  badwolf new my-dashboard
+  badwolf list
+  badwolf search chart
+  badwolf install sparkline-widget
+  badwolf info json-tree
+  badwolf update
+EOF
+}
+
+# ── Entry point ───────────────────────────────────────────────────────────────
+
+cmd="${1:-help}"
+shift 2>/dev/null || true
+
+case "$cmd" in
+  new)     cmd_new "$@" ;;
+  install) cmd_install "$@" ;;
+  list)    cmd_list ;;
+  search)  cmd_search "$@" ;;
+  info)    cmd_info "$@" ;;
+  update)  cmd_update ;;
+  publish) cmd_publish ;;
+  version) echo "badwolf ${BADWOLF_VERSION}" ;;
+  help|--help|-h) usage ;;
+  *) echo -e "${C_RED}Unknown command:${C_RESET} ${cmd}"; usage; exit 1 ;;
+esac

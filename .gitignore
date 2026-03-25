@@ -90,6 +90,12 @@ out/
 !tools/**/*.py
 !tools/**/*.cpp
 !tools/ftxui
+!tools/badwolf
+
+# registry directory:
+!registry/**/*.json
+!registry/**/*.hpp
+!registry/**/*.md
 
 # packaging directory:
 !packaging/**/*.cmake
