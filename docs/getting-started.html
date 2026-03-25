@@ -29,10 +29,20 @@
       <a href="getting-started.html" class="nav-link">Getting Started</a>
       <a href="api.html" class="nav-link">API</a>
       <a href="examples.html" class="nav-link">Examples</a>
+      <a href="colors.html" class="nav-link">Colors</a>
+      <a href="typewriter.html" class="nav-link">Typewriter</a>
+      <a href="json.html" class="nav-link">JSON</a>
+      <a href="live-data.html" class="nav-link">Live Data</a>
+      <a href="collab.html" class="nav-link">Collab</a>
+      <a href="registry.html" class="nav-link">Registry</a>
+      <a href="llm-bridge.html" class="nav-link">LLM</a>
+      <a href="playground.html" class="nav-link">Playground</a>
+      <a href="webgl.html" class="nav-link">WebGL</a>
       <a href="deep-dive.html" class="nav-link">Deep Dive</a>
       <a href="executive.html" class="nav-link">Executive Brief</a>
-      <a href="collab.html" class="nav-link">Collab</a>
-      <a href="typewriter.html" class="nav-link">Typewriter</a>
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
+        ⭐ GitHub
+      </a>
     </div>
     <div class="nav-actions">
       <span class="star-badge">⭐ Star</span>
@@ -115,6 +125,27 @@
   <span class="type">GIT_SHALLOW</span>    <span class="kw">TRUE</span>
 )
 <span class="fn">FetchContent_MakeAvailable</span>(ftxui)</pre></div>
+      </div>
+
+      <!-- Single-Header Quick Start (alternative to cmake) -->
+      <div class="glass-card animate-on-scroll" style="margin-bottom:1.5rem;">
+        <h3>🎯 Single-Header (Zero Build System)</h3>
+        <p>Drop <code>dist/ftxui.hpp</code> into your project. No cmake, no linking.</p>
+        <div class="code-block"><pre><span class="cmt">// myapp.cpp</span>
+<span class="pp">#define BADWOLF_IMPLEMENTATION</span>
+<span class="pp">#include "ftxui.hpp"</span>
+
+<span class="type">int</span> <span class="fn">main</span>() {
+  <span class="kw">auto</span> screen = <span class="ns">ftxui</span>::<span class="fn">ScreenInteractive::TerminalOutput</span>();
+  <span class="kw">auto</span> console = <span class="ns">ftxui::ui</span>::<span class="fn">Console::Create</span>();
+  console-&gt;<span class="fn">Info</span>(<span class="str">"Hello, BadWolf!"</span>);
+  screen.<span class="fn">Loop</span>(console-&gt;<span class="fn">Build</span>());
+}</pre></div>
+        <div class="code-block" style="margin-top:0.75rem;"><pre>g++ -std=c++20 -pthread -o myapp myapp.cpp</pre></div>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.75rem;">
+          Uses the <strong>STB-style</strong> <code>BADWOLF_IMPLEMENTATION</code> guard — declare it in exactly one <code>.cpp</code> file.
+          All other files can <code>#include "ftxui.hpp"</code> without the define for declarations only.
+        </p>
       </div>
 
       <!-- Step 2 -->

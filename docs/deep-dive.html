@@ -29,10 +29,20 @@
       <a href="getting-started.html" class="nav-link">Getting Started</a>
       <a href="api.html" class="nav-link">API</a>
       <a href="examples.html" class="nav-link">Examples</a>
+      <a href="colors.html" class="nav-link">Colors</a>
+      <a href="typewriter.html" class="nav-link">Typewriter</a>
+      <a href="json.html" class="nav-link">JSON</a>
+      <a href="live-data.html" class="nav-link">Live Data</a>
+      <a href="collab.html" class="nav-link">Collab</a>
+      <a href="registry.html" class="nav-link">Registry</a>
+      <a href="llm-bridge.html" class="nav-link">LLM</a>
+      <a href="playground.html" class="nav-link">Playground</a>
+      <a href="webgl.html" class="nav-link">WebGL</a>
       <a href="deep-dive.html" class="nav-link">Deep Dive</a>
       <a href="executive.html" class="nav-link">Executive Brief</a>
-      <a href="collab.html" class="nav-link">Collab</a>
-      <a href="typewriter.html" class="nav-link">Typewriter</a>
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
+        ⭐ GitHub
+      </a>
     </div>
     <div class="nav-actions">
       <span class="star-badge">⭐ Star</span>
@@ -68,8 +78,22 @@
     <div class="animate-on-scroll" style="margin-bottom:2rem;">
       <div class="arch-block">
         <div class="arch-layer arch-layer-ui">
-          <div class="arch-layer-title">ftxui::ui &nbsp;&nbsp; (high-level API — our additions)</div>
-          <div class="arch-layer-items">Form │ Charts │ GeoMap │ Globe │ Reactive │ Router │ Wizard │ DataTable │ VirtualList</div>
+          <div class="arch-layer-title">ftxui::ui &nbsp;&nbsp; (BadWolf Layer — high-level API)</div>
+          <div class="arch-layer-items">
+            <span style="color:var(--teal-light);">Text &amp; Richness:</span> TypewriterText │ RichText │ AnsiParser &nbsp;│&nbsp;
+            <span style="color:var(--purple-light);">Data:</span> JsonValue │ ReactiveJson │ JsonPath &nbsp;│&nbsp;
+            <span style="color:var(--amber);">AI:</span> NLParser │ UIGenerator │ LLMAdapter
+          </div>
+          <div class="arch-layer-items" style="margin-top:0.4rem;">
+            <span style="color:var(--blue-light);">Reactive:</span> Reactive&lt;T&gt; │ Bind&lt;T&gt; │ ReactiveList&lt;T&gt; &nbsp;│&nbsp;
+            <span style="color:var(--teal-light);">Visualization:</span> BrailleCanvas │ LineChart │ GeoMap │ GlobeMap │ GalaxyMap &nbsp;│&nbsp;
+            <span style="color:var(--red);">Net:</span> CollabServer │ LiveSource&lt;T&gt;
+          </div>
+          <div class="arch-layer-items" style="margin-top:0.4rem;">
+            <span style="color:var(--purple-light);">Themes:</span> LCARS │ Imperial │ Enterprise │ Rebel │ Matrix │ Dracula &nbsp;│&nbsp;
+            <span style="color:var(--amber);">Animation:</span> AnimationLoop │ Tween │ ParticleSystem &nbsp;│&nbsp;
+            <span style="color:var(--blue-light);">WASM:</span> WebGLRenderer │ WasmBridge
+          </div>
         </div>
         <div style="text-align:center;font-size:1.2rem;color:var(--text-muted);margin:0.1rem 0;">▼</div>
         <div class="arch-layer arch-layer-component">
@@ -91,6 +115,68 @@
 
     <div class="info-box animate-on-scroll">
       <strong>Design principle:</strong> Each layer is independently usable. You can use just <code>ftxui::dom</code> to render static layouts, or just <code>ftxui::screen</code> for raw terminal access. The <code>ftxui::ui</code> layer adds the high-level builder API on top.
+    </div>
+
+    <!-- Distribution Options -->
+    <div class="glass-card animate-on-scroll" style="margin-top:2rem;">
+      <h3 style="color:var(--purple-light);margin-bottom:1rem;">Distribution Options</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+        <thead>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+            <th style="text-align:left;padding:0.5rem 1rem 0.5rem 0;color:var(--text-secondary);">Method</th>
+            <th style="text-align:left;padding:0.5rem 1rem;color:var(--text-secondary);">Command</th>
+            <th style="text-align:left;padding:0.5rem 0 0.5rem 1rem;color:var(--text-secondary);">Best For</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:0.5rem 1rem 0.5rem 0;"><strong>CMake FetchContent</strong></td>
+            <td style="padding:0.5rem 1rem;font-family:monospace;color:var(--teal-light);">See getting-started</td>
+            <td style="padding:0.5rem 0 0.5rem 1rem;">Most projects</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:0.5rem 1rem 0.5rem 0;"><strong>vcpkg</strong></td>
+            <td style="padding:0.5rem 1rem;font-family:monospace;color:var(--teal-light);">vcpkg install ftxui-badwolf</td>
+            <td style="padding:0.5rem 0 0.5rem 1rem;">Enterprise / Windows</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:0.5rem 1rem 0.5rem 0;"><strong>Conan</strong></td>
+            <td style="padding:0.5rem 1rem;font-family:monospace;color:var(--teal-light);">conan install ftxui-badwolf/1.0.0</td>
+            <td style="padding:0.5rem 0 0.5rem 1rem;">Conan users</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:0.5rem 1rem 0.5rem 0;"><strong>Single-header</strong></td>
+            <td style="padding:0.5rem 1rem;font-family:monospace;color:var(--teal-light);">#define BADWOLF_IMPLEMENTATION</td>
+            <td style="padding:0.5rem 0 0.5rem 1rem;">Scripts / embedding</td>
+          </tr>
+          <tr>
+            <td style="padding:0.5rem 1rem 0.5rem 0;"><strong>Homebrew</strong></td>
+            <td style="padding:0.5rem 1rem;font-family:monospace;color:var(--teal-light);">brew install ftxui-badwolf</td>
+            <td style="padding:0.5rem 0 0.5rem 1rem;">macOS quick install</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Single-Header Section -->
+    <div class="glass-card animate-on-scroll" style="margin-top:1.5rem;">
+      <h3 style="color:var(--blue-light);margin-bottom:1rem;">Single-Header (<code>BADWOLF_IMPLEMENTATION</code>)</h3>
+      <p style="color:var(--text-secondary);margin-bottom:1rem;">
+        Drop <code>dist/ftxui.hpp</code> into your project. No cmake, no linking, no build system — just one file and one define.
+      </p>
+      <div class="code-block"><pre><span class="cmt">// In exactly ONE .cpp file:</span>
+<span class="pp">#define BADWOLF_IMPLEMENTATION</span>
+<span class="pp">#include "ftxui.hpp"</span>
+
+<span class="cmt">// In all other files that need declarations:</span>
+<span class="pp">#include "ftxui.hpp"</span>
+
+<span class="cmt">// Compile with no extra link step:</span>
+<span class="cmt">// g++ -std=c++20 -pthread -o myapp myapp.cpp</span></pre></div>
+      <p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.75rem;">
+        This is the <strong>STB-style</strong> single-header pattern. The header contains all declarations unconditionally, and all
+        <code>.cpp</code> implementations wrapped in <code>#ifdef BADWOLF_IMPLEMENTATION</code>.
+      </p>
     </div>
   </div>
 </section>

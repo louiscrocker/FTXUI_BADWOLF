@@ -308,28 +308,70 @@ Requires CMake 3.28+, Ninja generator, and a recent Clang/GCC/MSVC compiler.
 
 ---
 
-## Library Architecture
+## Architecture
+
+### Dependency Stack
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                     ftxui::ui                           │
-│  Form  DataTable  Charts  GeoMap  Globe  Router  …      │
-└────────────────────────┬────────────────────────────────┘
-                         │ builds / wraps
-┌────────────────────────▼────────────────────────────────┐
-│                  ftxui::component                       │
-│   Button  Input  Menu  Renderer  CatchEvent  …         │
-└────────────────────────┬────────────────────────────────┘
-                         │ renders to
-┌────────────────────────▼────────────────────────────────┐
-│                    ftxui::dom                           │
-│   text  hbox  vbox  border  flex  color  canvas  …     │
-└────────────────────────┬────────────────────────────────┘
-                         │ outputs to
-┌────────────────────────▼────────────────────────────────┐
-│                   ftxui::screen                         │
-│   Screen  Color  Terminal  Event  App                  │
-└─────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                    Your Application                          │
+└──────────────────────────┬──────────────────────────────────┘
+                           │ #include "ftxui/ui.hpp"
+┌──────────────────────────▼──────────────────────────────────┐
+│                  ftxui::ui  (BadWolf Layer)                   │
+│                                                              │
+│  Text & Richness    │  Data           │  AI & Intelligence   │
+│  ─ TypewriterText   │  ─ JsonValue    │  ─ NLParser          │
+│  ─ RichText         │  ─ Json::Parse  │  ─ UIGenerator       │
+│  ─ AnsiParser       │  ─ JsonPath     │  ─ LLMAdapter        │
+│                     │  ─ ReactiveJson │                      │
+│  Reactive & Binding │  Visualization │  Networking           │
+│  ─ Reactive<T>      │  ─ BrailleCanvas│  ─ CollabServer      │
+│  ─ Bind<T>          │  ─ LineChart    │  ─ NetworkReactive   │
+│  ─ ReactiveList<T>  │  ─ GeoMap       │  ─ LiveSource<T>     │
+│  ─ ReactiveJson     │  ─ GlobeMap     │                      │
+│                     │  ─ GalaxyMap    │  Animation           │
+│  Themes             │               │  ─ AnimationLoop      │
+│  ─ LCARS / Imperial │  WebAssembly  │  ─ Tween              │
+│  ─ Enterprise/Rebel │  ─ WebGLRenderer│ ─ ParticleSystem    │
+│  ─ Matrix/Dracula   │  ─ WasmBridge  │                      │
+└─────────────────────┴───────────────┴──────────────────────┘
+                           │ links against
+┌──────────────────────────▼──────────────────────────────────┐
+│              ftxui::component                                │
+│  Interactive components, event loop, App runner              │
+└──────────────────────────┬──────────────────────────────────┘
+                           │ links against
+┌──────────────────────────▼──────────────────────────────────┐
+│                   ftxui::dom                                 │
+│  Layout engine, Elements, Canvas, Flexbox                    │
+└──────────────────────────┬──────────────────────────────────┘
+                           │ links against
+┌──────────────────────────▼──────────────────────────────────┐
+│                  ftxui::screen                               │
+│  Terminal I/O, Color, ANSI rendering, String utilities       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Distribution Options
+
+| Method | Command | Best For |
+|--------|---------|----------|
+| **CMake FetchContent** | See below | Most projects |
+| **vcpkg** | `vcpkg install ftxui-badwolf` | Enterprise / Windows |
+| **Conan** | `conan install ftxui-badwolf/1.0.0` | Conan users |
+| **Single-header** | `#define BADWOLF_IMPLEMENTATION` + `#include "dist/ftxui.hpp"` | Scripts / embedding |
+| **Homebrew** | `brew install ftxui-badwolf` | macOS quick install |
+
+### Single-Header Usage
+
+```cpp
+// In exactly ONE .cpp file in your project:
+#define BADWOLF_IMPLEMENTATION
+#include "ftxui/badwolf.hpp"
+
+// In all other files (optional):
+#include "ftxui/badwolf.hpp"
 ```
 
 You can use any layer independently, or build from the top down with `ftxui::ui`.
