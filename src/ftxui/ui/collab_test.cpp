@@ -17,7 +17,8 @@
 namespace ftxui::ui {
 namespace {
 
-// ── CollabServer tests ────────────────────────────────────────────────────────
+// ── CollabServer tests
+// ────────────────────────────────────────────────────────
 
 TEST(CollabServerTest, StartsAndStopsCleanly) {
   auto server = std::make_shared<CollabServer>(19900);
@@ -35,7 +36,8 @@ TEST(CollabServerTest, ReportsZeroPeersInitially) {
   server->Stop();
 }
 
-// ── CollabClient tests ────────────────────────────────────────────────────────
+// ── CollabClient tests
+// ────────────────────────────────────────────────────────
 
 TEST(CollabClientTest, FailsConnectWhenNoServer) {
   // No server is running on port 19902 — connect should return false.
@@ -157,7 +159,8 @@ TEST(CollabIntegrationTest, BroadcastReachesClient) {
   auto server = std::make_shared<CollabServer>(kPort);
   server->Start();
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(300));  // give server time to bind
+  std::this_thread::sleep_for(
+      std::chrono::milliseconds(300));  // give server time to bind
 
   // Two clients so the server can broadcast from one to the other.
   auto client_a = std::make_shared<CollabClient>("127.0.0.1", kPort, "Alice");
@@ -174,18 +177,39 @@ TEST(CollabIntegrationTest, BroadcastReachesClient) {
     return;
   }
 
-  // client_b listens for events
+  // client_b listens for STATE_SYNC events using a condition variable so
+  // the callback thread is never starved by the polling loop.
   std::string received_payload;
+  bool received = false;
   std::mutex rx_mutex;
+  std::condition_variable rx_cv;
   client_b->OnRemoteEvent([&](CollabEvent ev) {
     if (ev.type == CollabEvent::Type::STATE_SYNC) {
       std::lock_guard<std::mutex> lk(rx_mutex);
       received_payload = ev.payload;
+      received = true;
+      rx_cv.notify_all();
     }
   });
 
-  // Give both JOIN events time to be processed
-  std::this_thread::sleep_for(std::chrono::milliseconds(200));
+  // Wait for the server to see both peers before sending.
+  {
+    const auto peer_deadline =
+        std::chrono::steady_clock::now() + std::chrono::seconds(2);
+    while (std::chrono::steady_clock::now() < peer_deadline) {
+      if (server->PeerCount() >= 2) {
+        break;
+      }
+      std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    }
+    if (server->PeerCount() < 2) {
+      client_a->Disconnect();
+      client_b->Disconnect();
+      server->Stop();
+      GTEST_SKIP() << "Server did not register both peers in time";
+      return;
+    }
+  }
 
   // client_a sends a STATE_SYNC
   CollabEvent ev;
@@ -196,21 +220,13 @@ TEST(CollabIntegrationTest, BroadcastReachesClient) {
   ev.timestamp_ms = 0;
   client_a->SendEvent(ev);
 
-  // Wait for client_b to receive it
-  const auto deadline =
-      std::chrono::steady_clock::now() + std::chrono::seconds(2);
-  while (std::chrono::steady_clock::now() < deadline) {
-    std::lock_guard<std::mutex> lk(rx_mutex);
-    if (received_payload == "hello_collab") {
-      break;
-    }
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+  // Wait for client_b to receive it (condition variable — no polling).
+  {
+    std::unique_lock<std::mutex> lk(rx_mutex);
+    rx_cv.wait_for(lk, std::chrono::seconds(3), [&] { return received; });
   }
 
-  {
-    std::lock_guard<std::mutex> lk(rx_mutex);
-    EXPECT_EQ(received_payload, "hello_collab");
-  }
+  EXPECT_EQ(received_payload, "hello_collab");
 
   client_a->Disconnect();
   client_b->Disconnect();

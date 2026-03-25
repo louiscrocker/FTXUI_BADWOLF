@@ -23,12 +23,12 @@ namespace ftxui::ui {
 
 /// @brief Represents a connected collaborator in a shared TUI session.
 struct CollabPeer {
-  std::string id;            ///< Unique peer ID (8 hex chars from /dev/urandom)
-  std::string name;          ///< Display name
-  Color cursor_color;        ///< Assigned color for cursor overlay
-  int cursor_x = 0;          ///< Last known cursor column
-  int cursor_y = 0;          ///< Last known cursor row
-  bool is_active = true;     ///< Whether this peer is currently connected
+  std::string id;         ///< Unique peer ID (8 hex chars from /dev/urandom)
+  std::string name;       ///< Display name
+  Color cursor_color;     ///< Assigned color for cursor overlay
+  int cursor_x = 0;       ///< Last known cursor column
+  int cursor_y = 0;       ///< Last known cursor row
+  bool is_active = true;  ///< Whether this peer is currently connected
 };
 
 /// @brief An event exchanged between collaborating peers.
@@ -146,14 +146,15 @@ class CollabClient {
   std::shared_ptr<Impl> impl_;
 };
 
-// ── Higher-level components ───────────────────────────────────────────────────
+// ── Higher-level components
+// ───────────────────────────────────────────────────
 
 /// @brief Wraps any Component to broadcast key events and render peer cursors.
 ///
 /// Every key-press is forwarded to the CollabServer.  Peer cursor positions
 /// are overlaid as colored "▌" glyphs on the rendered output.
 Component WithCollabSession(Component inner,
-                             std::shared_ptr<CollabClient> client);
+                            std::shared_ptr<CollabClient> client);
 
 /// @brief Peer-list sidebar showing all connected peers with colored dots.
 Component CollabPeerList(std::shared_ptr<CollabClient> client);

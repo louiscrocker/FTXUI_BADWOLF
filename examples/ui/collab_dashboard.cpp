@@ -44,12 +44,17 @@ struct Metric {
 
 std::vector<Metric> GenerateMetrics(double t) {
   return {
-      {"CPU",    "%",  40.0 + 30.0 * std::sin(t * 0.7),           100.0, Color::GreenLight},
-      {"Memory", "%",  60.0 + 10.0 * std::sin(t * 0.3 + 1.0),    100.0, Color::CyanLight},
-      {"Disk I/O","MB/s", 120.0 + 80.0 * std::abs(std::sin(t)),   400.0, Color::YellowLight},
-      {"Network","Mb/s", 25.0 + 20.0 * std::sin(t * 1.1 + 0.5),  100.0, Color::BlueLight},
-      {"Requests","/s", 820.0 + 180.0 * std::sin(t * 0.9),       1500.0, Color::MagentaLight},
-      {"Errors",  "/s", 2.0 + 1.5 * std::abs(std::sin(t * 2.0)),   20.0, Color::RedLight},
+      {"CPU", "%", 40.0 + 30.0 * std::sin(t * 0.7), 100.0, Color::GreenLight},
+      {"Memory", "%", 60.0 + 10.0 * std::sin(t * 0.3 + 1.0), 100.0,
+       Color::CyanLight},
+      {"Disk I/O", "MB/s", 120.0 + 80.0 * std::abs(std::sin(t)), 400.0,
+       Color::YellowLight},
+      {"Network", "Mb/s", 25.0 + 20.0 * std::sin(t * 1.1 + 0.5), 100.0,
+       Color::BlueLight},
+      {"Requests", "/s", 820.0 + 180.0 * std::sin(t * 0.9), 1500.0,
+       Color::MagentaLight},
+      {"Errors", "/s", 2.0 + 1.5 * std::abs(std::sin(t * 2.0)), 20.0,
+       Color::RedLight},
   };
 }
 
@@ -60,16 +65,18 @@ std::string FormatValue(double v, const std::string& unit) {
   return oss.str();
 }
 
-// ── Dashboard renderer ────────────────────────────────────────────────────────
+// ── Dashboard renderer
+// ────────────────────────────────────────────────────────
 
 Element RenderDashboard(const std::vector<Metric>& metrics,
-                         int selected,
-                         int viewer_count,
-                         const std::string& highlight_name) {
+                        int selected,
+                        int viewer_count,
+                        const std::string& highlight_name) {
   Elements rows;
   rows.push_back(
       hbox({
-          text(" ★  SHARED OPS DASHBOARD  ★") | bold | color(Color::CyanLight) | flex,
+          text(" ★  SHARED OPS DASHBOARD  ★") | bold | color(Color::CyanLight) |
+              flex,
           text(" Viewers: ") | color(Color::GrayLight),
           text(std::to_string(viewer_count)) | bold | color(Color::GreenLight),
           text("  "),
@@ -81,15 +88,16 @@ Element RenderDashboard(const std::vector<Metric>& metrics,
     bool is_selected = (i == selected);
     bool is_highlighted = (m.name == highlight_name);
     double pct = m.value / m.max_value;
-    if (pct > 1.0) pct = 1.0;
+    if (pct > 1.0) {
+      pct = 1.0;
+    }
 
     auto bar = hbox({
-        text(" " + m.name) | bold |
-            size(WIDTH, EQUAL, 12) |
+        text(" " + m.name) | bold | size(WIDTH, EQUAL, 12) |
             color(is_selected ? Color::White : m.color),
         gauge(static_cast<float>(pct)) | flex | color(m.color),
-        text(" " + FormatValue(m.value, m.unit)) |
-            size(WIDTH, EQUAL, 14) | color(Color::GrayLight),
+        text(" " + FormatValue(m.value, m.unit)) | size(WIDTH, EQUAL, 14) |
+            color(Color::GrayLight),
     });
 
     if (is_selected) {
@@ -102,17 +110,15 @@ Element RenderDashboard(const std::vector<Metric>& metrics,
   }
 
   if (!highlight_name.empty()) {
-    rows.push_back(
-        hbox({
-            text(" Highlighted by peer: "),
-            text(highlight_name) | bold | color(Color::YellowLight),
-        }) |
-        color(Color::GrayDark));
+    rows.push_back(hbox({
+                       text(" Highlighted by peer: "),
+                       text(highlight_name) | bold | color(Color::YellowLight),
+                   }) |
+                   color(Color::GrayDark));
   }
 
-  rows.push_back(
-      text(" ↑/↓ = select | Enter = highlight for all | q = quit") |
-      color(Color::GrayDark) | hcenter);
+  rows.push_back(text(" ↑/↓ = select | Enter = highlight for all | q = quit") |
+                 color(Color::GrayDark) | hcenter);
 
   return vbox(rows);
 }
@@ -151,7 +157,8 @@ Args ParseArgs(int argc, char** argv) {
   return args;
 }
 
-// ── Shared dashboard logic (used by both server and client) ───────────────────
+// ── Shared dashboard logic (used by both server and client)
+// ───────────────────
 
 int RunDashboard(const Args& args) {
   // Server setup
@@ -169,7 +176,9 @@ int RunDashboard(const Args& args) {
 
   if (!client->Connect()) {
     fprintf(stderr, "Cannot connect to %s:%d\n", args.host.c_str(), args.port);
-    if (server) server->Stop();
+    if (server) {
+      server->Stop();
+    }
     return 1;
   }
 
@@ -204,7 +213,9 @@ int RunDashboard(const Args& args) {
         // Simple CSV: name=value,name=value,...
         std::string payload;
         for (auto& m : new_metrics) {
-          if (!payload.empty()) payload += ";";
+          if (!payload.empty()) {
+            payload += ";";
+          }
           payload += m.name + "=" + std::to_string(m.value);
         }
         ev.payload = "METRICS:" + payload;
@@ -229,9 +240,8 @@ int RunDashboard(const Args& args) {
         int idx = 0;
         while (pos < csv.size() && idx < static_cast<int>(metrics->size())) {
           auto semi = csv.find(';', pos);
-          std::string entry =
-              csv.substr(pos, semi == std::string::npos ? csv.size() - pos
-                                                        : semi - pos);
+          std::string entry = csv.substr(
+              pos, semi == std::string::npos ? csv.size() - pos : semi - pos);
           auto eq = entry.find('=');
           if (eq != std::string::npos) {
             try {
@@ -262,8 +272,8 @@ int RunDashboard(const Args& args) {
       snap = *metrics;
       hl = highlight_name;
     }
-    int viewers =
-        server ? server->PeerCount() + 1 : (client->GetRemotePeers().size() + 1);
+    int viewers = server ? server->PeerCount() + 1
+                         : (client->GetRemotePeers().size() + 1);
     return vbox({
         RenderDashboard(snap, sel, static_cast<int>(viewers), hl),
         CollabStatusBar(client) | border,
@@ -334,8 +344,9 @@ int main(int argc, char** argv) {
                      color(Color::CyanLight) | hcenter,
                  separator(),
                  text("  Start server:  ./collab_dashboard --server [PORT]"),
-                 text("  Connect:       ./collab_dashboard --client HOST[:PORT] "
-                      "--name NAME"),
+                 text(
+                     "  Connect:       ./collab_dashboard --client HOST[:PORT] "
+                     "--name NAME"),
                  separator(),
                  text(" q = quit") | color(Color::GrayDark),
              }) |

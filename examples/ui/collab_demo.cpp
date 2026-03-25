@@ -31,7 +31,8 @@ using namespace ftxui::ui;
 
 static constexpr int kDefaultPort = 7777;
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// ── Helpers
+// ───────────────────────────────────────────────────────────────────
 
 struct Args {
   bool is_server = false;
@@ -65,7 +66,8 @@ Args ParseArgs(int argc, char** argv) {
   return args;
 }
 
-// ── Server mode ───────────────────────────────────────────────────────────────
+// ── Server mode
+// ───────────────────────────────────────────────────────────────
 
 int RunServer(const Args& args) {
   int split_right = 24;
@@ -154,12 +156,12 @@ int RunServer(const Args& args) {
   return 0;
 }
 
-// ── Client mode ───────────────────────────────────────────────────────────────
+// ── Client mode
+// ───────────────────────────────────────────────────────────────
 
 int RunClient(const Args& args) {
   int split_right = 20;
-  auto client =
-      std::make_shared<CollabClient>(args.host, args.port, args.name);
+  auto client = std::make_shared<CollabClient>(args.host, args.port, args.name);
 
   if (!client->Connect()) {
     fprintf(stderr, "Failed to connect to %s:%d\n", args.host.c_str(),
@@ -173,9 +175,8 @@ int RunClient(const Args& args) {
 
   auto layout = ResizableSplitRight(
       peer_list,
-      Renderer(session_notepad, [session_notepad]() {
-        return session_notepad->Render();
-      }),
+      Renderer(session_notepad,
+               [session_notepad]() { return session_notepad->Render(); }),
       &split_right);
 
   auto root = Renderer(layout, [&, layout]() -> Element {
@@ -210,7 +211,8 @@ int RunClient(const Args& args) {
   return 0;
 }
 
-// ── Usage screen ──────────────────────────────────────────────────────────────
+// ── Usage screen
+// ──────────────────────────────────────────────────────────────
 
 int ShowUsage() {
   auto root = Renderer([]() -> Element {
@@ -226,8 +228,10 @@ int ShowUsage() {
                text(""),
                text("  Example:") | bold,
                text("    Terminal 1: ./collab_demo --server 7777"),
-               text("    Terminal 2: ./collab_demo --client 127.0.0.1 --name Alice"),
-               text("    Terminal 3: ./collab_demo --client 127.0.0.1:7777 --name Bob"),
+               text("    Terminal 2: ./collab_demo --client 127.0.0.1 --name "
+                    "Alice"),
+               text("    Terminal 3: ./collab_demo --client 127.0.0.1:7777 "
+                    "--name Bob"),
                separator(),
                text(" q = quit") | color(Color::GrayDark),
            }) |

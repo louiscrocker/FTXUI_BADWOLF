@@ -55,10 +55,9 @@ bool SendMessage(int fd, const std::string& payload) {
   }
   ssize_t sent = 0;
   while (sent < static_cast<ssize_t>(len)) {
-    ssize_t n =
-        ::send(fd, payload.data() + sent,
-               static_cast<size_t>(len) - static_cast<size_t>(sent),
-               MSG_NOSIGNAL);
+    ssize_t n = ::send(fd, payload.data() + sent,
+                       static_cast<size_t>(len) - static_cast<size_t>(sent),
+                       MSG_NOSIGNAL);
     if (n <= 0) {
       return false;
     }
@@ -102,7 +101,8 @@ bool RecvMessage(int fd, std::string& out) {
   return true;
 }
 
-// ── Simple JSON helpers ───────────────────────────────────────────────────────
+// ── Simple JSON helpers
+// ───────────────────────────────────────────────────────
 
 int64_t NowMs() {
   using namespace std::chrono;
@@ -259,11 +259,9 @@ CollabEvent::Type StrToType(const std::string& s) {
 }
 
 std::string EventToJson(const CollabEvent& ev) {
-  return "{\"peer_id\":\"" + JsonEscape(ev.peer_id) +
-         "\",\"peer_name\":\"" + JsonEscape(ev.peer_name) +
-         "\",\"type\":\"" + TypeToStr(ev.type) +
-         "\",\"x\":" + std::to_string(ev.x) +
-         ",\"y\":" + std::to_string(ev.y) +
+  return "{\"peer_id\":\"" + JsonEscape(ev.peer_id) + "\",\"peer_name\":\"" +
+         JsonEscape(ev.peer_name) + "\",\"type\":\"" + TypeToStr(ev.type) +
+         "\",\"x\":" + std::to_string(ev.x) + ",\"y\":" + std::to_string(ev.y) +
          ",\"payload\":\"" + JsonEscape(ev.payload) +
          "\",\"ts\":" + std::to_string(ev.timestamp_ms) + "}";
 }
@@ -381,6 +379,9 @@ struct CollabServer::Impl {
       tv.tv_usec = 100000;  // 100 ms
       int sel = ::select(client_fd + 1, &fds, nullptr, nullptr, &tv);
       if (sel < 0) {
+        if (errno == EINTR) {
+          continue;
+        }
         break;
       }
       if (sel == 0) {
@@ -449,9 +450,8 @@ struct CollabServer::Impl {
 
       // Spawn per-client handler thread
       std::lock_guard<std::mutex> lk(threads_mutex_);
-      client_threads_.emplace_back([this, client_fd]() {
-        HandleClient(client_fd);
-      });
+      client_threads_.emplace_back(
+          [this, client_fd]() { HandleClient(client_fd); });
     }
   }
 
@@ -496,7 +496,8 @@ struct CollabServer::Impl {
   }
 };
 
-// ── CollabServer public API ───────────────────────────────────────────────────
+// ── CollabServer public API
+// ───────────────────────────────────────────────────
 
 CollabServer::CollabServer(int port) : impl_(std::make_shared<Impl>()) {
   impl_->port_ = port;
@@ -538,8 +539,7 @@ void CollabServer::Start() {
   }
 
   impl_->running_.store(true);
-  impl_->accept_thread_ =
-      std::thread([impl = impl_]() { impl->AcceptLoop(); });
+  impl_->accept_thread_ = std::thread([impl = impl_]() { impl->AcceptLoop(); });
 }
 
 void CollabServer::Stop() {
@@ -624,6 +624,9 @@ struct CollabClient::Impl {
       tv.tv_usec = 100000;
       int sel = ::select(sock_fd_ + 1, &fds, nullptr, nullptr, &tv);
       if (sel < 0) {
+        if (errno == EINTR) {
+          continue;
+        }
         break;
       }
       if (sel == 0) {
@@ -678,7 +681,8 @@ struct CollabClient::Impl {
   }
 };
 
-// ── CollabClient public API ───────────────────────────────────────────────────
+// ── CollabClient public API
+// ───────────────────────────────────────────────────
 
 CollabClient::CollabClient(std::string host, int port, std::string peer_name)
     : impl_(std::make_shared<Impl>()) {
@@ -745,8 +749,7 @@ bool CollabClient::Connect() {
   }
 
   // Start receive thread
-  impl_->recv_thread_ =
-      std::thread([impl = impl_]() { impl->RecvLoop(); });
+  impl_->recv_thread_ = std::thread([impl = impl_]() { impl->RecvLoop(); });
 
   return true;
 }
@@ -812,13 +815,13 @@ std::string CollabClient::GeneratePeerId() {
 
 // static
 Color CollabClient::AssignColor(int index) {
-  static const Color kColors[6] = {Color::Red,     Color::Green,
-                                   Color::Yellow,   Color::Blue,
-                                   Color::Magenta,  Color::Cyan};
+  static const Color kColors[6] = {Color::Red,  Color::Green,   Color::Yellow,
+                                   Color::Blue, Color::Magenta, Color::Cyan};
   return kColors[((index % 6) + 6) % 6];
 }
 
-// ── Higher-level components ───────────────────────────────────────────────────
+// ── Higher-level components
+// ───────────────────────────────────────────────────
 
 // Helper: draw a peer cursor marker at (x, y) in a dbox overlay.
 namespace {
@@ -830,14 +833,13 @@ Element PeerCursorOverlay(int x, int y, Color c, const std::string& label) {
   }
   rows.push_back(
       hbox({text(std::string(static_cast<size_t>(x > 0 ? x : 0), ' ')),
-            text("▌") | color(c),
-            text(label) | color(c)}));
+            text("▌") | color(c), text(label) | color(c)}));
   return vbox(rows);
 }
 }  // namespace
 
 Component WithCollabSession(Component inner,
-                             std::shared_ptr<CollabClient> client) {
+                            std::shared_ptr<CollabClient> client) {
   struct State {
     std::map<std::string, CollabPeer> cursors;
     std::mutex mutex;
@@ -874,7 +876,7 @@ Component WithCollabSession(Component inner,
     std::lock_guard<std::mutex> lk(state->mutex);
     for (auto& [id, peer] : state->cursors) {
       layers.push_back(PeerCursorOverlay(peer.cursor_x, peer.cursor_y,
-                                          peer.cursor_color, peer.name));
+                                         peer.cursor_color, peer.name));
     }
     if (layers.size() == 1) {
       return layers[0];
@@ -916,13 +918,12 @@ Component CollabPeerList(std::shared_ptr<CollabClient> client) {
               text(local.name + " (you)") | color(Color::GrayLight)}));
 
     for (auto& p : peers) {
-      items.push_back(
-          hbox({text("● ") | color(p.cursor_color),
-                text(p.name) | color(Color::White)}));
+      items.push_back(hbox({text("● ") | color(p.cursor_color),
+                            text(p.name) | color(Color::White)}));
     }
     if (peers.empty()) {
-      items.push_back(
-          text(" (no peers yet)") | color(Color::GrayDark) | italic);
+      items.push_back(text(" (no peers yet)") | color(Color::GrayDark) |
+                      italic);
     }
     items.push_back(separator());
     std::string status = client->IsConnected() ? "CONNECTED" : "DISCONNECTED";
@@ -939,19 +940,17 @@ Component CollabPeerList(std::shared_ptr<CollabServer> server) {
     items.push_back(text(" Server Peers") | bold | color(Color::CyanLight));
     items.push_back(separator());
     for (auto& p : peers) {
-      items.push_back(
-          hbox({text("● ") | color(p.cursor_color),
-                text(p.name) | color(Color::White)}));
+      items.push_back(hbox({text("● ") | color(p.cursor_color),
+                            text(p.name) | color(Color::White)}));
     }
     if (peers.empty()) {
-      items.push_back(
-          text(" (no peers connected)") | color(Color::GrayDark) | italic);
+      items.push_back(text(" (no peers connected)") | color(Color::GrayDark) |
+                      italic);
     }
     items.push_back(separator());
-    items.push_back(
-        hbox({text(" Listening on port "),
-              text(std::to_string(server->IsRunning() ? 1 : 0)) |
-                  color(Color::Yellow)}));
+    items.push_back(hbox({text(" Listening on port "),
+                          text(std::to_string(server->IsRunning() ? 1 : 0)) |
+                              color(Color::Yellow)}));
     return vbox(items) | border;
   });
 }
@@ -1017,33 +1016,27 @@ Element CollabStatusBar(std::shared_ptr<CollabClient> client) {
   Elements items;
   const auto& local = client->LocalPeer();
   items.push_back(
-      text(std::string(" [COLLAB:") + std::to_string(client->IsConnected()
-                                                          ? 1
-                                                          : 0) +
-           "] ") |
+      text(std::string(" [COLLAB:") +
+           std::to_string(client->IsConnected() ? 1 : 0) + "] ") |
       color(client->IsConnected() ? Color::GreenLight : Color::GrayDark));
   items.push_back(hbox({text("● ") | color(Color::White),
                         text(local.name + " (you)") | color(Color::GrayLight),
                         text("  ")}));
   for (auto& p : client->GetRemotePeers()) {
-    items.push_back(
-        hbox({text("● ") | color(p.cursor_color),
-              text(p.name) | color(Color::White),
-              text("  ")}));
+    items.push_back(hbox({text("● ") | color(p.cursor_color),
+                          text(p.name) | color(Color::White), text("  ")}));
   }
   return hbox(items);
 }
 
 Element CollabStatusBar(std::shared_ptr<CollabServer> server) {
   Elements items;
-  items.push_back(text(" [SERVER] ") | bold |
-                  color(server->IsRunning() ? Color::GreenLight
-                                            : Color::GrayDark));
+  items.push_back(
+      text(" [SERVER] ") | bold |
+      color(server->IsRunning() ? Color::GreenLight : Color::GrayDark));
   for (auto& p : server->GetPeers()) {
-    items.push_back(
-        hbox({text("● ") | color(p.cursor_color),
-              text(p.name) | color(Color::White),
-              text("  ")}));
+    items.push_back(hbox({text("● ") | color(p.cursor_color),
+                          text(p.name) | color(Color::White), text("  ")}));
   }
   if (server->GetPeers().empty()) {
     items.push_back(text("(no peers)") | color(Color::GrayDark));

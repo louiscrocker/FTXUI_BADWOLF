@@ -78,6 +78,7 @@
 #include "ftxui/ui/lcars.hpp"
 #include "ftxui/ui/list.hpp"
 #include "ftxui/ui/live_source.hpp"
+#include "ftxui/ui/llm_bridge.hpp"
 #include "ftxui/ui/log_panel.hpp"
 #include "ftxui/ui/markdown.hpp"
 #include "ftxui/ui/model_binding.hpp"
@@ -101,6 +102,5 @@
 #include "ftxui/ui/widgets.hpp"
 #include "ftxui/ui/wizard.hpp"
 #include "ftxui/ui/world_map_data.hpp"
-#include "ftxui/ui/llm_bridge.hpp"
 
 #endif  // FTXUI_UI_HPP
