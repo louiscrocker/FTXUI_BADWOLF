@@ -29,31 +29,36 @@
 
 // Register a handful of demo components so the registry is non-empty even if
 // no external components have been installed.
-BADWOLF_REGISTER_COMPONENT(sparkline_widget, "1.0.0",
-                            "Compact sparkline charts", []() -> ftxui::Component {
-                              return ftxui::Renderer([] {
-                                return ftxui::vbox(
-                                    {ftxui::text("▁▂▃▄▅▆▇█▇▆▅▄▃▂▁") |
-                                     ftxui::color(ftxui::Color::Cyan)});
-                              });
-                            });
+BADWOLF_REGISTER_COMPONENT(sparkline_widget,
+                           "1.0.0",
+                           "Compact sparkline charts",
+                           []() -> ftxui::Component {
+                             return ftxui::Renderer([] {
+                               return ftxui::vbox(
+                                   {ftxui::text("▁▂▃▄▅▆▇█▇▆▅▄▃▂▁") |
+                                    ftxui::color(ftxui::Color::Cyan)});
+                             });
+                           });
 
-BADWOLF_REGISTER_COMPONENT(file_tree, "1.0.0",
-                            "Interactive filesystem tree browser",
-                            []() -> ftxui::Component {
-                              return ftxui::Renderer([] {
-                                return ftxui::vbox({
-                                    ftxui::text("📁 src/") | ftxui::bold,
-                                    ftxui::text("  📄 main.cpp"),
-                                    ftxui::text("  📄 app.cpp"),
-                                    ftxui::text("📁 include/"),
-                                    ftxui::text("  📄 app.hpp"),
-                                });
-                              });
-                            });
+BADWOLF_REGISTER_COMPONENT(file_tree,
+                           "1.0.0",
+                           "Interactive filesystem tree browser",
+                           []() -> ftxui::Component {
+                             return ftxui::Renderer([] {
+                               return ftxui::vbox({
+                                   ftxui::text("📁 src/") | ftxui::bold,
+                                   ftxui::text("  📄 main.cpp"),
+                                   ftxui::text("  📄 app.cpp"),
+                                   ftxui::text("📁 include/"),
+                                   ftxui::text("  📄 app.hpp"),
+                               });
+                             });
+                           });
 
 BADWOLF_REGISTER_COMPONENT(
-    hex_viewer, "1.0.0", "Hex dump viewer with ASCII panel",
+    hex_viewer,
+    "1.0.0",
+    "Hex dump viewer with ASCII panel",
     []() -> ftxui::Component {
       return ftxui::Renderer([] {
         return ftxui::vbox({
@@ -83,8 +88,8 @@ int main() {
   // We rebuild the visible entries on every render.
   auto list_renderer = Renderer(search_input, [&]() -> Element {
     const Theme& t = GetTheme();
-    auto entries =
-        filter.empty() ? Registry::Get().List() : Registry::Get().Search(filter);
+    auto entries = filter.empty() ? Registry::Get().List()
+                                  : Registry::Get().Search(filter);
 
     // Clamp selection
     if (!entries.empty()) {
@@ -121,53 +126,49 @@ int main() {
       // tags
       std::vector<Element> tag_els;
       for (const auto& tag : m.tags) {
-        tag_els.push_back(text(" " + tag + " ") | border |
-                          color(t.secondary));
+        tag_els.push_back(text(" " + tag + " ") | border | color(t.secondary));
       }
-      Element tags_el = tag_els.empty()
-                            ? text("—") | dim
-                            : hbox(tag_els) | xflex;
+      Element tags_el =
+          tag_els.empty() ? text("—") | dim : hbox(tag_els) | xflex;
 
       right = vbox({
-                 separatorEmpty(),
-                 hbox({text("  Name:    ") | dim,
-                       text(m.name) | bold | color(t.primary)}),
-                 hbox({text("  Version: ") | dim,
-                       text(m.version) | color(t.accent)}),
-                 hbox({text("  Author:  ") | dim, text(m.author)}),
-                 separatorEmpty(),
-                 hbox({text("  Tags:    ") | dim, tags_el | xflex}),
-                 separatorEmpty(),
-                 separatorLight(),
-                 separatorEmpty(),
-                 paragraph("  " + m.description) | xflex,
-                 separatorEmpty(),
-             }) |
-             flex;
+                  separatorEmpty(),
+                  hbox({text("  Name:    ") | dim,
+                        text(m.name) | bold | color(t.primary)}),
+                  hbox({text("  Version: ") | dim,
+                        text(m.version) | color(t.accent)}),
+                  hbox({text("  Author:  ") | dim, text(m.author)}),
+                  separatorEmpty(),
+                  hbox({text("  Tags:    ") | dim, tags_el | xflex}),
+                  separatorEmpty(),
+                  separatorLight(),
+                  separatorEmpty(),
+                  paragraph("  " + m.description) | xflex,
+                  separatorEmpty(),
+              }) |
+              flex;
     }
 
     // ── Search bar ───────────────────────────────────────────────────────
     Element search_box =
-        hbox({text(" 🔍 "), search_input->Render() | xflex}) |
-        border;
+        hbox({text(" 🔍 "), search_input->Render() | xflex}) | border;
 
     // ── Footer ───────────────────────────────────────────────────────────
     std::string install_hint =
         entries.empty() ? "badwolf install <component>"
                         : "badwolf install " + entries[selected].name;
 
-    Element footer =
-        hbox({
-            text("  ") ,
-            text("badwolf list") | bold | color(t.secondary),
-            text("   "),
-            text(install_hint) | bold | color(t.accent),
-            text("   "),
-            text("↑↓ navigate  Enter select") | dim,
-            filler(),
-            text("BadWolf Registry v1.0.0  ") | dim,
-        }) |
-        size(HEIGHT, EQUAL, 1);
+    Element footer = hbox({
+                         text("  "),
+                         text("badwolf list") | bold | color(t.secondary),
+                         text("   "),
+                         text(install_hint) | bold | color(t.accent),
+                         text("   "),
+                         text("↑↓ navigate  Enter select") | dim,
+                         filler(),
+                         text("BadWolf Registry v1.0.0  ") | dim,
+                     }) |
+                     size(HEIGHT, EQUAL, 1);
 
     return vbox({
         search_box,

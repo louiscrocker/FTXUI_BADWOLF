@@ -85,7 +85,8 @@ ftxui::Component Registry::Create(const std::string& name) const {
   return nullptr;
 }
 
-// ── ComponentRegistrar ────────────────────────────────────────────────────────
+// ── ComponentRegistrar
+// ────────────────────────────────────────────────────────
 
 ComponentRegistrar::ComponentRegistrar(
     ComponentMeta meta,

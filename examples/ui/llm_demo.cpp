@@ -50,12 +50,13 @@ int main() {
   // ── Build example buttons ────────────────────────────────────────────────
   std::vector<ftxui::Component> btn_list;
   for (const auto& ex : examples) {
-    auto btn =
-        Button(ex, [ex, active_component, active_intent] {
+    auto btn = Button(
+        ex,
+        [ex, active_component, active_intent] {
           *active_intent = NLParser::Parse(ex);
           *active_component = UIGenerator::Generate(*active_intent);
         },
-               ButtonOption::Ascii());
+        ButtonOption::Ascii());
     btn_list.push_back(btn);
   }
   auto example_menu = Container::Vertical(btn_list);
@@ -78,16 +79,17 @@ int main() {
     const Theme& t = GetTheme();
 
     // Sidebar
-    auto sidebar = window(
-        text(" Example Prompts ") | bold | color(t.primary),
-        vbox({
-            text("Click to run instantly") | color(t.text_muted) | dim,
-            separatorEmpty(),
-            example_menu->Render() | vscroll_indicator | yflex,
-            separatorEmpty(),
-            separatorEmpty(),
-            text("Backend: " + backend) | bold | color(t.secondary),
-        }) | yflex_grow) | size(WIDTH, EQUAL, 34);
+    auto sidebar =
+        window(text(" Example Prompts ") | bold | color(t.primary),
+               vbox({
+                   text("Click to run instantly") | color(t.text_muted) | dim,
+                   separatorEmpty(),
+                   example_menu->Render() | vscroll_indicator | yflex,
+                   separatorEmpty(),
+                   separatorEmpty(),
+                   text("Backend: " + backend) | bold | color(t.secondary),
+               }) | yflex_grow) |
+        size(WIDTH, EQUAL, 34);
 
     // Main REPL panel
     auto main_panel = repl->Render() | flex;

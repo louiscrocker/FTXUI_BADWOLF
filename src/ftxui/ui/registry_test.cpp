@@ -124,7 +124,10 @@ TEST(RegistryTest, SearchCaseInsensitive) {
 
 TEST(RegistryTest, SearchByTag) {
   Registry& reg = Registry::Get();
-  reg.Register({"tagged-comp", "1.0.0", "Tagged component", "t",
+  reg.Register({"tagged-comp",
+                "1.0.0",
+                "Tagged component",
+                "t",
                 {"visualization", "chart"}},
                MakeStub);
 
@@ -140,9 +143,9 @@ TEST(RegistryTest, SearchByTag) {
 
 TEST(RegistryTest, SearchByTagPartial) {
   Registry& reg = Registry::Get();
-  reg.Register({"partial-tag-comp", "1.0.0", "Partial tag test", "t",
-                {"filesystem"}},
-               MakeStub);
+  reg.Register(
+      {"partial-tag-comp", "1.0.0", "Partial tag test", "t", {"filesystem"}},
+      MakeStub);
 
   EXPECT_FALSE(reg.Search("file").empty());
 }

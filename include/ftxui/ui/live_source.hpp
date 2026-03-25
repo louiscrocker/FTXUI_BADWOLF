@@ -65,8 +65,7 @@ class LiveSource {
         }
         // Interruptible sleep for Interval().
         std::unique_lock<std::mutex> lock(cv_mutex_);
-        cv_.wait_for(lock, Interval(),
-                     [this] { return !running_.load(); });
+        cv_.wait_for(lock, Interval(), [this] { return !running_.load(); });
       }
     });
   }
@@ -120,10 +119,13 @@ class LiveSource {
 
 // ── HTTP JSON polling source ───────────────────────────────────────────────
 
-// Polls an HTTP endpoint via raw POSIX TCP socket and returns the response body.
+// Polls an HTTP endpoint via raw POSIX TCP socket and returns the response
+// body.
 class HttpJsonSource : public LiveSource<std::string> {
  public:
-  HttpJsonSource(std::string host, int port, std::string path,
+  HttpJsonSource(std::string host,
+                 int port,
+                 std::string path,
                  std::chrono::milliseconds interval = std::chrono::seconds(5));
 
  protected:
@@ -149,7 +151,8 @@ struct PrometheusMetric {
 // Scrapes a Prometheus /metrics endpoint and parses the text format.
 class PrometheusSource : public LiveSource<std::vector<PrometheusMetric>> {
  public:
-  explicit PrometheusSource(std::string host = "localhost", int port = 9090,
+  explicit PrometheusSource(std::string host = "localhost",
+                            int port = 9090,
                             std::string path = "/metrics");
 
  protected:
@@ -224,7 +227,8 @@ Component LiveMetricsTable(std::shared_ptr<PrometheusSource> source);
 
 // Line chart (sparkline ring buffer) auto-connected to LiveSource<double>.
 Component LiveLineChart(std::shared_ptr<LiveSource<double>> source,
-                        const std::string& title = "", int history = 60);
+                        const std::string& title = "",
+                        int history = 60);
 
 // JSON text viewer auto-connected to HttpJsonSource.
 Component LiveJsonViewer(std::shared_ptr<HttpJsonSource> source);

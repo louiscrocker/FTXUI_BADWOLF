@@ -30,7 +30,8 @@
 using namespace ftxui;
 using namespace ftxui::ui;
 
-// ── Deterministic pseudo-random chart data ────────────────────────────────────
+// ── Deterministic pseudo-random chart data
+// ────────────────────────────────────
 
 static std::vector<float> SeedData() {
   // Simple deterministic sequence — avoids <random> header variability on
@@ -47,7 +48,8 @@ static std::vector<float> SeedData() {
   return data;
 }
 
-// ── Entry point ───────────────────────────────────────────────────────────────
+// ── Entry point
+// ───────────────────────────────────────────────────────────────
 
 int main() {
   // ── Reactive state ──────────────────────────────────────────────
@@ -66,12 +68,13 @@ int main() {
       [&](bool /*focused*/) -> Element {
         (void)false;  // suppress unused-param warning in older compilers
         return hbox({
-            btn_dec->Render(),
-            text("  Count: ") | bold,
-            text(std::to_string(count)) | color(Color::Cyan) | bold,
-            text("  "),
-            btn_inc->Render(),
-        }) | center;
+                   btn_dec->Render(),
+                   text("  Count: ") | bold,
+                   text(std::to_string(count)) | color(Color::Cyan) | bold,
+                   text("  "),
+                   btn_inc->Render(),
+               }) |
+               center;
       });
 
   // ── Chart ───────────────────────────────────────────────────────
@@ -95,8 +98,7 @@ int main() {
       return text("Hello, world!") | dim;
     }
     return hbox({text("Hello, ") | dim,
-                 text(user_text) | bold | color(Color::Cyan),
-                 text("!") | dim});
+                 text(user_text) | bold | color(Color::Cyan), text("!") | dim});
   });
 
   auto inner = Container::Vertical({

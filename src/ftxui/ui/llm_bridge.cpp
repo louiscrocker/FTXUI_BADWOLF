@@ -30,8 +30,8 @@
 #include "ftxui/screen/color.hpp"
 #include "ftxui/ui/charts.hpp"
 #include "ftxui/ui/form.hpp"
-#include "ftxui/ui/geomap.hpp"
 #include "ftxui/ui/geojson.hpp"
+#include "ftxui/ui/geomap.hpp"
 #include "ftxui/ui/log_panel.hpp"
 #include "ftxui/ui/progress.hpp"
 #include "ftxui/ui/theme.hpp"
@@ -56,8 +56,8 @@ std::string ToLower(std::string s) {
 bool ContainsWord(const std::string& haystack, const std::string& needle) {
   size_t pos = haystack.find(needle);
   while (pos != std::string::npos) {
-    bool left_ok =
-        (pos == 0) || !std::isalnum(static_cast<unsigned char>(haystack[pos - 1]));
+    bool left_ok = (pos == 0) ||
+                   !std::isalnum(static_cast<unsigned char>(haystack[pos - 1]));
     bool right_ok = (pos + needle.size() >= haystack.size()) ||
                     !std::isalnum(static_cast<unsigned char>(
                         haystack[pos + needle.size()]));
@@ -90,8 +90,9 @@ std::vector<std::string> Tokenize(const std::string& s) {
 }
 
 // Collect comma/and-separated tokens after a keyword index.
-std::vector<std::string> ExtractListAfter(const std::vector<std::string>& tokens,
-                                           size_t start) {
+std::vector<std::string> ExtractListAfter(
+    const std::vector<std::string>& tokens,
+    size_t start) {
   std::vector<std::string> result;
   for (size_t i = start; i < tokens.size(); ++i) {
     if (tokens[i] == "and" || tokens[i] == "or") {
@@ -171,11 +172,11 @@ SampleDataset SampleFor(const std::string& entity) {
   ds.headers = {"Name", "Value"};
   std::string cap = entity;
   if (!cap.empty()) {
-    cap[0] = static_cast<char>(std::toupper(static_cast<unsigned char>(cap[0])));
+    cap[0] =
+        static_cast<char>(std::toupper(static_cast<unsigned char>(cap[0])));
   }
   for (int i = 1; i <= 5; ++i) {
-    ds.rows.push_back({cap + " " + std::to_string(i),
-                       std::to_string(i * 10)});
+    ds.rows.push_back({cap + " " + std::to_string(i), std::to_string(i * 10)});
   }
   return ds;
 }
@@ -199,8 +200,8 @@ Element MakeTableElement(const SampleDataset& ds) {
     std::vector<Element> elems;
     for (size_t col = 0; col < ds.headers.size(); ++col) {
       std::string val = (col < row.size()) ? row[col] : "";
-      int w = static_cast<int>(
-          std::max(val.size(), ds.headers[col].size()) + 2);
+      int w =
+          static_cast<int>(std::max(val.size(), ds.headers[col].size()) + 2);
       elems.push_back(text(val) | size(WIDTH, EQUAL, w));
     }
     cells.push_back(std::move(elems));
@@ -226,8 +227,9 @@ Component MakeChartComponent(const UIIntent& intent) {
     v1[i] = 50.f + 30.f * std::sin(static_cast<float>(i) * 0.2f);
     v2[i] = 50.f + 20.f * std::cos(static_cast<float>(i) * 0.15f + 1.f);
   }
-  chart.Title(title).Series("Series A", v1, Color::Cyan).Series("Series B", v2,
-                                                                 Color::Yellow);
+  chart.Title(title)
+      .Series("Series A", v1, Color::Cyan)
+      .Series("Series B", v2, Color::Yellow);
   chart.ShowLegend(true).ShowAxes(true);
   return chart.Build();
 }
@@ -237,7 +239,8 @@ Component MakeFormComponent(const UIIntent& intent) {
   auto form = Form();
   if (!intent.entity.empty()) {
     std::string cap = intent.entity;
-    cap[0] = static_cast<char>(std::toupper(static_cast<unsigned char>(cap[0])));
+    cap[0] =
+        static_cast<char>(std::toupper(static_cast<unsigned char>(cap[0])));
     form.Title(cap + " Form");
   }
 
@@ -246,8 +249,8 @@ Component MakeFormComponent(const UIIntent& intent) {
     for (const auto& field : intent.fields) {
       std::string label = field;
       if (!label.empty()) {
-        label[0] =
-            static_cast<char>(std::toupper(static_cast<unsigned char>(label[0])));
+        label[0] = static_cast<char>(
+            std::toupper(static_cast<unsigned char>(label[0])));
       }
       form.Field(label, nullptr);
     }
@@ -380,9 +383,7 @@ UIIntent NLParser::Parse(const std::string& natural_language) {
   const auto tokens = Tokenize(low);
 
   // ── Determine IntentType by keyword priority
-  auto has = [&](const std::string& w) {
-    return ContainsWord(low, w);
-  };
+  auto has = [&](const std::string& w) { return ContainsWord(low, w); };
 
   if (has("chart") || has("graph") || has("plot") || has("histogram") ||
       has("sparkline")) {
@@ -407,8 +408,8 @@ UIIntent NLParser::Parse(const std::string& natural_language) {
 
   // ── Extract entity: word that follows a trigger verb/preposition
   static const std::array<std::string, 12> trigger_words = {
-      "show",    "display", "plot",  "of",   "for",   "list",
-      "monitor", "create",  "edit",  "add",  "table", "log"};
+      "show",    "display", "plot", "of",  "for",   "list",
+      "monitor", "create",  "edit", "add", "table", "log"};
   static const std::array<std::string, 10> skip_words = {
       "a", "an", "the", "me", "my", "all", "some", "new", "of", "for"};
   // These are type keywords, not entities — skip them when extracting entity
@@ -436,7 +437,8 @@ UIIntent NLParser::Parse(const std::string& natural_language) {
           break;
         }
       }
-      // Also skip type keywords (list, table, chart) — they describe the widget, not the entity
+      // Also skip type keywords (list, table, chart) — they describe the
+      // widget, not the entity
       if (!skip) {
         for (const auto& tw : type_words) {
           if (tokens[j] == tw) {
@@ -508,8 +510,8 @@ UIIntent NLParser::Parse(const std::string& natural_language) {
 
 std::vector<UIIntent> NLParser::ParseMulti(const std::string& nl) {
   // Split on "and", "also", "plus", "then" at the sentence level
-  static const std::array<std::string, 4> splitters = {" and ", " also ", " plus ",
-                                                         " then "};
+  static const std::array<std::string, 4> splitters = {" and ", " also ",
+                                                       " plus ", " then "};
   std::vector<std::string> parts = {nl};
   for (const auto& sp : splitters) {
     std::vector<std::string> new_parts;
@@ -549,8 +551,8 @@ Component UIGenerator::Generate(const UIIntent& intent) {
         for (const auto& f : intent.fields) {
           std::string h = f;
           if (!h.empty()) {
-            h[0] =
-                static_cast<char>(std::toupper(static_cast<unsigned char>(h[0])));
+            h[0] = static_cast<char>(
+                std::toupper(static_cast<unsigned char>(h[0])));
           }
           ds.headers.push_back(h);
         }
@@ -579,8 +581,7 @@ Component UIGenerator::Generate(const UIIntent& intent) {
 
     case IntentType::PROGRESS: {
       static float prog = 0.67f;
-      std::string lbl =
-          intent.entity.empty() ? "Loading" : intent.entity;
+      std::string lbl = intent.entity.empty() ? "Loading" : intent.entity;
       return ThemedProgressBar(&prog, lbl);
     }
 
@@ -629,8 +630,8 @@ Element UIGenerator::PreviewElement(const UIIntent& intent) {
     }
     case IntentType::UNKNOWN:
     default:
-      return hbox(
-          {text("Unknown: ") | bold, text(intent.raw_input) | color(Color::Red)});
+      return hbox({text("Unknown: ") | bold,
+                   text(intent.raw_input) | color(Color::Red)});
   }
 }
 
@@ -758,7 +759,7 @@ std::string JsonStringField(const std::string& json, const std::string& key) {
 
 // Parse a JSON array of strings: ["a","b","c"]
 std::vector<std::string> JsonStringArray(const std::string& json,
-                                          const std::string& key) {
+                                         const std::string& key) {
   std::string search = "\"" + key + "\"";
   auto kpos = json.find(search);
   if (kpos == std::string::npos) {
@@ -792,7 +793,7 @@ std::vector<std::string> JsonStringArray(const std::string& json,
 
 // Parse a JSON intent object into UIIntent.
 UIIntent ParseJsonIntent(const std::string& json,
-                          const std::string& raw_input) {
+                         const std::string& raw_input) {
   UIIntent intent;
   intent.raw_input = raw_input;
 
@@ -862,7 +863,7 @@ bool LLMAdapter::OllamaAvailable() {
   if (fd < 0) {
     return false;
   }
-  struct sockaddr_in addr {};
+  struct sockaddr_in addr{};
   addr.sin_family = AF_INET;
   addr.sin_port = htons(11434);
   addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
@@ -877,22 +878,22 @@ bool LLMAdapter::OpenAIAvailable() {
 }
 
 std::string LLMAdapter::SystemPrompt() {
-  return
-      "You are a UI generator assistant. The user will describe a terminal UI "
-      "component in plain English. You must respond with ONLY valid JSON in "
-      "this exact format (no markdown, no explanation):\n"
-      "{\"type\":\"TABLE\",\"entity\":\"users\","
-      "\"fields\":[\"name\",\"email\"],\"options\":{}}\n\n"
-      "Valid types: TABLE, CHART, FORM, DASHBOARD, MAP, LOG, PROGRESS, "
-      "UNKNOWN.\n"
-      "Set entity to the data subject (e.g. \"users\", \"servers\").\n"
-      "Set fields to column names if mentioned, otherwise [].\n"
-      "Set options to {} unless color/size/border is specified.\n"
-      "Respond ONLY with the JSON object.";
+  return "You are a UI generator assistant. The user will describe a terminal "
+         "UI "
+         "component in plain English. You must respond with ONLY valid JSON in "
+         "this exact format (no markdown, no explanation):\n"
+         "{\"type\":\"TABLE\",\"entity\":\"users\","
+         "\"fields\":[\"name\",\"email\"],\"options\":{}}\n\n"
+         "Valid types: TABLE, CHART, FORM, DASHBOARD, MAP, LOG, PROGRESS, "
+         "UNKNOWN.\n"
+         "Set entity to the data subject (e.g. \"users\", \"servers\").\n"
+         "Set fields to column names if mentioned, otherwise [].\n"
+         "Set options to {} unless color/size/border is specified.\n"
+         "Respond ONLY with the JSON object.";
 }
 
 UIIntent LLMAdapter::QueryLLM(const std::string& prompt,
-                               const std::string& model) {
+                              const std::string& model) {
   if (!OllamaAvailable()) {
     return NLParser::Parse(prompt);
   }
@@ -902,7 +903,7 @@ UIIntent LLMAdapter::QueryLLM(const std::string& prompt,
     return NLParser::Parse(prompt);
   }
 
-  struct sockaddr_in addr {};
+  struct sockaddr_in addr{};
   addr.sin_family = AF_INET;
   addr.sin_port = htons(11434);
   addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
@@ -915,9 +916,8 @@ UIIntent LLMAdapter::QueryLLM(const std::string& prompt,
   // Build JSON body
   std::string system_prompt = JsonEscape(SystemPrompt());
   std::string user_prompt = JsonEscape(prompt);
-  std::string body = "{\"model\":\"" + model +
-                     "\",\"prompt\":\"" + user_prompt +
-                     "\",\"system\":\"" + system_prompt +
+  std::string body = "{\"model\":\"" + model + "\",\"prompt\":\"" +
+                     user_prompt + "\",\"system\":\"" + system_prompt +
                      "\",\"stream\":false}";
 
   // Build HTTP request
@@ -1012,7 +1012,8 @@ Component LLMRepl() {
     state->last_prompt = prompt;
   };
 
-  auto text_input = Input(&state->input, "Describe a UI component...", input_opt);
+  auto text_input =
+      Input(&state->input, "Describe a UI component...", input_opt);
 
   auto help_overlay = Renderer([state]() -> Element {
     const Theme& t = GetTheme();
@@ -1028,65 +1029,73 @@ Component LLMRepl() {
                   vbox(std::move(lines)));
   });
 
-  auto root = Renderer(text_input, [state, text_input, help_overlay]() -> Element {
-    const Theme& t = GetTheme();
+  auto root =
+      Renderer(text_input, [state, text_input, help_overlay]() -> Element {
+        const Theme& t = GetTheme();
 
-    // ── History sidebar ────────────────────────────────────────────────────
-    std::vector<Element> hist_items;
-    for (const auto& h : state->history) {
-      std::string display = h.size() > 22 ? h.substr(0, 19) + "..." : h;
-      hist_items.push_back(text(display) | color(t.text_muted));
-    }
-    if (hist_items.empty()) {
-      hist_items.push_back(text("(no history)") | color(t.text_muted) | dim);
-    }
-    auto sidebar =
-        window(text(" History ") | bold | color(t.primary),
-               vbox(std::move(hist_items)) | vscroll_indicator | yflex) |
-        size(WIDTH, EQUAL, 26) | yflex_grow;
+        // ── History sidebar
+        // ────────────────────────────────────────────────────
+        std::vector<Element> hist_items;
+        for (const auto& h : state->history) {
+          std::string display = h.size() > 22 ? h.substr(0, 19) + "..." : h;
+          hist_items.push_back(text(display) | color(t.text_muted));
+        }
+        if (hist_items.empty()) {
+          hist_items.push_back(text("(no history)") | color(t.text_muted) |
+                               dim);
+        }
+        auto sidebar =
+            window(text(" History ") | bold | color(t.primary),
+                   vbox(std::move(hist_items)) | vscroll_indicator | yflex) |
+            size(WIDTH, EQUAL, 26) | yflex_grow;
 
-    // ── Generated preview ──────────────────────────────────────────────────
-    Element preview;
-    if (state->current_component) {
-      preview = state->current_component->Render();
-    } else {
-      preview = text("Type a prompt to generate a component") | dim | hcenter |
-                vcenter;
-    }
-    auto main_area =
-        window(text(" Preview: " + state->last_prompt + " ") | bold |
-                   color(t.primary),
-               preview | flex) |
-        flex;
+        // ── Generated preview
+        // ──────────────────────────────────────────────────
+        Element preview;
+        if (state->current_component) {
+          preview = state->current_component->Render();
+        } else {
+          preview = text("Type a prompt to generate a component") | dim |
+                    hcenter | vcenter;
+        }
+        auto main_area = window(text(" Preview: " + state->last_prompt + " ") |
+                                    bold | color(t.primary),
+                                preview | flex) |
+                         flex;
 
-    // ── Input row ──────────────────────────────────────────────────────────
-    auto input_row = hbox({
-        text(" ❯ ") | bold | color(t.accent),
-        text_input->Render() | flex,
-    });
+        // ── Input row
+        // ──────────────────────────────────────────────────────────
+        auto input_row = hbox({
+            text(" ❯ ") | bold | color(t.accent),
+            text_input->Render() | flex,
+        });
 
-    // ── Status bar ─────────────────────────────────────────────────────────
-    auto status_bar = hbox({
-        text(" NLP: ") | color(t.text_muted),
-        text(state->backend_label) | bold | color(t.secondary),
-        filler(),
-        text(" Ctrl+H: help ") | color(t.text_muted),
-    }) | color(t.text_muted);
+        // ── Status bar
+        // ─────────────────────────────────────────────────────────
+        auto status_bar =
+            hbox({
+                text(" NLP: ") | color(t.text_muted),
+                text(state->backend_label) | bold | color(t.secondary),
+                filler(),
+                text(" Ctrl+H: help ") | color(t.text_muted),
+            }) |
+            color(t.text_muted);
 
-    // ── Layout ─────────────────────────────────────────────────────────────
-    Element body = vbox({
-        hbox({sidebar, main_area}) | flex,
-        separator(),
-        input_row,
-        separator(),
-        status_bar,
-    });
+        // ── Layout
+        // ─────────────────────────────────────────────────────────────
+        Element body = vbox({
+            hbox({sidebar, main_area}) | flex,
+            separator(),
+            input_row,
+            separator(),
+            status_bar,
+        });
 
-    if (state->show_help) {
-      body = dbox({body, help_overlay->Render() | clear_under | center});
-    }
-    return body;
-  });
+        if (state->show_help) {
+          body = dbox({body, help_overlay->Render() | clear_under | center});
+        }
+        return body;
+      });
 
   // Ctrl+H toggles help overlay
   auto with_events = CatchEvent(root, [state](Event ev) -> bool {
@@ -1106,8 +1115,8 @@ Component LLMRepl() {
 Component WithLLMHelp(Component inner, const std::string& component_name) {
   auto show_help = std::make_shared<bool>(false);
 
-  auto help_btn = Button("?", [show_help] { *show_help = !*show_help; },
-                          ButtonOption::Animated());
+  auto help_btn = Button(
+      "?", [show_help] { *show_help = !*show_help; }, ButtonOption::Animated());
 
   auto help_overlay = Renderer([component_name, show_help]() -> Element {
     if (!*show_help) {
@@ -1119,11 +1128,13 @@ Component WithLLMHelp(Component inner, const std::string& component_name) {
     info_intent.type = IntentType::UNKNOWN;
 
     return window(
-               text(" About: " + component_name + " ") | bold | color(t.primary),
+               text(" About: " + component_name + " ") | bold |
+                   color(t.primary),
                vbox({
                    text("Component: " + component_name) | bold,
                    separatorEmpty(),
-                   text("Use natural language to generate similar components:") |
+                   text(
+                       "Use natural language to generate similar components:") |
                        color(t.text_muted),
                    separatorEmpty(),
                    text("  e.g. \"show me a " + component_name + "\"") |
@@ -1136,15 +1147,16 @@ Component WithLLMHelp(Component inner, const std::string& component_name) {
 
   auto buttons = Container::Horizontal({help_btn});
 
-  return Renderer(buttons, [inner, buttons, help_overlay, show_help]() -> Element {
-    auto inner_elem = inner->Render();
-    auto btn_elem = hbox({filler(), buttons->Render()});
-    Element body = vbox({btn_elem, inner_elem | flex});
-    if (*show_help) {
-      body = dbox({body, help_overlay->Render()});
-    }
-    return body;
-  });
+  return Renderer(buttons,
+                  [inner, buttons, help_overlay, show_help]() -> Element {
+                    auto inner_elem = inner->Render();
+                    auto btn_elem = hbox({filler(), buttons->Render()});
+                    Element body = vbox({btn_elem, inner_elem | flex});
+                    if (*show_help) {
+                      body = dbox({body, help_overlay->Render()});
+                    }
+                    return body;
+                  });
 }
 
 }  // namespace ftxui::ui

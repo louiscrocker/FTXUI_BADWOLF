@@ -34,8 +34,7 @@ class Registry {
   static Registry& Get();
 
   /// @brief Registers a component with the given metadata and factory.
-  void Register(ComponentMeta meta,
-                std::function<ftxui::Component()> factory);
+  void Register(ComponentMeta meta, std::function<ftxui::Component()> factory);
 
   /// @brief Returns metadata for all registered components.
   std::vector<ComponentMeta> List() const;
@@ -78,9 +77,8 @@ struct ComponentRegistrar {
 /// BADWOLF_REGISTER_COMPONENT(my_button, "1.0.0",
 ///     "A stylish button", []{ return ftxui::Button("Click me", []{}); });
 /// @endcode
-#define BADWOLF_REGISTER_COMPONENT(name, version, desc, factory)     \
-  static ::ftxui::ui::ComponentRegistrar _badwolf_reg_##name(        \
-      ::ftxui::ui::ComponentMeta{#name, version, desc, "local", {}}, \
-      factory)
+#define BADWOLF_REGISTER_COMPONENT(name, version, desc, factory) \
+  static ::ftxui::ui::ComponentRegistrar _badwolf_reg_##name(    \
+      ::ftxui::ui::ComponentMeta{#name, version, desc, "local", {}}, factory)
 
 #endif  // FTXUI_UI_REGISTRY_HPP

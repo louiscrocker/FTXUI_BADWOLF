@@ -33,9 +33,9 @@ enum class IntentType {
 /// @ingroup ui
 struct UIIntent {
   IntentType type = IntentType::UNKNOWN;
-  std::string entity;                         ///< "users", "metrics", …
-  std::vector<std::string> fields;            ///< from "with columns …"
-  std::map<std::string, std::string> options; ///< "color"→"blue", …
+  std::string entity;                          ///< "users", "metrics", …
+  std::vector<std::string> fields;             ///< from "with columns …"
+  std::map<std::string, std::string> options;  ///< "color"→"blue", …
   std::string raw_input;
 };
 
@@ -100,7 +100,7 @@ class LLMAdapter {
   /// @param prompt  Natural-language description.
   /// @param model   Ollama model name (default: "llama3").
   static UIIntent QueryLLM(const std::string& prompt,
-                            const std::string& model = "llama3");
+                           const std::string& model = "llama3");
 
   /// @brief Returns the system prompt that instructs the LLM to output a
   ///        structured JSON intent.
@@ -131,7 +131,7 @@ ftxui::Component LLMRepl();
 /// @param component_name  Human-readable name shown in the help overlay.
 /// @ingroup ui
 ftxui::Component WithLLMHelp(ftxui::Component inner,
-                              const std::string& component_name);
+                             const std::string& component_name);
 
 }  // namespace ftxui::ui
 

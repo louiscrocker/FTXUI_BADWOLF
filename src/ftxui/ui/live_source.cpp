@@ -29,7 +29,9 @@ namespace ftxui::ui {
 
 // ── HTTP JSON Source ───────────────────────────────────────────────────────
 
-HttpJsonSource::HttpJsonSource(std::string host, int port, std::string path,
+HttpJsonSource::HttpJsonSource(std::string host,
+                               int port,
+                               std::string path,
                                std::chrono::milliseconds interval)
     : host_(std::move(host)),
       port_(port),
@@ -48,7 +50,7 @@ std::string HttpJsonSource::Fetch() {
     return "";
   }
 
-  struct sockaddr_in serv_addr {};
+  struct sockaddr_in serv_addr{};
   serv_addr.sin_family = AF_INET;
   serv_addr.sin_port = htons(port_);
   std::memcpy(&serv_addr.sin_addr.s_addr, server->h_addr, server->h_length);
@@ -85,8 +87,7 @@ std::string HttpJsonSource::Fetch() {
 
 // ── Prometheus Source ──────────────────────────────────────────────────────
 
-PrometheusSource::PrometheusSource(std::string host, int port,
-                                   std::string path)
+PrometheusSource::PrometheusSource(std::string host, int port, std::string path)
     : host_(std::move(host)), path_(std::move(path)), port_(port) {}
 
 std::vector<PrometheusMetric> PrometheusSource::Fetch() {
@@ -101,7 +102,7 @@ std::vector<PrometheusMetric> PrometheusSource::Fetch() {
     return {};
   }
 
-  struct sockaddr_in serv_addr {};
+  struct sockaddr_in serv_addr{};
   serv_addr.sin_family = AF_INET;
   serv_addr.sin_port = htons(port_);
   std::memcpy(&serv_addr.sin_addr.s_addr, server->h_addr, server->h_length);
@@ -173,12 +174,14 @@ std::vector<PrometheusMetric> PrometheusSource::ParsePrometheusText(
     if (brace_pos != std::string::npos && brace_pos < space_pos) {
       std::string name = line.substr(0, brace_pos);
       size_t close_brace = line.find('}', brace_pos);
-      if (close_brace == std::string::npos)
+      if (close_brace == std::string::npos) {
         continue;
+      }
 
-      std::string labels = line.substr(brace_pos + 1, close_brace - brace_pos - 1);
+      std::string labels =
+          line.substr(brace_pos + 1, close_brace - brace_pos - 1);
       std::string rest = line.substr(close_brace + 1);
-      
+
       std::istringstream iss(rest);
       double value;
       iss >> value;
@@ -188,7 +191,7 @@ std::vector<PrometheusMetric> PrometheusSource::ParsePrometheusText(
     } else if (space_pos != std::string::npos) {
       std::string name = line.substr(0, space_pos);
       std::string rest = line.substr(space_pos + 1);
-      
+
       std::istringstream iss(rest);
       double value;
       iss >> value;
@@ -223,11 +226,11 @@ std::string FileTailSource::Fetch() {
   }
 
   file.seekg(last_pos_);
-  
+
   std::string new_content;
   std::string line;
   int line_count = 0;
-  
+
   while (std::getline(file, line) && line_count < max_lines_) {
     if (!new_content.empty()) {
       new_content += "\n";
@@ -254,7 +257,7 @@ std::string StdinSource::Fetch() {
   FD_ZERO(&readfds);
   FD_SET(STDIN_FILENO, &readfds);
 
-  struct timeval tv {};
+  struct timeval tv{};
   tv.tv_sec = 0;
   tv.tv_usec = 0;
 
@@ -276,14 +279,14 @@ std::string StdinSource::Fetch() {
 
 // ── Widget Factories ───────────────────────────────────────────────────────
 
-Component LiveLogPanel(std::shared_ptr<FileTailSource> source,
-                       int max_lines) {
+Component LiveLogPanel(std::shared_ptr<FileTailSource> source, int max_lines) {
   auto log = LogPanel::Create(max_lines);
-  
+
   source->OnData([log](const std::string& content) {
-    if (content.empty())
+    if (content.empty()) {
       return;
-    
+    }
+
     std::istringstream stream(content);
     std::string line;
     while (std::getline(stream, line)) {
@@ -315,14 +318,14 @@ Component LiveMetricsTable(std::shared_ptr<PrometheusSource> source) {
 
   return Renderer([metrics, mutex]() -> Element {
     std::lock_guard<std::mutex> lock(*mutex);
-    
+
     std::vector<Element> rows;
     rows.push_back(hbox({
-      text("Metric") | bold | size(WIDTH, EQUAL, 30),
-      separator(),
-      text("Type") | bold | size(WIDTH, EQUAL, 15),
-      separator(),
-      text("Value") | bold | size(WIDTH, EQUAL, 20),
+        text("Metric") | bold | size(WIDTH, EQUAL, 30),
+        separator(),
+        text("Type") | bold | size(WIDTH, EQUAL, 15),
+        separator(),
+        text("Value") | bold | size(WIDTH, EQUAL, 20),
     }));
     rows.push_back(separator());
 
@@ -330,11 +333,11 @@ Component LiveMetricsTable(std::shared_ptr<PrometheusSource> source) {
       for (const auto& [label, value] : metric.samples) {
         std::string label_str = label.empty() ? "" : "{" + label + "}";
         rows.push_back(hbox({
-          text(metric.name + label_str) | size(WIDTH, EQUAL, 30),
-          separator(),
-          text(metric.type) | size(WIDTH, EQUAL, 15),
-          separator(),
-          text(std::to_string(value)) | size(WIDTH, EQUAL, 20),
+            text(metric.name + label_str) | size(WIDTH, EQUAL, 30),
+            separator(),
+            text(metric.type) | size(WIDTH, EQUAL, 15),
+            separator(),
+            text(std::to_string(value)) | size(WIDTH, EQUAL, 20),
         }));
       }
     }
@@ -344,7 +347,8 @@ Component LiveMetricsTable(std::shared_ptr<PrometheusSource> source) {
 }
 
 Component LiveLineChart(std::shared_ptr<LiveSource<double>> source,
-                        const std::string& title, int history) {
+                        const std::string& title,
+                        int history) {
   auto buffer = std::make_shared<std::vector<double>>();
   auto mutex = std::make_shared<std::mutex>();
   buffer->reserve(history);
@@ -363,14 +367,15 @@ Component LiveLineChart(std::shared_ptr<LiveSource<double>> source,
 
   return Renderer([buffer, mutex, title, history]() -> Element {
     std::lock_guard<std::mutex> lock(*mutex);
-    
+
     if (buffer->empty()) {
       if (!title.empty()) {
         return vbox({
-          text(title) | bold,
-          separator(),
-          text("Waiting for data..."),
-        }) | border;
+                   text(title) | bold,
+                   separator(),
+                   text("Waiting for data..."),
+               }) |
+               border;
       }
       return text("Waiting for data...") | border;
     }
@@ -385,12 +390,13 @@ Component LiveLineChart(std::shared_ptr<LiveSource<double>> source,
 
     if (!title.empty()) {
       return vbox({
-        text(title) | bold,
-        separator(),
-        chart,
-      }) | border;
+                 text(title) | bold,
+                 separator(),
+                 chart,
+             }) |
+             border;
     }
-    
+
     return chart | border;
   });
 }
@@ -410,16 +416,17 @@ Component LiveJsonViewer(std::shared_ptr<HttpJsonSource> source) {
 
   return Renderer([content, mutex]() -> Element {
     std::lock_guard<std::mutex> lock(*mutex);
-    
+
     if (content->empty()) {
       return text("Loading...") | center | border;
     }
 
     return vbox({
-      text("JSON Response:") | bold,
-      separator(),
-      text(*content),
-    }) | border | vscroll_indicator | frame | flex;
+               text("JSON Response:") | bold,
+               separator(),
+               text(*content),
+           }) |
+           border | vscroll_indicator | frame | flex;
   });
 }
 

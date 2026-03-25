@@ -71,7 +71,8 @@ int main() {
   auto json_viewer = ui::LiveJsonViewer(http_source);
 
   auto tab2 = Container::Vertical({
-      Renderer([] { return text("Polling httpbin.org/json every 10s") | bold; }),
+      Renderer(
+          [] { return text("Polling httpbin.org/json every 10s") | bold; }),
       json_viewer | flex,
   });
 
@@ -126,7 +127,8 @@ int main() {
   int tab_index = 0;
   std::vector<std::string> tab_names = {"File Tail", "HTTP", "Prometheus",
                                         "Stdin"};
-  auto tab_menu = Menu(&tab_names, &tab_index, MenuOption::HorizontalAnimated());
+  auto tab_menu =
+      Menu(&tab_names, &tab_index, MenuOption::HorizontalAnimated());
 
   auto tab_container = Container::Tab(
       {
