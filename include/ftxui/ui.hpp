@@ -99,6 +99,8 @@
 #include "ftxui/ui/tree.hpp"
 #include "ftxui/ui/ui_builder.hpp"
 #include "ftxui/ui/virtual_list.hpp"
+#include "ftxui/ui/wasm_bridge.hpp"
+#include "ftxui/ui/webgl_renderer.hpp"
 #include "ftxui/ui/widgets.hpp"
 #include "ftxui/ui/wizard.hpp"
 #include "ftxui/ui/world_map_data.hpp"

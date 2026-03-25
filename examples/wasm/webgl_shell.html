@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BadWolf — WebGL Demo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0a0a0f;
+      color: #00ff88;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    #header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: rgba(0,0,0,0.6);
+      border-bottom: 1px solid #00ff8833;
+      backdrop-filter: blur(8px);
+    }
+    #header h1 { font-size: 1rem; letter-spacing: 0.1em; }
+    #badge {
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      background: #1a3a1a;
+      border: 1px solid #00ff88;
+      color: #00ff88;
+    }
+    #badge.webgl2  { background:#1a2a3a; border-color:#4488ff; color:#4488ff; }
+    #badge.webgl1  { background:#2a2a1a; border-color:#ffaa00; color:#ffaa00; }
+    #badge.term    { background:#2a1a1a; border-color:#ff4444; color:#ff4444; }
+    #fps {
+      font-size: 0.75rem;
+      color: #888;
+    }
+    #container {
+      position: relative;
+      width: 100vw;
+      flex: 1;
+    }
+    /* Terminal canvas (text output from FTXUI) */
+    #terminal-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    /* WebGL overlay canvas */
+    #badwolf-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.85;
+    }
+    #fullscreen-btn {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid #00ff88;
+      color: #00ff88;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-family: monospace;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      transition: background 0.2s;
+    }
+    #fullscreen-btn:hover { background: #00ff8822; }
+    #loading {
+      position: fixed;
+      inset: 0;
+      background: #0a0a0f;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 100;
+    }
+    #loading h2 { color: #00ff88; letter-spacing: 0.2em; }
+    #loading-bar {
+      width: 300px; height: 4px;
+      background: #1a1a1a;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    #loading-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00ff88, #4488ff);
+      animation: load 1.5s ease-in-out infinite;
+    }
+    @keyframes load {
+      0%   { width: 0%; }
+      50%  { width: 70%; }
+      100% { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="loading">
+  <h2>BADWOLF</h2>
+  <p style="color:#666;font-size:0.8rem">Loading WebAssembly module…</p>
+  <div id="loading-bar"><div id="loading-fill"></div></div>
+</div>
+
+<div id="header">
+  <h1>⚡ BadWolf WebGL Demo</h1>
+  <span id="badge" class="term">Terminal Mode</span>
+  <span id="fps">-- fps</span>
+</div>
+
+<div id="container">
+  <!-- Terminal text output -->
+  <canvas id="terminal-canvas"></canvas>
+  <!-- WebGL overlay for GPU-accelerated braille -->
+  <canvas id="badwolf-canvas"></canvas>
+</div>
+
+<button id="fullscreen-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+
+<script>
+  // ── WebGL detection ────────────────────────────────────────────────────────
+  (function detectWebGL() {
+    const badge = document.getElementById('badge');
+    const testCanvas = document.createElement('canvas');
+    if (testCanvas.getContext('webgl2')) {
+      badge.textContent = 'WebGL2 Active';
+      badge.className = 'webgl2';
+    } else if (testCanvas.getContext('webgl') ||
+               testCanvas.getContext('experimental-webgl')) {
+      badge.textContent = 'WebGL1 Active';
+      badge.className = 'webgl1';
+    } else {
+      badge.textContent = 'Terminal Mode';
+      badge.className = 'term';
+    }
+  })();
+
+  // ── Device-pixel-ratio aware resize ───────────────────────────────────────
+  function resizeCanvases() {
+    const dpr = window.devicePixelRatio || 1;
+    const container = document.getElementById('container');
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    for (const id of ['terminal-canvas', 'badwolf-canvas']) {
+      const c = document.getElementById(id);
+      c.width  = Math.round(w * dpr);
+      c.height = Math.round(h * dpr);
+      c.style.width  = w + 'px';
+      c.style.height = h + 'px';
+    }
+  }
+  window.addEventListener('resize', resizeCanvases);
+  resizeCanvases();
+
+  // ── FPS counter ───────────────────────────────────────────────────────────
+  let lastTime = performance.now();
+  let frames = 0;
+  function fpsLoop() {
+    frames++;
+    const now = performance.now();
+    if (now - lastTime >= 1000) {
+      document.getElementById('fps').textContent = frames + ' fps';
+      frames = 0;
+      lastTime = now;
+    }
+    requestAnimationFrame(fpsLoop);
+  }
+  requestAnimationFrame(fpsLoop);
+
+  // ── Fullscreen ────────────────────────────────────────────────────────────
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  }
+
+  // ── Load Emscripten module ─────────────────────────────────────────────────
+  var Module = {
+    canvas: (function() { return document.getElementById('terminal-canvas'); })(),
+    onRuntimeInitialized: function() {
+      document.getElementById('loading').style.display = 'none';
+    },
+    print:    function(text) { console.log('[BadWolf]', text); },
+    printErr: function(text) { console.error('[BadWolf]', text); },
+  };
+</script>
+<script src="badwolf_webgl_demo.js"></script>
+
+</body>
+</html>
