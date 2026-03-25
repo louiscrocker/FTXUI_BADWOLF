@@ -1,13 +1,13 @@
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/c++-%2300599C.svg?style=flat&logo=c%2B%2B&logoColor=white" alt="C++"></a>
-  <a href="http://opensource.org/licenses/MIT"><img src="https://img.shields.io/github/license/arthursonzogni/FTXUI?color=black" alt="MIT License"></a>
-  <a href="https://github.com/ArthurSonzogni/FTXUI/actions"><img src="https://github.com/ArthurSonzogni/FTXUI/actions/workflows/build.yaml/badge.svg" alt="Build"></a>
-  <a href="https://codecov.io/gh/ArthurSonzogni/FTXUI"><img src="https://codecov.io/gh/ArthurSonzogni/FTXUI/branch/master/graph/badge.svg?token=C41FdRpNVA" alt="Coverage"></a>
-  <a href="https://github.com/ArthurSonzogni/FTXUI/stargazers"><img src="https://img.shields.io/github/stars/ArthurSonzogni/FTXUI" alt="Stars"></a>
+  <a href="http://opensource.org/licenses/MIT"><img src="https://img.shields.io/github/license/louiscrocker/FTXUI_BADWOLF?color=black" alt="MIT License"></a>
+  <a href="https://github.com/louiscrocker/FTXUI_BADWOLF/actions"><img src="https://github.com/louiscrocker/FTXUI_BADWOLF/actions/workflows/build.yaml/badge.svg" alt="Build"></a>
+  <a href="https://codecov.io/gh/louiscrocker/FTXUI_BADWOLF"><img src="https://codecov.io/gh/louiscrocker/FTXUI_BADWOLF/branch/master/graph/badge.svg?token=C41FdRpNVA" alt="Coverage"></a>
+  <a href="https://github.com/louiscrocker/FTXUI_BADWOLF/stargazers"><img src="https://img.shields.io/github/stars/louiscrocker/FTXUI_BADWOLF" alt="Stars"></a>
   <a href="https://repology.org/project/ftxui/versions"><img src="https://repology.org/badge/latest-versions/ftxui.svg" alt="Packaged versions"></a>
 </p>
 
-# FTXUI — The C++ Terminal UI Framework
+# FTXUI BadWolf — The C++ Terminal UI Framework
 
 ```
      ████████████████████████████████████████████████████████████
@@ -25,16 +25,16 @@
 
 > Build beautiful terminal applications in C++ — inspired by React, as fast as bare metal.
 
-**FTXUI** is a cross-platform, zero-dependency C++ library for terminal UIs. Its functional
+**FTXUI BadWolf** is a cross-platform, zero-dependency C++ library for terminal UIs. Its functional
 style (declarative DOM + reactive components) makes complex TUIs feel simple to write.
 The new high-level `ftxui::ui` layer cuts boilerplate to near zero — a full interactive form
 in 10 lines of code.
 
 ---
 
-## Why FTXUI?
+## Why FTXUI BadWolf?
 
-| Feature | **FTXUI** | ncurses | Bubbletea | Textual | Ratatui |
+| Feature | **FTXUI BadWolf** | ncurses | Bubbletea | Textual | Ratatui |
 |---|---|---|---|---|---|
 | Language | **C++** | C | Go | Python | Rust |
 | Hello world (lines) | **~10** | ~35 | ~30 | ~12 | ~30 |
@@ -60,11 +60,9 @@ in 10 lines of code.
 ```cmake
 include(FetchContent)
 FetchContent_Declare(ftxui
-  GIT_REPOSITORY https://github.com/ArthurSonzogni/ftxui
+  GIT_REPOSITORY https://github.com/louiscrocker/FTXUI_BADWOLF
   GIT_TAG main
 )
-FetchContent_MakeAvailable(ftxui)
-target_link_libraries(my_app PRIVATE ftxui::ui)
 ```
 
 **main.cpp — a full interactive form:**
@@ -258,7 +256,7 @@ SetTheme(Theme::Dark()
 ```cmake
 include(FetchContent)
 FetchContent_Declare(ftxui
-  GIT_REPOSITORY https://github.com/ArthurSonzogni/ftxui
+  GIT_REPOSITORY https://github.com/louiscrocker/FTXUI_BADWOLF
   GIT_TAG main   # or a specific release tag
 )
 FetchContent_MakeAvailable(ftxui)
@@ -382,7 +380,7 @@ You can use any layer independently, or build from the top down with `ftxui::ui`
 
 | Resource | Link |
 |---|---|
-| API Reference | [arthursonzogni.github.io/FTXUI](https://arthursonzogni.github.io/FTXUI/) |
+| API Reference | [louiscrocker.github.io/FTXUI_BADWOLF](https://louiscrocker.github.io/FTXUI_BADWOLF/) |
 | Getting Started | [doc/getting-started.md](doc/getting-started.md) |
 | Cookbook (30+ recipes) | [doc/cookbook.md](doc/cookbook.md) |
 | High-Level UI Layer | [doc/ui-layer.md](doc/ui-layer.md) |
@@ -390,11 +388,11 @@ You can use any layer independently, or build from the top down with `ftxui::ui`
 | Migrating from Bubbletea | [doc/migration-bubbletea.md](doc/migration-bubbletea.md) |
 | Migrating from Textual | [doc/migration-textual.md](doc/migration-textual.md) |
 | Migrating from Ratatui | [doc/migration-ratatui.md](doc/migration-ratatui.md) |
-| Live Examples (WASM) | [arthursonzogni.github.io/FTXUI/examples](https://arthursonzogni.github.io/FTXUI/examples/) |
+| Live Examples (WASM) | [louiscrocker.github.io/FTXUI_BADWOLF/examples](https://louiscrocker.github.io/FTXUI_BADWOLF/examples/) |
 | CMake Starter Project | [ftxui-starter](https://github.com/ArthurSonzogni/ftxui-starter) |
 | Bazel Starter Project | [ftxui-bazel](https://github.com/ArthurSonzogni/ftxui-bazel) |
 
-Available in: [English](https://arthursonzogni.github.io/FTXUI/) · [Français](https://arthursonzogni.github.io/FTXUI/fr/) · [Español](https://arthursonzogni.github.io/FTXUI/es/) · [繁體中文](https://arthursonzogni.github.io/FTXUI/zh-TW/) · [简体中文](https://arthursonzogni.github.io/FTXUI/zh-CH/) · [日本語](https://arthursonzogni.github.io/FTXUI/ja/)
+Available in: [English](https://louiscrocker.github.io/FTXUI_BADWOLF/) · [Français](https://louiscrocker.github.io/FTXUI_BADWOLF/fr/) · [Español](https://louiscrocker.github.io/FTXUI_BADWOLF/es/) · [繁體中文](https://louiscrocker.github.io/FTXUI_BADWOLF/zh-TW/) · [简体中文](https://louiscrocker.github.io/FTXUI_BADWOLF/zh-CH/) · [日本語](https://louiscrocker.github.io/FTXUI_BADWOLF/ja/)
 
 ---
 

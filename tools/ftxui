@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# ftxui — Project scaffolding and utility tool for FTXUI
+# ftxui — Project scaffolding and utility tool for FTXUI BadWolf
+# https://github.com/louiscrocker/FTXUI_BADWOLF
 #
 # Usage:
 #   ftxui new <name>           Create a new FTXUI C++ project

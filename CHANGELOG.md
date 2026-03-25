@@ -262,8 +262,8 @@ See #1017 and #1019.
     multiple checkboxes.
   - A couple of components are now activated when the mouse is pressed,
   as opposed to being released.
-  This fixes: https://github.com/ArthurSonzogni/FTXUI/issues/773
-  This fixes: https://github.com/ArthurSonzogni/FTXUI/issues/792
+  This fixes: https://github.com/louiscrocker/FTXUI_BADWOLF/issues/773
+  This fixes: https://github.com/louiscrocker/FTXUI_BADWOLF/issues/792
 - Bugfix: mouse.control is now reported correctly.
 - Feature: Add `App::FullscreenPrimaryScreen()`. This allows
   displaying a fullscreen component on the primary screen, as opposed to the
@@ -295,7 +295,7 @@ See #1017 and #1019.
   Proposed by @kenReneris in #1009.
 - Feature: Add `hscroll_indicator`. It display an horizontal indicator
   reflecting the current scroll position. Proposed by @ibrahimnasson in
-  [issue 752](https://github.com/ArthurSonzogni/FTXUI/issues/752)
+  [issue 752](https://github.com/louiscrocker/FTXUI_BADWOLF/issues/752)
 - Feature: Add `extend_beyond_screen` option to `Dimension::Fit(..)`, allowing
   the element to be larger than the screen. Proposed by @LordWhiro. See #572 and
   #949.
@@ -359,7 +359,7 @@ See #1017 and #1019.
   auto link = text("Click here") | hyperlink("https://github.com/FTXUI")
   ```
   See the [OSC 8 page](https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda).
-  FTXUI support proposed by @aaleino in [#662](https://github.com/ArthurSonzogni/FTXUI/issues/662).
+  FTXUI support proposed by @aaleino in [#662](https://github.com/louiscrocker/FTXUI_BADWOLF/issues/662).
 
 ### Screen
 - Breaking: `WordBreakProperty` becomes a uint8_t enum. This yields a 0.8%
@@ -476,7 +476,7 @@ This version is abandonned and must not be used. It introduced a breaking change
   `ActiveChild()` methods.
 - **bugfix** Automatically convert '\r' keys into '\n' for Linux programs that
   do not send the correct code for the return key, like the 'bind'.
-  https://github.com/ArthurSonzogni/FTXUI/issues/337
+  https://github.com/louiscrocker/FTXUI_BADWOLF/issues/337
 - Add decorator for components:
   - `operator|(Component, ComponentDecorator)`
   - `operator|(Component, ElementDecorator)`
@@ -587,7 +587,7 @@ Element gaugeDirection(float ratio, GaugeDirection);
 
 ### Dom
 - `Table()` class to build stylised table.
-   See https://github.com/ArthurSonzogni/FTXUI/discussions/228
+   See https://github.com/louiscrocker/FTXUI_BADWOLF/discussions/228
 - `vscroll_indicator`. Show a scrollbar indicator on the right.
 - `separatorEmpty`. A separator drawing nothing.
 - `separatorFixed`. A separator drawing the provided character.

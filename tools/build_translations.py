@@ -31,7 +31,7 @@ console = Console()
 # ---------------------------------------------------------------------------
 # Config & Constants
 # ---------------------------------------------------------------------------
-FTXUI_REPO_URL = "git@github.com:ArthurSonzogni/FTXUI.git"
+FTXUI_REPO_URL = "git@github.com:louiscrocker/FTXUI_BADWOLF.git"
 TRANSLATIONS_REPO_URL = "git@github.com:ArthurSonzogni/ftxui-translations.git"
 MODEL = "gemini-2.5-flash"
 

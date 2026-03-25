@@ -22,7 +22,7 @@ A `ftxui::Component` is a shared pointer to a `ftxui::ComponentBase`. The latter
 `ftxui::Component` are used to render dynamic user interface, producing multiple
 frame, and updating its state on events.
 
-[Gallery](https://arthursonzogni.github.io/FTXUI/examples_2component_2gallery_8cpp-example.html) of multiple components. ([demo](https://arthursonzogni.github.io/FTXUI/examples/?file=component/gallery))
+[Gallery](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2component_2gallery_8cpp-example.html) of multiple components. ([demo](https://louiscrocker.github.io/FTXUI_BADWOLF/examples/?file=component/gallery))
 
 ![image](https://user-images.githubusercontent.com/4759106/147247330-b60beb9f-e665-48b4-81c0-4b01ee95bc66.png)
 
@@ -33,7 +33,7 @@ All predefined components are available in
 
 # Input {#component-input}
 
-[Example](https://arthursonzogni.github.io/FTXUI/examples_2component_2input_8cpp-example.html):
+[Example](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2component_2input_8cpp-example.html):
 
 ![image](https://user-images.githubusercontent.com/4759106/147247671-f1d6f606-1845-4e94-a4a0-d4273e9ae6bd.png)
 
@@ -67,7 +67,7 @@ input |= CatchEvent([&](Event event) {
 
 Defines a menu object. It contains a list of entries, one of them is selected.
 
-[Example](https://arthursonzogni.github.io/FTXUI/examples_2component_2menu_8cpp-example.html):
+[Example](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2component_2menu_8cpp-example.html):
 
 ![image](https://user-images.githubusercontent.com/4759106/147247822-0035fd6f-bb13-4b3a-b057-77eb9291582f.png)
 
@@ -82,7 +82,7 @@ Produced by: `ftxui::Menu()` from "ftxui/component/component.hpp"
 
 A special kind of menu. The entries are displayed horizontally.
 
-[Example](https://arthursonzogni.github.io/FTXUI/examples_2component_2toggle_8cpp-example.html):
+[Example](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2component_2toggle_8cpp-example.html):
 
 ![image](https://user-images.githubusercontent.com/4759106/147249383-e2201cf1-b7b8-4a5a-916f-d761e3e7ae40.png)
 
@@ -97,7 +97,7 @@ Produced by: `ftxui::Toggle()` from "ftxui/component/component.hpp"
 This component defines a checkbox. It is a single entry that can be turned
 on/off.
 
-[Example](https://arthursonzogni.github.io/FTXUI/examples_2component_2checkbox_8cpp-example.html):
+[Example](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2component_2checkbox_8cpp-example.html):
 
 ![image](https://user-images.githubusercontent.com/4759106/147246646-b86926a9-1ef9-4efb-af98-48a9b62acd81.png)
 
@@ -111,7 +111,7 @@ Produced by: `ftxui::Checkbox()` from "ftxui/component/component.hpp"
 
 A radiobutton component. This is a list of entries, where one can be turned on.
 
-[Example](https://arthursonzogni.github.io/FTXUI/examples_2component_2radiobox_8cpp-example.html):
+[Example](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2component_2radiobox_8cpp-example.html):
   
 ![image](https://user-images.githubusercontent.com/4759106/147246401-809d14a5-6621-4e36-8dd9-a2d75ef2a94e.png)
 
@@ -126,7 +126,7 @@ Produced by: `ftxui::Radiobox()` from "ftxui/component/component.hpp"
 A drop-down menu is a component that, when opened, displays a list of elements
 for the user to select from.
 
-[Example](https://arthursonzogni.github.io/FTXUI/examples_2component_2dropdown_8cpp-example.html):
+[Example](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2component_2dropdown_8cpp-example.html):
 
 ![youtube-video-gif (3)](https://user-images.githubusercontent.com/4759106/147246982-1e821751-531c-4e1f-bc37-2fa290e143cd.gif)
 
@@ -137,7 +137,7 @@ Produced by: `ftxui::Dropdown()` from "ftxui/component/component.hpp"
 Represents a slider object that consists of a range with binned intermediate
 intervals. It can be created by `ftxui::Slider()`.
 
-[Example](https://arthursonzogni.github.io/FTXUI/examples_2component_2slider_8cpp-example.html):
+[Example](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2component_2slider_8cpp-example.html):
 
 ![image](https://user-images.githubusercontent.com/4759106/147249265-7e2cad75-082c-436e-affe-44a550c480ab.png)
 
@@ -259,11 +259,11 @@ Produced by: `ftxui::Container::Tab()` from
 "ftxui/component/component.hpp". It takes a list of components and displays
 only one of them. This is useful for implementing a tab bar.
 
-[Vertical](https://arthursonzogni.github.io/FTXUI/examples_2component_2tab_vertical_8cpp-example.html):
+[Vertical](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2component_2tab_vertical_8cpp-example.html):
   
 ![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/4759106/147250144-22ff044a-4773-4ff7-a49c-12ba4034acb4.gif)
 
-[Horizontal](https://arthursonzogni.github.io/FTXUI/examples_2component_2tab_horizontal_8cpp-example.html):
+[Horizontal](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2component_2tab_horizontal_8cpp-example.html):
   
   ![ezgif com-gif-maker (2)](https://user-images.githubusercontent.com/4759106/147250217-fe447e0f-7a99-4e08-948a-995087d9b40e.gif)
 
@@ -279,7 +279,7 @@ There are four possible splits:
 - `ftxui::ResizableSplitBottom()`
 from "ftxui/component/component.hpp"
 
-[Example](https://arthursonzogni.github.io/FTXUI/examples_2component_2resizable_split_8cpp-example.html):
+[Example](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2component_2resizable_split_8cpp-example.html):
 
 ![ezgif com-gif-maker](https://user-images.githubusercontent.com/4759106/147248372-c55512fe-9b96-4b08-a1df-d05cf2cae431.gif)  
 

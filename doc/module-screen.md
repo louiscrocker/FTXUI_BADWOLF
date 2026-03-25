@@ -183,15 +183,15 @@ requested color is not supported by the terminal.
 **Color Spaces**
 
 - **Default**: `ftxui::Color::Default` (terminal's default color)
-- **16-color palette** [Demo](https://arthursonzogni.github.io/FTXUI/examples/?file=dom/color_gallery):
+- **16-color palette** [Demo](https://louiscrocker.github.io/FTXUI_BADWOLF/examples/?file=dom/color_gallery):
     - `ftxui::Color::Black`,
     - `ftxui::Color::Red`,
     - ...
-- **256-color palette** [Demo](https://arthursonzogni.github.io/FTXUI/examples/?file=dom/color_palette256):
+- **256-color palette** [Demo](https://louiscrocker.github.io/FTXUI_BADWOLF/examples/?file=dom/color_palette256):
     - `ftxui::Color::Chartreuse1`,
     - `ftxui::Color::DarkViolet`,
     - ...
-- **True color** (24bit) [Demo](https://arthursonzogni.github.io/FTXUI/examples/?file=dom/color_truecolor_HSV:
+- **True color** (24bit) [Demo](https://louiscrocker.github.io/FTXUI_BADWOLF/examples/?file=dom/color_truecolor_HSV:
     - `ftxui::Color::RGB(uint8_t red, uint8_t green, uint8_t blue)`
     - `ftxui::Color::HSV(uint8_t h, uint8_t s, uint8_t v)`.
     

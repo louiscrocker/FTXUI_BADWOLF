@@ -1,8 +1,8 @@
 {
-  "name": "ftxui",
+  "name": "ftxui-badwolf",
   "version": "6.2.0",
-  "description": "Functional Terminal (X) User Interface — C++ TUI library with React-inspired API",
-  "homepage": "https://github.com/ArthurSonzogni/FTXUI",
+  "description": "FTXUI BadWolf — Functional Terminal (X) User Interface, C++ TUI library with React-inspired API",
+  "homepage": "https://github.com/louiscrocker/FTXUI_BADWOLF",
   "license": "MIT",
   "dependencies": []
 }

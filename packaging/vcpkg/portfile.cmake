@@ -1,6 +1,6 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
-  REPO ArthurSonzogni/FTXUI
+  REPO louiscrocker/FTXUI_BADWOLF
   REF "v${VERSION}"
   SHA512 0  # placeholder — update with real SHA512 before publishing
   HEAD_REF main

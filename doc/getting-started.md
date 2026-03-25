@@ -335,4 +335,4 @@ int main() {
 | Coming from Bubbletea | [migration-bubbletea.md](migration-bubbletea.md) |
 | Coming from Textual | [migration-textual.md](migration-textual.md) |
 | Coming from Ratatui | [migration-ratatui.md](migration-ratatui.md) |
-| Live WASM examples | [arthursonzogni.github.io/FTXUI/examples](https://arthursonzogni.github.io/FTXUI/examples/) |
+| Live WASM examples | [louiscrocker.github.io/FTXUI_BADWOLF/examples](https://louiscrocker.github.io/FTXUI_BADWOLF/examples/) |

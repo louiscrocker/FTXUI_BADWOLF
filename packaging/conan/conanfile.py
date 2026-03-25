@@ -5,12 +5,12 @@ import os
 
 
 class FtxuiConan(ConanFile):
-    name = "ftxui"
+    name = "ftxui-badwolf"
     version = "6.2.0"
-    description = "Functional Terminal (X) User Interface"
+    description = "FTXUI BadWolf — Functional Terminal (X) User Interface"
     license = "MIT"
     url = "https://github.com/conan-io/conan-center-index"
-    homepage = "https://github.com/ArthurSonzogni/FTXUI"
+    homepage = "https://github.com/louiscrocker/FTXUI_BADWOLF"
     topics = ("tui", "terminal", "ui", "cpp20")
     package_type = "library"
     settings = "os", "compiler", "build_type", "arch"
@@ -37,7 +37,7 @@ class FtxuiConan(ConanFile):
     def source(self):
         get(
             self,
-            f"https://github.com/ArthurSonzogni/FTXUI/archive/refs/tags/v{self.version}.tar.gz",
+            f"https://github.com/louiscrocker/FTXUI_BADWOLF/archive/refs/tags/v{self.version}.tar.gz",
             strip_root=True,
         )
 

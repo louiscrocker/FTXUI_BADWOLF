@@ -1,6 +1,6 @@
 # Some developers would be happier with the gtest version provided from their
 # package manager. Use it if it is installed the package provide cmake support.
-# https://github.com/ArthurSonzogni/FTXUI/issues/551
+# https://github.com/louiscrocker/FTXUI_BADWOLF/issues/551
 find_package(GTest QUIET)
 
 if (GTest_FOUND)

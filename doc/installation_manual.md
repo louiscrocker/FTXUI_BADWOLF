@@ -6,7 +6,7 @@
 Clone and build the project using CMake:
 
 ```bash
-git clone https://github.com/ArthurSonzogni/FTXUI.git
+git clone https://github.com/louiscrocker/FTXUI_BADWOLF.git
 cd FTXUI
 cmake -S . -B build -D FTXUI_ENABLE_INSTALL=ON
 cmake --build build -j

@@ -36,7 +36,7 @@ Once FTXUI is installed:
 ## Contributions
 
 If you use another build system or package manager, feel free to contribute a guide.  
-You can also open a feature request on the [GitHub issue tracker](https://github.com/ArthurSonzogni/FTXUI/issues).
+You can also open a feature request on the [GitHub issue tracker](https://github.com/louiscrocker/FTXUI_BADWOLF/issues).
 
 <div class="section_buttons">
  

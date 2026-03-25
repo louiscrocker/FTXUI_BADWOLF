@@ -1,7 +1,7 @@
 @mainpage Introduction
 @tableofcontents
 
-<img src="https://github.com/ArthurSonzogni/FTXUI/assets/4759106/6925b6da-0a7e-49d9-883c-c890e1f36007" alt="Demo image"></img>
+<img src="https://github.com/louiscrocker/FTXUI_BADWOLF/assets/4759106/6925b6da-0a7e-49d9-883c-c890e1f36007" alt="Demo image"></img>
 
 **FTXUI** is simple cross-platform C++ library for terminal based user interfaces!
 
@@ -14,8 +14,8 @@
  * Simple and elegant syntax (in my opinion)
  * Keyboard & mouse navigation.
  * Support for [UTF8](https://en.wikipedia.org/wiki/UTF-8) and [fullwidth chars](https://en.wikipedia.org/wiki/Halfwidth_and_fullwidth_forms) (→ 测试)
- * Support for animations. [Demo 1](https://arthursonzogni.github.io/FTXUI/examples/?file=component/menu_underline_animated_gallery), [Demo 2](https://arthursonzogni.github.io/FTXUI/examples/?file=component/button_style)
- * Support for drawing. [Demo](https://arthursonzogni.github.io/FTXUI/examples/?file=component/canvas_animated)
+ * Support for animations. [Demo 1](https://louiscrocker.github.io/FTXUI_BADWOLF/examples/?file=component/menu_underline_animated_gallery), [Demo 2](https://louiscrocker.github.io/FTXUI_BADWOLF/examples/?file=component/button_style)
+ * Support for drawing. [Demo](https://louiscrocker.github.io/FTXUI_BADWOLF/examples/?file=component/canvas_animated)
  * Learn by [examples](#documentation), and [tutorials](#documentation)
  * Multiple build system and packages: 
  * Good practices: documentation, tests, fuzzers, performance tests, automated CI, automated packaging, etc...

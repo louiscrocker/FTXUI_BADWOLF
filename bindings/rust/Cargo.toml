@@ -1,9 +1,10 @@
 [package]
-name = "ftxui"
+name = "ftxui-badwolf"
 version = "0.1.0"
 edition = "2021"
-description = "Safe Rust bindings for the FTXUI C API"
+description = "Safe Rust bindings for FTXUI BadWolf"
 license = "MIT"
+repository = "https://github.com/louiscrocker/FTXUI_BADWOLF"
 
 [lib]
 name = "ftxui"

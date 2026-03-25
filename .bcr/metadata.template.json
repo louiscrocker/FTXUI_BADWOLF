@@ -1,5 +1,5 @@
 {
-  "homepage": "https://github.com/ArthurSonzogni/FTXUI",
+  "homepage": "https://github.com/louiscrocker/FTXUI_BADWOLF",
   "maintainers": [
     {
       "name": "Arthur Sonzogni",
@@ -9,7 +9,7 @@
     }
   ],
   "repository": [
-    "github:ArthurSonzogni/FTXUI"
+    "github:louiscrocker/FTXUI_BADWOLF"
   ],
   "versions": [],
   "yanked_versions": {}

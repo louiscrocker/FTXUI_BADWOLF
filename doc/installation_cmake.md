@@ -14,7 +14,7 @@ This approach downloads FTXUI at configure time and doesn't require a system-wid
 include(FetchContent)
 
 FetchContent_Declare(ftxui
-  GIT_REPOSITORY https://github.com/ArthurSonzogni/FTXUI
+  GIT_REPOSITORY https://github.com/louiscrocker/FTXUI_BADWOLF
   GIT_TAG v6.1.9  # Replace with a version, tag, or commit hash
 )
 
@@ -52,7 +52,7 @@ Make sure the package is visible in your `CMAKE_PREFIX_PATH`.
 You can also add FTXUI as a [Git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules), keeping it as part of your repository:
 
 ```cmake
-git submodule add https://github.com/ArthurSonzogni/FTXUI external/ftxui
+git submodule add https://github.com/louiscrocker/FTXUI_BADWOLF external/ftxui
 git submodule update --init --recursive
 ```
 

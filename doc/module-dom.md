@@ -85,7 +85,7 @@ paragraph("A very long text")
 
 ![ezgif com-gif-maker (4)](https://user-images.githubusercontent.com/4759106/147251370-983a06e7-6f41-4113-92b8-942f43d34d06.gif)
 
-For a more detailed example refer to [detailed example](https://arthursonzogni.github.io/FTXUI/examples_2dom_2paragraph_8cpp-example.html). Paragraph also includes a number of other variants as shown below:
+For a more detailed example refer to [detailed example](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2dom_2paragraph_8cpp-example.html). Paragraph also includes a number of other variants as shown below:
 ```cpp
 namespace ftxui {
     Element paragraph(std::string text);
@@ -247,7 +247,7 @@ Decorator bgcolor(Color);
 ```
 
 
-Color [gallery](https://arthursonzogni.github.io/FTXUI/examples_2dom_2color_gallery_8cpp-example.html):
+Color [gallery](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2dom_2color_gallery_8cpp-example.html):
 ![image](https://user-images.githubusercontent.com/4759106/147248595-04c7245a-5b85-4544-809d-a5984fc6f9e7.png)
 
 ## Palette16 #{#dom-colors-palette-16}
@@ -343,7 +343,7 @@ LinearGradient(Color::Red, Color::Blue);
 LinearGradient(45, Color::Red, Color::Blue);
 ```
 
-See [demo](https://arthursonzogni.github.io/FTXUI/examples/?file=component/linear_gradient_gallery).
+See [demo](https://louiscrocker.github.io/FTXUI_BADWOLF/examples/?file=component/linear_gradient_gallery).
 
 
 # Style {#dom-style}
@@ -365,7 +365,7 @@ Decorator colorgrad(LinearGradient);
 Decorator bgcolorgrad(LinearGradient);
 ```
 
-[Example](https://arthursonzogni.github.io/FTXUI/examples_2dom_2style_gallery_8cpp-example.html)
+[Example](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2dom_2style_gallery_8cpp-example.html)
 
 ![image](https://user-images.githubusercontent.com/4759106/147244118-380bf834-9e33-40df-9ff0-07c10f2598ef.png)
 
@@ -387,25 +387,25 @@ Enables elements to be arranged in the following ways:
   - **Inside a grid** with `ftxui::gridbox`
   - **Wrapped along one direction** using the `ftxui::flexbox`.
   
-[Example](https://arthursonzogni.github.io/FTXUI/examples_2dom_2vbox_hbox_8cpp-example.html) using `ftxui::hbox`, `ftxui::vbox` and `ftxui::filler`.
+[Example](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2dom_2vbox_hbox_8cpp-example.html) using `ftxui::hbox`, `ftxui::vbox` and `ftxui::filler`.
 
 ![image](https://user-images.githubusercontent.com/4759106/147242524-7103b5d9-1a92-4e2d-ac70-b3d6740061e3.png)
   
   
-[Example](https://arthursonzogni.github.io/FTXUI/examples_2dom_2gridbox_8cpp-example.htmlp)
+[Example](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2dom_2gridbox_8cpp-example.htmlp)
 using `ftxui::gridbox`:
 
 ![image](https://user-images.githubusercontent.com/4759106/147242972-0db1f2e9-0790-496f-86e6-ed2c604f7a73.png)
 
-[Example](https://github.com/ArthurSonzogni/FTXUI/blob/master/examples/dom/hflow.cpp)
+[Example](https://github.com/louiscrocker/FTXUI_BADWOLF/blob/master/examples/dom/hflow.cpp)
 using flexbox:
 
 ![image](https://user-images.githubusercontent.com/4759106/147243064-780ac7cc-605b-475f-94b8-cf7c4aed03a5.png)
 
 Checkout this
-[example](https://arthursonzogni.github.io/FTXUI/examples_2dom_2hflow_8cpp-example.html)
+[example](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2dom_2hflow_8cpp-example.html)
 and the associated
-[demo](https://arthursonzogni.github.io/FTXUI/examples/?file=component/flexbox).
+[demo](https://louiscrocker.github.io/FTXUI_BADWOLF/examples/?file=component/flexbox).
 
 Element can also become flexible using the `ftxui::flex` decorator.
 
@@ -462,7 +462,7 @@ table.SelectRow(0).Border(DOUBLE);
 auto document = table.Render();
 ```
 
-[Code example](https://arthursonzogni.github.io/FTXUI/examples_2dom_2table_8cpp-example.html):
+[Code example](https://louiscrocker.github.io/FTXUI_BADWOLF/examples_2dom_2table_8cpp-example.html):
   
 ![image](https://user-images.githubusercontent.com/4759106/147250766-77d8ec9e-cf2b-486d-9866-1fd9f1bd2e6b.png)
 
@@ -524,10 +524,10 @@ See the API [<ftxui/dom/canvas.hpp>](./canvas_8hpp_source.html)
 Drawing can be performed on a `ftxui::Canvas`, using braille, block, or simple
 characters:
   
-Simple [example](https://github.com/ArthurSonzogni/FTXUI/blob/master/examples/dom/canvas.cpp):
+Simple [example](https://github.com/louiscrocker/FTXUI_BADWOLF/blob/master/examples/dom/canvas.cpp):
   
 ![image](https://user-images.githubusercontent.com/4759106/147245843-76cc62fb-ccb4-421b-aacf-939f9afb42fe.png)
 
-Complex [example](https://github.com/ArthurSonzogni/FTXUI/blob/master/examples/component/canvas_animated.cpp):
+Complex [example](https://github.com/louiscrocker/FTXUI_BADWOLF/blob/master/examples/component/canvas_animated.cpp):
   
 ![ezgif com-gif-maker (3)](https://user-images.githubusercontent.com/4759106/147250538-783a8246-98e0-4a25-b032-3bd3710549d1.gif)

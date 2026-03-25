@@ -3,9 +3,11 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="pyftxui",
+    name="pybadwolf",
     version="0.1.0",
     packages=find_packages(),
     package_data={"pyftxui": ["*.pyi", "*.so", "*.pyd"]},
     python_requires=">=3.8",
+    description="FTXUI BadWolf Python bindings",
+    url="https://github.com/louiscrocker/FTXUI_BADWOLF",
 )

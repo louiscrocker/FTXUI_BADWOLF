@@ -1,5 +1,5 @@
 """
-pyftxui — Python bindings for the FTXUI terminal UI library.
+pybadwolf — Python bindings for FTXUI BadWolf.
 
 Quick start::
 
