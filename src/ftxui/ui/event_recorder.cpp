@@ -60,7 +60,8 @@ std::string Describe(const ftxui::Event& e) {
   if (e.is_mouse()) {
     char buf[64];
     auto mutable_e = e;
-    std::snprintf(buf, sizeof(buf), "Mouse(%d,%d)", mutable_e.mouse().x, mutable_e.mouse().y);
+    std::snprintf(buf, sizeof(buf), "Mouse(%d,%d)", mutable_e.mouse().x,
+                  mutable_e.mouse().y);
     return buf;
   }
   std::string raw = ToHex(e.input());
@@ -85,8 +86,8 @@ std::string SerializeEvent(const ftxui::Event& e) {
     std::ostringstream oss;
     oss << "MOUSE " << static_cast<int>(m.button) << " "
         << static_cast<int>(m.motion) << " " << (m.shift ? 1 : 0) << " "
-        << (m.meta ? 1 : 0) << " " << (m.control ? 1 : 0) << " " << m.x
-        << " " << m.y << " " << ToHex(e.input());
+        << (m.meta ? 1 : 0) << " " << (m.control ? 1 : 0) << " " << m.x << " "
+        << m.y << " " << ToHex(e.input());
     return oss.str();
   }
   return "SPECIAL " + ToHex(e.input());
@@ -263,9 +264,8 @@ void EventRecorder::Replay(std::function<void()> on_complete) {
   std::thread([this, events_copy = std::move(events_copy),
                complete_cb = std::move(complete_cb)]() mutable {
     const auto wall_start = std::chrono::steady_clock::now();
-    const auto rec_start = events_copy.empty()
-                               ? wall_start
-                               : events_copy.front().timestamp;
+    const auto rec_start =
+        events_copy.empty() ? wall_start : events_copy.front().timestamp;
 
     for (const auto& re : events_copy) {
       if (!replaying_) {

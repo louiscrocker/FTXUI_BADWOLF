@@ -38,9 +38,8 @@ int main() {
                [&] {
                  std::string state_str;
                  if (rec.IsRecording()) {
-                   state_str =
-                       "● REC  |  Ctrl+R=stop  (" +
-                       std::to_string(rec.EventCount()) + " events)";
+                   state_str = "● REC  |  Ctrl+R=stop  (" +
+                               std::to_string(rec.EventCount()) + " events)";
                  } else if (rec.IsReplaying()) {
                    state_str = "▶ REPLAY …";
                  } else {
@@ -63,9 +62,10 @@ int main() {
           if (rec.IsRecording()) {
             rec.StopRecording();
             rec.Save("badwolf_session.txt");
-            status = "Recording stopped. Saved to badwolf_session.txt  "
-                     "(" +
-                     std::to_string(rec.EventCount()) + " events)";
+            status =
+                "Recording stopped. Saved to badwolf_session.txt  "
+                "(" +
+                std::to_string(rec.EventCount()) + " events)";
           } else {
             rec.StartRecording();
             status = "● Recording…";

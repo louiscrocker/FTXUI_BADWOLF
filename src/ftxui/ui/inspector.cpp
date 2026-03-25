@@ -20,7 +20,9 @@ namespace ftxui::ui {
 namespace {
 
 // Walk the component tree collecting lines of text.
-void WalkTree(ComponentBase* node, int depth, std::vector<std::string>& lines,
+void WalkTree(ComponentBase* node,
+              int depth,
+              std::vector<std::string>& lines,
               ComponentBase* focused) {
   if (!node) {
     return;
@@ -66,25 +68,25 @@ class InspectorComponent : public ComponentBase {
     std::snprintf(dims_buf, sizeof(dims_buf), "Root children: %zu",
                   inner_->ChildCount());
 
-    Element panel = vbox({
-                        separatorLight(),
-                        hbox({
-                            text(" ╭─ Component Inspector ") |
-                                color(Color::Cyan) | bold,
-                            filler(),
-                            text("Ctrl+I to hide ") | dim,
-                        }),
-                        hbox({
-                            text(" "),
-                            vbox(std::move(tree_elems)) | frame |
-                                size(HEIGHT, LESS_THAN, 8),
-                        }),
-                        hbox({
-                            text(" "),
-                            text(dims_buf) | dim,
-                        }),
-                    }) |
-                    border;
+    Element panel =
+        vbox({
+            separatorLight(),
+            hbox({
+                text(" ╭─ Component Inspector ") | color(Color::Cyan) | bold,
+                filler(),
+                text("Ctrl+I to hide ") | dim,
+            }),
+            hbox({
+                text(" "),
+                vbox(std::move(tree_elems)) | frame |
+                    size(HEIGHT, LESS_THAN, 8),
+            }),
+            hbox({
+                text(" "),
+                text(dims_buf) | dim,
+            }),
+        }) |
+        border;
 
     return vbox({content | flex, panel});
   }

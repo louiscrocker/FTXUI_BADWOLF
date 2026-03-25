@@ -110,8 +110,7 @@ Element RenderTree(const std::vector<UINode>& nodes, int depth = 0) {
 // ---------------------------------------------------------------------------
 
 static const std::vector<std::string> kPalette = {
-    "text",  "hbox",   "vbox",    "border",
-    "separator", "button", "gauge", "spinner",
+    "text", "hbox", "vbox", "border", "separator", "button", "gauge", "spinner",
 };
 
 class UIBuilderComponent : public ComponentBase {
@@ -127,24 +126,22 @@ class UIBuilderComponent : public ComponentBase {
     std::string code = BuildCode();
 
     // ── Left: Palette ─────────────────────────────────────────────────────
-    Element palette_panel =
-        vbox({
-            text(" Palette ") | bold | center,
-            separator(),
-            palette_menu_->Render() | frame | flex,
-            separator(),
-            text(" Enter=add  Del=remove ") | dim | center,
-        }) |
-        border | size(WIDTH, EQUAL, 18);
+    Element palette_panel = vbox({
+                                text(" Palette ") | bold | center,
+                                separator(),
+                                palette_menu_->Render() | frame | flex,
+                                separator(),
+                                text(" Enter=add  Del=remove ") | dim | center,
+                            }) |
+                            border | size(WIDTH, EQUAL, 18);
 
     // ── Center: Preview ───────────────────────────────────────────────────
-    Element preview_panel =
-        vbox({
-            text(" Preview ") | bold | center,
-            separator(),
-            RenderTree(tree_) | flex,
-        }) |
-        border | flex;
+    Element preview_panel = vbox({
+                                text(" Preview ") | bold | center,
+                                separator(),
+                                RenderTree(tree_) | flex,
+                            }) |
+                            border | flex;
 
     // ── Right: Code ───────────────────────────────────────────────────────
     // Split code into lines for display.
@@ -159,19 +156,19 @@ class UIBuilderComponent : public ComponentBase {
     if (code_lines.empty()) {
       code_lines.push_back(text("(no elements)") | dim);
     }
-    Element code_panel =
-        vbox({
-            text(" Generated C++ ") | bold | center,
-            separator(),
-            vbox(std::move(code_lines)) | frame | flex,
-            separator(),
-            text(" s=export  q=quit ") | dim | center,
-        }) |
-        border | size(WIDTH, EQUAL, 40);
+    Element code_panel = vbox({
+                             text(" Generated C++ ") | bold | center,
+                             separator(),
+                             vbox(std::move(code_lines)) | frame | flex,
+                             separator(),
+                             text(" s=export  q=quit ") | dim | center,
+                         }) |
+                         border | size(WIDTH, EQUAL, 40);
 
     // ── Status bar ────────────────────────────────────────────────────────
-    std::string status = "  Visual UI Builder  |  Tab=focus  Enter=add  "
-                         "Del=remove  s=export  q=quit  ";
+    std::string status =
+        "  Visual UI Builder  |  Tab=focus  Enter=add  "
+        "Del=remove  s=export  q=quit  ";
     if (!status_msg_.empty()) {
       status = "  " + status_msg_;
     }
