@@ -287,6 +287,8 @@ add_library(ui
   src/ftxui/ui/nl_theme.cpp
   include/ftxui/ui/voice.hpp
   src/ftxui/ui/voice.cpp
+  include/ftxui/ui/voice_theme.hpp
+  src/ftxui/ui/voice_theme.cpp
   include/ftxui/ui/hot_reload.hpp
   src/ftxui/ui/hot_reload.cpp
   include/ftxui/ui/plugin.hpp

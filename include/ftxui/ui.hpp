@@ -139,6 +139,7 @@
 // ── Voice Control
 // ──────────────────────────────────────────────────────────────
 #include "ftxui/ui/voice.hpp"
+#include "ftxui/ui/voice_theme.hpp"
 
 // ── Plugin System
 // ─────────────────────────────────────────────────────────────

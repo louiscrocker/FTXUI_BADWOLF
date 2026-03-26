@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI BadWolf — 🤖 AI Code Generator</title>
+  <meta name="description" content="Generate complete, compilable FTXUI BadWolf terminal apps from a plain-English description. Zero configuration — uses built-in templates or Ollama.">
+  <meta property="og:title" content="FTXUI BadWolf — AI Code Generator">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+  <style>
+    /* ── Code Generator page extras ─────────────────────────────────── */
+    .terminal-demo {
+      background: #0d1117;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      position: relative;
+    }
+    .terminal-demo .bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 1rem;
+    }
+    .terminal-demo .bar span {
+      width: 12px; height: 12px; border-radius: 50%;
+    }
+    .terminal-demo .bar .red    { background:#ff5f57; }
+    .terminal-demo .bar .yellow { background:#ffbd2e; }
+    .terminal-demo .bar .green  { background:#28c941; }
+    .terminal-prompt    { color: #79c0ff; }
+    .terminal-output    { color: #e6edf3; }
+    .terminal-comment   { color: #8b949e; }
+    .terminal-highlight { color: #56d364; font-weight: bold; }
+    .terminal-error     { color: #f85149; }
+    .terminal-muted     { color: #8b949e; }
+    .terminal-kw        { color: #ff7b72; font-weight: bold; }
+    .terminal-str       { color: #a5d6ff; }
+    .terminal-pp        { color: #c9a0ff; }
+    .terminal-num       { color: #f2cc60; }
+
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .template-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .template-card:hover {
+      border-color: rgba(121,192,255,0.35);
+      background: rgba(121,192,255,0.06);
+    }
+    .template-card .t-name {
+      font-weight: 700;
+      color: #79c0ff;
+      font-family: monospace;
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+    }
+    .template-card .t-desc {
+      color: #8b949e;
+      font-size: 0.83rem;
+      line-height: 1.4;
+    }
+    .template-card .t-kws {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+    .template-card .t-kw {
+      background: rgba(121,192,255,0.1);
+      border: 1px solid rgba(121,192,255,0.2);
+      border-radius: 4px;
+      padding: 1px 7px;
+      font-size: 0.72rem;
+      color: #79c0ff;
+      font-family: monospace;
+    }
+
+    .arch-diagram {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 1.5rem 2rem;
+      font-family: monospace;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      color: #e6edf3;
+      overflow-x: auto;
+    }
+    .arch-arrow { color: #79c0ff; }
+    .arch-box   { color: #56d364; font-weight: bold; }
+    .arch-label { color: #e3b341; }
+
+    .api-section { margin-top: 2.5rem; }
+    .api-section h3 { color: #79c0ff; margin-bottom: 0.75rem; }
+    .method-sig {
+      background: rgba(255,255,255,0.04);
+      border-left: 3px solid rgba(121,192,255,0.5);
+      border-radius: 0 8px 8px 0;
+      padding: 0.6rem 1rem;
+      font-family: monospace;
+      font-size: 0.82rem;
+      color: #e6edf3;
+      margin-bottom: 0.5rem;
+      overflow-x: auto;
+    }
+    .method-desc {
+      font-size: 0.875rem;
+      color: #8b949e;
+      margin: 0 0 1rem 1rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .badge-green  { background: rgba(86,211,100,0.15); color: #56d364; border: 1px solid rgba(86,211,100,0.3); }
+    .badge-blue   { background: rgba(121,192,255,0.15); color: #79c0ff; border: 1px solid rgba(121,192,255,0.3); }
+    .badge-yellow { background: rgba(242,204,96,0.15); color: #f2cc60; border: 1px solid rgba(242,204,96,0.3); }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ──────────────────────────────────────────────────────────── -->
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">🐺 FTXUI BadWolf</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Get Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Components <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="colors.html">🎨 Colors &amp; Styling</a>
+          <a href="typewriter.html">⌨️ Typewriter &amp; Console</a>
+          <a href="json.html">📄 JSON</a>
+          <a href="sql.html">🗄️ SQL &amp; DataFrame</a>
+          <a href="layout.html">📐 Constraint Layout</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Platform <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="live-data.html">📡 Live Data</a>
+          <a href="distributed.html">🌐 Distributed State</a>
+          <a href="collab.html">👥 Collab Sessions</a>
+          <a href="registry.html">📦 Component Registry</a>
+          <a href="llm-bridge.html">🤖 LLM Bridge</a>
+          <a href="codegen.html">⚙️ AI Code Generator</a>
+          <a href="nl-theming.html">🎨 AI Theming</a>
+          <a href="voice.html">🎙 Voice Control</a>
+          <a href="playground.html">🌐 Playground</a>
+          <a href="webgl.html">⚡ WebGL Renderer</a>
+          <a href="video.html">📺 Video Player</a>
+          <a href="hot-reload.html">🔥 Hot Reload</a>
+          <a href="plugins.html">🔌 Plugin System</a>
+          <a href="multiplayer.html">🎮 Multiplayer Games</a>
+          <a href="web-bridge.html">🌐 Web Bridge</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Docs <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="deep-dive.html">📖 Deep Dive</a>
+          <a href="api.html">📘 API Reference</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Hero ────────────────────────────────────────────────────────────────── -->
+<header class="glass-hero">
+  <div class="hero-inner">
+    <div class="hero-badge">AI-Powered</div>
+    <h1 class="hero-title">🤖 AI Code Generator</h1>
+    <p class="hero-subtitle">
+      One command. A complete, compilable terminal app.<br>
+      <code>badwolf generate "kubernetes pod monitor"</code> → ready-to-build
+      <code>.cpp</code> file.
+    </p>
+    <div class="hero-actions">
+      <a href="#quickstart" class="btn-primary">Quick Start</a>
+      <a href="#templates" class="btn-secondary">Browse Templates</a>
+      <a href="#studio"    class="btn-secondary">CodeGenStudio</a>
+    </div>
+    <div style="display:flex;gap:0.75rem;justify-content:center;margin-top:1.2rem;flex-wrap:wrap;">
+      <span class="badge badge-green">Zero Dependencies</span>
+      <span class="badge badge-blue">LLM Optional</span>
+      <span class="badge badge-yellow">8 Built-in Templates</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── Main ────────────────────────────────────────────────────────────────── -->
+<main class="glass-main">
+
+  <!-- ── Quick Start ──────────────────────────────────────────────────────── -->
+  <section id="quickstart" class="glass-section">
+    <h2>Quick Start</h2>
+    <p>
+      The <code>badwolf generate</code> CLI command produces a complete
+      <code>.cpp</code> file from a plain-English description. No LLM required
+      — built-in templates cover the most common app patterns out of the box.
+    </p>
+
+    <div class="terminal-demo">
+      <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre><span class="terminal-prompt">$</span> <span class="terminal-highlight">badwolf generate</span> <span class="terminal-str">"kubernetes pod monitor"</span>
+<span class="terminal-output">🤖 BadWolf AI Code Generator
+Description: kubernetes pod monitor
+Output: generated_app.cpp</span>
+
+<span class="terminal-output">Ollama not found. Using built-in templates...
+  Matched template: <span class="terminal-highlight">monitor</span>
+  Keywords matched: monitor, kubernetes, pod</span>
+
+<span class="terminal-highlight">✓ Generated: generated_app.cpp</span>
+
+<span class="terminal-comment"># Build immediately:</span>
+<span class="terminal-prompt">$</span> g++ -std=c++17 generated_app.cpp \
+      -lftxui_ui -lftxui_component -lftxui_dom -lftxui_screen \
+      -o pod_monitor
+<span class="terminal-prompt">$</span> ./pod_monitor</pre>
+    </div>
+
+    <div class="terminal-demo" style="margin-top:1.5rem;">
+      <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+      <p style="color:#8b949e;font-family:monospace;margin:0 0 0.75rem;">With Ollama (AI-powered generation):</p>
+<pre><span class="terminal-prompt">$</span> brew install ollama &amp;&amp; ollama pull llama3
+<span class="terminal-prompt">$</span> ollama serve &amp;
+<span class="terminal-prompt">$</span> <span class="terminal-highlight">badwolf generate</span> <span class="terminal-str">"kubernetes pod monitor with CPU gauges"</span> k8s.cpp
+<span class="terminal-output">🤖 BadWolf AI Code Generator
+Using Ollama LLM...
+<span class="terminal-highlight">✓ Generated: k8s.cpp</span>
+
+Build with:
+  g++ -std=c++17 k8s.cpp -lftxui_ui -lftxui_component -lftxui_dom -lftxui_screen -o myapp</span></pre>
+    </div>
+  </section>
+
+  <!-- ── Architecture ─────────────────────────────────────────────────────── -->
+  <section class="glass-section">
+    <h2>How It Works</h2>
+    <div class="arch-diagram">
+<pre><span class="arch-label">Input description</span>  "kubernetes pod monitor"
+         │
+         ▼
+<span class="arch-box">  LLM Available?</span>
+  ┌──────┴──────────────────┐
+  │ No                      │ Yes (Ollama / OpenAI)
+  ▼                         ▼
+<span class="arch-box">TemplateLibrary</span>         <span class="arch-box">CodeGenerator</span>
+  │  Keyword scoring         │  BuildSystemPrompt()
+  │  FindBest("k8s pod")     │  BuildUserPrompt(req)
+  │  → "monitor" template    │  QueryOllama(...)
+  │                          │  ExtractCode(response)
+  └──────────┬───────────────┘
+             ▼
+       <span class="arch-box">CodeGenResult</span>
+         .code          ← complete .cpp
+         .cmake_snippet ← CMakeLists.txt snippet
+         .LooksValid()  ← sanity check
+         .WriteToFile() ← save to disk</pre>
+    </div>
+    <p style="margin-top:1rem;color:#8b949e;">
+      When LLM generation fails or Ollama is unreachable, the generator falls back
+      to template matching automatically — no user action needed.
+    </p>
+  </section>
+
+  <!-- ── Templates ────────────────────────────────────────────────────────── -->
+  <section id="templates" class="glass-section">
+    <h2>Built-in Template Library</h2>
+    <p>
+      Eight production-quality templates covering the most common terminal app
+      patterns. Each template is a complete, working <code>.cpp</code> file with
+      <code>{APP_NAME}</code> and <code>{TIMESTAMP}</code> placeholders.
+    </p>
+
+    <div class="template-grid">
+      <div class="template-card">
+        <div class="t-name">dashboard</div>
+        <div class="t-desc">Multi-tab dashboard with status panel, overview metrics, and log viewer.</div>
+        <div class="t-kws">
+          <span class="t-kw">dashboard</span>
+          <span class="t-kw">overview</span>
+          <span class="t-kw">admin</span>
+          <span class="t-kw">status</span>
+          <span class="t-kw">tabs</span>
+        </div>
+      </div>
+
+      <div class="template-card">
+        <div class="t-name">monitor</div>
+        <div class="t-desc">Real-time sysmon-style display with CPU/memory gauges and process table.</div>
+        <div class="t-kws">
+          <span class="t-kw">monitor</span>
+          <span class="t-kw">kubernetes</span>
+          <span class="t-kw">sysmon</span>
+          <span class="t-kw">cpu</span>
+          <span class="t-kw">metrics</span>
+        </div>
+      </div>
+
+      <div class="template-card">
+        <div class="t-name">crud</div>
+        <div class="t-desc">Create / Read / Update / Delete data app with form input and sortable table.</div>
+        <div class="t-kws">
+          <span class="t-kw">crud</span>
+          <span class="t-kw">edit</span>
+          <span class="t-kw">records</span>
+          <span class="t-kw">form</span>
+          <span class="t-kw">database</span>
+        </div>
+      </div>
+
+      <div class="template-card">
+        <div class="t-name">chat</div>
+        <div class="t-desc">Chat / messaging UI with message history, input field, and timestamps.</div>
+        <div class="t-kws">
+          <span class="t-kw">chat</span>
+          <span class="t-kw">messages</span>
+          <span class="t-kw">conversation</span>
+          <span class="t-kw">irc</span>
+        </div>
+      </div>
+
+      <div class="template-card">
+        <div class="t-name">explorer</div>
+        <div class="t-desc">File / data explorer with tree on left and detail view on right.</div>
+        <div class="t-kws">
+          <span class="t-kw">explorer</span>
+          <span class="t-kw">files</span>
+          <span class="t-kw">tree</span>
+          <span class="t-kw">browse</span>
+          <span class="t-kw">navigate</span>
+        </div>
+      </div>
+
+      <div class="template-card">
+        <div class="t-name">wizard</div>
+        <div class="t-desc">Multi-step wizard form using the built-in Wizard component.</div>
+        <div class="t-kws">
+          <span class="t-kw">wizard</span>
+          <span class="t-kw">setup</span>
+          <span class="t-kw">onboarding</span>
+          <span class="t-kw">steps</span>
+        </div>
+      </div>
+
+      <div class="template-card">
+        <div class="t-name">game</div>
+        <div class="t-desc">Basic game loop with canvas rendering, physics, and WASD controls.</div>
+        <div class="t-kws">
+          <span class="t-kw">game</span>
+          <span class="t-kw">arcade</span>
+          <span class="t-kw">physics</span>
+          <span class="t-kw">canvas</span>
+        </div>
+      </div>
+
+      <div class="template-card">
+        <div class="t-name">map</div>
+        <div class="t-desc">GeoMap with per-country data overlay, legend, and click-to-select info.</div>
+        <div class="t-kws">
+          <span class="t-kw">map</span>
+          <span class="t-kw">geo</span>
+          <span class="t-kw">world</span>
+          <span class="t-kw">countries</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CodeGenStudio ─────────────────────────────────────────────────────── -->
+  <section id="studio" class="glass-section">
+    <h2>CodeGenStudio — In-App Generator</h2>
+    <p>
+      Embed the code generator directly inside your running BadWolf app using
+      the <code>CodeGenStudio</code> component. Type a description, choose style
+      and feature toggles, and get syntax-highlighted code instantly.
+    </p>
+
+    <div class="terminal-demo">
+      <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre><span class="terminal-muted">┌─ 🤖 BadWolf Code Generator ─────────────────────────────────────────────────┐</span>
+<span class="terminal-muted">│</span> <span class="terminal-output">Describe your app:</span> <span class="terminal-str">[kubernetes pod monitor with real-time metrics_______]</span>  <span class="terminal-muted">│</span>
+<span class="terminal-muted">│</span> <span class="terminal-output">Style:</span> <span class="terminal-str">[Modern ▾]</span>  <span class="terminal-highlight">[✓ Charts]</span> <span class="terminal-highlight">[✓ Tables]</span> <span class="terminal-highlight">[✓ Real-time]</span> <span class="terminal-muted">[_ Map]</span>       <span class="terminal-muted">│</span>
+<span class="terminal-muted">│</span>                                    <span class="terminal-highlight">[ Generate → ]</span>  <span class="terminal-output">[From Template]</span>         <span class="terminal-muted">│</span>
+<span class="terminal-muted">│─────────────────────────────────────────────────────────────────────────────│</span>
+<span class="terminal-muted">│</span> <span class="terminal-highlight">✓ Generated from template: monitor</span>                          <span class="terminal-output">[Save As…]</span>    <span class="terminal-muted">│</span>
+<span class="terminal-muted">│─────────────────────────────────────────────────────────────────────────────│</span>
+<span class="terminal-muted">│</span> Generated Code (58 lines)                                                   <span class="terminal-muted">│</span>
+<span class="terminal-muted">│</span>  <span class="terminal-num">1</span> │ <span class="terminal-pp">#include</span> <span class="terminal-str">&lt;ftxui/ui.hpp&gt;</span>                                               <span class="terminal-muted">│</span>
+<span class="terminal-muted">│</span>  <span class="terminal-num">2</span> │ <span class="terminal-kw">using namespace</span> ftxui;                                               <span class="terminal-muted">│</span>
+<span class="terminal-muted">│</span>  <span class="terminal-num">3</span> │ <span class="terminal-kw">using namespace</span> ftxui::ui;                                           <span class="terminal-muted">│</span>
+<span class="terminal-muted">│</span>  <span class="terminal-num">4</span> │                                                                         <span class="terminal-muted">│</span>
+<span class="terminal-muted">│</span>  <span class="terminal-num">5</span> │ <span class="terminal-kw">int</span> main() {                                                          <span class="terminal-muted">│</span>
+<span class="terminal-muted">│</span>  <span class="terminal-num">6</span> │   SetTheme(Theme::Dark());                                              <span class="terminal-muted">│</span>
+<span class="terminal-muted">│</span> …  │                                                                         <span class="terminal-muted">│</span>
+<span class="terminal-muted">└─────────────────────────────────────────────────────────────────────────────┘</span></pre>
+    </div>
+
+    <div class="terminal-demo" style="margin-top:1.5rem;">
+      <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+      <p style="color:#8b949e;font-family:monospace;margin:0 0 0.75rem;font-size:0.82rem;">Embed CodeGenStudio in your app:</p>
+<pre><span class="terminal-pp">#include</span> <span class="terminal-str">&lt;ftxui/ui.hpp&gt;</span>
+<span class="terminal-pp">#include</span> <span class="terminal-str">&lt;ftxui/ui/codegen.hpp&gt;</span>
+<span class="terminal-kw">using namespace</span> ftxui;
+<span class="terminal-kw">using namespace</span> ftxui::ui;
+
+<span class="terminal-kw">int</span> main() {
+  SetTheme(Theme::Dark());
+
+  <span class="terminal-kw">auto</span> studio = CodeGenStudio([](const CodeGenResult&amp; r) {
+    <span class="terminal-comment">// called when code is generated</span>
+    r.WriteToFile(<span class="terminal-str">"output.cpp"</span>);
+  });
+
+  ScreenInteractive::Fullscreen().Loop(studio);
+  <span class="terminal-kw">return</span> <span class="terminal-num">0</span>;
+}</pre>
+    </div>
+  </section>
+
+  <!-- ── Syntax Highlighter ─────────────────────────────────────────────────── -->
+  <section class="glass-section">
+    <h2>SyntaxHighlighter</h2>
+    <p>
+      Minimal C++ syntax highlighter built entirely on standard string
+      processing — no external dependencies. Recognises keywords, strings,
+      comments, numbers, and preprocessor directives and maps them to FTXUI
+      colour decorators.
+    </p>
+
+    <div class="terminal-demo">
+      <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre><span class="terminal-comment">// Highlight a full source file</span>
+<span class="terminal-kw">auto</span> elements = SyntaxHighlighter::Highlight(source_code);
+
+<span class="terminal-comment">// Highlight a single line</span>
+<span class="terminal-kw">auto</span> el = SyntaxHighlighter::HighlightLine(<span class="terminal-str">"int x = 42;"</span>);
+
+<span class="terminal-comment">// Tokenise to inspect individual tokens</span>
+<span class="terminal-kw">auto</span> tokens = SyntaxHighlighter::Tokenize(<span class="terminal-str">"return nullptr;"</span>);
+<span class="terminal-kw">for</span> (<span class="terminal-kw">auto</span>&amp; tok : tokens) {
+  <span class="terminal-comment">// tok.text, tok.type (Keyword / String / Comment / Number / …)</span>
+}</pre>
+    </div>
+
+    <h3 style="margin-top:2rem;color:#79c0ff;">Token Types</h3>
+    <table class="api-table" style="width:100%;border-collapse:collapse;font-size:0.875rem;">
+      <thead>
+        <tr>
+          <th style="padding:0.6rem 1rem;text-align:left;background:rgba(121,192,255,0.12);color:#79c0ff;border-bottom:1px solid rgba(255,255,255,0.1);">TokenType</th>
+          <th style="padding:0.6rem 1rem;text-align:left;background:rgba(121,192,255,0.12);color:#79c0ff;border-bottom:1px solid rgba(255,255,255,0.1);">Terminal Colour</th>
+          <th style="padding:0.6rem 1rem;text-align:left;background:rgba(121,192,255,0.12);color:#79c0ff;border-bottom:1px solid rgba(255,255,255,0.1);">Examples</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:#ff7b72;font-family:monospace;">Keyword</td>   <td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);">Blue bold</td>  <td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:#8b949e;font-family:monospace;">int, auto, return, class</td></tr>
+        <tr><td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:#a5d6ff;font-family:monospace;">String</td>    <td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);">Green</td>      <td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:#8b949e;font-family:monospace;">"hello", 'x'</td></tr>
+        <tr><td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:#8b949e;font-family:monospace;">Comment</td>   <td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);">Dim gray</td>   <td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:#8b949e;font-family:monospace;">// …, /* … */</td></tr>
+        <tr><td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:#f2cc60;font-family:monospace;">Number</td>    <td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);">Yellow</td>     <td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:#8b949e;font-family:monospace;">42, 3.14, 0xFF</td></tr>
+        <tr><td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:#c9a0ff;font-family:monospace;">Preprocessor</td><td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);">Magenta</td>   <td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:#8b949e;font-family:monospace;">#include, #define</td></tr>
+        <tr><td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:#e6edf3;font-family:monospace;">Operator</td>  <td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);">Light gray</td><td style="padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:#8b949e;font-family:monospace;">+, -, =, ::, -&gt;</td></tr>
+        <tr><td style="padding:0.5rem 1rem;font-family:monospace;">Normal</td>    <td style="padding:0.5rem 1rem;">White</td>      <td style="padding:0.5rem 1rem;color:#8b949e;font-family:monospace;">identifiers</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── API Reference ─────────────────────────────────────────────────────── -->
+  <section class="glass-section api-section">
+    <h2>API Reference</h2>
+
+    <h3>CodeGenRequest</h3>
+    <div class="method-sig">struct CodeGenRequest { std::string description; std::string style = "modern"; … };</div>
+    <div class="method-desc">Configures a generation request. Key fields: <code>description</code> (required), <code>style</code> ("modern" / "minimal" / "matrix" / "lcars"), <code>features</code>, <code>model</code>, <code>max_tokens</code>.</div>
+
+    <h3>CodeGenResult</h3>
+    <div class="method-sig">bool CodeGenResult::LooksValid() const;</div>
+    <div class="method-desc">Returns true if <code>.code</code> is non-empty and references both <code>ftxui</code> and a <code>main(</code> function.</div>
+    <div class="method-sig">bool CodeGenResult::WriteToFile(const std::string&amp; path) const;</div>
+    <div class="method-desc">Write <code>.code</code> to <code>path</code>. Returns true on success.</div>
+
+    <h3>TemplateLibrary</h3>
+    <div class="method-sig">static const CodeTemplate* TemplateLibrary::FindBest(const std::string&amp; description);</div>
+    <div class="method-desc">Keyword-score all built-in templates against <code>description</code>. Returns the highest-scoring match (score ≥ 1), or <code>nullptr</code>.</div>
+    <div class="method-sig">static std::string TemplateLibrary::Fill(const CodeTemplate&amp; tmpl, const std::map&lt;std::string,std::string&gt;&amp; vars);</div>
+    <div class="method-desc">Replace <code>{KEY}</code> placeholders with values from <code>vars</code>. Unknown placeholders are left unchanged.</div>
+
+    <h3>CodeGenerator</h3>
+    <div class="method-sig">CodeGenResult CodeGenerator::Generate(const CodeGenRequest&amp; req);</div>
+    <div class="method-desc">Synchronous generation. Uses Ollama if available, falls back to <code>GenerateFromTemplate</code> automatically.</div>
+    <div class="method-sig">void CodeGenerator::GenerateAsync(req, on_token, on_complete);</div>
+    <div class="method-desc">Runs generation on a background thread. <code>on_token</code> is called with each ~40-char chunk; <code>on_complete</code> with the final <code>CodeGenResult</code>.</div>
+
+    <h3>CodeGenStudio()</h3>
+    <div class="method-sig">ftxui::Component CodeGenStudio(std::function&lt;void(const CodeGenResult&amp;)&gt; on_generated = {});</div>
+    <div class="method-desc">Full interactive code generation panel — description input, style/feature toggles, generate buttons, and syntax-highlighted preview.</div>
+
+    <h3>CodePreview()</h3>
+    <div class="method-sig">ftxui::Component CodePreview(const std::string&amp; code, const std::string&amp; language = "cpp");</div>
+    <div class="method-desc">Scrollable, line-numbered, syntax-highlighted code view. Arrow keys / j-k / PageUp-PageDown for navigation.</div>
+  </section>
+
+  <!-- ── Demo ──────────────────────────────────────────────────────────────── -->
+  <section class="glass-section">
+    <h2>Run the Demo</h2>
+    <div class="terminal-demo">
+      <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+<pre><span class="terminal-comment"># Build with examples enabled</span>
+<span class="terminal-prompt">$</span> cmake -S . -B build -DFTXUI_BUILD_EXAMPLES=ON
+<span class="terminal-prompt">$</span> cmake --build build --target ftxui_example_codegen_demo
+
+<span class="terminal-comment"># Run</span>
+<span class="terminal-prompt">$</span> ./build/examples/ui/ftxui_example_codegen_demo</pre>
+    </div>
+    <p style="margin-top:1rem;color:#8b949e;">
+      The demo shows the template browser, LLM status indicator, CodeGenStudio,
+      and a live syntax-highlighted preview — side by side.
+    </p>
+  </section>
+
+</main>
+
+<!-- ── Footer ──────────────────────────────────────────────────────────────── -->
+<footer class="glass-footer">
+  <div class="footer-inner">
+    <p>🐺 FTXUI BadWolf — MIT License</p>
+    <p><a href="https://github.com/ArthurSonzogni/FTXUI">GitHub</a> · <a href="api.html">API Docs</a></p>
+  </div>
+</footer>
+
+<script src="js/glass.js"></script>
+</body>
+</html>

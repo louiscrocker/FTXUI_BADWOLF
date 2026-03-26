@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI BadWolf — Voice + Live Themes</title>
+  <meta name="description" content="Voice-activated and reactive live theme switching for FTXUI BadWolf terminal UIs.">
+  <meta property="og:title" content="FTXUI BadWolf — Voice + Live Themes">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">🐺 FTXUI BadWolf</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Get Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Components <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="colors.html">🎨 Colors &amp; Styling</a>
+          <a href="typewriter.html">⌨️ Typewriter &amp; Console</a>
+          <a href="json.html">📄 JSON</a>
+          <a href="layout.html">📐 Constraint Layout</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Platform <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="live-data.html">📡 Live Data</a>
+          <a href="distributed.html">🌐 Distributed State</a>
+          <a href="collab.html">👥 Collab Sessions</a>
+          <a href="registry.html">📦 Component Registry</a>
+          <a href="llm-bridge.html">🤖 LLM Bridge</a>
+          <a href="nl-theming.html">🎨 AI Theming</a>
+          <a href="voice.html">🎙 Voice Control</a>
+          <a href="voice-themes.html">🎙 Voice Themes</a>
+          <a href="playground.html">🌐 Playground</a>
+          <a href="webgl.html">⚡ WebGL Renderer</a>
+          <a href="video.html">📺 Video Player</a>
+          <a href="hot-reload.html">🔥 Hot Reload</a>
+          <a href="plugins.html">🔌 Plugin System</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Docs <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="deep-dive.html">🔬 Technical Deep Dive</a>
+          <a href="executive.html">📊 Executive Brief</a>
+        </div>
+      </div>
+
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section style="padding:6rem 2rem 3rem;text-align:center;">
+  <span class="section-label">Voice · Reactive · Live Transitions</span>
+  <h1 style="font-size:clamp(2rem,4vw,3.5rem);font-weight:900;margin-bottom:1rem;">
+    🎙 Voice + <span class="gradient-text">Live Themes</span>
+  </h1>
+  <p style="font-size:1.1rem;color:var(--text-secondary);max-width:680px;margin:0 auto 2rem;">
+    Say <em>"activate matrix"</em> or <em>"switch to enterprise"</em> and watch your terminal
+    UI transform with smooth animated theme transitions — powered by the same Whisper
+    transcription engine as voice commands, no LLM required.
+  </p>
+
+  <div class="glass-card" style="max-width:720px;margin:0 auto;padding:2rem;text-align:left;">
+    <div style="color:var(--text-secondary);font-size:0.8rem;margin-bottom:0.5rem;">QUICK START</div>
+    <pre style="margin:0;font-size:0.9rem;overflow-x:auto;"><code style="color:var(--text-primary);">// Wrap any app with live voice theme switching
+#include "ftxui/ui/voice_theme.hpp"
+using namespace ftxui::ui;
+
+auto ctrl = std::make_shared&lt;VoiceThemeController&gt;();
+auto app  = WithLiveThemes(MyApp(), ctrl);
+App::Fullscreen().Loop(app);
+
+// Or just use the all-in-one showcase:
+auto showcase = ThemeShowcase(/*auto_cycle=*/true);
+App::Fullscreen().Loop(showcase);</code></pre>
+  </div>
+</section>
+
+<!-- Voice Commands -->
+<section style="padding:3rem 2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1.5rem;">Voice Commands</h2>
+  <p style="color:var(--text-secondary);margin-bottom:2rem;">
+    The engine recognises natural-language wake words and extracts the theme name.
+    Articles ("the", "a", "an") and the trailing word "theme" are stripped automatically.
+  </p>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-bottom:2rem;">
+
+    <div class="glass-card" style="padding:1.5rem;">
+      <h3 style="margin:0 0 1rem;color:var(--accent);">Single-word triggers</h3>
+      <div style="font-family:monospace;font-size:0.9rem;line-height:2;">
+        <div><span style="color:var(--primary);">"activate lcars"</span></div>
+        <div><span style="color:var(--primary);">"apply the matrix theme"</span></div>
+        <div><span style="color:var(--primary);">"use enterprise"</span></div>
+        <div><span style="color:var(--primary);">"set dark"</span></div>
+        <div><span style="color:var(--primary);">"theme nord"</span></div>
+      </div>
+    </div>
+
+    <div class="glass-card" style="padding:1.5rem;">
+      <h3 style="margin:0 0 1rem;color:var(--accent);">Multi-word triggers</h3>
+      <div style="font-family:monospace;font-size:0.9rem;line-height:2;">
+        <div><span style="color:var(--primary);">"switch to imperial"</span></div>
+        <div><span style="color:var(--primary);">"change to dracula"</span></div>
+        <div><span style="color:var(--primary);">"switch to dark blue cyberpunk"</span></div>
+        <div><span style="color:var(--primary);">"change to warm sunset orange"</span></div>
+      </div>
+    </div>
+
+    <div class="glass-card" style="padding:1.5rem;">
+      <h3 style="margin:0 0 1rem;color:var(--accent);">NL fallback</h3>
+      <p style="color:var(--text-secondary);font-size:0.9rem;">
+        Unknown theme names are passed to <code>NLThemeParser::FromDescription()</code>
+        — so any English description generates a matching palette on the fly.
+      </p>
+      <div style="font-family:monospace;font-size:0.9rem;line-height:2;">
+        <div><span style="color:var(--primary);">"activate retro amber 80s"</span></div>
+        <div><span style="color:var(--primary);">"switch to neon pink synthwave"</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Theme Gallery -->
+<section style="padding:3rem 2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1.5rem;">Theme Gallery</h2>
+  <p style="color:var(--text-secondary);margin-bottom:2rem;">
+    All preset themes are available by name. Each is accessible both programmatically
+    and via voice command.
+  </p>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;">
+
+    <div class="glass-card" style="padding:1.2rem;">
+      <div style="font-weight:700;margin-bottom:0.5rem;">Default / BadWolf</div>
+      <div style="display:flex;gap:4px;margin-bottom:0.5rem;">
+        <span style="display:inline-block;width:18px;height:18px;background:#00ffff;border-radius:3px;" title="primary"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#0000ff;border-radius:3px;" title="secondary"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#90ee90;border-radius:3px;" title="accent"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#ff0000;border-radius:3px;" title="error"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#ffff00;border-radius:3px;" title="warning"></span>
+      </div>
+      <code style="font-size:0.8rem;color:var(--text-secondary);">Theme::Default()</code>
+    </div>
+
+    <div class="glass-card" style="padding:1.2rem;">
+      <div style="font-weight:700;margin-bottom:0.5rem;">Dark</div>
+      <div style="display:flex;gap:4px;margin-bottom:0.5rem;">
+        <span style="display:inline-block;width:18px;height:18px;background:#7aa2f7;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#bb9af7;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#9ece6a;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#f7768e;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#e0af68;border-radius:3px;"></span>
+      </div>
+      <code style="font-size:0.8rem;color:var(--text-secondary);">Theme::Dark()</code>
+    </div>
+
+    <div class="glass-card" style="padding:1.2rem;">
+      <div style="font-weight:700;margin-bottom:0.5rem;">Nord</div>
+      <div style="display:flex;gap:4px;margin-bottom:0.5rem;">
+        <span style="display:inline-block;width:18px;height:18px;background:#81a1c1;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#5e81ac;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#a3be8c;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#bf616a;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#ebcb8b;border-radius:3px;"></span>
+      </div>
+      <code style="font-size:0.8rem;color:var(--text-secondary);">Theme::Nord()</code>
+    </div>
+
+    <div class="glass-card" style="padding:1.2rem;">
+      <div style="font-weight:700;margin-bottom:0.5rem;">Dracula</div>
+      <div style="display:flex;gap:4px;margin-bottom:0.5rem;">
+        <span style="display:inline-block;width:18px;height:18px;background:#bd93f9;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#ff79c6;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#50fa7b;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#ff5555;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#f1fa8c;border-radius:3px;"></span>
+      </div>
+      <code style="font-size:0.8rem;color:var(--text-secondary);">Theme::Dracula()</code>
+    </div>
+
+    <div class="glass-card" style="padding:1.2rem;">
+      <div style="font-weight:700;margin-bottom:0.5rem;">LCARS</div>
+      <div style="display:flex;gap:4px;margin-bottom:0.5rem;">
+        <span style="display:inline-block;width:18px;height:18px;background:#ff9900;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#cc88ff;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#99ccff;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#ff4444;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#ffcc00;border-radius:3px;"></span>
+      </div>
+      <code style="font-size:0.8rem;color:var(--text-secondary);">Theme::LCARS()</code>
+    </div>
+
+    <div class="glass-card" style="padding:1.2rem;">
+      <div style="font-weight:700;margin-bottom:0.5rem;">Matrix</div>
+      <div style="display:flex;gap:4px;margin-bottom:0.5rem;">
+        <span style="display:inline-block;width:18px;height:18px;background:#00ff41;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#008f11;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#00cc33;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#ff0000;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#ffff00;border-radius:3px;"></span>
+      </div>
+      <code style="font-size:0.8rem;color:var(--text-secondary);">Theme::Matrix()</code>
+    </div>
+
+    <div class="glass-card" style="padding:1.2rem;">
+      <div style="font-weight:700;margin-bottom:0.5rem;">Imperial</div>
+      <div style="display:flex;gap:4px;margin-bottom:0.5rem;">
+        <span style="display:inline-block;width:18px;height:18px;background:#cc0000;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#888888;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#ffffff;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#ff4444;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#ffaa00;border-radius:3px;"></span>
+      </div>
+      <code style="font-size:0.8rem;color:var(--text-secondary);">Theme::Imperial()</code>
+    </div>
+
+    <div class="glass-card" style="padding:1.2rem;">
+      <div style="font-weight:700;margin-bottom:0.5rem;">Enterprise</div>
+      <div style="display:flex;gap:4px;margin-bottom:0.5rem;">
+        <span style="display:inline-block;width:18px;height:18px;background:#4488cc;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#cc8844;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#44cc88;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#cc4444;border-radius:3px;"></span>
+        <span style="display:inline-block;width:18px;height:18px;background:#cccc44;border-radius:3px;"></span>
+      </div>
+      <code style="font-size:0.8rem;color:var(--text-secondary);">Theme::Enterprise()</code>
+    </div>
+
+  </div>
+</section>
+
+<!-- Transition Animation -->
+<section style="padding:3rem 2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1.5rem;">Transition Animation</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+    <div>
+      <p style="color:var(--text-secondary);line-height:1.7;">
+        Every theme change — whether triggered by voice, button click, or code — is
+        animated through a <code>ThemeTransition</code>. The transition smoothly
+        interpolates every colour channel using the <code>AnimationLoop</code> at
+        up to 30 fps, posting a <code>Event::Custom</code> repaint after each frame.
+      </p>
+      <p style="color:var(--text-secondary);line-height:1.7;margin-top:1rem;">
+        The default duration is <strong>800 ms</strong>, configurable via
+        <code>VoiceThemeConfig::transition_duration</code>.
+      </p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;">
+      <pre style="margin:0;font-size:0.85rem;overflow-x:auto;"><code style="color:var(--text-primary);">VoiceThemeConfig cfg;
+cfg.transition_duration =
+    std::chrono::milliseconds(400);
+cfg.continuous_listening = true;
+
+auto ctrl =
+  std::make_shared&lt;VoiceThemeController&gt;(cfg);
+ctrl-&gt;Start();
+
+// Callback on each change
+ctrl-&gt;OnThemeChanged([](const Theme&amp; t,
+                         const std::string&amp; name) {
+  // t is already applied globally
+});</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- API Reference -->
+<section style="padding:3rem 2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:2rem;">API Reference</h2>
+
+  <!-- VoiceThemeController -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="margin:0 0 1rem;color:var(--accent);">VoiceThemeController</h3>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">
+      The primary controller. Ties together voice transcription and theme application.
+    </p>
+    <pre style="font-size:0.85rem;overflow-x:auto;"><code style="color:var(--text-primary);">VoiceThemeController(VoiceThemeConfig cfg = {});
+
+void Start();              // begin listening
+void Stop();               // stop listening
+bool IsListening() const;
+
+void ApplyTheme(const Theme&amp;);
+void ApplyThemeByName(const std::string&amp; name);
+void ApplyThemeFromDescription(const std::string&amp; desc);
+
+int OnThemeChanged(fn&lt;void(Theme, string)&gt;);
+int OnCommand(fn&lt;void(VoiceThemeCommand)&gt;);
+void RemoveCallback(int id);
+
+static VoiceThemeCommand ParseCommand(const std::string&amp;);
+static Theme NamedTheme(const std::string&amp;);
+static std::vector&lt;std::string&gt; AvailableThemeNames();</code></pre>
+  </div>
+
+  <!-- LiveThemeBar -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="margin:0 0 1rem;color:var(--accent);">LiveThemeBar</h3>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">
+      Drop-in bottom bar showing mic status, current theme, colour swatches,
+      last voice command, and a text input for direct theme entry.
+    </p>
+    <pre style="font-size:0.85rem;"><code style="color:var(--text-primary);">ftxui::Component LiveThemeBar(
+    std::shared_ptr&lt;VoiceThemeController&gt; ctrl = nullptr,
+    VoiceThemeConfig cfg = {});</code></pre>
+  </div>
+
+  <!-- ThemeStage -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="margin:0 0 1rem;color:var(--accent);">ThemeStage</h3>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">
+      A self-contained preview panel — buttons, input, data table, status bar —
+      that reads <code>GetTheme()</code> on every render, picking up live changes
+      immediately with no extra wiring.
+    </p>
+    <pre style="font-size:0.85rem;"><code style="color:var(--text-primary);">ftxui::Component ThemeStage();</code></pre>
+  </div>
+
+  <!-- ThemeShowcase -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="margin:0 0 1rem;color:var(--accent);">ThemeShowcase</h3>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">
+      A full-page component combining preset buttons and a ThemeStage, with
+      optional auto-cycle mode that rotates through all presets on a timer.
+    </p>
+    <pre style="font-size:0.85rem;"><code style="color:var(--text-primary);">ftxui::Component ThemeShowcase(
+    bool auto_cycle = false,
+    std::chrono::milliseconds cycle_interval
+        = std::chrono::seconds(5));</code></pre>
+  </div>
+
+  <!-- ReactiveTheme -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="margin:0 0 1rem;color:var(--accent);">ReactiveTheme</h3>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">
+      Meyer's singleton that wraps <code>SetTheme</code>/<code>GetTheme</code>
+      with listener callbacks and optional animation.
+    </p>
+    <pre style="font-size:0.85rem;"><code style="color:var(--text-primary);">ReactiveTheme&amp; ReactiveTheme::Global();
+
+const Theme&amp; Get() const;
+void Set(const Theme&amp; t, bool animate = true);
+
+int OnChange(fn&lt;void(Theme)&gt;);
+void RemoveOnChange(int id);
+
+ftxui::Component Bind(ftxui::Component c);</code></pre>
+  </div>
+
+  <!-- WithLiveThemes -->
+  <div class="glass-card" style="padding:2rem;">
+    <h3 style="margin:0 0 1rem;color:var(--accent);">WithLiveThemes</h3>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">
+      Wraps any existing component with a <code>LiveThemeBar</code> at the
+      bottom and intercepts the <code>V</code> key to toggle voice listening.
+    </p>
+    <pre style="font-size:0.85rem;"><code style="color:var(--text-primary);">ftxui::Component WithLiveThemes(
+    ftxui::Component app,
+    std::shared_ptr&lt;VoiceThemeController&gt; ctrl = nullptr,
+    VoiceThemeConfig cfg = {});</code></pre>
+  </div>
+
+</section>
+
+<footer style="padding:3rem 2rem;text-align:center;color:var(--text-secondary);font-size:0.85rem;">
+  <p>FTXUI BadWolf — © 2024 Arthur Sonzogni — MIT License</p>
+  <p style="margin-top:0.5rem;">
+    <a href="index.html" style="color:var(--primary);text-decoration:none;">Home</a> ·
+    <a href="api.html" style="color:var(--primary);text-decoration:none;">API</a> ·
+    <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" style="color:var(--primary);text-decoration:none;" target="_blank">GitHub</a>
+  </p>
+</footer>
+
+<script>
+// Simple nav dropdown toggle
+document.querySelectorAll('.nav-dropdown-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const dd = btn.closest('.nav-dropdown');
+    dd.classList.toggle('open');
+  });
+});
+document.addEventListener('click', e => {
+  if (!e.target.closest('.nav-dropdown')) {
+    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+  }
+});
+const ham = document.querySelector('.hamburger');
+if (ham) {
+  ham.addEventListener('click', () => {
+    const nav = document.querySelector('.nav-links');
+    nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+  });
+}
+</script>
+</body>
+</html>

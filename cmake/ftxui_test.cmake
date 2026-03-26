@@ -113,6 +113,7 @@ add_executable(ftxui_ui_test
   src/ftxui/ui/video_test.cpp
   src/ftxui/ui/hot_reload_test.cpp
   src/ftxui/ui/voice_test.cpp
+  src/ftxui/ui/voice_theme_test.cpp
   src/ftxui/ui/plugin_test.cpp
   src/ftxui/ui/time_travel_test.cpp
   src/ftxui/ui/multiplayer_test.cpp

@@ -320,8 +320,8 @@ int main() {
 
   auto root = ftxui::CatchEvent(layout, [&](ftxui::Event e) {
     if (e == ftxui::Event::Character('q')) {
-      if (App* a = App::Active()) {
-        a->Exit(0);
+      if (ftxui::App* a = ftxui::App::Active()) {
+        a->Exit();
       }
       return true;
     }
@@ -337,8 +337,6 @@ int main() {
     return false;
   });
 
-  ftxui::ui::App app;
-  app.Add(root);
-  app.Run();
+  ftxui::ui::RunFullscreen(root);
   return 0;
 }

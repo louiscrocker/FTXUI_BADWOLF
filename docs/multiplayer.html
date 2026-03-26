@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI BadWolf — Multiplayer Terminal Games</title>
+  <meta name="description" content="FTXUI BadWolf multiplayer terminal games: real-time TCP gameplay, authoritative server model, up to 8 players.">
+  <meta property="og:title" content="FTXUI BadWolf — Multiplayer Terminal Games">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">🐺 FTXUI BadWolf</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Get Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Components <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="colors.html">🎨 Colors &amp; Styling</a>
+          <a href="typewriter.html">⌨️ Typewriter &amp; Console</a>
+          <a href="json.html">📄 JSON</a>
+          <a href="layout.html">📐 Constraint Layout</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Platform <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="live-data.html">📡 Live Data</a>
+          <a href="distributed.html">🌐 Distributed State</a>
+          <a href="collab.html">👥 Collab Sessions</a>
+          <a href="registry.html">📦 Component Registry</a>
+          <a href="llm-bridge.html">🤖 LLM Bridge</a>
+          <a href="codegen.html">⚙️ AI Code Generator</a>
+          <a href="nl-theming.html">🎨 AI Theming</a>
+          <a href="voice.html">🎙 Voice Control</a>
+          <a href="playground.html">🌐 Playground</a>
+          <a href="webgl.html">⚡ WebGL Renderer</a>
+          <a href="video.html">📺 Video Player</a>
+          <a href="hot-reload.html">🔥 Hot Reload</a>
+          <a href="plugins.html">🔌 Plugin System</a>
+          <a href="multiplayer.html">🎮 Multiplayer Games</a>
+          <a href="multiplayer.html">🎮 Multiplayer Games</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Docs <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="deep-dive.html">🔬 Technical Deep Dive</a>
+          <a href="executive.html">📊 Executive Brief</a>
+        </div>
+      </div>
+
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section style="padding:6rem 2rem 3rem;text-align:center;">
+  <div style="max-width:800px;margin:0 auto;">
+    <div style="font-size:3rem;margin-bottom:1rem;">🎮</div>
+    <h1 style="font-size:2.5rem;font-weight:800;margin-bottom:1rem;">
+      Multiplayer Terminal Games
+    </h1>
+    <p style="font-size:1.2rem;opacity:0.8;margin-bottom:2rem;">
+      Real-time multiplayer games over TCP — up to 8 players, authoritative
+      server model, braille canvas rendering, 30&nbsp;fps game loop.
+    </p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <span style="background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);padding:0.4rem 1rem;border-radius:2rem;font-size:0.9rem;">TCP Multiplayer</span>
+      <span style="background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);padding:0.4rem 1rem;border-radius:2rem;font-size:0.9rem;">4 Built-in Games</span>
+      <span style="background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);padding:0.4rem 1rem;border-radius:2rem;font-size:0.9rem;">30 FPS Loop</span>
+      <span style="background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);padding:0.4rem 1rem;border-radius:2rem;font-size:0.9rem;">8 Players</span>
+    </div>
+  </div>
+</section>
+
+<!-- Architecture -->
+<section style="padding:3rem 2rem;">
+  <div style="max-width:900px;margin:0 auto;">
+    <div class="glass-card" style="padding:2rem;">
+      <h2 style="font-size:1.6rem;font-weight:700;margin-bottom:1.5rem;">Architecture</h2>
+      <pre style="background:rgba(0,0,0,0.3);border-radius:0.5rem;padding:1.5rem;overflow-x:auto;font-size:0.85rem;line-height:1.6;">
+┌─────────────────────────────────────────────────────────────────────┐
+│                    BadWolf Multiplayer Stack                         │
+├──────────────────────────┬──────────────────────────────────────────┤
+│  MultiplayerServer        │  MultiplayerClient                      │
+│  ┌────────────────────┐   │  ┌────────────────────────────────────┐ │
+│  │ AcceptLoop         │   │  │ Connect() → welcome/player_id      │ │
+│  │ GameLoop (30fps)   │   │  │ RecvLoop() → GameState updates     │ │
+│  │  ├ collect inputs  │   │  │ SendInput() → PlayerInput JSON     │ │
+│  │  ├ OnTick callback │   │  │ OnStateUpdate callbacks            │ │
+│  │  └ BroadcastState  │   └──────────────────────────────────────┘ │
+│  │ ProcessClient(sock)│◄──────────────────────────────────────────  │
+│  └────────────────────┘   Wire: [4-byte LE len][JSON payload]       │
+│  PhysicsWorld (Vec2)      GameState: positions, scores, projectiles  │
+└──────────────────────────┴──────────────────────────────────────────┘
+                           │
+            ┌──────────────▼──────────────┐
+            │    MultiplayerRenderer       │
+            │  GameState → BrailleCanvas   │
+            │  Players: colored circles    │
+            │  Projectiles: colored dots   │
+            │  ScorePanel: hbox sidebar    │
+            └──────────────────────────────┘</pre>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Start -->
+<section style="padding:2rem;">
+  <div style="max-width:900px;margin:0 auto;">
+    <h2 style="font-size:1.8rem;font-weight:700;margin-bottom:1.5rem;text-align:center;">Quick Start</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+      <div class="glass-card" style="padding:1.5rem;">
+        <h3 style="margin-bottom:1rem;color:#a5f3fc;">🖥️ Host a Game</h3>
+        <pre style="background:rgba(0,0,0,0.3);border-radius:0.4rem;padding:1rem;font-size:0.85rem;">./multiplayer_demo \
+  --server \
+  --port 29910 \
+  --game shooter</pre>
+        <p style="font-size:0.85rem;opacity:0.7;margin-top:0.8rem;">
+          Starts a TCP server on port 29910. Share your IP with friends.
+        </p>
+      </div>
+      <div class="glass-card" style="padding:1.5rem;">
+        <h3 style="margin-bottom:1rem;color:#a5f3fc;">🕹️ Join a Game</h3>
+        <pre style="background:rgba(0,0,0,0.3);border-radius:0.4rem;padding:1rem;font-size:0.85rem;">./multiplayer_demo \
+  --host 192.168.1.10 \
+  --port 29910 \
+  --name "Alice"</pre>
+        <p style="font-size:0.85rem;opacity:0.7;margin-top:0.8rem;">
+          Connect to a running server. Receive GameState at 30 fps.
+        </p>
+      </div>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;margin-top:1.5rem;">
+      <h3 style="margin-bottom:1rem;color:#a5f3fc;">⚙️ Embed in Your App</h3>
+      <pre style="background:rgba(0,0,0,0.3);border-radius:0.4rem;padding:1rem;font-size:0.9rem;">
+#include "ftxui/ui/multiplayer.hpp"
+using namespace ftxui::ui;
+
+// Server side
+MultiplayerServer::Config cfg;
+cfg.port = 29910;
+auto server = std::make_shared&lt;MultiplayerServer&gt;(cfg);
+server-&gt;OnTick([](GameState&amp; gs, const std::vector&lt;PlayerInput&gt;&amp; inputs) {
+  gs.game_phase = "playing";
+  for (auto&amp; inp : inputs) {
+    auto&amp; pos = gs.player_positions[inp.player_id];
+    if (inp.keys.left)  pos.x -= 1.0f;
+    if (inp.keys.right) pos.x += 1.0f;
+  }
+});
+server-&gt;Start();
+
+// Client side
+MultiplayerClient::Config ccfg;
+ccfg.host = "localhost";  ccfg.port = 29910;
+auto client = std::make_shared&lt;MultiplayerClient&gt;(ccfg);
+client-&gt;Connect();
+client-&gt;OnStateUpdate([](const GameState&amp; gs) {
+  // re-render with latest state
+});
+      </pre>
+    </div>
+  </div>
+</section>
+
+<!-- Games -->
+<section style="padding:2rem;">
+  <div style="max-width:900px;margin:0 auto;">
+    <h2 style="font-size:1.8rem;font-weight:700;margin-bottom:1.5rem;text-align:center;">Built-in Games</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
+      <div class="glass-card" style="padding:1.5rem;text-align:center;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">🏓</div>
+        <h3 style="font-weight:700;margin-bottom:0.5rem;">MultiPong</h3>
+        <p style="font-size:0.85rem;opacity:0.7;">Multi-player pong with one ball per server. ↑↓ controls. Score when ball passes opponent.</p>
+        <code style="font-size:0.75rem;display:block;margin-top:0.8rem;background:rgba(0,0,0,0.3);padding:0.4rem;border-radius:0.3rem;">MultiGames::MultiPong(opts)</code>
+      </div>
+      <div class="glass-card" style="padding:1.5rem;text-align:center;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">🔫</div>
+        <h3 style="font-weight:700;margin-bottom:0.5rem;">TopDownShooter</h3>
+        <p style="font-size:0.85rem;opacity:0.7;">Move with WASD, fire with Space. Shoot others to score. Projectiles expire on hit.</p>
+        <code style="font-size:0.75rem;display:block;margin-top:0.8rem;background:rgba(0,0,0,0.3);padding:0.4rem;border-radius:0.3rem;">MultiGames::TopDownShooter(opts)</code>
+      </div>
+      <div class="glass-card" style="padding:1.5rem;text-align:center;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">⚽</div>
+        <h3 style="font-weight:700;margin-bottom:0.5rem;">CoopPush</h3>
+        <p style="font-size:0.85rem;opacity:0.7;">All players cooperate to push a ball to the goal. WASD movement, friction physics.</p>
+        <code style="font-size:0.75rem;display:block;margin-top:0.8rem;background:rgba(0,0,0,0.3);padding:0.4rem;border-radius:0.3rem;">MultiGames::CoopPush(opts)</code>
+      </div>
+      <div class="glass-card" style="padding:1.5rem;text-align:center;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">🏎️</div>
+        <h3 style="font-weight:700;margin-bottom:0.5rem;">Racing</h3>
+        <p style="font-size:0.85rem;opacity:0.7;">8 cars on a side-scrolling track. ↑ accelerate, ↓ brake, ←→ steer. Laps = score.</p>
+        <code style="font-size:0.75rem;display:block;margin-top:0.8rem;background:rgba(0,0,0,0.3);padding:0.4rem;border-radius:0.3rem;">MultiGames::Racing(opts)</code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Wire Protocol -->
+<section style="padding:2rem;">
+  <div style="max-width:900px;margin:0 auto;">
+    <div class="glass-card" style="padding:2rem;">
+      <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:1rem;">Wire Protocol</h2>
+      <p style="opacity:0.8;margin-bottom:1rem;">
+        Uses the same framing as <code>NetworkReactive</code> and <code>CollabSession</code>
+        for compatibility:
+      </p>
+      <pre style="background:rgba(0,0,0,0.3);border-radius:0.4rem;padding:1rem;font-size:0.85rem;">
+[4-byte little-endian length][JSON payload bytes]
+
+Server → Client (GameState, ~30/sec, compact JSON):
+{"f":42,"ph":"playing","pp":{"0":{"x":10.5,"y":20.0},...},"ps":{"0":3},...}
+
+Client → Server (PlayerInput):
+{"frame":42,"keys":{"up":true,"down":false,...},"ax":0.5,"ay":-0.3}
+
+Server → Client (Welcome, on connect):
+{"type":"welcome","pid":0}
+      </pre>
+    </div>
+  </div>
+</section>
+
+<!-- API Reference -->
+<section style="padding:2rem 2rem 4rem;">
+  <div style="max-width:900px;margin:0 auto;">
+    <h2 style="font-size:1.8rem;font-weight:700;margin-bottom:1.5rem;text-align:center;">API Reference</h2>
+    <div class="glass-card" style="padding:2rem;">
+      <h3 style="color:#a5f3fc;margin-bottom:1rem;">GameState</h3>
+      <pre style="background:rgba(0,0,0,0.3);border-radius:0.4rem;padding:1rem;font-size:0.85rem;">
+struct GameState {
+  uint64_t frame;
+  std::map&lt;int, Vec2&gt;         player_positions;
+  std::map&lt;int, Vec2&gt;         player_velocities;
+  std::map&lt;int, int&gt;          player_scores;
+  std::map&lt;int, std::string&gt;  player_names;
+  std::map&lt;int, Color&gt;        player_colors;
+  std::vector&lt;tuple&lt;Vec2,Vec2,Color&gt;&gt; projectiles;
+  std::string game_phase;   // "waiting","playing","round_end","game_over"
+  int round;
+  float time_remaining;
+  JsonValue ToJson() const;
+  static GameState FromJson(const JsonValue&amp;);
+};
+      </pre>
+
+      <h3 style="color:#a5f3fc;margin-bottom:1rem;margin-top:1.5rem;">MultiplayerServer</h3>
+      <pre style="background:rgba(0,0,0,0.3);border-radius:0.4rem;padding:1rem;font-size:0.85rem;">
+auto server = std::make_shared&lt;MultiplayerServer&gt;(cfg);
+server-&gt;OnTick([](GameState&amp; gs, const std::vector&lt;PlayerInput&gt;&amp; inputs) {
+  // authoritative game logic here
+});
+server-&gt;Start();    // non-blocking
+server-&gt;Stop();
+server-&gt;PlayerCount();
+server-&gt;CurrentState();
+      </pre>
+
+      <h3 style="color:#a5f3fc;margin-bottom:1rem;margin-top:1.5rem;">MultiplayerClient</h3>
+      <pre style="background:rgba(0,0,0,0.3);border-radius:0.4rem;padding:1rem;font-size:0.85rem;">
+auto client = std::make_shared&lt;MultiplayerClient&gt;(cfg);
+bool ok = client-&gt;Connect();
+int cbId = client-&gt;OnStateUpdate([](const GameState&amp; gs) { /* render */ });
+client-&gt;SendInput(inp);
+client-&gt;RemoveCallback(cbId);
+client-&gt;Disconnect();
+      </pre>
+
+      <h3 style="color:#a5f3fc;margin-bottom:1rem;margin-top:1.5rem;">MultiplayerRenderer</h3>
+      <pre style="background:rgba(0,0,0,0.3);border-radius:0.4rem;padding:1rem;font-size:0.85rem;">
+MultiplayerRenderer renderer(100.0f, 60.0f);  // world width/height
+Element elem = renderer.Render(gameState);    // braille canvas
+Vec2 canvas_pos = renderer.WorldToCanvas({50,30}, cw, ch);
+      </pre>
+    </div>
+  </div>
+</section>
+
+<footer style="text-align:center;padding:2rem;opacity:0.5;font-size:0.85rem;">
+  FTXUI BadWolf — MIT License — <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" style="color:inherit;">GitHub</a>
+</footer>
+
+<script>
+  // Hamburger toggle
+  document.querySelector('.hamburger')?.addEventListener('click', function() {
+    const nav = document.querySelector('.nav-links');
+    const expanded = this.getAttribute('aria-expanded') === 'true';
+    this.setAttribute('aria-expanded', String(!expanded));
+    nav?.classList.toggle('open');
+  });
+  // Dropdown toggles
+  document.querySelectorAll('.nav-dropdown-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.closest('.nav-dropdown')?.classList.toggle('open');
+    });
+  });
+</script>
+</body>
+</html>
