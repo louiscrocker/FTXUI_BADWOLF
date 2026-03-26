@@ -409,6 +409,7 @@ ${C_BOLD}Commands:${C_RESET}
   update           Re-download all installed components
   publish          Validate component and show submission instructions
   serve <file>     Compile a .cpp file and serve it in the browser via WebSocket
+  dev <target>     Hot-reload dev mode — watch sources, rebuild, auto-signal app
   version          Print version and exit
   help             Show this help
 
@@ -436,13 +437,53 @@ case "$cmd" in
   info)    cmd_info "$@" ;;
   update)  cmd_update ;;
   publish) cmd_publish ;;
+  dev)
+    target="${1:-}"
+    [ -z "$target" ] && die "usage: badwolf dev <example-target>"
+    echo -e "${C_BOLD}🔥 BadWolf Dev Mode — Hot Reload${C_RESET}"
+    echo -e "Watching: ${C_CYAN}src/ include/${C_RESET}"
+    echo -e "Building: ${C_CYAN}${target}${C_RESET}"
+    # Initial build
+    cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DFTXUI_BUILD_EXAMPLES=ON \
+      -DFTXUI_QUIET=ON 2>/dev/null
+    cmake --build build --parallel 8 --target "ftxui_example_${target}" 2>&1 | tail -5
+    if [ $? -ne 0 ]; then
+      die "Initial build failed. Fix errors before starting dev mode."
+    fi
+    ok "Build succeeded. Starting app in dev mode..."
+    "./build/examples/ui/ftxui_example_${target}" --dev &
+    APP_PID=$!
+    echo -e "App running (PID ${C_DIM}${APP_PID}${C_RESET}). Watching for changes..."
+    # Watch loop: on change, rebuild and send SIGUSR1 to app
+    while kill -0 "$APP_PID" 2>/dev/null; do
+      # Polling fallback (works on macOS and Linux without inotify)
+      sleep 1
+      # Check if any source files changed more recently than the binary
+      binary="./build/examples/ui/ftxui_example_${target}"
+      if [ -f "$binary" ]; then
+        changed=$(find src/ include/ examples/ui/ -name "*.cpp" -o -name "*.hpp" \
+          -newer "$binary" 2>/dev/null | head -1)
+        if [ -n "$changed" ]; then
+          echo -e "${C_YELLOW}⟳ Change detected in ${changed}. Rebuilding...${C_RESET}"
+          cmake --build build --parallel 8 --target "ftxui_example_${target}" 2>&1 | tail -3
+          if [ $? -eq 0 ]; then
+            ok "Rebuilt. Signalling app (SIGUSR1)..."
+            kill -USR1 "$APP_PID" 2>/dev/null || true
+          else
+            warn "Build failed — app continues running."
+          fi
+        fi
+      fi
+    done
+    echo "App exited."
+    ;;
   serve)
     src="${1:-}"
     [ -z "$src" ] && die "usage: badwolf serve <source.cpp>"
     [ ! -f "$src" ] && die "File not found: $src"
     echo -e "${C_BOLD}🌐 BadWolf Web Bridge${C_RESET}"
     echo -e "Compiling ${C_CYAN}${src}${C_RESET} with web bridge support..."
-    out="$(mktemp -u badwolf_serve_XXXXXX)"
+    out="badwolf_serve_$$"
     g++ -std=c++17 -pthread -o "$out" "$src" \
         -lftxui_ui -lftxui_component -lftxui_dom -lftxui_screen 2>&1
     if [ $? -eq 0 ]; then
