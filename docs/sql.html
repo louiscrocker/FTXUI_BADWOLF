@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI BadWolf — SQL First-Class + DataFrame</title>
+  <meta name="description" content="FTXUI BadWolf SQL: SqlValue, optional SQLite integration, pandas-style DataFrame, ReactiveQuery, and DataFrameTable UI component — batteries-included data layer for terminal UIs.">
+  <meta property="og:title" content="FTXUI BadWolf — SQL First-Class + DataFrame">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">🐺 FTXUI BadWolf</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Get Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Components <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="colors.html">🎨 Colors &amp; Styling</a>
+          <a href="typewriter.html">⌨️ Typewriter &amp; Console</a>
+          <a href="json.html">📄 JSON</a>
+          <a href="sql.html">🗄️ SQL &amp; DataFrame</a>
+          <a href="layout.html">📐 Constraint Layout</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Platform <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="live-data.html">📡 Live Data</a>
+          <a href="collab.html">👥 Collab Sessions</a>
+          <a href="registry.html">📦 Component Registry</a>
+          <a href="llm-bridge.html">🤖 LLM Bridge</a>
+          <a href="nl-theming.html">🎨 AI Theming</a>
+          <a href="playground.html">🌐 Playground</a>
+          <a href="webgl.html">⚡ WebGL Renderer</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Docs <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="deep-dive.html">🔬 Technical Deep Dive</a>
+          <a href="executive.html">📊 Executive Brief</a>
+        </div>
+      </div>
+
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section style="padding:6rem 2rem 3rem;text-align:center;">
+  <span class="section-label">Optional SQLite · Pandas-style · Reactive · Zero Boilerplate</span>
+  <h1 style="font-size:clamp(2rem,4vw,3.5rem);font-weight:900;margin-bottom:1rem;">
+    SQL &amp; DataFrame as <span class="gradient-text">First-Class</span> Citizens
+  </h1>
+  <p style="font-size:1.1rem;color:var(--text-secondary);max-width:680px;margin:0 auto 2rem;">
+    <code>SqlValue</code> and <code>DataFrame</code> bring structured data directly into your terminal UI —
+    filter, sort, aggregate, and render tables without writing boilerplate.
+    Plug in optional SQLite for full query power, or stay dependency-free with the
+    in-memory DataFrame engine.
+  </p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem;">
+    <a href="#quickstart" class="btn-primary">Quick Start</a>
+    <a href="#api" class="btn-secondary">API Reference</a>
+  </div>
+</section>
+
+<!-- Feature cards -->
+<section style="padding:2rem 2rem 4rem;">
+  <div style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem;">
+
+    <div class="glass-card" style="padding:1.5rem;">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">🔢</div>
+      <h3 style="color:var(--accent-1);margin-bottom:0.5rem;">SqlValue</h3>
+      <p style="color:var(--text-secondary);font-size:0.95rem;">
+        Typed variant — <code>NULL</code>, <code>INTEGER</code>, <code>REAL</code>, <code>TEXT</code>, <code>BLOB</code>.
+        Value semantics, zero allocations for scalars.
+      </p>
+    </div>
+
+    <div class="glass-card" style="padding:1.5rem;">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">🗄️</div>
+      <h3 style="color:var(--accent-2);margin-bottom:0.5rem;">SqliteDb <span style="font-size:0.75rem;opacity:0.7;">(optional)</span></h3>
+      <p style="color:var(--text-secondary);font-size:0.95rem;">
+        Thin RAII wrapper over SQLite3. Enabled with
+        <code>-DFTXUI_ENABLE_SQLITE=ON</code>. Execute queries, bind parameters,
+        iterate result rows.
+      </p>
+    </div>
+
+    <div class="glass-card" style="padding:1.5rem;">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">📊</div>
+      <h3 style="color:var(--accent-3);margin-bottom:0.5rem;">DataFrame</h3>
+      <p style="color:var(--text-secondary);font-size:0.95rem;">
+        In-memory columnar table. Load from CSV, vectors, or query results.
+        Filter, sort, slice, aggregate — pandas-style, no Python required.
+      </p>
+    </div>
+
+    <div class="glass-card" style="padding:1.5rem;">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">⚡</div>
+      <h3 style="color:var(--accent-1);margin-bottom:0.5rem;">ReactiveQuery <span style="font-size:0.75rem;opacity:0.7;">(optional)</span></h3>
+      <p style="color:var(--text-secondary);font-size:0.95rem;">
+        Re-runs a SQL query whenever bound parameters change. Subscribers and
+        the UI refresh automatically. Requires <code>BADWOLF_SQLITE</code>.
+      </p>
+    </div>
+
+    <div class="glass-card" style="padding:1.5rem;">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">🔄</div>
+      <h3 style="color:var(--accent-2);margin-bottom:0.5rem;">ReactiveDataFrame</h3>
+      <p style="color:var(--text-secondary);font-size:0.95rem;">
+        Reactive wrapper around <code>DataFrame</code>. Mutate the frame and all
+        bound UI components re-render — no manual invalidation.
+      </p>
+    </div>
+
+    <div class="glass-card" style="padding:1.5rem;">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">🖥️</div>
+      <h3 style="color:var(--accent-3);margin-bottom:0.5rem;">DataFrameTable</h3>
+      <p style="color:var(--text-secondary);font-size:0.95rem;">
+        Interactive terminal table component. Scrollable, sortable by column,
+        and live-linked to a <code>ReactiveDataFrame</code>.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- Quick Start -->
+<section id="quickstart" style="padding:4rem 2rem;">
+  <div style="max-width:900px;margin:0 auto;">
+    <h2 style="font-size:2rem;font-weight:800;margin-bottom:2rem;">Quick Start</h2>
+
+    <div class="glass-card" style="margin-bottom:2rem;">
+      <h3 style="color:var(--accent-1);margin-bottom:1rem;">1. SqlValue Construction</h3>
+      <pre style="overflow:auto;padding:1.5rem;background:rgba(0,0,0,0.3);border-radius:0.5rem;"><code>#include "ftxui/ui/sql.hpp"
+using namespace ftxui::ui;
+
+// Typed constructors
+SqlValue null_val;                          // NULL
+SqlValue integer_val{42};                   // INTEGER
+SqlValue real_val{3.14};                    // REAL
+SqlValue text_val{std::string("hello")};    // TEXT
+SqlValue blob_val{std::vector&lt;uint8_t&gt;{}}; // BLOB
+
+// Type predicates
+bool is_int = integer_val.is_integer();  // true
+bool is_null = null_val.is_null();       // true
+
+// Typed access — throws on mismatch
+int64_t n = integer_val.as_integer();    // 42
+double  r = real_val.as_real();          // 3.14
+std::string t = text_val.as_text();      // "hello"
+
+// Safe access — returns default on mismatch
+int64_t safe = null_val.get_integer(0);  // 0</code></pre>
+    </div>
+
+    <div class="glass-card" style="margin-bottom:2rem;">
+      <h3 style="color:var(--accent-2);margin-bottom:1rem;">2. DataFrame — Load, Filter, Sort, Slice</h3>
+      <pre style="overflow:auto;padding:1.5rem;background:rgba(0,0,0,0.3);border-radius:0.5rem;"><code>#include "ftxui/ui/dataframe.hpp"
+using namespace ftxui::ui;
+
+// Load from CSV file
+auto df = DataFrame::FromCSV("metrics.csv");
+
+// Load from vectors
+DataFrame df2;
+df2.AddColumn("host",  std::vector&lt;std::string&gt;{"web-01","web-02","db-01"});
+df2.AddColumn("cpu",   std::vector&lt;double&gt;{12.5, 87.3, 45.1});
+df2.AddColumn("alive", std::vector&lt;int64_t&gt;{1, 1, 0});
+
+// Filter rows (predicate on SqlValue)
+auto busy = df2.Filter([](const DataFrame::Row&amp; row) {
+    return row.at("cpu").as_real() &gt; 50.0;
+});
+
+// Sort by column (ascending)
+auto sorted = df2.SortBy("cpu", /*ascending=*/false);
+
+// Take first N rows
+auto top5 = sorted.Head(5);
+
+// Select a subset of columns
+auto slim = top5.Select({"host", "cpu"});
+
+// Shape
+std::size_t rows = df2.RowCount();   // 3
+std::size_t cols = df2.ColCount();   // 3</code></pre>
+    </div>
+
+    <div class="glass-card" style="margin-bottom:2rem;">
+      <h3 style="color:var(--accent-3);margin-bottom:1rem;">3. DataFrame Aggregates</h3>
+      <pre style="overflow:auto;padding:1.5rem;background:rgba(0,0,0,0.3);border-radius:0.5rem;"><code>// Column statistics (numeric columns)
+double total = df2.Sum("cpu");    // 144.9
+double avg   = df2.Mean("cpu");   // 48.3
+double lo    = df2.Min("cpu");    // 12.5
+double hi    = df2.Max("cpu");    // 87.3
+int64_t n    = df2.Count("cpu");  // 3 (non-null)
+
+// Group-by aggregate
+auto by_status = df2.GroupBy("alive").Mean("cpu");
+// → DataFrame with columns: alive | cpu_mean
+
+// Value counts
+auto vc = df2.ValueCounts("alive");
+// → DataFrame with columns: alive | count</code></pre>
+    </div>
+
+    <div class="glass-card" style="margin-bottom:2rem;">
+      <h3 style="color:var(--accent-1);margin-bottom:1rem;">4. ReactiveQuery <span style="font-size:0.85rem;font-weight:400;opacity:0.7;">— requires BADWOLF_SQLITE</span></h3>
+      <pre style="overflow:auto;padding:1.5rem;background:rgba(0,0,0,0.3);border-radius:0.5rem;"><code>#ifdef BADWOLF_SQLITE
+#include "ftxui/ui/sqlite.hpp"
+using namespace ftxui::ui;
+
+// Open (or create) a database
+auto db = std::make_shared&lt;SqliteDb&gt;("app.db");
+
+// Execute DDL / DML directly
+db-&gt;Execute("CREATE TABLE IF NOT EXISTS events "
+             "(id INTEGER PRIMARY KEY, name TEXT, ts REAL)");
+db-&gt;Execute("INSERT INTO events(name,ts) VALUES(?,?)",
+            {SqlValue{"login"}, SqlValue{1700000000.0}});
+
+// ReactiveQuery — re-runs on parameter change
+auto query = std::make_shared&lt;ReactiveQuery&gt;(
+    db,
+    "SELECT name, ts FROM events WHERE ts &gt; ? ORDER BY ts DESC LIMIT 20",
+    /*params=*/std::vector&lt;SqlValue&gt;{SqlValue{0.0}});
+
+// Subscribe to new result sets
+query-&gt;OnResult([](const DataFrame&amp; result) {
+    // called whenever the query is re-executed
+});
+
+// Update a bound parameter — triggers re-execution + callbacks
+query-&gt;SetParam(0, SqlValue{1700000000.0});
+#endif</code></pre>
+    </div>
+
+    <div class="glass-card">
+      <h3 style="color:var(--accent-2);margin-bottom:1rem;">5. DataFrameTable Component</h3>
+      <pre style="overflow:auto;padding:1.5rem;background:rgba(0,0,0,0.3);border-radius:0.5rem;"><code>#include "ftxui/ui/dataframe_component.hpp"
+using namespace ftxui::ui;
+
+// Wrap a DataFrame in a reactive handle
+auto rdf = std::make_shared&lt;ReactiveDataFrame&gt;(df2);
+
+// Create a scrollable, sortable table component
+auto table = DataFrameTable(rdf);
+
+// Use inside any FTXUI layout
+auto screen = ScreenInteractive::Fullscreen();
+screen.Loop(table);
+
+// Push new data — table re-renders automatically
+rdf-&gt;Update([](DataFrame&amp; frame) {
+    frame.AppendRow({{"host", SqlValue{"web-03"}},
+                     {"cpu",  SqlValue{22.0}},
+                     {"alive",SqlValue{int64_t(1)}}});
+});</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- API Reference -->
+<section id="api" style="padding:4rem 2rem;background:rgba(0,0,0,0.15);">
+  <div style="max-width:900px;margin:0 auto;">
+    <h2 style="font-size:2rem;font-weight:800;margin-bottom:2rem;">API Reference</h2>
+
+    <!-- SqlValue -->
+    <div class="glass-card" style="margin-bottom:1.5rem;">
+      <h3 style="color:var(--accent-1);">SqlValue</h3>
+      <p style="color:var(--text-secondary);margin-bottom:1rem;">
+        Typed SQL variant — <code>NULL</code>, <code>INTEGER</code> (int64), <code>REAL</code> (double),
+        <code>TEXT</code> (string), <code>BLOB</code> (bytes). Value semantics — copy is always a deep clone.
+      </p>
+      <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+        <thead><tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+          <th style="text-align:left;padding:0.5rem;">Member</th>
+          <th style="text-align:left;padding:0.5rem;">Description</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:0.4rem;font-family:monospace;">SqlValue()</td><td style="padding:0.4rem;color:var(--text-secondary);">NULL value</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">SqlValue(int64_t / double / string / blob)</td><td style="padding:0.4rem;color:var(--text-secondary);">Typed constructors</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">is_null / is_integer / is_real / is_text / is_blob()</td><td style="padding:0.4rem;color:var(--text-secondary);">Type predicates</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">as_integer / as_real / as_text / as_blob()</td><td style="padding:0.4rem;color:var(--text-secondary);">Typed access — throws on mismatch</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">get_integer / get_real / get_text(default)</td><td style="padding:0.4rem;color:var(--text-secondary);">Safe access — returns default on mismatch</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">type()</td><td style="padding:0.4rem;color:var(--text-secondary);">Returns <code>SqlType</code> enum</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">to_string()</td><td style="padding:0.4rem;color:var(--text-secondary);">Human-readable representation</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">operator== / !=</td><td style="padding:0.4rem;color:var(--text-secondary);">Deep equality (NULL == NULL)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SqliteDb -->
+    <div class="glass-card" style="margin-bottom:1.5rem;">
+      <h3 style="color:var(--accent-2);">SqliteDb <span style="font-size:0.8rem;font-weight:400;opacity:0.7;">— requires <code>BADWOLF_SQLITE</code></span></h3>
+      <p style="color:var(--text-secondary);margin-bottom:0.75rem;">
+        RAII wrapper over a SQLite3 connection. The destructor closes the connection;
+        move-only, not copyable.
+      </p>
+      <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+        <thead><tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+          <th style="text-align:left;padding:0.5rem;">Member</th>
+          <th style="text-align:left;padding:0.5rem;">Description</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:0.4rem;font-family:monospace;">SqliteDb(path)</td><td style="padding:0.4rem;color:var(--text-secondary);">Open/create on-disk database</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">SqliteDb(":memory:")</td><td style="padding:0.4rem;color:var(--text-secondary);">In-memory database</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">Execute(sql, params)</td><td style="padding:0.4rem;color:var(--text-secondary);">Run DDL / DML; bind optional params</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">Query(sql, params)</td><td style="padding:0.4rem;color:var(--text-secondary);">Run SELECT — returns <code>DataFrame</code></td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">LastInsertRowId()</td><td style="padding:0.4rem;color:var(--text-secondary);">Row ID of last INSERT</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">Changes()</td><td style="padding:0.4rem;color:var(--text-secondary);">Rows affected by last DML</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">BeginTransaction() / Commit() / Rollback()</td><td style="padding:0.4rem;color:var(--text-secondary);">Manual transaction control</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- DataFrame -->
+    <div class="glass-card" style="margin-bottom:1.5rem;">
+      <h3 style="color:var(--accent-3);">DataFrame</h3>
+      <p style="color:var(--text-secondary);margin-bottom:0.75rem;">
+        In-memory columnar table. Columns are typed as <code>SqlValue</code> vectors.
+        All transformation methods return a new <code>DataFrame</code> — the original is unchanged.
+      </p>
+      <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+        <thead><tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+          <th style="text-align:left;padding:0.5rem;">Member</th>
+          <th style="text-align:left;padding:0.5rem;">Description</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:0.4rem;font-family:monospace;">DataFrame::FromCSV(path, opts)</td><td style="padding:0.4rem;color:var(--text-secondary);">Parse CSV file — auto-detects types</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">AddColumn(name, values)</td><td style="padding:0.4rem;color:var(--text-secondary);">Append a typed column</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">AppendRow(map)</td><td style="padding:0.4rem;color:var(--text-secondary);">Add a row by column-name map</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">Filter(predicate)</td><td style="padding:0.4rem;color:var(--text-secondary);">Keep rows matching predicate</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">SortBy(col, ascending)</td><td style="padding:0.4rem;color:var(--text-secondary);">Sort rows by column value</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">Select(cols)</td><td style="padding:0.4rem;color:var(--text-secondary);">Project subset of columns</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">Head(n) / Tail(n) / Slice(start, end)</td><td style="padding:0.4rem;color:var(--text-secondary);">Row slicing</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">Sum / Mean / Min / Max / Count(col)</td><td style="padding:0.4rem;color:var(--text-secondary);">Column aggregates</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">GroupBy(col).Mean/Sum/Count(col)</td><td style="padding:0.4rem;color:var(--text-secondary);">Group-by aggregation</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">ValueCounts(col)</td><td style="padding:0.4rem;color:var(--text-secondary);">Frequency table for a column</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">RowCount() / ColCount()</td><td style="padding:0.4rem;color:var(--text-secondary);">Shape</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">ColumnNames()</td><td style="padding:0.4rem;color:var(--text-secondary);">Ordered list of column names</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">At(row, col)</td><td style="padding:0.4rem;color:var(--text-secondary);">Single cell access</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ReactiveQuery -->
+    <div class="glass-card" style="margin-bottom:1.5rem;">
+      <h3 style="color:var(--accent-1);">ReactiveQuery <span style="font-size:0.8rem;font-weight:400;opacity:0.7;">— requires <code>BADWOLF_SQLITE</code></span></h3>
+      <p style="color:var(--text-secondary);margin-bottom:0.75rem;">
+        Parameterised query that re-executes whenever a bound parameter changes,
+        delivering a fresh <code>DataFrame</code> to subscribers and triggering UI refresh.
+      </p>
+      <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+        <thead><tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+          <th style="text-align:left;padding:0.5rem;">Member</th>
+          <th style="text-align:left;padding:0.5rem;">Description</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:0.4rem;font-family:monospace;">ReactiveQuery(db, sql, params)</td><td style="padding:0.4rem;color:var(--text-secondary);">Construct with initial parameter values</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">SetParam(index, val)</td><td style="padding:0.4rem;color:var(--text-secondary);">Update a bound parameter — re-executes query</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">SetParams(vals)</td><td style="padding:0.4rem;color:var(--text-secondary);">Replace all parameters atomically</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">OnResult(cb)</td><td style="padding:0.4rem;color:var(--text-secondary);">Subscribe to new <code>DataFrame</code> results</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">Result()</td><td style="padding:0.4rem;color:var(--text-secondary);">Read latest result synchronously</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">Refresh()</td><td style="padding:0.4rem;color:var(--text-secondary);">Force re-execution without param change</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ReactiveDataFrame -->
+    <div class="glass-card" style="margin-bottom:1.5rem;">
+      <h3 style="color:var(--accent-2);">ReactiveDataFrame</h3>
+      <p style="color:var(--text-secondary);margin-bottom:0.75rem;">
+        Reactive wrapper around <code>DataFrame</code>. Mutations via <code>Update()</code>
+        notify all subscribers and trigger UI re-render.
+      </p>
+      <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+        <thead><tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+          <th style="text-align:left;padding:0.5rem;">Member</th>
+          <th style="text-align:left;padding:0.5rem;">Description</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:0.4rem;font-family:monospace;">ReactiveDataFrame(df)</td><td style="padding:0.4rem;color:var(--text-secondary);">Wrap an existing DataFrame</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">Get()</td><td style="padding:0.4rem;color:var(--text-secondary);">Read current DataFrame (const)</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">Set(df)</td><td style="padding:0.4rem;color:var(--text-secondary);">Replace entire DataFrame</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">Update(fn)</td><td style="padding:0.4rem;color:var(--text-secondary);">Mutate in-place via callback — notifies</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">OnChange(cb)</td><td style="padding:0.4rem;color:var(--text-secondary);">Subscribe to changes</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- UI Components -->
+    <div class="glass-card">
+      <h3 style="color:var(--accent-3);">UI Components</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+        <thead><tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+          <th style="text-align:left;padding:0.5rem;">Function</th>
+          <th style="text-align:left;padding:0.5rem;">Description</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:0.4rem;font-family:monospace;">DataFrameTable(rdf)</td><td style="padding:0.4rem;color:var(--text-secondary);">Scrollable, sortable table Component</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">DataFrameTable(rdf, opts)</td><td style="padding:0.4rem;color:var(--text-secondary);">With column widths, row limit, highlight</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">DataFrameElement(df)</td><td style="padding:0.4rem;color:var(--text-secondary);">Static table Element (non-interactive)</td></tr>
+          <tr><td style="padding:0.4rem;font-family:monospace;">DataFrameBarChart(rdf, col)</td><td style="padding:0.4rem;color:var(--text-secondary);">ASCII bar chart bound to a column</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CMake Integration -->
+<section id="cmake" style="padding:4rem 2rem;">
+  <div style="max-width:900px;margin:0 auto;">
+    <h2 style="font-size:2rem;font-weight:800;margin-bottom:2rem;">CMake Integration</h2>
+
+    <div class="glass-card" style="margin-bottom:2rem;">
+      <h3 style="color:var(--accent-1);margin-bottom:1rem;">DataFrame only (no extra dependencies)</h3>
+      <pre style="overflow:auto;padding:1.5rem;background:rgba(0,0,0,0.3);border-radius:0.5rem;"><code># DataFrame and SqlValue are always available
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+
+# Link your target
+target_link_libraries(my_app PRIVATE ftxui::component)</code></pre>
+    </div>
+
+    <div class="glass-card" style="margin-bottom:2rem;">
+      <h3 style="color:var(--accent-2);margin-bottom:1rem;">Enable optional SQLite support</h3>
+      <pre style="overflow:auto;padding:1.5rem;background:rgba(0,0,0,0.3);border-radius:0.5rem;"><code># Optional SQLite support — enables SqliteDb and ReactiveQuery
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DFTXUI_ENABLE_SQLITE=ON
+cmake --build build
+
+# The macro BADWOLF_SQLITE is defined when SQLite is enabled
+# Use it to guard SQLite-specific code:
+#   #ifdef BADWOLF_SQLITE
+#   #include "ftxui/ui/sqlite.hpp"
+#   #endif</code></pre>
+    </div>
+
+    <div class="glass-card">
+      <h3 style="color:var(--accent-3);margin-bottom:1rem;">FetchContent (recommended for projects)</h3>
+      <pre style="overflow:auto;padding:1.5rem;background:rgba(0,0,0,0.3);border-radius:0.5rem;"><code>include(FetchContent)
+FetchContent_Declare(ftxui
+  GIT_REPOSITORY https://github.com/louiscrocker/FTXUI_BADWOLF
+  GIT_TAG        main
+)
+set(FTXUI_ENABLE_SQLITE ON CACHE BOOL "" FORCE)  # optional
+FetchContent_MakeAvailable(ftxui)
+
+target_link_libraries(my_app PRIVATE ftxui::component)</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer style="padding:2rem;text-align:center;color:var(--text-secondary);font-size:0.85rem;">
+  <p>FTXUI BadWolf — MIT License — <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" style="color:var(--accent-1);">GitHub</a></p>
+</footer>
+
+<script>
+  // Hamburger nav toggle
+  document.querySelector('.hamburger')?.addEventListener('click', function() {
+    const links = document.querySelector('.nav-links');
+    links.classList.toggle('open');
+    this.setAttribute('aria-expanded', links.classList.contains('open'));
+  });
+</script>
+</body>
+</html>

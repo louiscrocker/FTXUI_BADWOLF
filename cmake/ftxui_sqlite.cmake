@@ -1,0 +1,12 @@
+# Optional SQLite3 integration
+option(FTXUI_ENABLE_SQLITE "Enable SQLite3 support in ReactiveQuery" OFF)
+if(FTXUI_ENABLE_SQLITE)
+  find_package(SQLite3)
+  if(SQLite3_FOUND)
+    target_compile_definitions(ui PUBLIC BADWOLF_SQLITE)
+    target_link_libraries(ui PUBLIC SQLite::SQLite3)
+    message(STATUS "BadWolf: SQLite3 support enabled")
+  else()
+    message(WARNING "BadWolf: SQLite3 not found, SQL features will be stubs")
+  endif()
+endif()
