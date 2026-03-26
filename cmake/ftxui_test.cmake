@@ -97,6 +97,7 @@ add_executable(ftxui_ui_test
   src/ftxui/ui/devtools_test.cpp
   src/ftxui/ui/collab_test.cpp
   src/ftxui/ui/live_source_test.cpp
+  src/ftxui/ui/distributed_test.cpp
   src/ftxui/ui/wasm_test.cpp
   src/ftxui/ui/registry_test.cpp
   src/ftxui/ui/llm_test.cpp
@@ -114,6 +115,9 @@ add_executable(ftxui_ui_test
   src/ftxui/ui/voice_test.cpp
   src/ftxui/ui/plugin_test.cpp
   src/ftxui/ui/time_travel_test.cpp
+  src/ftxui/ui/multiplayer_test.cpp
+  src/ftxui/ui/codegen_test.cpp
+  src/ftxui/ui/spatial_test.cpp
 )
 
 target_link_libraries(ftxui_ui_test

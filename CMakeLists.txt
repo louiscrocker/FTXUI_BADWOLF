@@ -249,14 +249,20 @@ add_library(ui
   include/ftxui/ui/transitions.hpp
   include/ftxui/ui/galaxy_map.hpp
   src/ftxui/ui/galaxy_map.cpp
+  include/ftxui/ui/spatial.hpp
+  src/ftxui/ui/spatial.cpp
   include/ftxui/ui/network_reactive.hpp
   src/ftxui/ui/network_reactive.cpp
   include/ftxui/ui/collab.hpp
   src/ftxui/ui/collab.cpp
   include/ftxui/ui/llm_bridge.hpp
   src/ftxui/ui/llm_bridge.cpp
+  include/ftxui/ui/codegen.hpp
+  src/ftxui/ui/codegen.cpp
   include/ftxui/ui/live_source.hpp
   src/ftxui/ui/live_source.cpp
+  include/ftxui/ui/distributed.hpp
+  src/ftxui/ui/distributed.cpp
   include/ftxui/ui/registry.hpp
   src/ftxui/ui/registry.cpp
   include/ftxui/ui/rich_text.hpp
@@ -289,6 +295,8 @@ add_library(ui
   src/ftxui/ui/time_travel.cpp
   include/ftxui/ui/video.hpp
   src/ftxui/ui/video.cpp
+  include/ftxui/ui/multiplayer.hpp
+  src/ftxui/ui/multiplayer.cpp
 )
 
 target_link_libraries(dom PUBLIC screen)

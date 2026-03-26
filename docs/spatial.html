@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI BadWolf — Spatial/AR Computing</title>
+  <meta name="description" content="FTXUI BadWolf Spatial/AR Computing — Vec3, Mat4, Camera3D, SpatialScene, SpatialLayouts, HUD for 3D terminal interfaces.">
+  <meta property="og:title" content="FTXUI BadWolf — Spatial/AR Computing">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">🐺 FTXUI BadWolf</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Get Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Components <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="colors.html">🎨 Colors &amp; Styling</a>
+          <a href="typewriter.html">⌨️ Typewriter &amp; Console</a>
+          <a href="json.html">📄 JSON</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Platform <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="live-data.html">📡 Live Data</a>
+          <a href="collab.html">👥 Collab Sessions</a>
+          <a href="registry.html">📦 Component Registry</a>
+          <a href="llm-bridge.html">🤖 LLM Bridge</a>
+          <a href="nl-theming.html">🎨 AI Theming</a>
+          <a href="voice.html">🎙 Voice Control</a>
+          <a href="playground.html">🌐 Playground</a>
+          <a href="webgl.html">⚡ WebGL Renderer</a>
+          <a href="video.html">📺 Video Player</a>
+          <a href="hot-reload.html">🔥 Hot Reload</a>
+          <a href="plugins.html">🔌 Plugin System</a>
+          <a href="physics.html">🎮 Terminal Game Engine</a>
+          <a href="spatial.html">🌐 Spatial/AR Computing</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Docs <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="deep-dive.html">🔬 Technical Deep Dive</a>
+          <a href="executive.html">📊 Executive Brief</a>
+        </div>
+      </div>
+
+      <a href="https://github.com/ArthurSonzogni/FTXUI" class="nav-link" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header style="padding:4rem 2rem 2rem;max-width:900px;margin:0 auto;text-align:center;">
+  <div style="font-size:4rem;margin-bottom:1rem;">🌐</div>
+  <h1 style="font-size:2.8rem;font-weight:900;background:linear-gradient(135deg,#64ffda,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem;">
+    Spatial/AR Computing
+  </h1>
+  <p style="font-size:1.2rem;color:var(--text-secondary);max-width:600px;margin:0 auto 2rem;">
+    Pure-C++ 3D math and perspective projection for terminal UIs.
+    Position widgets in 3D space, render them depth-sorted onto a
+    <strong style="color:var(--teal-light)">BrailleCanvas</strong>,
+    and add a <strong style="color:var(--teal-light)">HUD</strong> overlay —
+    no GPU required.
+  </p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <span class="glass-card" style="padding:0.5rem 1.2rem;font-size:0.9rem;font-family:monospace;">#include "ftxui/ui/spatial.hpp"</span>
+  </div>
+</header>
+
+<!-- Feature cards -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;">
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">📐</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">Vec3 &amp; Mat4</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">3D vector math and column-major 4×4 matrices: translate, scale, rotate, perspective, lookAt.</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">📷</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">Camera3D</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Perspective camera with orbit, zoom, and pan. View + projection matrices built automatically.</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🧩</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">SpatialScene</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Depth-sorted widget rendering with content blitting, bounding boxes, and optional auto-orbit.</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🗺️</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">SpatialLayouts</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Arrange widgets in Circle, Grid, Sphere, Stack, or Fan formations automatically.</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🎯</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">HUD</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Head-up display overlay: corner elements, crosshair, and compass rendered over the 3D scene.</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🚀</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">SpatialDock</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">One-line helper: wrap any components in an auto-orbiting 3D dock.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Start -->
+<section style="padding:0 2rem 2rem;max-width:900px;margin:0 auto;">
+  <div class="glass-card" style="padding:2rem;">
+    <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:1rem;">Quick Start</h2>
+    <pre style="background:rgba(0,0,0,0.3);border-radius:8px;padding:1.5rem;overflow-x:auto;font-size:0.85rem;line-height:1.6;"><code>#include "ftxui/ui/spatial.hpp"
+#include "ftxui/ui/app.hpp"
+#include "ftxui/component/component.hpp"
+using namespace ftxui;
+using namespace ftxui::ui;
+
+int main() {
+  // 1. Create a scene with a perspective camera
+  SpatialScene scene(Camera3D{{0, 2, 8}});
+
+  // 2. Add widgets at 3D positions
+  for (int i = 0; i &lt; 6; i++) {
+    SpatialWidget w;
+    w.content = Renderer([] { return text("Hello") | border; });
+    w.content_width = 10;
+    w.content_height = 3;
+    scene.AddWidget(std::move(w));
+  }
+
+  // 3. Arrange in a circle and start auto-orbit
+  SpatialLayouts::Circle(scene, 4.0f);
+  scene.StartOrbit(20.0f);
+
+  // 4. Build interactive component and run
+  auto comp = scene.BuildComponent();
+  ui::App app;
+  app.Add(comp);
+  app.Run();
+}</code></pre>
+  </div>
+</section>
+
+<!-- API Reference -->
+<section style="padding:0 2rem 2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.8rem;font-weight:800;margin-bottom:1.5rem;">API Reference</h2>
+
+  <!-- Vec3 -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:0.8rem;color:var(--teal-light);">Vec3 — 3D Vector</h3>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">Simple 3D float vector with math operations.</p>
+    <pre style="background:rgba(0,0,0,0.3);border-radius:8px;padding:1rem;font-size:0.82rem;overflow-x:auto;"><code>struct Vec3 {
+  float x, y, z;
+  Vec3 operator+(Vec3) const;    // addition
+  Vec3 operator-(Vec3) const;    // subtraction
+  Vec3 operator*(float) const;   // scalar multiply
+  Vec3 cross(Vec3) const;        // cross product
+  float dot(Vec3) const;         // dot product
+  float length() const;          // euclidean length
+  Vec3 normalized() const;       // unit vector
+  static Vec3 Zero();
+  static Vec3 Up();      // {0,1,0}
+  static Vec3 Forward(); // {0,0,-1}
+};</code></pre>
+  </div>
+
+  <!-- Mat4 -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:0.8rem;color:var(--teal-light);">Mat4 — 4×4 Matrix</h3>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">Column-major 4×4 transformation matrix (OpenGL convention). Index = col×4 + row.</p>
+    <pre style="background:rgba(0,0,0,0.3);border-radius:8px;padding:1rem;font-size:0.82rem;overflow-x:auto;"><code>struct Mat4 {
+  float m[16];  // column-major storage
+  static Mat4 Identity();
+  static Mat4 Translation(Vec3 t);
+  static Mat4 Scale(Vec3 s);
+  static Mat4 RotationX(float radians);
+  static Mat4 RotationY(float radians);
+  static Mat4 RotationZ(float radians);
+  static Mat4 Perspective(float fov_y, float aspect,
+                          float near, float far);
+  static Mat4 LookAt(Vec3 eye, Vec3 target, Vec3 up);
+  Mat4 operator*(const Mat4&amp;) const;
+  Vec3 Transform(Vec3 v) const; // perspective divide
+};</code></pre>
+  </div>
+
+  <!-- Camera3D -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:0.8rem;color:var(--teal-light);">Camera3D</h3>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">Perspective camera. Builds view + projection matrices and supports interactive controls.</p>
+    <pre style="background:rgba(0,0,0,0.3);border-radius:8px;padding:1rem;font-size:0.82rem;overflow-x:auto;"><code>struct Camera3D {
+  Vec3 position = {0, 0, 5};
+  Vec3 target   = {0, 0, 0};
+  Vec3 up       = {0, 1, 0};
+  float fov     = 60.0f;        // degrees
+  float near_plane = 0.1f;
+  float far_plane  = 1000.0f;
+
+  Mat4 ViewMatrix() const;
+  Mat4 ProjectionMatrix(float aspect) const;
+  Mat4 ViewProjection(float aspect) const;
+
+  void OrbitAround(Vec3 center, float delta_yaw, float delta_pitch);
+  void Zoom(float delta);       // move along view direction
+  void Pan(Vec3 delta);         // translate camera + target
+};</code></pre>
+  </div>
+
+  <!-- SpatialWidget -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:0.8rem;color:var(--teal-light);">SpatialWidget</h3>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">A UI component placed in 3D space. Set <code>content</code> to any FTXUI Component for full rendering.</p>
+    <pre style="background:rgba(0,0,0,0.3);border-radius:8px;padding:1rem;font-size:0.82rem;overflow-x:auto;"><code>struct SpatialWidget {
+  int id;                        // assigned by scene
+  Vec3 position;                 // world-space position
+  Vec3 rotation;                 // Euler angles (radians)
+  Vec3 scale  = {1, 1, 1};
+  float opacity = 1.0f;
+
+  ftxui::Component content;     // rendered and blitted
+  int content_width  = 20;      // in terminal columns
+  int content_height = 10;      // in terminal rows
+  bool visible = true;
+  std::string label;             // shown when no content
+};</code></pre>
+  </div>
+
+  <!-- SpatialScene -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:0.8rem;color:var(--teal-light);">SpatialScene</h3>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">Manages a collection of SpatialWidgets, renders them depth-sorted to a BrailleCanvas.</p>
+    <pre style="background:rgba(0,0,0,0.3);border-radius:8px;padding:1rem;font-size:0.82rem;overflow-x:auto;"><code>SpatialScene scene(Camera3D{{0, 2, 8}});
+
+int id = scene.AddWidget(widget);
+scene.RemoveWidget(id);
+SpatialWidget* w = scene.GetWidget(id);
+scene.UpdateWidget(id, [](SpatialWidget&amp; w) {
+  w.position.x += 1.0f;
+});
+
+scene.SetCamera(cam);
+Camera3D&amp; cam = scene.camera();
+
+// Render to braille canvas element (canvas_cols × canvas_rows chars)
+ftxui::Element el = scene.Render(80, 24);
+
+// Project a world point to screen coordinates
+auto proj = scene.Project({0,0,0}, 80, 24);
+// proj.x, proj.y  — screen position in characters
+// proj.depth      — distance in front of camera
+// proj.visible    — false if behind camera
+
+// Build interactive component with mouse orbit/zoom
+ftxui::Component comp = scene.BuildComponent();
+
+// Background auto-orbit
+scene.StartOrbit(30.0f);  // 30 degrees/second
+scene.StopOrbit();</code></pre>
+  </div>
+
+  <!-- SpatialLayouts -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:0.8rem;color:var(--teal-light);">SpatialLayouts</h3>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">Automatically arrange all widgets in a scene.</p>
+    <pre style="background:rgba(0,0,0,0.3);border-radius:8px;padding:1rem;font-size:0.82rem;overflow-x:auto;"><code>// Evenly spaced around a circle
+SpatialLayouts::Circle(scene, /*radius=*/3.0f, /*y=*/0.0f);
+
+// 3×3 (or N×cols) grid on XZ plane
+SpatialLayouts::Grid(scene, /*cols=*/3, /*spacing=*/2.5f);
+
+// Golden-angle spiral on a sphere surface
+SpatialLayouts::Sphere(scene, /*radius=*/4.0f);
+
+// Stack vertically along Y axis
+SpatialLayouts::Stack(scene, /*y_step=*/1.5f);
+
+// Fan arc facing the camera
+SpatialLayouts::Fan(scene, /*arc_degrees=*/120.0f, /*distance=*/3.0f);</code></pre>
+  </div>
+
+  <!-- HUD -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:0.8rem;color:var(--teal-light);">HUD</h3>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">Overlay elements on top of a spatial scene element using <code>dbox</code>.</p>
+    <pre style="background:rgba(0,0,0,0.3);border-radius:8px;padding:1rem;font-size:0.82rem;overflow-x:auto;"><code>HUD hud;
+// corner: 0=top-left, 1=top-right, 2=bottom-left, 3=bottom-right
+hud.AddCorner(ftxui::text("FPS: 60"), 1);
+hud.AddCrosshair(true);   // center + symbol
+hud.AddCompass(true);     // N/E/S/W directions
+
+ftxui::Element scene_el = scene.Render(80, 24);
+ftxui::Element final    = hud.Render(std::move(scene_el));</code></pre>
+  </div>
+
+  <!-- SpatialDock & FloatingWindow -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:0.8rem;color:var(--teal-light);">SpatialDock &amp; FloatingWindow</h3>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">Convenience constructors for common patterns.</p>
+    <pre style="background:rgba(0,0,0,0.3);border-radius:8px;padding:1rem;font-size:0.82rem;overflow-x:auto;"><code>// Wrap multiple components in an auto-orbiting circle
+ftxui::Component dock = SpatialDock({comp_a, comp_b, comp_c});
+
+// Single component floating at a 3D position
+ftxui::Component win = FloatingWindow(
+    my_component, {2.0f, 0.0f, -1.0f}, "My Window");</code></pre>
+  </div>
+</section>
+
+<!-- Demo screenshot placeholder -->
+<section style="padding:0 2rem 4rem;max-width:900px;margin:0 auto;text-align:center;">
+  <div class="glass-card" style="padding:2rem;">
+    <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:1rem;">Run the Demo</h2>
+    <pre style="background:rgba(0,0,0,0.4);border-radius:8px;padding:1rem;display:inline-block;text-align:left;font-size:0.9rem;"><code>cmake --build build --target ftxui_example_ui_spatial_demo
+./build/examples/ui/ftxui_example_ui_spatial_demo</code></pre>
+    <p style="color:var(--text-secondary);margin-top:1rem;font-size:0.9rem;">
+      Four tabs: Spatial Dock · 3D Grid · Free Placement · HUD overlay
+    </p>
+  </div>
+</section>
+
+<script>
+document.querySelectorAll('.nav-dropdown-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const dd = btn.closest('.nav-dropdown');
+    dd.classList.toggle('open');
+    document.querySelectorAll('.nav-dropdown').forEach(d => {
+      if (d !== dd) d.classList.remove('open');
+    });
+  });
+});
+document.addEventListener('click', e => {
+  if (!e.target.closest('.nav-dropdown')) {
+    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+  }
+});
+</script>
+</body>
+</html>

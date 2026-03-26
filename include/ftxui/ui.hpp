@@ -67,6 +67,7 @@
 #include "ftxui/ui/geojson.hpp"
 #include "ftxui/ui/geomap.hpp"
 #include "ftxui/ui/globe.hpp"
+#include "ftxui/ui/spatial.hpp"
 #include "ftxui/ui/world_map_data.hpp"
 
 // ── Animation & Effects
@@ -95,10 +96,12 @@
 // ── Networking & Collaboration
 // ────────────────────────────────────────────────
 #include "ftxui/ui/collab.hpp"
+#include "ftxui/ui/distributed.hpp"
 #include "ftxui/ui/live_source.hpp"
 #include "ftxui/ui/network_reactive.hpp"
 
 // ── AI & Intelligence ────────────────────────────────────────────────────────
+#include "ftxui/ui/codegen.hpp"
 #include "ftxui/ui/llm_bridge.hpp"
 #include "ftxui/ui/nl_theme.hpp"
 #include "ftxui/ui/registry.hpp"
@@ -124,6 +127,10 @@
 // ── Game Engine & Physics
 // ─────────────────────────────────────────────────────
 #include "ftxui/ui/physics.hpp"
+
+// ── Multiplayer Games
+// ─────────────────────────────────────────────────────────
+#include "ftxui/ui/multiplayer.hpp"
 
 // ── Dev Tools: Hot Reload
 // ─────────────────────────────────────────────────────
