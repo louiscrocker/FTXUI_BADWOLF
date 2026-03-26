@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI BadWolf — Distributed State</title>
+  <meta name="description" content="FTXUI BadWolf distributed state: connect your terminal UI to Redis, Kafka, and gRPC streams with zero external dependencies.">
+  <meta property="og:title" content="FTXUI BadWolf — Distributed State">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">🐺 FTXUI BadWolf</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Get Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Components <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="colors.html">🎨 Colors &amp; Styling</a>
+          <a href="typewriter.html">⌨️ Typewriter &amp; Console</a>
+          <a href="json.html">📄 JSON</a>
+          <a href="layout.html">📐 Constraint Layout</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Platform <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="live-data.html">📡 Live Data</a>
+          <a href="distributed.html">🌐 Distributed State</a>
+          <a href="collab.html">👥 Collab Sessions</a>
+          <a href="registry.html">📦 Component Registry</a>
+          <a href="llm-bridge.html">🤖 LLM Bridge</a>
+          <a href="nl-theming.html">🎨 AI Theming</a>
+          <a href="voice.html">🎙 Voice Control</a>
+          <a href="playground.html">🌐 Playground</a>
+          <a href="webgl.html">⚡ WebGL Renderer</a>
+          <a href="video.html">📺 Video Player</a>
+          <a href="hot-reload.html">🔥 Hot Reload</a>
+          <a href="plugins.html">🔌 Plugin System</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Docs <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="deep-dive.html">🔬 Technical Deep Dive</a>
+          <a href="executive.html">📊 Executive Brief</a>
+        </div>
+      </div>
+
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section style="padding:6rem 2rem 3rem;text-align:center;">
+  <span class="section-label">Redis · Kafka · gRPC · Pure POSIX</span>
+  <h1 style="font-size:clamp(2rem,4vw,3.5rem);font-weight:900;margin-bottom:1rem;">
+    🌐 <span class="gradient-text">Distributed State</span>
+  </h1>
+  <p style="font-size:1.1rem;color:var(--text-secondary);max-width:680px;margin:0 auto 2rem;">
+    Connect your terminal UI to Redis pub/sub, Kafka topics, and gRPC streams.
+    Pure POSIX sockets — zero external dependencies. Automatic reconnection, push callbacks, reactive bindings.
+  </p>
+  <div style="font-style:italic;color:var(--text-secondary);font-size:0.95rem;margin-bottom:2rem;">
+    "The Empire's data flows through every channel — now so does yours."
+  </div>
+</section>
+
+<!-- Architecture -->
+<section style="padding:2rem;max-width:960px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1.5rem;">Architecture</h2>
+  <div class="glass-card" style="padding:2rem;font-family:monospace;font-size:0.85rem;line-height:1.8;">
+    <pre style="margin:0;color:var(--text-primary);overflow-x:auto;">
+┌─ Data Sources ──────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  Redis PubSub ──┐                                                           │
+│  Redis PollKey ─┤                                                           │
+│  Redis Queue ───┼──▶  LiveSource&lt;T&gt; ──▶  EmitData() ──▶  OnData callbacks  │
+│  Kafka Topic ───┤         │                                  │              │
+│  gRPC Stream ───┘         │ (poll or push)                   ▼              │
+│                           ▼                          ReactiveState&lt;T&gt;       │
+│                    Background thread                         │              │
+│                    Auto-reconnect                            ▼              │
+│                    POSIX TCP sockets               FTXUI Component::Render  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─ DistributedState&lt;T&gt; ───────────────────────────────────────────────────────┐
+│                                                                             │
+│  DistributedState&lt;string&gt; state("key", RedisSubscribe("channel"));         │
+│         │                                                                   │
+│         ├── source_->OnData(...)  ──▶  local_.Set(val)  ──▶  synced_=true  │
+│         └── local_.OnChange(...)  ──▶  UI re-render callback               │
+└─────────────────────────────────────────────────────────────────────────────┘</pre>
+  </div>
+</section>
+
+<!-- Redis Section -->
+<section style="padding:2rem;max-width:960px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:0.5rem;">Redis Integration</h2>
+  <p style="color:var(--text-secondary);margin-bottom:1.5rem;">Three modes: pub/sub subscribe, key polling, and blocking queue (BLPOP). All auto-reconnecting.</p>
+
+  <div class="glass-card" style="padding:1.5rem;margin-bottom:1.5rem;">
+    <h3 style="font-weight:700;margin-bottom:1rem;">Pub/Sub Subscribe</h3>
+    <pre style="background:rgba(0,0,0,0.3);padding:1rem;border-radius:8px;overflow-x:auto;font-size:0.85rem;"><code>// Subscribe to a Redis channel
+auto src = RedisSubscribe("my:channel");
+
+// Or use the full API with config
+RedisConfig cfg;
+cfg.host = "redis.example.com";
+cfg.port = 6379;
+cfg.password = "secret";
+auto src = RedisSource&lt;string&gt;::Subscribe("my:channel", cfg);
+
+src-&gt;OnData([](const string&amp; msg) {
+    // Called on each published message
+    std::cout &lt;&lt; "Received: " &lt;&lt; msg &lt;&lt; "\n";
+});
+src-&gt;Start();
+
+// Test with: redis-cli PUBLISH my:channel "hello world"</code></pre>
+  </div>
+
+  <div class="glass-card" style="padding:1.5rem;margin-bottom:1.5rem;">
+    <h3 style="font-weight:700;margin-bottom:1rem;">Key Polling</h3>
+    <pre style="background:rgba(0,0,0,0.3);padding:1rem;border-radius:8px;overflow-x:auto;font-size:0.85rem;"><code>// Poll a key every 500ms, emit only on changes
+auto src = RedisPollKey("app:status", chrono::milliseconds(500));
+
+src-&gt;OnData([](const string&amp; val) {
+    std::cout &lt;&lt; "Status changed: " &lt;&lt; val &lt;&lt; "\n";
+});
+src-&gt;Start();
+
+// Test with: redis-cli SET app:status "running"</code></pre>
+  </div>
+
+  <div class="glass-card" style="padding:1.5rem;margin-bottom:1.5rem;">
+    <h3 style="font-weight:700;margin-bottom:1rem;">JSON Subscribe</h3>
+    <pre style="background:rgba(0,0,0,0.3);padding:1rem;border-radius:8px;overflow-x:auto;font-size:0.85rem;"><code>// Parse messages as JSON automatically
+auto src = RedisSubscribeJson("metrics:json");
+
+src-&gt;OnData([](const JsonValue&amp; val) {
+    if (val.has("cpu"))
+        std::cout &lt;&lt; "CPU: " &lt;&lt; val["cpu"].as_double() &lt;&lt; "%\n";
+});
+src-&gt;Start();
+
+// Test: redis-cli PUBLISH metrics:json '{"cpu":42.5,"mem":1024}'</code></pre>
+  </div>
+
+  <div class="glass-card" style="padding:1.5rem;">
+    <h3 style="font-weight:700;margin-bottom:1rem;">DistributedState binding</h3>
+    <pre style="background:rgba(0,0,0,0.3);padding:1rem;border-radius:8px;overflow-x:auto;font-size:0.85rem;"><code>// Bind a Redis source directly to reactive state
+auto src = RedisSubscribe("app:theme");
+DistributedState&lt;string&gt; theme("current-theme", src, "dark");
+
+// Reactive — UI re-renders automatically when Redis publishes
+theme.OnChange([](const string&amp; t) { /* re-render */ });
+
+// Check sync status
+if (theme.IsSynced()) { /* received at least one value */ }
+std::cout &lt;&lt; "Source: " &lt;&lt; theme.SourceName(); // redis://localhost:6379/app:theme</code></pre>
+  </div>
+</section>
+
+<!-- Kafka Section -->
+<section style="padding:2rem;max-width:960px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:0.5rem;">Kafka Integration</h2>
+  <p style="color:var(--text-secondary);margin-bottom:1.5rem;">Native Kafka wire protocol v0 over TCP. No librdkafka required — pure POSIX sockets.</p>
+
+  <div class="glass-card" style="padding:1.5rem;margin-bottom:1.5rem;">
+    <h3 style="font-weight:700;margin-bottom:1rem;">Basic Consumer</h3>
+    <pre style="background:rgba(0,0,0,0.3);padding:1rem;border-radius:8px;overflow-x:auto;font-size:0.85rem;"><code>KafkaConfig cfg;
+cfg.brokers = "kafka.example.com:9092";
+cfg.group_id = "my-consumer-group";
+cfg.reconnect_delay = chrono::milliseconds(3000);
+
+auto src = make_shared&lt;KafkaSource&gt;("my-topic", cfg);
+
+src-&gt;OnData([](const string&amp; msg) {
+    std::cout &lt;&lt; "Kafka: " &lt;&lt; msg &lt;&lt; "\n";
+});
+src-&gt;Start();
+
+cout &lt;&lt; src-&gt;Name(); // kafka://kafka.example.com:9092/my-topic</code></pre>
+  </div>
+
+  <div class="glass-card" style="padding:1.5rem;">
+    <h3 style="font-weight:700;margin-bottom:1rem;">Connection Status</h3>
+    <pre style="background:rgba(0,0,0,0.3);padding:1rem;border-radius:8px;overflow-x:auto;font-size:0.85rem;"><code>auto src = make_shared&lt;KafkaSource&gt;("events");
+src-&gt;Start();
+
+// Check state at any time
+bool connected = src-&gt;IsConnected();
+string err = src-&gt;last_error();
+
+// Stop gracefully
+src-&gt;Stop(); // waits for worker thread to exit</code></pre>
+  </div>
+</section>
+
+<!-- gRPC Section -->
+<section style="padding:2rem;max-width:960px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:0.5rem;">gRPC Streaming</h2>
+  <p style="color:var(--text-secondary);margin-bottom:1.5rem;">HTTP/1.1 gRPC-Web framing over plain TCP. Works with gRPC-Web proxies or grpc-gateway.</p>
+
+  <div class="glass-card" style="padding:1.5rem;">
+    <h3 style="font-weight:700;margin-bottom:1rem;">Server-Streaming RPC</h3>
+    <pre style="background:rgba(0,0,0,0.3);padding:1rem;border-radius:8px;overflow-x:auto;font-size:0.85rem;"><code>GrpcStreamConfig cfg;
+cfg.host = "api.example.com";
+cfg.port = 8080;
+cfg.service = "myapp.StreamService";
+cfg.method = "LiveFeed";
+cfg.request_json = R"({"filter":"all"})";
+cfg.reconnect_delay = chrono::milliseconds(5000);
+
+auto src = make_shared&lt;GrpcStreamSource&gt;(cfg);
+
+src-&gt;OnData([](const JsonValue&amp; frame) {
+    if (!frame.is_null())
+        std::cout &lt;&lt; "gRPC frame: " &lt;&lt; frame["event"].as_string() &lt;&lt; "\n";
+});
+src-&gt;Start();
+
+// Falls back gracefully if server is unavailable
+// Check: src-&gt;last_error() for connection errors</code></pre>
+  </div>
+</section>
+
+<!-- DistributedDashboard Section -->
+<section style="padding:2rem;max-width:960px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:0.5rem;">Distributed Dashboard</h2>
+  <p style="color:var(--text-secondary);margin-bottom:1.5rem;">Render multiple live sources in an auto-updating grid layout.</p>
+
+  <div class="glass-card" style="padding:1.5rem;margin-bottom:1.5rem;">
+    <pre style="background:rgba(0,0,0,0.3);padding:1rem;border-radius:8px;overflow-x:auto;font-size:0.85rem;"><code>DistributedDashboard dashboard;
+
+dashboard
+  .AddSource("Redis Events",    RedisSubscribe("app:events"))
+  .AddSource("Redis Status",    RedisPollKey("app:status"))
+  .AddSource("Kafka Logs",      make_shared&lt;KafkaSource&gt;("logs"))
+  .AddJsonSource("gRPC Metrics", make_shared&lt;GrpcStreamSource&gt;(grpc_cfg))
+  .WithLayout(2);  // 2 columns
+
+auto component = dashboard.Build();
+
+// Use in your screen loop — auto-refreshes when data arrives
+auto screen = ScreenInteractive::Fullscreen();
+screen.Loop(component);</code></pre>
+  </div>
+
+  <div class="glass-card" style="padding:1.5rem;font-family:monospace;font-size:0.85rem;">
+    <p style="color:var(--text-secondary);margin-bottom:0.5rem;">Dashboard renders as:</p>
+    <pre style="margin:0;color:var(--text-primary);">┌ Redis Events ──────────────┐┌ Redis Status ──────────────┐
+│ latest message here        ││ running                    │
+│ ● Connected      14:22:01  ││ ● Connected      14:22:00  │
+└────────────────────────────┘└────────────────────────────┘
+┌ Kafka Logs ────────────────┐┌ gRPC Metrics ──────────────┐
+│ (no data)                  ││ (no data)                  │
+│ ○ Disconnected    never    ││ ○ Disconnected    never    │
+└────────────────────────────┘└────────────────────────────┘</pre>
+  </div>
+</section>
+
+<!-- Config Reference -->
+<section style="padding:2rem;max-width:960px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1.5rem;">Configuration Reference</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;">
+    <div class="glass-card" style="padding:1.5rem;">
+      <h3 style="font-weight:700;margin-bottom:0.75rem;">RedisConfig</h3>
+      <pre style="font-size:0.8rem;color:var(--text-secondary);"><code>host           = "localhost"
+port           = 6379
+password       = ""
+db             = 0
+connect_timeout = 3000ms
+reconnect_delay = 1000ms
+max_retries    = -1  // infinite</code></pre>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;">
+      <h3 style="font-weight:700;margin-bottom:0.75rem;">KafkaConfig</h3>
+      <pre style="font-size:0.8rem;color:var(--text-secondary);"><code>brokers        = "localhost:9092"
+group_id       = "badwolf"
+client_id      = "ftxui-badwolf"
+offset         = -1  // latest
+poll_timeout   = 100ms
+reconnect_delay = 2000ms</code></pre>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;">
+      <h3 style="font-weight:700;margin-bottom:0.75rem;">GrpcStreamConfig</h3>
+      <pre style="font-size:0.8rem;color:var(--text-secondary);"><code>host           = "localhost"
+port           = 50051
+service        = ""
+method         = ""
+request_json   = "{}"
+reconnect_delay = 2000ms</code></pre>
+    </div>
+  </div>
+</section>
+
+<footer style="text-align:center;padding:3rem 2rem;color:var(--text-secondary);font-size:0.9rem;">
+  <p>FTXUI BadWolf — Pure POSIX. Zero dependencies. Real-time terminal UIs.</p>
+  <p style="margin-top:0.5rem;"><a href="https://github.com/louiscrocker/FTXUI_BADWOLF" style="color:var(--text-secondary);">GitHub</a> · <a href="api.html" style="color:var(--text-secondary);">API Docs</a> · <a href="live-data.html" style="color:var(--text-secondary);">Live Data</a></p>
+</footer>
+
+<script>
+document.querySelectorAll('.nav-dropdown-toggle').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const dd = btn.closest('.nav-dropdown');
+    dd.classList.toggle('open');
+  });
+});
+document.addEventListener('click', () => {
+  document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+});
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
+if (hamburger) {
+  hamburger.addEventListener('click', () => {
+    const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+    hamburger.setAttribute('aria-expanded', String(!expanded));
+    navLinks.classList.toggle('open');
+  });
+}
+</script>
+</body>
+</html>

@@ -37,7 +37,7 @@ class LiveSource {
   virtual ~LiveSource() { Stop(); }
 
   // Start background polling thread (idempotent).
-  void Start() {
+  virtual void Start() {
     if (running_.exchange(true)) {
       return;
     }
@@ -74,7 +74,7 @@ class LiveSource {
   }
 
   // Signal background thread to stop and join it.
-  void Stop() {
+  virtual void Stop() {
     running_.store(false);
     cv_.notify_all();
     if (thread_.joinable()) {
@@ -82,7 +82,9 @@ class LiveSource {
     }
   }
 
-  bool IsRunning() const { return running_.load(); }
+  virtual bool IsRunning() const { return running_.load(); }
+
+  virtual std::string Name() const { return ""; }
 
   // Subscribe to new data. Returns handle id. Called on background thread.
   int OnData(Callback cb) {
@@ -107,6 +109,25 @@ class LiveSource {
   virtual T Fetch() = 0;
   virtual std::chrono::milliseconds Interval() const {
     return std::chrono::milliseconds(1000);
+  }
+
+  // Called by push-based subclasses to emit a value without the poll loop.
+  void EmitData(const T& val) {
+    {
+      std::lock_guard<std::mutex> lock(mutex_);
+      latest_ = val;
+    }
+    std::map<int, Callback> cbs;
+    {
+      std::lock_guard<std::mutex> lock(mutex_);
+      cbs = callbacks_;
+    }
+    for (auto& [id, cb] : cbs) {
+      cb(val);
+    }
+    if (App* app = App::Active()) {
+      app->PostEvent(Event::Custom);
+    }
   }
 
  private:
