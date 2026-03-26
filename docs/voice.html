@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI BadWolf — 🎙 Voice Control</title>
+  <meta name="description" content="Voice control for FTXUI BadWolf: microphone → whisper.cpp transcription → NLParser → UI commands. Optional dependency, graceful fallback.">
+  <meta property="og:title" content="FTXUI BadWolf — Voice Control">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+  <style>
+    .terminal-demo {
+      background: #0d1117;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+    .terminal-demo .bar { display:flex;gap:6px;margin-bottom:1rem; }
+    .terminal-demo .bar span { width:12px;height:12px;border-radius:50%; }
+    .terminal-demo .bar .red    { background:#ff5f57; }
+    .terminal-demo .bar .yellow { background:#ffbd2e; }
+    .terminal-demo .bar .green  { background:#28c941; }
+    .kw { color:#56d364;font-weight:600; }
+    .str { color:#fbbf24; }
+    .cmt { color:#8b949e; }
+    .ty { color:#79c0ff; }
+    .fn { color:#06d6a0; }
+    .arch-diagram {
+      background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:10px;
+      padding:1.5rem 2rem;
+      font-family:monospace;
+      font-size:0.9rem;
+      line-height:2;
+      color:#e6edf3;
+      overflow-x:auto;
+    }
+    .step-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1rem; }
+    .step-card {
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:10px;
+      padding:1.2rem;
+    }
+    .step-card h4 { margin:0 0 0.5rem;color:#79c0ff;font-size:1rem; }
+    .step-card p  { margin:0;color:var(--text-secondary);font-size:0.875rem; }
+    .cmd-table { width:100%;border-collapse:collapse;font-size:0.875rem;margin-top:1rem; }
+    .cmd-table th { background:rgba(121,192,255,0.12);color:#79c0ff;padding:0.5rem 1rem;text-align:left;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.1); }
+    .cmd-table td { padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:#e6edf3; }
+    .cmd-table tr:last-child td { border-bottom:none; }
+    .cmd-table tr:hover td { background:rgba(255,255,255,0.03); }
+    .badge-opt { display:inline-block;background:rgba(86,211,100,0.15);border:1px solid rgba(86,211,100,0.3);color:#56d364;border-radius:4px;font-size:0.75rem;padding:0 6px;margin-left:4px;vertical-align:middle; }
+    .badge-req { display:inline-block;background:rgba(248,81,73,0.15);border:1px solid rgba(248,81,73,0.3);color:#f85149;border-radius:4px;font-size:0.75rem;padding:0 6px;margin-left:4px;vertical-align:middle; }
+  </style>
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">🐺 FTXUI BadWolf</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Get Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Components <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="components.html">🧩 All Components</a>
+          <a href="charts.html">📊 Charts</a>
+          <a href="datatable.html">📋 DataTable</a>
+          <a href="form.html">📝 Form</a>
+          <a href="geomap.html">🗺️ GeoMap</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Platform <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="live-data.html">📡 Live Data</a>
+          <a href="collab.html">👥 Collab Sessions</a>
+          <a href="registry.html">📦 Component Registry</a>
+          <a href="llm-bridge.html">🤖 LLM Bridge</a>
+          <a href="nl-theming.html">🎨 AI Theming</a>
+          <a href="voice.html">🎙 Voice Control</a>
+          <a href="playground.html">🌐 Playground</a>
+          <a href="webgl.html">⚡ WebGL Renderer</a>
+          <a href="web-bridge.html">🌐 Web Bridge</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Docs <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="deep-dive.html">🔬 Technical Deep Dive</a>
+          <a href="executive.html">📊 Executive Brief</a>
+        </div>
+      </div>
+
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section style="padding:5rem 2rem 3rem;text-align:center;">
+  <span class="section-label">ffmpeg · whisper.cpp · NLParser · Zero required deps</span>
+  <h1 style="font-size:clamp(2rem,4vw,3.5rem);font-weight:900;margin-bottom:1rem;">
+    🎙 <span class="gradient-text">Voice Control</span>
+  </h1>
+  <p style="font-size:1.1rem;color:var(--text-secondary);max-width:680px;margin:0 auto 2rem;">
+    Speak to your terminal app. <strong>Microphone → whisper.cpp transcription → NLParser → action.</strong>
+    Both whisper.cpp and ffmpeg are optional — everything degrades gracefully to keyboard simulation mode.
+  </p>
+  <div class="arch-diagram" style="max-width:640px;margin:0 auto;text-align:left;">
+    <span style="color:#79c0ff;">🎙 Microphone</span>
+    &nbsp;&nbsp;<span style="color:#e3b341;">──ffmpeg──►</span>&nbsp;&nbsp;
+    <span style="color:#56d364;">WAV file</span>
+    &nbsp;&nbsp;<span style="color:#e3b341;">──whisper──►</span>&nbsp;&nbsp;
+    <span style="color:#ff7b72;">Transcription</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span style="color:#e3b341;">──NLParser──►</span>&nbsp;&nbsp;
+    <span style="color:#8b5cf6;">UIIntent</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span style="color:#e3b341;">──dispatch──►</span>&nbsp;
+    <span style="color:#06d6a0;">handler(entity)</span>
+  </div>
+</section>
+
+<!-- Setup -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1.5rem;">Setup</h2>
+  <div class="step-grid">
+    <div class="step-card">
+      <h4>1 · Install ffmpeg <span class="badge-opt">optional</span></h4>
+      <p>Used for microphone capture. On macOS it accesses AVFoundation; on Linux it uses ALSA.</p>
+      <div class="terminal-demo" style="margin-top:0.75rem;padding:0.75rem;">
+        <span style="color:#8b949e;"># macOS</span><br>
+        brew install ffmpeg<br>
+        <span style="color:#8b949e;"># Ubuntu</span><br>
+        apt install ffmpeg
+      </div>
+    </div>
+    <div class="step-card">
+      <h4>2 · Install whisper.cpp <span class="badge-opt">optional</span></h4>
+      <p>Provides local speech-to-text. Download a model and build the CLI from source.</p>
+      <div class="terminal-demo" style="margin-top:0.75rem;padding:0.75rem;">
+        git clone https://github.com/ggerganov/whisper.cpp<br>
+        cd whisper.cpp &amp;&amp; make<br>
+        ./models/download-ggml-model.sh base
+      </div>
+    </div>
+    <div class="step-card">
+      <h4>3 · Link the library <span class="badge-req">required</span></h4>
+      <p>Voice control is part of the <code>ui</code> library — no extra CMake option needed.</p>
+      <div class="terminal-demo" style="margin-top:0.75rem;padding:0.75rem;">
+        target_link_libraries(myapp PRIVATE<br>
+        &nbsp;&nbsp;ftxui::ui<br>
+        )
+      </div>
+    </div>
+    <div class="step-card">
+      <h4>4 · Include the header</h4>
+      <p>Single include for everything, or include <code>voice.hpp</code> directly.</p>
+      <div class="terminal-demo" style="margin-top:0.75rem;padding:0.75rem;">
+        #include "ftxui/ui.hpp"<br>
+        <span style="color:#8b949e;">// or</span><br>
+        #include "ftxui/ui/voice.hpp"
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Quick start -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1rem;">Quick Start</h2>
+  <div class="terminal-demo">
+    <div class="bar"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+    <span class="cmt">// Create the engine</span><br>
+    <span class="kw">auto</span> engine = std::make_shared&lt;<span class="ty">VoiceCommandEngine</span>&gt;();<br>
+    <br>
+    <span class="cmt">// Register intent handlers</span><br>
+    engine-&gt;<span class="fn">OnCommand</span>(<span class="str">"table"</span>,  [&amp;](<span class="kw">const</span> std::string&amp; entity) { ShowTable(entity); });<br>
+    engine-&gt;<span class="fn">OnCommand</span>(<span class="str">"chart"</span>,  [&amp;](<span class="kw">const</span> std::string&amp; entity) { ShowChart(entity); });<br>
+    engine-&gt;<span class="fn">OnCommand</span>(<span class="str">"unknown"</span>,[&amp;](<span class="kw">const</span> std::string&amp; text)   { Log(text); });<br>
+    <br>
+    <span class="cmt">// Echo every transcription to the log</span><br>
+    engine-&gt;<span class="fn">OnTranscription</span>([&amp;](<span class="kw">const</span> std::string&amp; text) {<br>
+    &nbsp;&nbsp;log.push_front(<span class="str">"🎙 "</span> + text);<br>
+    });<br>
+    <br>
+    <span class="cmt">// Wrap your UI with a voice bar at the bottom (press V to record)</span><br>
+    <span class="kw">auto</span> app = <span class="fn">WithVoiceControl</span>(my_component, engine);<br>
+    App::Fullscreen().Loop(app);
+  </div>
+</section>
+
+<!-- Command examples -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:0.5rem;">Recognised Commands</h2>
+  <p style="color:var(--text-secondary);margin-bottom:1rem;">
+    The NLParser maps speech to <code>UIIntent</code> objects with an intent type and an entity string.
+    You can also register arbitrary keyword handlers that match anywhere in the transcription.
+  </p>
+  <table class="cmd-table">
+    <thead>
+      <tr>
+        <th>Utterance (example)</th>
+        <th>Intent type</th>
+        <th>Entity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>"show users table"</td><td><code>table</code></td><td><code>users</code></td></tr>
+      <tr><td>"plot server metrics"</td><td><code>chart</code></td><td><code>server</code></td></tr>
+      <tr><td>"create a new user form"</td><td><code>form</code></td><td><code>user</code></td></tr>
+      <tr><td>"show me a dashboard overview"</td><td><code>dashboard</code></td><td><code>dashboard</code></td></tr>
+      <tr><td>"display a world map"</td><td><code>map</code></td><td><code>world</code></td></tr>
+      <tr><td>"show server log events"</td><td><code>log</code></td><td><code>server</code></td></tr>
+      <tr><td>"show loading progress"</td><td><code>progress</code></td><td><code>loading</code></td></tr>
+      <tr><td>"increment counter" (custom keyword)</td><td><code>unknown</code></td><td>falls back to keyword match</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- API Reference -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1.5rem;">API Reference</h2>
+
+  <!-- VoiceConfig -->
+  <div class="glass-card" style="padding:1.5rem;margin-bottom:1rem;">
+    <h3 style="margin:0 0 0.75rem;color:#79c0ff;">VoiceConfig</h3>
+    <p style="color:var(--text-secondary);margin-bottom:0.75rem;">Configuration passed to all voice components.</p>
+    <table class="cmd-table">
+      <thead><tr><th>Field</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>whisper_path</code></td><td><code>"whisper"</code></td><td>Path to the whisper CLI binary</td></tr>
+        <tr><td><code>model_path</code></td><td><code>"ggml-base.bin"</code></td><td>whisper model file path</td></tr>
+        <tr><td><code>language</code></td><td><code>"en"</code></td><td>Transcription language code</td></tr>
+        <tr><td><code>sample_rate</code></td><td><code>16000</code></td><td>Recording sample rate (Hz)</td></tr>
+        <tr><td><code>max_record_duration</code></td><td><code>10000ms</code></td><td>Auto-stop after this many ms</td></tr>
+        <tr><td><code>silence_timeout</code></td><td><code>1500ms</code></td><td>Stop recording after silence</td></tr>
+        <tr><td><code>continuous</code></td><td><code>false</code></td><td>Keep listening after each command</td></tr>
+        <tr><td><code>echo_transcription</code></td><td><code>true</code></td><td>Call OnTranscription callback</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- VoiceCommandEngine -->
+  <div class="glass-card" style="padding:1.5rem;margin-bottom:1rem;">
+    <h3 style="margin:0 0 0.75rem;color:#79c0ff;">VoiceCommandEngine</h3>
+    <p style="color:var(--text-secondary);margin-bottom:0.75rem;">Ties together AudioCapture + WhisperTranscriber + NLParser dispatch.</p>
+    <div class="terminal-demo">
+      <span class="ty">VoiceCommandEngine</span> engine;<br>
+      engine.<span class="fn">OnCommand</span>(<span class="str">"table"</span>, handler);   <span class="cmt">// intent type → handler</span><br>
+      engine.<span class="fn">OnTranscription</span>(echo_fn);           <span class="cmt">// called with every transcription</span><br>
+      engine.<span class="fn">StartListening</span>();                    <span class="cmt">// begin recording</span><br>
+      engine.<span class="fn">StopListening</span>();                     <span class="cmt">// stop (thread-safe)</span><br>
+      engine.<span class="fn">ListenOnce</span>(callback);               <span class="cmt">// record one command, then stop</span><br>
+      engine.<span class="fn">status</span>();                            <span class="cmt">// → VoiceStatus enum</span><br>
+      engine.<span class="fn">last_transcription</span>();               <span class="cmt">// last successful text</span>
+    </div>
+  </div>
+
+  <!-- UI components -->
+  <div class="glass-card" style="padding:1.5rem;margin-bottom:1rem;">
+    <h3 style="margin:0 0 0.75rem;color:#79c0ff;">UI Components</h3>
+    <div class="terminal-demo">
+      <span class="cmt">// Mic button + VU meter + transcription display</span><br>
+      <span class="kw">auto</span> bar = <span class="fn">VoiceInputBar</span>(engine, cfg);<br>
+      <br>
+      <span class="cmt">// Wrap any component — press V to toggle listening</span><br>
+      <span class="kw">auto</span> app = <span class="fn">WithVoiceControl</span>(my_comp, engine, cfg);<br>
+      <br>
+      <span class="cmt">// Compact status icon for status bars</span><br>
+      <span class="kw">auto</span> icon = <span class="fn">VoiceStatusIndicator</span>(engine-&gt;<span class="fn">status</span>(), level);<br>
+    </div>
+  </div>
+
+  <!-- AudioCapture -->
+  <div class="glass-card" style="padding:1.5rem;margin-bottom:1rem;">
+    <h3 style="margin:0 0 0.75rem;color:#79c0ff;">AudioCapture</h3>
+    <p style="color:var(--text-secondary);margin-bottom:0.75rem;">Low-level microphone capture via ffmpeg. Use directly for custom pipelines.</p>
+    <div class="terminal-demo">
+      <span class="ty">AudioCapture</span> cap(cfg);<br>
+      cap.<span class="fn">StartRecording</span>(<span class="str">"my_audio.wav"</span>);  <span class="cmt">// non-blocking</span><br>
+      <span class="cmt">// ... do other work ...</span><br>
+      cap.<span class="fn">StopRecording</span>();<br>
+      <br>
+      <span class="cmt">// Or blocking:</span><br>
+      std::string path = cap.<span class="fn">RecordToFile</span>(std::chrono::seconds(5));<br>
+      <br>
+      <span class="cmt">// Check availability</span><br>
+      <span class="kw">bool</span> ok = <span class="ty">AudioCapture</span>::<span class="fn">MicrophoneAvailable</span>();<br>
+      <span class="kw">float</span> level = cap.<span class="fn">CurrentLevel</span>();  <span class="cmt">// 0–1 for VU meter</span>
+    </div>
+  </div>
+
+  <!-- WhisperTranscriber -->
+  <div class="glass-card" style="padding:1.5rem;">
+    <h3 style="margin:0 0 0.75rem;color:#79c0ff;">WhisperTranscriber</h3>
+    <p style="color:var(--text-secondary);margin-bottom:0.75rem;">Runs the whisper CLI on a WAV file. Returns a <code>TranscriptionResult</code>.</p>
+    <div class="terminal-demo">
+      <span class="ty">WhisperTranscriber</span> wt(cfg);<br>
+      <span class="ty">TranscriptionResult</span> r = wt.<span class="fn">Transcribe</span>(<span class="str">"audio.wav"</span>);<br>
+      <span class="kw">if</span> (r.success) {<br>
+      &nbsp;&nbsp;std::cout &lt;&lt; r.text &lt;&lt; <span class="str">"\n"</span>;<br>
+      } <span class="kw">else</span> {<br>
+      &nbsp;&nbsp;std::cerr &lt;&lt; r.error &lt;&lt; <span class="str">"\n"</span>;<br>
+      }<br>
+      <br>
+      <span class="cmt">// Check availability</span><br>
+      <span class="kw">bool</span> ok  = <span class="ty">WhisperTranscriber</span>::<span class="fn">WhisperAvailable</span>();<br>
+      std::string v = <span class="ty">WhisperTranscriber</span>::<span class="fn">WhisperVersion</span>();
+    </div>
+  </div>
+</section>
+
+<!-- Graceful degradation -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1rem;">Graceful Degradation</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;">
+    <div class="step-card">
+      <h4 style="color:#56d364;">Full stack ✓</h4>
+      <p>ffmpeg + whisper.cpp both present → full voice control. <code>VoiceStatus::Listening</code> → <code>Processing</code> → <code>Ready</code>.</p>
+    </div>
+    <div class="step-card">
+      <h4 style="color:#e3b341;">whisper missing</h4>
+      <p>Audio is still captured but <code>Transcribe()</code> returns <code>success=false</code>. Status becomes <code>Error</code> with a descriptive message.</p>
+    </div>
+    <div class="step-card">
+      <h4 style="color:#e3b341;">ffmpeg missing</h4>
+      <p><code>MicrophoneAvailable()</code> returns <code>false</code>. Recording silently no-ops. Use keyboard simulation mode (press K in <code>voice_demo</code>).</p>
+    </div>
+    <div class="step-card">
+      <h4 style="color:#8b949e;">Neither available</h4>
+      <p>All constructors succeed, all queries return safe defaults. Status stays <code>Unavailable</code>. No crashes, no aborts.</p>
+    </div>
+  </div>
+</section>
+
+<footer style="text-align:center;padding:2rem;color:var(--text-secondary);font-size:0.85rem;">
+  <p>FTXUI BadWolf · MIT License · <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" style="color:var(--text-primary);">GitHub</a></p>
+</footer>
+
+<script src="js/glass.js"></script>
+</body>
+</html>

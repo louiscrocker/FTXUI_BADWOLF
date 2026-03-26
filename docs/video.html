@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI BadWolf — Terminal Video Player</title>
+  <meta name="description" content="Play video files and webcam feeds as braille-rendered ASCII art in the terminal. Pipe-based ffmpeg integration, no libav dependency.">
+  <meta property="og:title" content="FTXUI BadWolf — Terminal Video Player">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">🐺 FTXUI BadWolf</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Get Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Components <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="colors.html">🎨 Colors &amp; Styling</a>
+          <a href="typewriter.html">⌨️ Typewriter &amp; Console</a>
+          <a href="json.html">📄 JSON</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Platform <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="live-data.html">📡 Live Data</a>
+          <a href="collab.html">👥 Collab Sessions</a>
+          <a href="registry.html">📦 Component Registry</a>
+          <a href="llm-bridge.html">🤖 LLM Bridge</a>
+          <a href="nl-theming.html">🎨 AI Theming</a>
+          <a href="voice.html">🎙 Voice Control</a>
+          <a href="playground.html">🌐 Playground</a>
+          <a href="webgl.html">⚡ WebGL Renderer</a>
+          <a href="web-bridge.html">🌐 Web Bridge</a>
+          <a href="physics.html">🎮 Terminal Game Engine</a>
+          <a href="video.html" aria-current="page">📺 Video Player</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Docs <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="deep-dive.html">🔬 Technical Deep Dive</a>
+          <a href="executive.html">📊 Executive Brief</a>
+        </div>
+      </div>
+
+      <a href="https://github.com/ArthurSonzogni/FTXUI" class="nav-link" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header style="padding:4rem 2rem 2rem;max-width:900px;margin:0 auto;text-align:center;">
+  <div style="font-size:4rem;margin-bottom:1rem;">📺</div>
+  <h1 style="font-size:2.8rem;font-weight:900;background:linear-gradient(135deg,#64ffda,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem;">
+    Terminal Video Player
+  </h1>
+  <p style="font-size:1.2rem;color:var(--text-secondary);max-width:640px;margin:0 auto 2rem;">
+    Play video files, webcam feeds, and animated GIFs as <strong style="color:var(--teal-light)">braille or half-block art</strong>
+    directly in your terminal — powered by an <strong style="color:var(--teal-light)">ffmpeg pipe</strong>
+    with zero libav dependencies.
+  </p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <span class="glass-card" style="padding:0.5rem 1.2rem;font-size:0.9rem;font-family:monospace;">#include "ftxui/ui/video.hpp"</span>
+  </div>
+</header>
+
+<!-- Feature cards -->
+<section style="padding:2rem;max-width:900px;margin:0 auto;">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;">
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">⣿</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">Braille Rendering</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">2×4 dot resolution per character cell — highest detail ASCII art without color overhead.</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">▀</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">Half-Block Color</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">▀ character with RGB24 foreground + background — near-pixel-perfect color fidelity.</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">📷</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">Webcam Feed</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Live camera capture via <code>avfoundation</code> (macOS) or <code>v4l2</code> (Linux).</p>
+    </div>
+    <div class="glass-card" style="padding:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🔗</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.3rem;">Zero libav</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">All decoding via <code>popen()</code> + ffmpeg pipe. No libavcodec headers or link flags needed.</p>
+    </div>
+  </div>
+
+  <!-- ffmpeg pipeline diagram -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:2rem;">
+    <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:1rem;">🔀 ffmpeg Pipeline</h2>
+    <div style="font-family:monospace;font-size:0.85rem;line-height:2;background:rgba(0,0,0,0.3);border-radius:8px;padding:1.5rem;overflow-x:auto;">
+      <span style="color:#64ffda;">video.mp4</span>
+      <span style="color:#888;"> ──ffmpeg─→ </span>
+      <span style="color:#a78bfa;">rawvideo rgb24</span>
+      <span style="color:#888;"> ──pipe:1──→ </span>
+      <span style="color:#ffd700;">ReadFrame()</span>
+      <span style="color:#888;"> ──→ </span>
+      <span style="color:#64ffda;">VideoFrame{pixels}</span>
+      <br>
+      <span style="color:#888;">command: </span>
+      <span style="color:#ffd700;">ffmpeg -i video.mp4 -f rawvideo -pix_fmt rgb24 -vf scale=W:H pipe:1</span>
+      <br><br>
+      <span style="color:#64ffda;">camera (avfoundation)</span>
+      <span style="color:#888;"> ──ffmpeg─→ </span>
+      <span style="color:#a78bfa;">rawvideo rgb24</span>
+      <span style="color:#888;"> ──pipe:1──→ </span>
+      <span style="color:#ffd700;">ReadFrame()</span>
+      <br>
+      <span style="color:#888;">command: </span>
+      <span style="color:#ffd700;">ffmpeg -f avfoundation -framerate 30 -video_size 640x480 -i "0:none" -f rawvideo -pix_fmt rgb24 pipe:1</span>
+    </div>
+    <p style="margin-top:1rem;font-size:0.85rem;color:var(--text-secondary);">
+      The decode thread reads exactly <code>width × height × 3</code> bytes per frame from the pipe,
+      then sleeps <code>1/fps</code> seconds before the next read. ffmpeg handles all codec
+      complexity; FTXUI never links against libavcodec.
+    </p>
+  </div>
+
+  <!-- Render mode comparison -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:2rem;">
+    <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:1rem;">🎨 Render Mode Comparison</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;">
+      <div>
+        <h3 style="font-size:1rem;font-weight:700;color:#64ffda;margin-bottom:0.5rem;">⣿ Braille</h3>
+        <ul style="font-size:0.85rem;color:var(--text-secondary);line-height:1.8;padding-left:1rem;">
+          <li>2×4 dots per character cell</li>
+          <li>Monochrome (white on black)</li>
+          <li>Highest spatial resolution</li>
+          <li>Best for fast movement</li>
+          <li>Uses <code>Canvas::DrawPoint()</code></li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="font-size:1rem;font-weight:700;color:#a78bfa;margin-bottom:0.5rem;">▀ ColorBlock</h3>
+        <ul style="font-size:0.85rem;color:var(--text-secondary);line-height:1.8;padding-left:1rem;">
+          <li>1×2 pixel-rows per character</li>
+          <li>Full RGB24 via fg + bg color</li>
+          <li>Best color fidelity</li>
+          <li>Great for stills &amp; GIFs</li>
+          <li>Uses <code>▀ + Color::RGB()</code></li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="font-size:1rem;font-weight:700;color:#ffd700;margin-bottom:0.5rem;">▀ GrayBlock</h3>
+        <ul style="font-size:0.85rem;color:var(--text-secondary);line-height:1.8;padding-left:1rem;">
+          <li>Same layout as ColorBlock</li>
+          <li>Luminance-only grayscale</li>
+          <li>Lower bandwidth terminals</li>
+          <li>Good for B&amp;W content</li>
+          <li>Uses BT.601 luma formula</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick-start examples -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:2rem;">
+    <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:1rem;">⚡ Quick Start</h2>
+
+    <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Play a video file</h3>
+    <pre style="background:rgba(0,0,0,0.4);border-radius:6px;padding:1rem;font-size:0.8rem;overflow-x:auto;margin-bottom:1.5rem;"><code>#include "ftxui/ui/video.hpp"
+#include "ftxui/component/app.hpp"
+using namespace ftxui;
+using namespace ftxui::ui;
+
+int main() {
+    auto player = VideoPlayerFromFile("movie.mp4");
+    App::Fullscreen().Loop(player);
+}</code></pre>
+
+    <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Live webcam feed</h3>
+    <pre style="background:rgba(0,0,0,0.4);border-radius:6px;padding:1rem;font-size:0.8rem;overflow-x:auto;margin-bottom:1.5rem;"><code>auto feed = CameraFeed("0");  // device index or path
+App::Fullscreen().Loop(feed);</code></pre>
+
+    <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Animated GIF</h3>
+    <pre style="background:rgba(0,0,0,0.4);border-radius:6px;padding:1rem;font-size:0.8rem;overflow-x:auto;margin-bottom:1.5rem;"><code>auto gif = GifPlayer("animation.gif", /*loop=*/true);
+App::FitComponent().Loop(gif);</code></pre>
+
+    <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Custom VideoPlayer with config</h3>
+    <pre style="background:rgba(0,0,0,0.4);border-radius:6px;padding:1rem;font-size:0.8rem;overflow-x:auto;"><code>VideoPlayer::Config cfg;
+cfg.mode        = VideoPlayer::RenderMode::ColorBlock;
+cfg.loop        = true;
+cfg.show_fps    = true;
+cfg.playback_speed = 2.0;          // 2× fast-forward
+
+auto source = std::make_shared&lt;FfmpegVideoSource&gt;("clip.mp4", 0.5);
+auto player = std::make_shared&lt;VideoPlayer&gt;(source, cfg);
+auto comp   = player-&gt;Build();     // returns ftxui::Component
+player-&gt;Play();
+App::Fullscreen().Loop(comp);</code></pre>
+  </div>
+
+  <!-- API reference -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:2rem;">
+    <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:1.5rem;">📖 API Reference</h2>
+
+    <!-- VideoFrame -->
+    <h3 style="font-size:1.1rem;font-weight:700;color:#64ffda;margin-bottom:0.8rem;border-bottom:1px solid rgba(100,255,218,0.2);padding-bottom:0.4rem;">VideoFrame</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:0.82rem;margin-bottom:1.5rem;">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+          <th style="text-align:left;padding:0.4rem 0.8rem;color:var(--text-secondary);">Member</th>
+          <th style="text-align:left;padding:0.4rem 0.8rem;color:var(--text-secondary);">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.5rem 0.8rem;font-family:monospace;color:#ffd700;">GrayAt(x, y)</td>
+          <td style="padding:0.5rem 0.8rem;color:var(--text-secondary);">BT.601 luminance of pixel (x,y) → [0,255]</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.5rem 0.8rem;font-family:monospace;color:#ffd700;">Scale(w, h)</td>
+          <td style="padding:0.5rem 0.8rem;color:var(--text-secondary);">Nearest-neighbor resize; returns new VideoFrame</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.5rem 0.8rem;font-family:monospace;color:#ffd700;">ToBraille(cols, rows)</td>
+          <td style="padding:0.5rem 0.8rem;color:var(--text-secondary);">Render as braille Element (cols*2 × rows*4 dots)</td>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem 0.8rem;font-family:monospace;color:#ffd700;">ToColoredBlock(cols, rows)</td>
+          <td style="padding:0.5rem 0.8rem;color:var(--text-secondary);">Render as ▀ half-block Element with full RGB24</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- FfmpegVideoSource -->
+    <h3 style="font-size:1.1rem;font-weight:700;color:#a78bfa;margin-bottom:0.8rem;border-bottom:1px solid rgba(167,139,250,0.2);padding-bottom:0.4rem;">FfmpegVideoSource</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:0.82rem;margin-bottom:1.5rem;">
+      <tbody>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.5rem 0.8rem;font-family:monospace;color:#ffd700;">FfmpegVideoSource(path, scale)</td>
+          <td style="padding:0.5rem 0.8rem;color:var(--text-secondary);">Construct; scale defaults to 1.0 (native resolution)</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.5rem 0.8rem;font-family:monospace;color:#ffd700;">Open()</td>
+          <td style="padding:0.5rem 0.8rem;color:var(--text-secondary);">Probe dimensions with ffprobe, open ffmpeg pipe</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.5rem 0.8rem;font-family:monospace;color:#ffd700;">ReadFrame(out)</td>
+          <td style="padding:0.5rem 0.8rem;color:var(--text-secondary);">Read one RGB24 frame from the pipe; false = EOF</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.5rem 0.8rem;font-family:monospace;color:#ffd700;">FfmpegAvailable()</td>
+          <td style="padding:0.5rem 0.8rem;color:var(--text-secondary);">Static: true if ffmpeg binary found in PATH</td>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem 0.8rem;font-family:monospace;color:#ffd700;">FfmpegVersion()</td>
+          <td style="padding:0.5rem 0.8rem;color:var(--text-secondary);">Static: ffmpeg version string</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- VideoPlayer -->
+    <h3 style="font-size:1.1rem;font-weight:700;color:#ffd700;margin-bottom:0.8rem;border-bottom:1px solid rgba(255,215,0,0.2);padding-bottom:0.4rem;">VideoPlayer</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:0.82rem;margin-bottom:1.5rem;">
+      <tbody>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.5rem 0.8rem;font-family:monospace;color:#ffd700;">Build()</td>
+          <td style="padding:0.5rem 0.8rem;color:var(--text-secondary);">Returns interactive ftxui::Component with key bindings</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.5rem 0.8rem;font-family:monospace;color:#ffd700;">Play() / Pause() / Stop()</td>
+          <td style="padding:0.5rem 0.8rem;color:var(--text-secondary);">Playback control; Play() starts the decode thread</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:0.5rem 0.8rem;font-family:monospace;color:#ffd700;">SetRenderMode(mode)</td>
+          <td style="padding:0.5rem 0.8rem;color:var(--text-secondary);">Switch between Braille / ColorBlock / GrayBlock</td>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem 0.8rem;font-family:monospace;color:#ffd700;">CurrentTime() / FrameCount()</td>
+          <td style="padding:0.5rem 0.8rem;color:var(--text-secondary);">Thread-safe read of playback position</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Keyboard bindings -->
+    <h3 style="font-size:1.1rem;font-weight:700;color:#64ffda;margin-bottom:0.8rem;border-bottom:1px solid rgba(100,255,218,0.2);padding-bottom:0.4rem;">Keyboard Bindings (Build() component)</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.8rem;">
+      <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:0.8rem;text-align:center;">
+        <code style="font-size:1.2rem;color:#ffd700;">Space</code>
+        <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:0.3rem;">Play / Pause</p>
+      </div>
+      <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:0.8rem;text-align:center;">
+        <code style="font-size:1.2rem;color:#ffd700;">Q</code>
+        <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:0.3rem;">Stop</p>
+      </div>
+      <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:0.8rem;text-align:center;">
+        <code style="font-size:1.2rem;color:#ffd700;">L</code>
+        <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:0.3rem;">Toggle Loop</p>
+      </div>
+      <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:0.8rem;text-align:center;">
+        <code style="font-size:1.2rem;color:#ffd700;">B</code>
+        <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:0.3rem;">Cycle Render Mode</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Platform notes -->
+  <div class="glass-card" style="padding:2rem;margin-bottom:2rem;">
+    <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:1rem;">💻 Platform Notes</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+      <div>
+        <h3 style="font-size:1rem;font-weight:700;color:#64ffda;margin-bottom:0.5rem;"> macOS</h3>
+        <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;">
+          Camera capture uses <code>-f avfoundation</code>. Device <code>"0"</code> is the built-in
+          FaceTime camera. Install ffmpeg via Homebrew: <code>brew install ffmpeg</code>.
+        </p>
+      </div>
+      <div>
+        <h3 style="font-size:1rem;font-weight:700;color:#a78bfa;margin-bottom:0.5rem;"> Linux</h3>
+        <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;">
+          Camera capture uses <code>-f v4l2</code>. Device path is typically
+          <code>/dev/video0</code>. Install: <code>apt install ffmpeg</code>.
+        </p>
+      </div>
+    </div>
+    <div style="margin-top:1rem;padding:1rem;background:rgba(255,193,7,0.1);border-radius:6px;border-left:3px solid #ffc107;">
+      <strong style="color:#ffc107;">ffmpeg is optional.</strong>
+      <span style="font-size:0.85rem;color:var(--text-secondary);"> All code compiles and runs without ffmpeg installed.
+      When unavailable, the player component renders a friendly "ffmpeg not found" message instead of crashing.</span>
+    </div>
+  </div>
+
+</section>
+
+<footer style="text-align:center;padding:3rem 2rem;color:var(--text-secondary);font-size:0.85rem;">
+  <p>FTXUI BadWolf — <a href="https://github.com/ArthurSonzogni/FTXUI" style="color:var(--teal-light)">GitHub ↗</a></p>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

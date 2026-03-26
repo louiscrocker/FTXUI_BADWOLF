@@ -137,4 +137,7 @@
 // ─────────────────────────────────────────────────────────────
 #include "ftxui/ui/plugin.hpp"
 
+// ── Video Player ─────────────────────────────────────────────────────────────
+#include "ftxui/ui/video.hpp"
+
 #endif  // FTXUI_UI_HPP

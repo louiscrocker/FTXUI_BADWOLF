@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI BadWolf — ⚡ Dev Mode: Hot Reload</title>
+  <meta name="description" content="Hot-reload dev mode for FTXUI BadWolf: file watcher, zero-restart component updates, DevApp runner, badwolf dev command.">
+  <meta property="og:title" content="FTXUI BadWolf — Dev Mode: Hot Reload">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">🐺 FTXUI BadWolf</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Get Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Components <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="components.html">🧩 All Components</a>
+          <a href="charts.html">📊 Charts</a>
+          <a href="datatable.html">📋 DataTable</a>
+          <a href="form.html">📝 Form</a>
+          <a href="geomap.html">🗺️ GeoMap</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Platform <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="live-data.html">📡 Live Data</a>
+          <a href="collab.html">👥 Collab Sessions</a>
+          <a href="registry.html">📦 Component Registry</a>
+          <a href="llm-bridge.html">🤖 LLM Bridge</a>
+          <a href="nl-theming.html">🎨 AI Theming</a>
+          <a href="voice.html">🎙 Voice Control</a>
+          <a href="playground.html">🌐 Playground</a>
+          <a href="webgl.html">⚡ WebGL Renderer</a>
+          <a href="video.html">📺 Video Player</a>
+          <a href="hot-reload.html" class="nav-link-active">🔥 Hot Reload</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Docs <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="deep-dive.html">🔬 Technical Deep Dive</a>
+          <a href="executive.html">📊 Executive Brief</a>
+        </div>
+      </div>
+
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section style="padding:5rem 2rem 3rem;text-align:center;">
+  <span class="section-label">Zero-restart · Polling-based · Cross-platform</span>
+  <h1 style="font-size:clamp(2rem,4vw,3.5rem);font-weight:900;margin-bottom:1rem;">
+    ⚡ Dev Mode: Hot Reload
+  </h1>
+  <p style="font-size:1.2rem;color:var(--text-secondary);max-width:640px;margin:0 auto 2rem;">
+    File watcher that detects source changes, recompiles, and hot-swaps components in a running app.
+    <strong>Zero restart needed</strong> during development.
+  </p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="#quickstart" class="btn-primary">Get Started</a>
+    <a href="#api" class="btn-secondary">API Reference</a>
+  </div>
+</section>
+
+<!-- Quick start -->
+<section id="quickstart" class="section-container">
+  <div class="glass-card" style="max-width:760px;margin:0 auto;">
+    <h2 style="margin-top:0;">🚀 badwolf dev in 30 seconds</h2>
+    <pre class="code-block"><code><span class="c-comment"># Build and launch with hot-reload enabled</span>
+badwolf dev hot_reload_demo
+
+<span class="c-comment"># Output:</span>
+<span class="c-green">🔥 BadWolf Dev Mode — Hot Reload</span>
+Watching: src/ include/
+Building: hot_reload_demo
+<span class="c-green">✓ Build succeeded. Starting app in dev mode...</span>
+App running (PID 12345). Watching for changes...
+
+<span class="c-comment"># Edit examples/ui/hot_reload_demo.cpp …</span>
+<span class="c-yellow">⟳ Change detected in examples/ui/hot_reload_demo.cpp. Rebuilding...</span>
+<span class="c-green">✓ Rebuilt. Signalling app (SIGUSR1)...</span></code></pre>
+  </div>
+</section>
+
+<!-- Features grid -->
+<section class="section-container">
+  <h2 style="text-align:center;margin-bottom:2rem;">What's included</h2>
+  <div class="features-grid">
+    <div class="glass-card feature-card">
+      <div class="feature-icon">📂</div>
+      <h3>FileWatcher</h3>
+      <p>Polling-based file watcher using <code>std::filesystem</code>.
+         Watches directories recursively for <code>.cpp</code>, <code>.hpp</code>, and <code>.h</code> changes.
+         No OS-specific APIs — works identically on macOS, Linux, and Windows.</p>
+    </div>
+    <div class="glass-card feature-card">
+      <div class="feature-icon">🔄</div>
+      <h3>HotReloader</h3>
+      <p>Wraps your component factory. On file change: debounce → detect → swap.
+         The Component() wrapper always renders the latest factory result.
+         Track reload count, last error, and status.</p>
+    </div>
+    <div class="glass-card feature-card">
+      <div class="feature-icon">🎛️</div>
+      <h3>DevApp</h3>
+      <p>One-line dev runner. Adds a status bar showing reload count + current state.
+         Pass your factory and watch paths; it handles the rest.</p>
+    </div>
+    <div class="glass-card feature-card">
+      <div class="feature-icon">🎨</div>
+      <h3>ReloadOverlay</h3>
+      <p>Visual status indicator overlaid on your component:
+         yellow dot while detecting, spinning icon while compiling,
+         green tick on success, red bordered box on error.</p>
+    </div>
+    <div class="glass-card feature-card">
+      <div class="feature-icon">🛡️</div>
+      <h3>WithHotReload</h3>
+      <p>In Release builds (<code>NDEBUG</code>), calls factory() directly.
+         In Debug builds, wraps with full hot-reload support.
+         Zero overhead in production.</p>
+    </div>
+    <div class="glass-card feature-card">
+      <div class="feature-icon">🔥</div>
+      <h3>badwolf dev</h3>
+      <p>CLI command that builds your app, starts it with <code>--dev</code>,
+         then polls for source changes and sends <code>SIGUSR1</code> to trigger in-process reloads.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Code examples -->
+<section class="section-container">
+  <h2 style="text-align:center;margin-bottom:2rem;">Usage Examples</h2>
+
+  <div class="glass-card" style="max-width:760px;margin:0 auto 2rem;">
+    <h3 style="margin-top:0;">Minimal DevApp</h3>
+    <pre class="code-block"><code><span class="c-keyword">#include</span> <span class="c-string">"ftxui/ui/hot_reload.hpp"</span>
+
+<span class="c-keyword">int</span> main(<span class="c-keyword">int</span> argc, <span class="c-keyword">char</span>** argv) {
+  <span class="c-keyword">bool</span> dev = argc > 1 &amp;&amp; std::string(argv[1]) == <span class="c-string">"--dev"</span>;
+
+  <span class="c-keyword">auto</span> factory = [] {
+    <span class="c-keyword">return</span> ftxui::Renderer([] {
+      <span class="c-keyword">return</span> ftxui::text(<span class="c-string">"Hello, World!"</span>) | ftxui::border;
+    });
+  };
+
+  <span class="c-keyword">if</span> (dev) {
+    ftxui::ui::DevApp(argc, argv, factory, {<span class="c-string">"src/"</span>, <span class="c-string">"include/"</span>});
+  } <span class="c-keyword">else</span> {
+    <span class="c-keyword">auto</span> screen = ftxui::ScreenInteractive::Fullscreen();
+    screen.Loop(factory());
+  }
+}</code></pre>
+  </div>
+
+  <div class="glass-card" style="max-width:760px;margin:0 auto 2rem;">
+    <h3 style="margin-top:0;">WithHotReload — transparent wrapper</h3>
+    <pre class="code-block"><code><span class="c-comment">// In Debug builds: full hot reload.
+// In Release builds (NDEBUG): calls factory() directly, zero overhead.</span>
+<span class="c-keyword">auto</span> comp = ftxui::ui::WithHotReload(
+    [] { <span class="c-keyword">return</span> MyComponent(); },
+    { .watch_paths = {<span class="c-string">"src/"</span>}, .debounce = std::chrono::milliseconds(200) }
+);
+screen.Loop(comp);</code></pre>
+  </div>
+
+  <div class="glass-card" style="max-width:760px;margin:0 auto 2rem;">
+    <h3 style="margin-top:0;">Manual FileWatcher with callbacks</h3>
+    <pre class="code-block"><code>ftxui::ui::FileWatcher watcher(std::chrono::milliseconds(100));
+watcher.Watch(<span class="c-string">"src/"</span>);
+watcher.OnChange([](const std::string&amp; path) {
+    std::cout &lt;&lt; <span class="c-string">"Changed: "</span> &lt;&lt; path &lt;&lt; <span class="c-string">"\n"</span>;
+});
+watcher.Start();
+
+<span class="c-comment">// ... or poll synchronously:</span>
+<span class="c-keyword">auto</span> changes = watcher.PollChanges();
+<span class="c-keyword">for</span> (<span class="c-keyword">auto</span>&amp; p : changes) { ... }</code></pre>
+  </div>
+</section>
+
+<!-- API Reference -->
+<section id="api" class="section-container">
+  <div class="glass-card" style="max-width:820px;margin:0 auto;">
+    <h2 style="margin-top:0;">API Reference</h2>
+
+    <h3>HotReloadConfig</h3>
+    <table class="api-table">
+      <thead><tr><th>Field</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>watch_paths</code></td><td><code>vector&lt;string&gt;</code></td><td><code>{}</code></td><td>Directories or files to watch</td></tr>
+        <tr><td><code>compiler</code></td><td><code>string</code></td><td><code>"g++"</code></td><td>Compiler command</td></tr>
+        <tr><td><code>flags</code></td><td><code>string</code></td><td><code>"-std=c++17 -O0 -g"</code></td><td>Compiler flags</td></tr>
+        <tr><td><code>debounce</code></td><td><code>milliseconds</code></td><td><code>300ms</code></td><td>Wait after change before triggering reload</td></tr>
+        <tr><td><code>verbose</code></td><td><code>bool</code></td><td><code>false</code></td><td>Print rebuild output</td></tr>
+        <tr><td><code>show_overlay</code></td><td><code>bool</code></td><td><code>true</code></td><td>Show status overlay during rebuild</td></tr>
+      </tbody>
+    </table>
+
+    <h3>HotReloadStatus</h3>
+    <table class="api-table">
+      <thead><tr><th>Value</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>Idle</code></td><td>Watching, no changes detected</td></tr>
+        <tr><td><code>Detected</code></td><td>Change detected, debouncing</td></tr>
+        <tr><td><code>Compiling</code></td><td>Recompile in progress</td></tr>
+        <tr><td><code>Success</code></td><td>Last rebuild succeeded</td></tr>
+        <tr><td><code>Error</code></td><td>Last rebuild failed</td></tr>
+      </tbody>
+    </table>
+
+    <h3>FileWatcher</h3>
+    <table class="api-table">
+      <thead><tr><th>Method</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>Watch(path)</code></td><td>Add file or directory (recursive)</td></tr>
+        <tr><td><code>Unwatch(path)</code></td><td>Remove a watched path</td></tr>
+        <tr><td><code>Clear()</code></td><td>Remove all watched paths and state</td></tr>
+        <tr><td><code>PollChanges()</code></td><td>Synchronously return changed files since last call</td></tr>
+        <tr><td><code>OnChange(fn)</code></td><td>Register callback fired on change (background thread)</td></tr>
+        <tr><td><code>RemoveOnChange(id)</code></td><td>Unregister a callback by ID</td></tr>
+        <tr><td><code>Start() / Stop()</code></td><td>Start/stop background polling thread</td></tr>
+        <tr><td><code>IsRunning()</code></td><td>Returns true if background thread is active</td></tr>
+      </tbody>
+    </table>
+
+    <h3>HotReloader</h3>
+    <table class="api-table">
+      <thead><tr><th>Method</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>SetFactory(fn)</code></td><td>Set component factory (called on each reload)</td></tr>
+        <tr><td><code>Start() / Stop()</code></td><td>Start/stop file watching and reload loop</td></tr>
+        <tr><td><code>Component()</code></td><td>Returns a wrapper component that always renders the latest factory result</td></tr>
+        <tr><td><code>status()</code></td><td>Current HotReloadStatus</td></tr>
+        <tr><td><code>last_error()</code></td><td>Error message from last failed reload</td></tr>
+        <tr><td><code>reload_count()</code></td><td>Number of successful reloads</td></tr>
+        <tr><td><code>OnReload(fn)</code></td><td>Register callback after successful reload</td></tr>
+        <tr><td><code>OnError(fn)</code></td><td>Register callback after failed reload</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Free functions</h3>
+    <table class="api-table">
+      <thead><tr><th>Function</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>WithHotReload(factory, cfg)</code></td><td>Transparent wrapper: Debug → hot reload, Release → direct call</td></tr>
+        <tr><td><code>DevApp(argc, argv, factory, paths, cfg)</code></td><td>Full dev-mode app runner with status bar</td></tr>
+        <tr><td><code>ReloadOverlay(status, error)</code></td><td>Visual element reflecting current reload state</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="section-container">
+  <div class="glass-card" style="max-width:760px;margin:0 auto;">
+    <h2 style="margin-top:0;">How it works</h2>
+    <ol style="line-height:2;color:var(--text-secondary);">
+      <li><strong>FileWatcher</strong> spawns a background thread that polls <code>std::filesystem::last_write_time()</code> every 250 ms.</li>
+      <li>Any modified <code>.cpp</code> / <code>.hpp</code> / <code>.h</code> file triggers registered callbacks.</li>
+      <li><strong>HotReloader</strong> debounces the signal (default 300 ms) then calls <code>TriggerReload()</code>.</li>
+      <li>Within-process reload: the factory function is re-invoked; the new component replaces the old one atomically.</li>
+      <li>The <strong>Component()</strong> wrapper always delegates to the current component — the screen loop just keeps rendering.</li>
+      <li><strong>badwolf dev</strong> goes further: it rebuilds the binary on disk and sends <code>SIGUSR1</code> to the running process.</li>
+    </ol>
+    <div style="background:rgba(255,200,0,0.1);border-left:3px solid gold;padding:1rem;border-radius:4px;margin-top:1rem;">
+      <strong>No OS-specific APIs.</strong> Pure <code>std::filesystem</code> polling works on macOS, Linux, and Windows (C++17).
+      No <code>inotify</code>, <code>kqueue</code>, or <code>FSEvents</code> required.
+    </div>
+  </div>
+</section>
+
+<footer style="text-align:center;padding:3rem 2rem;color:var(--text-secondary);font-size:0.875rem;">
+  <p>FTXUI BadWolf · <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" style="color:var(--accent);">GitHub</a> · MIT License</p>
+</footer>
+
+<script src="js/glass.js"></script>
+</body>
+</html>
