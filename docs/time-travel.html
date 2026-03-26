@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTXUI BadWolf — Time-Travel Debugger</title>
+  <meta name="description" content="FTXUI BadWolf Time-Travel Debugger: record reactive state snapshots, scrub through history, and replay UI state changes interactively.">
+  <meta property="og:title" content="FTXUI BadWolf — Time-Travel Debugger">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+<div class="bg-animated" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-orb bg-orb-4"></div>
+</div>
+
+<nav class="glass-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-text">🐺 FTXUI BadWolf</span>
+      <span class="nav-logo-tag">The C++ Terminal UI Framework</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="getting-started.html" class="nav-link">Get Started</a>
+      <a href="api.html" class="nav-link">API</a>
+      <a href="examples.html" class="nav-link">Examples</a>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Components <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="colors.html">🎨 Colors &amp; Styling</a>
+          <a href="typewriter.html">⌨️ Typewriter &amp; Console</a>
+          <a href="json.html">📄 JSON</a>
+          <a href="sql.html">🗄️ SQL &amp; DataFrame</a>
+          <a href="layout.html">📐 Constraint Layout</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Platform <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="live-data.html">📡 Live Data</a>
+          <a href="collab.html">👥 Collab Sessions</a>
+          <a href="registry.html">📦 Component Registry</a>
+          <a href="llm-bridge.html">🤖 LLM Bridge</a>
+          <a href="nl-theming.html">🎨 AI Theming</a>
+          <a href="playground.html">🌐 Playground</a>
+          <a href="webgl.html">⚡ WebGL Renderer</a>
+          <a href="time-travel.html">⏱ Time-Travel Debugger</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Docs <span class="chevron">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="deep-dive.html">🔬 Technical Deep Dive</a>
+          <a href="executive.html">📊 Executive Brief</a>
+        </div>
+      </div>
+
+      <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section style="padding:6rem 2rem 3rem;text-align:center;">
+  <span class="section-label">Zero-overhead · Thread-safe · Ring buffer · Interactive</span>
+  <h1 style="font-size:clamp(2rem,4vw,3.5rem);font-weight:900;margin-bottom:1rem;">
+    ⏱ <span class="gradient-text">Time-Travel Debugger</span>
+  </h1>
+  <p style="font-size:1.2rem;color:var(--text-muted);max-width:640px;margin:0 auto 2rem;">
+    Record every reactive state change, scrub through history, replay with adjustable speed,
+    and inspect before/after diffs — all inside your terminal UI.
+  </p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="#quickstart" class="btn-primary">Quick Start</a>
+    <a href="#api" class="btn-secondary">API Reference</a>
+  </div>
+</section>
+
+<!-- Quick Start -->
+<section id="quickstart" style="padding:4rem 2rem;max-width:900px;margin:0 auto;">
+  <h2 class="section-title">Quick Start</h2>
+  <div class="glass-card" style="margin-bottom:2rem;">
+    <h3 style="margin-top:0;">1. Track reactive values</h3>
+    <pre><code>#include "ftxui/ui/time_travel.hpp"
+
+// Track any Reactive&lt;T&gt; with a single macro:
+auto counter = std::make_shared&lt;Reactive&lt;int&gt;&gt;(0);
+BADWOLF_TRACK(counter, "counter");
+
+// Or with a custom serializer:
+StateRecorder::Global().Track&lt;int&gt;(counter, "counter",
+    [](const int&amp; v) { return JsonValue(v); });</code></pre>
+  </div>
+
+  <div class="glass-card" style="margin-bottom:2rem;">
+    <h3 style="margin-top:0;">2. Wrap your app — press F12 to open the debugger</h3>
+    <pre><code>auto app_ui = Renderer(container, [&amp;]() { /* your UI */ });
+
+// Wrap with time-travel panel (toggled by F12):
+auto root = WithTimeTravel(app_ui);
+
+auto screen = ScreenInteractive::Fullscreen();
+screen.Loop(root);</code></pre>
+  </div>
+
+  <div class="glass-card">
+    <h3 style="margin-top:0;">3. Or embed the debugger directly</h3>
+    <pre><code>auto recorder = std::make_shared&lt;StateRecorder&gt;();
+auto debugger = TimeTravelDebugger(recorder);
+
+// Use arrow keys / space to navigate:
+//   ← →    step backward / forward
+//   Home   go to first snapshot
+//   End    go to last snapshot
+//   Space  play / pause
+auto layout = Container::Vertical({app_ui, debugger});</code></pre>
+  </div>
+</section>
+
+<!-- Key Concepts -->
+<section style="padding:4rem 2rem;max-width:900px;margin:0 auto;">
+  <h2 class="section-title">Key Concepts</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;">
+
+    <div class="glass-card">
+      <div style="font-size:2rem;margin-bottom:.75rem;">📼</div>
+      <h3 style="margin-top:0;">StateRecorder</h3>
+      <p style="color:var(--text-muted);">
+        Ring-buffer-backed recorder that stores up to <em>N</em> snapshots. Each snapshot
+        captures <code>before</code> / <code>after</code> JSON values, a label, a key,
+        a trigger string, and a high-resolution timestamp.
+      </p>
+    </div>
+
+    <div class="glass-card">
+      <div style="font-size:2rem;margin-bottom:.75rem;">⏯</div>
+      <h3 style="margin-top:0;">TimelinePlayer</h3>
+      <p style="color:var(--text-muted);">
+        Navigates snapshots by index or time. Supports step-by-step navigation and
+        background-thread playback at configurable speed (0.25× – 4×). Fires position-change
+        callbacks on every move.
+      </p>
+    </div>
+
+    <div class="glass-card">
+      <div style="font-size:2rem;margin-bottom:.75rem;">🔍</div>
+      <h3 style="margin-top:0;">TimeTravelDebugger</h3>
+      <p style="color:var(--text-muted);">
+        A full FTXUI <code>Component</code> showing a scrubber bar, timeline list,
+        before/after diff panel, and playback controls. Embed directly in your layout
+        or use <code>WithTimeTravel</code> for a toggleable overlay.
+      </p>
+    </div>
+
+    <div class="glass-card">
+      <div style="font-size:2rem;margin-bottom:.75rem;">🏷️</div>
+      <h3 style="margin-top:0;">BADWOLF_TRACK</h3>
+      <p style="color:var(--text-muted);">
+        Convenience macro that registers a <code>Reactive&lt;T&gt;</code> with the global
+        <code>StateRecorder</code>. Uses <code>std::ostringstream</code> by default; supply
+        a custom serializer for richer JSON output.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- API Reference -->
+<section id="api" style="padding:4rem 2rem;max-width:900px;margin:0 auto;">
+  <h2 class="section-title">API Reference</h2>
+
+  <div class="glass-card" style="margin-bottom:2rem;">
+    <h3 style="margin-top:0;"><code>StateSnapshot</code></h3>
+    <pre><code>struct StateSnapshot {
+  uint64_t id;
+  std::chrono::steady_clock::time_point timestamp;
+  std::string label;       // human-readable description
+  std::string state_key;   // reactive variable name
+  JsonValue before;        // value before change
+  JsonValue after;         // value after change
+  std::string trigger;     // e.g. "user_event", "unknown"
+};</code></pre>
+  </div>
+
+  <div class="glass-card" style="margin-bottom:2rem;">
+    <h3 style="margin-top:0;"><code>StateRecorder</code></h3>
+    <pre><code>// Record a change manually:
+void Record(key, before, after, label = "", trigger = "unknown");
+
+// Auto-record via Reactive&lt;T&gt;:
+template&lt;typename T&gt;
+void Track(shared_ptr&lt;Reactive&lt;T&gt;&gt;, key, serializer = nullptr);
+
+// Query:
+const vector&lt;StateSnapshot&gt;&amp; Snapshots() const;
+size_t Count() const;
+void Clear();
+
+// Persistence:
+JsonValue ExportJson() const;
+bool SaveToFile(const string&amp; path) const;
+static StateRecorder LoadFromFile(const string&amp; path);
+
+// Singleton:
+static StateRecorder&amp; Global();</code></pre>
+  </div>
+
+  <div class="glass-card" style="margin-bottom:2rem;">
+    <h3 style="margin-top:0;"><code>TimelinePlayer</code></h3>
+    <pre><code>explicit TimelinePlayer(const StateRecorder&amp;);
+
+// Navigation:
+void GoToSnapshot(size_t index);
+void GoToTime(steady_clock::time_point t);
+void StepForward();   void StepBackward();
+void GoToStart();     void GoToEnd();
+
+// Playback:
+void PlayFrom(size_t index, double speed = 1.0);
+void Pause();
+
+// State:
+size_t CurrentIndex() const;
+const StateSnapshot&amp; CurrentSnapshot() const;
+bool AtStart() const;  bool AtEnd() const;  bool IsPlaying() const;
+
+// Callbacks:
+int  OnPositionChange(function&lt;void(size_t, const StateSnapshot&amp;)&gt;);
+void RemoveCallback(int id);</code></pre>
+  </div>
+
+  <div class="glass-card">
+    <h3 style="margin-top:0;">Free Functions</h3>
+    <pre><code>// Full interactive debugger component:
+ftxui::Component TimeTravelDebugger(
+    shared_ptr&lt;StateRecorder&gt; recorder = nullptr,
+    ftxui::Component app_component = nullptr);
+
+// Wrap any component with F12-toggled debugger overlay:
+ftxui::Component WithTimeTravel(
+    ftxui::Component app,
+    shared_ptr&lt;StateRecorder&gt; recorder = nullptr);
+
+// Macro shorthand for Global() recorder:
+BADWOLF_TRACK(reactive_ptr, "key");</code></pre>
+  </div>
+</section>
+
+<!-- Example Output -->
+<section style="padding:4rem 2rem;max-width:900px;margin:0 auto;">
+  <h2 class="section-title">Terminal Output</h2>
+  <div class="glass-card">
+    <pre style="font-family:monospace;font-size:.85rem;line-height:1.6;overflow-x:auto;"><code>╔ Time-Travel Debugger ══════════════════════════════════════════╗
+║ [◀◀][◀][▶/⏸][▶][▶▶]  [──────────●───────────────] #7/12      ║
+║──────────────────────────────────────────────────────────────────║
+║ #7 counter changed                             [user_event]      ║
+║──────────────────────────────────────────────────────────────────║
+║  Timeline:                                                       ║
+║    #4 username changed                          user_event       ║
+║    #5 counter changed                           user_event       ║
+║    #6 theme changed                             user_event       ║
+║  ► #7 counter changed                           user_event       ║
+║    #8 counter changed                           user_event       ║
+║    #9 username changed                          user_event       ║
+║──────────────────────────────────────────────────────────────────║
+║  Before:              │  After:                                  ║
+║  6                    │  7                                       ║
+╚══════════════════════════════════════════════════════════════════╝</code></pre>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer style="text-align:center;padding:3rem 2rem;color:var(--text-muted);">
+  <p>FTXUI BadWolf · MIT License · <a href="https://github.com/louiscrocker/FTXUI_BADWOLF" target="_blank" rel="noopener">GitHub</a></p>
+</footer>
+
+<script>
+// Nav dropdown toggle
+document.querySelectorAll('.nav-dropdown-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const dd = btn.closest('.nav-dropdown');
+    dd.classList.toggle('open');
+  });
+});
+document.addEventListener('click', e => {
+  if (!e.target.closest('.nav-dropdown')) {
+    document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+  }
+});
+// Hamburger
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
+if (hamburger) {
+  hamburger.addEventListener('click', () => {
+    const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+    hamburger.setAttribute('aria-expanded', String(!expanded));
+    navLinks.classList.toggle('open');
+  });
+}
+</script>
+</body>
+</html>

@@ -109,6 +109,11 @@ add_executable(ftxui_ui_test
   src/ftxui/ui/physics_test.cpp
   src/ftxui/ui/web_bridge_test.cpp
   src/ftxui/ui/nl_theme_test.cpp
+  src/ftxui/ui/video_test.cpp
+  src/ftxui/ui/hot_reload_test.cpp
+  src/ftxui/ui/voice_test.cpp
+  src/ftxui/ui/plugin_test.cpp
+  src/ftxui/ui/time_travel_test.cpp
 )
 
 target_link_libraries(ftxui_ui_test

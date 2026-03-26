@@ -112,6 +112,7 @@
 #include "ftxui/ui/debug_overlay.hpp"
 #include "ftxui/ui/event_recorder.hpp"
 #include "ftxui/ui/inspector.hpp"
+#include "ftxui/ui/time_travel.hpp"
 #include "ftxui/ui/ui_builder.hpp"
 
 // ── WebAssembly & Platform
@@ -123,5 +124,17 @@
 // ── Game Engine & Physics
 // ─────────────────────────────────────────────────────
 #include "ftxui/ui/physics.hpp"
+
+// ── Dev Tools: Hot Reload
+// ─────────────────────────────────────────────────────
+#include "ftxui/ui/hot_reload.hpp"
+
+// ── Voice Control
+// ──────────────────────────────────────────────────────────────
+#include "ftxui/ui/voice.hpp"
+
+// ── Plugin System
+// ─────────────────────────────────────────────────────────────
+#include "ftxui/ui/plugin.hpp"
 
 #endif  // FTXUI_UI_HPP

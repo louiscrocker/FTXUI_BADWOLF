@@ -279,11 +279,26 @@ add_library(ui
   src/ftxui/ui/physics.cpp
   include/ftxui/ui/nl_theme.hpp
   src/ftxui/ui/nl_theme.cpp
+  include/ftxui/ui/voice.hpp
+  src/ftxui/ui/voice.cpp
+  include/ftxui/ui/hot_reload.hpp
+  src/ftxui/ui/hot_reload.cpp
+  include/ftxui/ui/plugin.hpp
+  src/ftxui/ui/plugin.cpp
+  include/ftxui/ui/time_travel.hpp
+  src/ftxui/ui/time_travel.cpp
+  include/ftxui/ui/video.hpp
+  src/ftxui/ui/video.cpp
 )
 
 target_link_libraries(dom PUBLIC screen)
 target_link_libraries(component PUBLIC dom)
 target_link_libraries(ui PUBLIC component)
+
+# dlopen/dlsym requires -ldl on Linux; on macOS it is part of libSystem.
+if(UNIX AND NOT APPLE)
+  target_link_libraries(ui PUBLIC dl)
+endif()
 
 include(cmake/ftxui_sqlite.cmake)
 

@@ -28,6 +28,7 @@ example(world_ops_demo)
 example(process_demo)
 example(markdown_demo)
 example(virtual_table_demo)
+example(time_travel_demo)
 example(bind_demo)
 example(reactive_list_demo)
 example(model_binding_demo)
@@ -52,6 +53,12 @@ example(web_bridge_demo)
 example(constraint_demo)
 example(physics_demo)
 example(nl_theme_demo)
+example(voice_demo)
+example(hot_reload_demo)
+example(plugin_demo)
+
+# Sample plugin shared library (loaded at runtime via dlopen).
+add_subdirectory(sample_plugin)
 
 # Copy world map GeoJSON data next to the binary at build time so examples
 # can locate it at runtime via their relative-path search.
