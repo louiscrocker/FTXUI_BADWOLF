@@ -408,6 +408,7 @@ ${C_BOLD}Commands:${C_RESET}
   info <pkg>       Show detailed metadata for a component
   update           Re-download all installed components
   publish          Validate component and show submission instructions
+  serve <file>     Compile a .cpp file and serve it in the browser via WebSocket
   version          Print version and exit
   help             Show this help
 
@@ -418,6 +419,7 @@ ${C_BOLD}Examples:${C_RESET}
   badwolf install sparkline-widget
   badwolf info json-tree
   badwolf update
+  badwolf serve examples/ui/web_bridge_demo.cpp
 EOF
 }
 
@@ -434,6 +436,24 @@ case "$cmd" in
   info)    cmd_info "$@" ;;
   update)  cmd_update ;;
   publish) cmd_publish ;;
+  serve)
+    src="${1:-}"
+    [ -z "$src" ] && die "usage: badwolf serve <source.cpp>"
+    [ ! -f "$src" ] && die "File not found: $src"
+    echo -e "${C_BOLD}🌐 BadWolf Web Bridge${C_RESET}"
+    echo -e "Compiling ${C_CYAN}${src}${C_RESET} with web bridge support..."
+    out="$(mktemp -u badwolf_serve_XXXXXX)"
+    g++ -std=c++17 -pthread -o "$out" "$src" \
+        -lftxui_ui -lftxui_component -lftxui_dom -lftxui_screen 2>&1
+    if [ $? -eq 0 ]; then
+      echo -e "${C_GREEN}✓ Build succeeded.${C_RESET} Starting web server..."
+      "$out" --web
+      rm -f "$out"
+    else
+      rm -f "$out"
+      die "Build failed."
+    fi
+    ;;
   version) echo "badwolf ${BADWOLF_VERSION}" ;;
   help|--help|-h) usage ;;
   *) echo -e "${C_RED}Unknown command:${C_RESET} ${cmd}"; usage; exit 1 ;;

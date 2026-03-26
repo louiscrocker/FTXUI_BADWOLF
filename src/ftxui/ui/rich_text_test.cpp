@@ -15,7 +15,8 @@
 using namespace ftxui;
 using namespace ftxui::ui;
 
-// ── TextStyle ─────────────────────────────────────────────────────────────────
+// ── TextStyle
+// ─────────────────────────────────────────────────────────────────
 
 TEST(TextStyleTest, DefaultNoAttributes) {
   TextStyle s;
@@ -89,7 +90,8 @@ TEST(TextStyleTest, Chaining) {
   EXPECT_TRUE(s.is_underline());
 }
 
-// ── RichText::Parse ───────────────────────────────────────────────────────────
+// ── RichText::Parse
+// ───────────────────────────────────────────────────────────
 
 TEST(RichTextParseTest, EmptyString) {
   auto spans = RichText::Parse("");
@@ -134,7 +136,8 @@ TEST(RichTextParseTest, CloseAllTags) {
   EXPECT_FALSE(spans.back().style.is_bold());
 }
 
-// ── RichText::Element ─────────────────────────────────────────────────────────
+// ── RichText::Element
+// ─────────────────────────────────────────────────────────
 
 TEST(RichTextElementTest, PlainTextNonNull) {
   auto el = RichText::Element("hello world");
@@ -146,7 +149,8 @@ TEST(RichTextElementTest, MarkupNonNull) {
   EXPECT_NE(el, nullptr);
 }
 
-// ── AnsiParser::Strip ─────────────────────────────────────────────────────────
+// ── AnsiParser::Strip
+// ─────────────────────────────────────────────────────────
 
 TEST(AnsiParserTest, StripRemovesEscapes) {
   const std::string input = "\033[1mhello\033[0m";
@@ -159,7 +163,8 @@ TEST(AnsiParserTest, StripLeavesPlainText) {
   EXPECT_EQ(AnsiParser::Strip(input), input);
 }
 
-// ── AnsiParser::Parse ─────────────────────────────────────────────────────────
+// ── AnsiParser::Parse
+// ─────────────────────────────────────────────────────────
 
 TEST(AnsiParserParseTest, EmptyString) {
   auto spans = AnsiParser::Parse("");
@@ -224,7 +229,8 @@ TEST(ColorGradientTest, NonNull) {
   EXPECT_NE(el, nullptr);
 }
 
-// ── StyledText convenience ────────────────────────────────────────────────────
+// ── StyledText convenience
+// ────────────────────────────────────────────────────
 
 TEST(ConvenienceFunctionsTest, StyledText) {
   TextStyle s;

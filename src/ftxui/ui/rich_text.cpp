@@ -17,7 +17,8 @@
 
 namespace ftxui::ui {
 
-// ── TextStyle ─────────────────────────────────────────────────────────────────
+// ── TextStyle
+// ─────────────────────────────────────────────────────────────────
 
 TextStyle& TextStyle::Fg(ftxui::Color c) {
   fg_ = c;
@@ -174,7 +175,8 @@ ftxui::Element TextStyle::operator()(ftxui::Element el) const {
   return Apply(std::move(el));
 }
 
-// ── RichText ──────────────────────────────────────────────────────────────────
+// ── RichText
+// ──────────────────────────────────────────────────────────────────
 
 namespace {
 
@@ -192,41 +194,134 @@ void ApplyTag(const std::string& tag, TextStyle& style) {
   const std::string t = ToLower(tag);
 
   // Attributes
-  if (t == "bold") { style.Bold(); return; }
-  if (t == "dim") { style.Dim(); return; }
-  if (t == "italic") { style.Italic(); return; }
-  if (t == "underline") { style.Underline(); return; }
-  if (t == "blink") { style.Blink(); return; }
-  if (t == "reverse") { style.Reverse(); return; }
-  if (t == "strikethrough") { style.Strikethrough(); return; }
+  if (t == "bold") {
+    style.Bold();
+    return;
+  }
+  if (t == "dim") {
+    style.Dim();
+    return;
+  }
+  if (t == "italic") {
+    style.Italic();
+    return;
+  }
+  if (t == "underline") {
+    style.Underline();
+    return;
+  }
+  if (t == "blink") {
+    style.Blink();
+    return;
+  }
+  if (t == "reverse") {
+    style.Reverse();
+    return;
+  }
+  if (t == "strikethrough") {
+    style.Strikethrough();
+    return;
+  }
 
   // Named fg colors
-  if (t == "black") { style.Black(); return; }
-  if (t == "red") { style.Red(); return; }
-  if (t == "green") { style.Green(); return; }
-  if (t == "yellow") { style.Yellow(); return; }
-  if (t == "blue") { style.Blue(); return; }
-  if (t == "magenta") { style.Magenta(); return; }
-  if (t == "cyan") { style.Cyan(); return; }
-  if (t == "white") { style.White(); return; }
-  if (t == "bright_black") { style.BrightBlack(); return; }
-  if (t == "bright_red") { style.BrightRed(); return; }
-  if (t == "bright_green") { style.BrightGreen(); return; }
-  if (t == "bright_yellow") { style.BrightYellow(); return; }
-  if (t == "bright_blue") { style.BrightBlue(); return; }
-  if (t == "bright_magenta") { style.BrightMagenta(); return; }
-  if (t == "bright_cyan") { style.BrightCyan(); return; }
-  if (t == "bright_white") { style.BrightWhite(); return; }
+  if (t == "black") {
+    style.Black();
+    return;
+  }
+  if (t == "red") {
+    style.Red();
+    return;
+  }
+  if (t == "green") {
+    style.Green();
+    return;
+  }
+  if (t == "yellow") {
+    style.Yellow();
+    return;
+  }
+  if (t == "blue") {
+    style.Blue();
+    return;
+  }
+  if (t == "magenta") {
+    style.Magenta();
+    return;
+  }
+  if (t == "cyan") {
+    style.Cyan();
+    return;
+  }
+  if (t == "white") {
+    style.White();
+    return;
+  }
+  if (t == "bright_black") {
+    style.BrightBlack();
+    return;
+  }
+  if (t == "bright_red") {
+    style.BrightRed();
+    return;
+  }
+  if (t == "bright_green") {
+    style.BrightGreen();
+    return;
+  }
+  if (t == "bright_yellow") {
+    style.BrightYellow();
+    return;
+  }
+  if (t == "bright_blue") {
+    style.BrightBlue();
+    return;
+  }
+  if (t == "bright_magenta") {
+    style.BrightMagenta();
+    return;
+  }
+  if (t == "bright_cyan") {
+    style.BrightCyan();
+    return;
+  }
+  if (t == "bright_white") {
+    style.BrightWhite();
+    return;
+  }
 
   // Named bg colors
-  if (t == "bg_black") { style.Bg(ftxui::Color::Palette16::Black); return; }
-  if (t == "bg_red") { style.Bg(ftxui::Color::Palette16::Red); return; }
-  if (t == "bg_green") { style.Bg(ftxui::Color::Palette16::Green); return; }
-  if (t == "bg_yellow") { style.Bg(ftxui::Color::Palette16::Yellow); return; }
-  if (t == "bg_blue") { style.Bg(ftxui::Color::Palette16::Blue); return; }
-  if (t == "bg_magenta") { style.Bg(ftxui::Color::Palette16::Magenta); return; }
-  if (t == "bg_cyan") { style.Bg(ftxui::Color::Palette16::Cyan); return; }
-  if (t == "bg_white") { style.Bg(ftxui::Color::Palette16::White); return; }
+  if (t == "bg_black") {
+    style.Bg(ftxui::Color::Palette16::Black);
+    return;
+  }
+  if (t == "bg_red") {
+    style.Bg(ftxui::Color::Palette16::Red);
+    return;
+  }
+  if (t == "bg_green") {
+    style.Bg(ftxui::Color::Palette16::Green);
+    return;
+  }
+  if (t == "bg_yellow") {
+    style.Bg(ftxui::Color::Palette16::Yellow);
+    return;
+  }
+  if (t == "bg_blue") {
+    style.Bg(ftxui::Color::Palette16::Blue);
+    return;
+  }
+  if (t == "bg_magenta") {
+    style.Bg(ftxui::Color::Palette16::Magenta);
+    return;
+  }
+  if (t == "bg_cyan") {
+    style.Bg(ftxui::Color::Palette16::Cyan);
+    return;
+  }
+  if (t == "bg_white") {
+    style.Bg(ftxui::Color::Palette16::White);
+    return;
+  }
 
   // TrueColor: rgb(r,g,b)
   if (t.rfind("rgb(", 0) == 0) {
@@ -327,7 +422,8 @@ ftxui::Component RichText::Component(const std::string& markup) {
   return ftxui::Renderer([markup] { return RichText::Element(markup); });
 }
 
-// ── AnsiParser ────────────────────────────────────────────────────────────────
+// ── AnsiParser
+// ────────────────────────────────────────────────────────────────
 
 namespace {
 
@@ -336,16 +432,20 @@ ftxui::Color AnsiIndexToColor(int base, int offset) {
   // base 30 → standard fg, base 90 → bright fg
   // base 40 → standard bg, base 100 → bright bg
   static const ftxui::Color::Palette16 standard[8] = {
-      ftxui::Color::Palette16::Black,   ftxui::Color::Palette16::Red,
-      ftxui::Color::Palette16::Green,   ftxui::Color::Palette16::Yellow,
-      ftxui::Color::Palette16::Blue,    ftxui::Color::Palette16::Magenta,
-      ftxui::Color::Palette16::Cyan,    ftxui::Color::Palette16::GrayLight,
+      ftxui::Color::Palette16::Black, ftxui::Color::Palette16::Red,
+      ftxui::Color::Palette16::Green, ftxui::Color::Palette16::Yellow,
+      ftxui::Color::Palette16::Blue,  ftxui::Color::Palette16::Magenta,
+      ftxui::Color::Palette16::Cyan,  ftxui::Color::Palette16::GrayLight,
   };
   static const ftxui::Color::Palette16 bright[8] = {
-      ftxui::Color::Palette16::GrayDark,    ftxui::Color::Palette16::RedLight,
-      ftxui::Color::Palette16::GreenLight,  ftxui::Color::Palette16::YellowLight,
-      ftxui::Color::Palette16::BlueLight,   ftxui::Color::Palette16::MagentaLight,
-      ftxui::Color::Palette16::CyanLight,   ftxui::Color::Palette16::White,
+      ftxui::Color::Palette16::GrayDark,
+      ftxui::Color::Palette16::RedLight,
+      ftxui::Color::Palette16::GreenLight,
+      ftxui::Color::Palette16::YellowLight,
+      ftxui::Color::Palette16::BlueLight,
+      ftxui::Color::Palette16::MagentaLight,
+      ftxui::Color::Palette16::CyanLight,
+      ftxui::Color::Palette16::White,
   };
   (void)base;
   if (offset >= 0 && offset < 8) {
@@ -366,23 +466,53 @@ void ApplySGRCodes(const std::vector<int>& codes, TextStyle& style) {
       case 0:  // Reset
         style = TextStyle{};
         break;
-      case 1: style.Bold(); break;
-      case 2: style.Dim(); break;
-      case 3: style.Italic(); break;
-      case 4: style.Underline(); break;
-      case 5: style.Blink(); break;
-      case 6: style.RapidBlink(); break;
-      case 7: style.Reverse(); break;
-      case 8: style.Hidden(); break;
-      case 9: style.Strikethrough(); break;
-      case 21: style.Underline(); break;  // doubly underlined → underline
-      case 22: /* normal intensity — clear bold/dim, not modeled */ break;
-      case 23: /* not italic */ break;
-      case 24: /* not underline */ break;
-      case 25: /* not blink */ break;
+      case 1:
+        style.Bold();
+        break;
+      case 2:
+        style.Dim();
+        break;
+      case 3:
+        style.Italic();
+        break;
+      case 4:
+        style.Underline();
+        break;
+      case 5:
+        style.Blink();
+        break;
+      case 6:
+        style.RapidBlink();
+        break;
+      case 7:
+        style.Reverse();
+        break;
+      case 8:
+        style.Hidden();
+        break;
+      case 9:
+        style.Strikethrough();
+        break;
+      case 21:
+        style.Underline();
+        break;  // doubly underlined → underline
+      case 22:  /* normal intensity — clear bold/dim, not modeled */
+        break;
+      case 23: /* not italic */
+        break;
+      case 24: /* not underline */
+        break;
+      case 25: /* not blink */
+        break;
       // Standard fg colors 30-37
-      case 30: case 31: case 32: case 33:
-      case 34: case 35: case 36: case 37:
+      case 30:
+      case 31:
+      case 32:
+      case 33:
+      case 34:
+      case 35:
+      case 36:
+      case 37:
         style.Fg(AnsiIndexToColor(30, code - 30));
         break;
       // Extended fg color
@@ -402,8 +532,14 @@ void ApplySGRCodes(const std::vector<int>& codes, TextStyle& style) {
         style.Fg(ftxui::Color::Default);
         break;
       // Standard bg colors 40-47
-      case 40: case 41: case 42: case 43:
-      case 44: case 45: case 46: case 47:
+      case 40:
+      case 41:
+      case 42:
+      case 43:
+      case 44:
+      case 45:
+      case 46:
+      case 47:
         style.Bg(AnsiIndexToColor(40, code - 40));
         break;
       // Extended bg color
@@ -423,13 +559,25 @@ void ApplySGRCodes(const std::vector<int>& codes, TextStyle& style) {
         style.Bg(ftxui::Color::Default);
         break;
       // Bright fg 90-97
-      case 90: case 91: case 92: case 93:
-      case 94: case 95: case 96: case 97:
+      case 90:
+      case 91:
+      case 92:
+      case 93:
+      case 94:
+      case 95:
+      case 96:
+      case 97:
         style.Fg(AnsiIndexToColor(90, (code - 90) + 60));
         break;
       // Bright bg 100-107
-      case 100: case 101: case 102: case 103:
-      case 104: case 105: case 106: case 107:
+      case 100:
+      case 101:
+      case 102:
+      case 103:
+      case 104:
+      case 105:
+      case 106:
+      case 107:
         style.Bg(AnsiIndexToColor(100, (code - 100) + 60));
         break;
       default:
@@ -526,7 +674,8 @@ std::string AnsiParser::Strip(const std::string& ansi_text) {
   return result;
 }
 
-// ── ColorSwatch ───────────────────────────────────────────────────────────────
+// ── ColorSwatch
+// ───────────────────────────────────────────────────────────────
 
 ftxui::Element ColorSwatch(ftxui::Color c) {
   return ftxui::bgcolor(c, ftxui::text("  "));
@@ -538,8 +687,8 @@ ftxui::Element ColorPalette256() {
     ftxui::Elements cells;
     for (int col = 0; col < 16; ++col) {
       const int index = row * 16 + col;
-      cells.push_back(
-          ColorSwatch(ftxui::Color(static_cast<ftxui::Color::Palette256>(index))));
+      cells.push_back(ColorSwatch(
+          ftxui::Color(static_cast<ftxui::Color::Palette256>(index))));
     }
     rows.push_back(ftxui::hbox(std::move(cells)));
   }
@@ -579,15 +728,17 @@ ftxui::Element ColorGradient(ftxui::Color from, ftxui::Color to, int width) {
   ftxui::Elements cells;
   cells.reserve(static_cast<size_t>(width));
   for (int i = 0; i < width; ++i) {
-    const float t = (width == 1) ? 0.0F : static_cast<float>(i) /
-                                              static_cast<float>(width - 1);
+    const float t = (width == 1)
+                        ? 0.0F
+                        : static_cast<float>(i) / static_cast<float>(width - 1);
     const ftxui::Color c = ftxui::Color::Interpolate(t, from, to);
     cells.push_back(ftxui::bgcolor(c, ftxui::text("█")));
   }
   return ftxui::hbox(std::move(cells));
 }
 
-// ── Convenience free functions ────────────────────────────────────────────────
+// ── Convenience free functions
+// ────────────────────────────────────────────────
 
 ftxui::Element StyledText(const std::string& t, TextStyle style) {
   return style(t);
@@ -620,7 +771,8 @@ ftxui::Element BlinkText(const std::string& t, ftxui::Color fg) {
   return s(t);
 }
 
-ftxui::Element ColorText(const std::string& t, ftxui::Color fg,
+ftxui::Element ColorText(const std::string& t,
+                         ftxui::Color fg,
                          ftxui::Color bg) {
   TextStyle s;
   s.Fg(fg);

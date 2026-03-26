@@ -16,7 +16,8 @@
 
 using namespace ftxui::ui;
 
-// ── 1. IsAvailable returns false on native ────────────────────────────────────
+// ── 1. IsAvailable returns false on native
+// ────────────────────────────────────
 
 TEST(WebGLRenderer, IsAvailableReturnsFalseOnNative) {
   EXPECT_FALSE(WebGLRenderer::IsAvailable());
@@ -54,8 +55,7 @@ TEST(WebGLRenderer, PresentDoesNotCrash) {
 
 TEST(WebGLRenderer, RenderBrailleCanvasEmptyDoesNotCrash) {
   std::vector<std::vector<bool>> dots;
-  EXPECT_NO_FATAL_FAILURE(
-      WebGLRenderer::RenderBrailleCanvas(dots, 0, 0));
+  EXPECT_NO_FATAL_FAILURE(WebGLRenderer::RenderBrailleCanvas(dots, 0, 0));
 }
 
 // ── 7. RenderBrailleCanvas does not crash with 10×10 data ────────────────────
@@ -66,7 +66,8 @@ TEST(WebGLRenderer, RenderBrailleCanvas10x10DoesNotCrash) {
       WebGLRenderer::RenderBrailleCanvas(dots, 10, 10, 0, 255, 0));
 }
 
-// ── 8. RenderScreen does not crash with empty lines ───────────────────────────
+// ── 8. RenderScreen does not crash with empty lines
+// ───────────────────────────
 
 TEST(WebGLRenderer, RenderScreenEmptyDoesNotCrash) {
   std::vector<std::string> lines;

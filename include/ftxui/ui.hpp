@@ -117,6 +117,7 @@
 // ── WebAssembly & Platform
 // ────────────────────────────────────────────────────
 #include "ftxui/ui/wasm_bridge.hpp"
+#include "ftxui/ui/web_bridge.hpp"
 #include "ftxui/ui/webgl_renderer.hpp"
 
 // ── Game Engine & Physics

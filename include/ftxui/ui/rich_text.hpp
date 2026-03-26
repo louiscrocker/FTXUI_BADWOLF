@@ -14,7 +14,8 @@
 
 namespace ftxui::ui {
 
-// ── TextStyle ─────────────────────────────────────────────────────────────────
+// ── TextStyle
+// ─────────────────────────────────────────────────────────────────
 
 /// @brief Fluent builder for all nine ANSI terminal text attributes plus
 /// TrueColor/256-color foreground and background colors.
@@ -29,8 +30,8 @@ class TextStyle {
   TextStyle& Bg(ftxui::Color c);
   TextStyle& Fg(uint8_t r, uint8_t g, uint8_t b);  // TrueColor fg
   TextStyle& Bg(uint8_t r, uint8_t g, uint8_t b);  // TrueColor bg
-  TextStyle& Fg256(uint8_t index);                  // 256-color fg
-  TextStyle& Bg256(uint8_t index);                  // 256-color bg
+  TextStyle& Fg256(uint8_t index);                 // 256-color fg
+  TextStyle& Bg256(uint8_t index);                 // 256-color bg
 
   // Named color shortcuts (set foreground)
   TextStyle& Black();
@@ -92,7 +93,8 @@ class TextStyle {
   bool reverse_ = false, hidden_ = false, strikethrough_ = false;
 };
 
-// ── Span ──────────────────────────────────────────────────────────────────────
+// ── Span
+// ──────────────────────────────────────────────────────────────────────
 
 /// @brief A styled text run: a UTF-8 string paired with a TextStyle.
 struct Span {
@@ -100,7 +102,8 @@ struct Span {
   TextStyle style;
 };
 
-// ── RichText ──────────────────────────────────────────────────────────────────
+// ── RichText
+// ──────────────────────────────────────────────────────────────────
 
 /// @brief Parses and renders inline markup into styled FTXUI Elements.
 ///
@@ -122,7 +125,8 @@ class RichText {
   static ftxui::Component Component(const std::string& markup);
 };
 
-// ── AnsiParser ────────────────────────────────────────────────────────────────
+// ── AnsiParser
+// ────────────────────────────────────────────────────────────────
 
 /// @brief Converts ANSI escape sequences to styled FTXUI Elements or Spans.
 class AnsiParser {
@@ -137,7 +141,8 @@ class AnsiParser {
   static std::string Strip(const std::string& ansi_text);
 };
 
-// ── ColorSwatch ───────────────────────────────────────────────────────────────
+// ── ColorSwatch
+// ───────────────────────────────────────────────────────────────
 
 /// @brief A visual 2-char wide color swatch element.
 ftxui::Element ColorSwatch(ftxui::Color c);
@@ -149,10 +154,12 @@ ftxui::Element ColorPalette256();
 ftxui::Element ColorPalette16();
 
 /// @brief TrueColor gradient element (horizontal, start→end color).
-ftxui::Element ColorGradient(ftxui::Color from, ftxui::Color to,
-                              int width = 40);
+ftxui::Element ColorGradient(ftxui::Color from,
+                             ftxui::Color to,
+                             int width = 40);
 
-// ── Convenience free functions ────────────────────────────────────────────────
+// ── Convenience free functions
+// ────────────────────────────────────────────────
 /// @brief Apply a TextStyle to a plain text string.
 ftxui::Element StyledText(const std::string& text, TextStyle style);
 /// @brief Bold text, optionally colored.
@@ -165,10 +172,13 @@ ftxui::Element DimText(const std::string& text,
 ftxui::Element BlinkText(const std::string& text,
                          ftxui::Color fg = ftxui::Color::Default);
 /// @brief Colored text with foreground and optional background.
-ftxui::Element ColorText(const std::string& text, ftxui::Color fg,
+ftxui::Element ColorText(const std::string& text,
+                         ftxui::Color fg,
                          ftxui::Color bg = ftxui::Color::Default);
 /// @brief TrueColor text with 24-bit RGB foreground.
-ftxui::Element RgbText(const std::string& text, uint8_t r, uint8_t g,
+ftxui::Element RgbText(const std::string& text,
+                       uint8_t r,
+                       uint8_t g,
                        uint8_t b);
 
 }  // namespace ftxui::ui

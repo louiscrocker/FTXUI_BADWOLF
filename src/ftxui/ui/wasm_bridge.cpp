@@ -74,7 +74,8 @@ void SaveState(const std::string& key, const std::string& value) {
       {
         try {
           localStorage.setItem(UTF8ToString($0), UTF8ToString($1));
-        } catch (e) {}
+        } catch (e) {
+        }
       },
       key.c_str(), value.c_str());
 }
@@ -85,14 +86,18 @@ std::string LoadState(const std::string& key,
       {
         var key = UTF8ToString($0);
         var val = localStorage.getItem(key);
-        if (val === null) return 0;
+        if (val == = null) {
+          return 0;
+        }
         var len = lengthBytesUTF8(val) + 1;
         var buf = _malloc(len);
         stringToUTF8(val, buf, len);
         return buf;
       },
       key.c_str()));
-  if (!raw) return default_value;
+  if (!raw) {
+    return default_value;
+  }
   std::string result(raw);
   free(raw);
   return result;
@@ -129,7 +134,7 @@ void RequestRedraw() {
 
 std::pair<int, int> GetCanvasDimensions() {
 #if defined(TIOCGWINSZ)
-  struct winsize ws {};
+  struct winsize ws{};
   if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == 0 && ws.ws_col > 0 &&
       ws.ws_row > 0) {
     return {static_cast<int>(ws.ws_col), static_cast<int>(ws.ws_row)};
@@ -141,7 +146,9 @@ std::pair<int, int> GetCanvasDimensions() {
 namespace {
 std::string StateFilePath(const std::string& key) {
   const char* home = std::getenv("HOME");
-  if (!home) home = ".";
+  if (!home) {
+    home = ".";
+  }
   return std::string(home) + "/.config/badwolf/" + key + ".txt";
 }
 }  // namespace
@@ -151,13 +158,17 @@ void SaveState(const std::string& key, const std::string& value) {
   // Best-effort: create parent directories if they don't exist.
   std::system(("mkdir -p \"$(dirname '" + path + "')\" 2>/dev/null").c_str());
   std::ofstream f(path);
-  if (f) f << value;
+  if (f) {
+    f << value;
+  }
 }
 
 std::string LoadState(const std::string& key,
                       const std::string& default_value) {
   std::ifstream f(StateFilePath(key));
-  if (!f) return default_value;
+  if (!f) {
+    return default_value;
+  }
   std::string content((std::istreambuf_iterator<char>(f)),
                       std::istreambuf_iterator<char>());
   return content.empty() ? default_value : content;

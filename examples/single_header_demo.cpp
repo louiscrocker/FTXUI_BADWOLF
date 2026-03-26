@@ -1,3 +1,7 @@
+// Copyright 2025 Arthur Sonzogni. All rights reserved.
+// Use of this source code is governed by the MIT license that can be found in
+// the LICENSE file.
+
 // Demo: FTXUI BadWolf single-header usage
 //
 // Compile (no cmake, no linking, just one file):

@@ -36,17 +36,20 @@ class WebGLRenderer {
   /// Each @p dots[row][col] == true entry is drawn as a tiny colored quad.
   /// Falls back to no-op when not available.
   static void RenderBrailleCanvas(const std::vector<std::vector<bool>>& dots,
-                                  int width, int height,
-                                  uint8_t r = 0, uint8_t g = 255,
+                                  int width,
+                                  int height,
+                                  uint8_t r = 0,
+                                  uint8_t g = 255,
                                   uint8_t b = 0);
 
   /// @brief Render a full text buffer as monospace glyph quads.
   ///
   /// @p lines[row] contains the UTF-8 text for that row.
   /// @p fg_colors[row][col] contains the packed RGBA foreground colour.
-  static void RenderScreen(int cols, int rows,
-                            const std::vector<std::string>& lines,
-                            const std::vector<std::vector<uint32_t>>& fg_colors);
+  static void RenderScreen(int cols,
+                           int rows,
+                           const std::vector<std::string>& lines,
+                           const std::vector<std::vector<uint32_t>>& fg_colors);
 
   /// @brief Clear the WebGL canvas with a solid colour.
   static void Clear(uint8_t r = 0, uint8_t g = 0, uint8_t b = 0);

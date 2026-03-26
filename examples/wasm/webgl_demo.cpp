@@ -24,28 +24,28 @@
 #include "ftxui/ui.hpp"
 #include "ftxui/ui/app.hpp"
 #include "ftxui/ui/particles.hpp"
-#include "ftxui/ui/webgl_renderer.hpp"
 #include "ftxui/ui/wasm_bridge.hpp"
+#include "ftxui/ui/webgl_renderer.hpp"
 
 using namespace ftxui;
 using namespace ftxui::ui;
 
 int main() {
   // WebGL is a no-op on native; this line is safe everywhere.
-  bool webgl_active  = WebGLRenderer::Init("badwolf-canvas");
+  bool webgl_active = WebGLRenderer::Init("badwolf-canvas");
   bool webgl_enabled = webgl_active;
-  bool globe_spin    = true;
+  bool globe_spin = true;
 
   // ── Particle system (terminal rendering) ─────────────────────────────────
   auto ps = Explosion(40.0f, 20.0f);
 
   // ── Globe ─────────────────────────────────────────────────────────────────
   Component globe = GlobeMap()
-      .LineColor(Color::GreenLight)
-      .RotationSpeed(0.8)
-      .ShowGraticule(true)
-      .GraticuleStep(30.0f)
-      .Build();
+                        .LineColor(Color::GreenLight)
+                        .RotationSpeed(0.8)
+                        .ShowGraticule(true)
+                        .GraticuleStep(30.0f)
+                        .Build();
 
   // ── Status panel ──────────────────────────────────────────────────────────
   auto status_line = [&]() -> Element {
@@ -59,14 +59,15 @@ int main() {
     }
 
     auto stats = WebGLRenderer::GetStats();
-    std::string stats_str = " | quads/frame: " +
-        std::to_string(stats.quads_rendered) +
+    std::string stats_str =
+        " | quads/frame: " + std::to_string(stats.quads_rendered) +
         "  draw_calls: " + std::to_string(stats.draw_calls) +
         "  frame: " + std::to_string(static_cast<int>(stats.frame_ms)) + "ms";
 
     return hbox({
-        text(mode_str)  | color(webgl_active && webgl_enabled
-                                    ? Color::GreenLight : Color::YellowLight),
+        text(mode_str) |
+            color(webgl_active && webgl_enabled ? Color::GreenLight
+                                                : Color::YellowLight),
         text(stats_str) | color(Color::GrayLight),
     });
   };
@@ -75,9 +76,9 @@ int main() {
   auto controls = [] {
     return hbox({
         text("[w] toggle WebGL  ") | color(Color::Cyan),
-        text("[b] explosion  ")    | color(Color::Cyan),
-        text("[g] globe spin  ")   | color(Color::Cyan),
-        text("[q] quit")           | color(Color::Cyan),
+        text("[b] explosion  ") | color(Color::Cyan),
+        text("[g] globe spin  ") | color(Color::Cyan),
+        text("[q] quit") | color(Color::Cyan),
     });
   };
 
@@ -98,16 +99,16 @@ int main() {
                       static_cast<float>(i) * 0.3f;
         int col = static_cast<int>((std::cos(angle) * 0.4f + 0.5f) * W);
         int row = static_cast<int>((std::sin(angle) * 0.4f + 0.5f) * H);
-        if (col >= 0 && col < W && row >= 0 && row < H) dots[row][col] = true;
+        if (col >= 0 && col < W && row >= 0 && row < H) {
+          dots[row][col] = true;
+        }
       }
       WebGLRenderer::RenderBrailleCanvas(dots, W, H, 255, 200, 50);
       WebGLRenderer::Present();
     }
 
     // Always render a terminal frame.
-    auto canvas_el = canvas(80, 40, [&](Canvas& c) {
-      ps->Render(c);
-    });
+    auto canvas_el = canvas(80, 40, [&](Canvas& c) { ps->Render(c); });
 
     return vbox({
         text("── WebGL Hybrid Renderer Demo ──") | bold | color(Color::Green),
@@ -143,6 +144,8 @@ int main() {
 
   RunApp([&root] { return root; });
 
-  if (webgl_active) WebGLRenderer::Shutdown();
+  if (webgl_active) {
+    WebGLRenderer::Shutdown();
+  }
   return 0;
 }

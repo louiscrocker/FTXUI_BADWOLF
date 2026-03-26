@@ -230,7 +230,8 @@ Component LiveLogPanel(std::shared_ptr<FileTailSource> source,
 /// @brief Metrics table auto-connected to a PrometheusSource.
 Component LiveMetricsTable(std::shared_ptr<PrometheusSource> source);
 
-/// @brief Line chart (sparkline ring buffer) auto-connected to LiveSource<double>.
+/// @brief Line chart (sparkline ring buffer) auto-connected to
+/// LiveSource<double>.
 Component LiveLineChart(std::shared_ptr<LiveSource<double>> source,
                         const std::string& title = "",
                         int history = 60);

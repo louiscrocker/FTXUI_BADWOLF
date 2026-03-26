@@ -20,7 +20,8 @@ struct GeoPoint {
 /// @brief A closed ring of geographic points (exterior/interior polygon ring).
 using GeoRing = std::vector<GeoPoint>;
 
-/// @brief Raw geometry from a GeoJSON feature (Point, LineString, Polygon, etc.).
+/// @brief Raw geometry from a GeoJSON feature (Point, LineString, Polygon,
+/// etc.).
 struct GeoGeometry {
   std::string type;
   std::vector<GeoPoint> points;
